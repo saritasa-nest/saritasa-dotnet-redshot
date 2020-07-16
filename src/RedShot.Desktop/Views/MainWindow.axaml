@@ -6,12 +6,14 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="RedShot.Desktop.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="RedShot.Desktop">
+        Title="RedShot.Desktop"
+		WindowState="Maximized">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
+	<Grid Background="{Binding ImageSource}">
+		<Button Command="{Binding ScreenShotCommand}" Width="100" Height="50">ScreenShot</Button>
+	</Grid>
+   
 </Window>
