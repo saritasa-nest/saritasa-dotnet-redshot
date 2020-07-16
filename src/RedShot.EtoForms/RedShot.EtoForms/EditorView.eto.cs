@@ -68,6 +68,9 @@ namespace RedShot.EtoForms
 					ClearImageView();
 					RenderRectangle();
 					capturing = false;
+
+					//Some save functions
+					Close();
 				}
                 else
                 {
