@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Threading;
 using Eto.Forms;
 
 namespace RedShot.EtoForms.Wpf

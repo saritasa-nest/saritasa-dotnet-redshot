@@ -9,7 +9,7 @@ namespace RedShot.EtoForms.Gtk
         public static void Main(string[] args)
         {
             Eto.Style.Add<Eto.GtkSharp.Forms.FormHandler>("mystyle", h => { h.WindowStyle = WindowStyle.None; });
-            new Application(Eto.Platforms.Gtk).Run();
+            new Application(Eto.Platforms.Gtk).Run(ApplicationManager.GetTrayApp());
         }
     }
 }

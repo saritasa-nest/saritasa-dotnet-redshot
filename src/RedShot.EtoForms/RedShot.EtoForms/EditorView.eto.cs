@@ -1,8 +1,8 @@
-using System;
 using Eto.Forms;
 using Eto.Drawing;
 using System.IO;
 using RedShot.ScreenshotCapture;
+using System.Threading.Tasks;
 
 namespace RedShot.EtoForms
 {
@@ -24,33 +24,27 @@ namespace RedShot.EtoForms
 
 			ClientSize = size;
 
-			sourceImage = SetDisplayImage();
-
-			ClearImageView();
-
-			var layout = new DynamicLayout();
-
-			layout.Add(imageview);
-			Content = layout;
+			imageview.Image = sourceImage = SetDisplayImage(); 
+			UpdateContent();
 
 			Style = "mystyle";
 
 			WindowState = WindowState.Maximized;
 		}
+		private void UpdateContent()
+        {
+			var layout = new DynamicLayout();
+			layout.Add(imageview);
+			Content = layout;
+		}
 		private void ClearImageView()
         {
 			image = sourceImage.Clone();
 			imageview.Image = image;
-
-			var layout = new DynamicLayout();
-
-			layout.Add(imageview);
-			Content = layout;
 		}
 
 		private void EditorView_MouseMove(object sender, MouseEventArgs e)
 		{
-			ClearImageView();
 			if (capturing)
 			{
 				endLocation = e.Location;
@@ -65,7 +59,6 @@ namespace RedShot.EtoForms
 				if (capturing)
 				{
 					endLocation = e.Location;
-					ClearImageView();
 					RenderRectangle();
 					capturing = false;
 
@@ -78,36 +71,38 @@ namespace RedShot.EtoForms
 					capturing = true;
 				}
 			}
+			else if (e.Buttons == MouseButtons.Alternate)
+            {
+                if (capturing)
+                {
+					capturing = false;
+				}
+            }
+			ClearImageView();
 		}
 
 		private void RenderRectangle()
 		{
+			image = sourceImage.Clone();
 			using (var graphics = new Graphics(image))
 			{
 				using (var brush = new SolidBrush(Color.FromRgb(int.Parse("808080", System.Globalization.NumberStyles.HexNumber))))
-				{                    
-					if(startLocation.Y < endLocation.Y)
-                    {
+				{
+					if (startLocation.Y < endLocation.Y)
+					{
 						graphics.FillRectangle(brush, new RectangleF(startLocation, endLocation));
 					}
-                    else
-                    {
+					else
+					{
 						graphics.FillRectangle(brush, new RectangleF(endLocation, startLocation));
 					}
 					imageview.Image = image;
+					UpdateContent();
 				}
 			}
+			
 		}
-
-		//using (System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Red))
-
-		//graphics.FillRectangle(myBrush, new Rectangle(0, 0, 200, 300)); // whatever
-		// and so on...
-		// myBrush will be disposed at this line
-		//bitmap.Save(fileName);
-	 // graphics will be disposed at this line
-
-		public Bitmap SetDisplayImage()
+		private Bitmap SetDisplayImage()
 		{
 			using (var ms = new MemoryStream())
 			{
