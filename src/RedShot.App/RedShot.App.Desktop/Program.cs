@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Eto.Forms;
 using RedShot.App;
 
@@ -16,22 +17,41 @@ namespace RedShot.EtoForms.Wpf
             var app = new Application(Eto.Platform.Detect);
             app.UnhandledException += InstanceOnUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += DomainUnhandledException;
-            Eto.Style.Add<Eto.WinForms.Forms.FormHandler>("mystyle", h =>
-            {
-                // Windows Forms.
-                var prop = h.Control.GetType().GetProperty("FormBorderStyle");
-                if (prop != null)
-                {
-                    prop.SetValue(h.Control, 0);
-                }
-                // WPF.
-                prop = h.Control.GetType().GetProperty("WindowStyle");
-                if (prop != null)
-                {
-                    prop.SetValue(h.Control, 0);
-                }
-            });
+
+            AddStyle();
             app.Run(ApplicationManager.GetTrayApp());
+        }
+
+        private static void AddStyle()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                Eto.Style.Add<Eto.GtkSharp.Forms.FormHandler>("FullScreenStyle",
+                    h =>
+                    {
+                        h.WindowStyle = WindowStyle.None;
+                        h.WindowState = WindowState.Maximized;
+                        h.Maximizable = true;
+                    });
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Eto.Style.Add<Eto.WinForms.Forms.FormHandler>("FullScreenStyle", h =>
+                {
+                    // Windows Forms.
+                    var prop = h.Control.GetType().GetProperty("FormBorderStyle");
+                    if (prop != null)
+                    {
+                        prop.SetValue(h.Control, 0);
+                    }
+                    // WPF.
+                    prop = h.Control.GetType().GetProperty("WindowStyle");
+                    if (prop != null)
+                    {
+                        prop.SetValue(h.Control, 0);
+                    }
+                });
+            }
         }
 
         private static void InstanceOnUnhandledException(object sender, Eto.UnhandledExceptionEventArgs e)

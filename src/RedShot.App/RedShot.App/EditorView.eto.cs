@@ -6,9 +6,8 @@ using System;
 
 namespace RedShot.App
 {
-    partial class EditorView : Eto.Forms.Form
+    internal partial class EditorView : Eto.Forms.Form
     {
-        int indent = 5;
         ImageView imageview = new ImageView();
         Bitmap sourceImage;
         Point startLocation;
@@ -19,13 +18,8 @@ namespace RedShot.App
 
         void InitializeComponent()
         {
-            this.MouseDown += EditorView_MouseDown;
-            this.MouseMove += EditorView_MouseMove;
-
             var rect = new Rectangle(ScreenShot.GetMainWindowSize());
-            var size = new Size(rect.Width, rect.Height);
-
-            ClientSize = size;
+            ClientSize = new Size(rect.Width, rect.Height);
 
             imageview.Image = sourceImage = SetDisplayImage();
             InitHighlightForm();
@@ -36,11 +30,18 @@ namespace RedShot.App
             this.Topmost = true;
             this.KeyDown += EditorView_KeyDown;
 
-            Style = "mystyle";
+            Style = "FullScreenStyle";
 
             WindowState = WindowState.Maximized;
 
             Closing += EditorView_Closing;
+            this.Shown += EditorView_Shown;
+        }
+
+        private void EditorView_Shown(object sender, EventArgs e)
+        {
+            this.MouseDown += EditorView_MouseDown;
+            this.MouseMove += EditorView_MouseMove;
         }
 
         private void EditorView_KeyDown(object sender, KeyEventArgs e)
@@ -60,11 +61,13 @@ namespace RedShot.App
         {
             form = new Eto.Forms.Form();
             form.BackgroundColor = Colors.Red;
+            form.Size = new Size(1, 1);
             form.Topmost = true;
-            form.Opacity = 0.5;
+            form.Opacity = 0.4;
             form.ShowInTaskbar = false;
-            form.Style = "mystyle";
+            form.Style = "FullScreenStyle";
             form.Show();
+
             form.Visible = false;
         }
 
@@ -142,7 +145,7 @@ namespace RedShot.App
                 // 4nd state.
                 else
                 {
-                    location = new Point(endLocation.X + indent, endLocation.Y + indent);
+                    location = new Point(endLocation.X, endLocation.Y);
                 }
             }
 
@@ -151,8 +154,8 @@ namespace RedShot.App
 
             form.Location = location;
             form.Size = new Size(
-                width: formWidth - indent,
-                height: formHeight - indent);
+                width: formWidth == 0 ? 1 : formWidth,
+                height: formHeight == 0 ? 1 : formHeight);
         }
 
         private Bitmap SetDisplayImage()
