@@ -1,34 +1,29 @@
 ﻿using Eto.Drawing;
 using Eto.Forms;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace RedShot.ScreenshotCapture
 {
+    /// <summary>
+    /// Represents functions to work with screen.
+    /// </summary>
     public static class ScreenShot
     {
+        /// <summary>
+        /// Gives image of screen.
+        /// </summary>
+        /// <returns></returns>
         public static Image TakeScreenshot()
         {
-            return WindowsCapture();
+            return Screen.PrimaryScreen.GetImage(GetMainWindowSize());
         }
 
+        /// <summary>
+        /// Gives size of screen.
+        /// </summary>
+        /// <returns></returns>
         public static RectangleF GetMainWindowSize()
         {
             return Screen.PrimaryScreen.Bounds;
         }
-
-
-        /// <summary>
-        /// Capture screenshot with .NET standard implementation.
-        /// </summary>
-        private static Image WindowsCapture()
-        {
-            return Screen.PrimaryScreen.GetImage(GetMainWindowSize());
-        }
-       
     }
 }

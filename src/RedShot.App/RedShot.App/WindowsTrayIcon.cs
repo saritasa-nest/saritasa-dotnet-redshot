@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Eto.Forms;
-using System.Linq;
 using Eto.Drawing;
-using System.IO;
 
 namespace RedShot.App
 {
@@ -12,7 +8,7 @@ namespace RedShot.App
     {
         public readonly TrayIndicator tray;
 
-        //Everything has to be sent in on the constructor since things do not auto-refresh / update this is a limitation
+        // Everything has to be sent in on the constructor since things do not auto-refresh / update this is a limitation.
         public WindowsTrayIcon(string title, string iconPath)
         {
             var menu = new ContextMenu();

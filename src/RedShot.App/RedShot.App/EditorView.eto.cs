@@ -1,9 +1,6 @@
 using Eto.Forms;
 using Eto.Drawing;
-using System.IO;
 using RedShot.ScreenshotCapture;
-using System.Threading.Tasks;
-using System.Linq;
 using RedShot.Upload;
 using System;
 
