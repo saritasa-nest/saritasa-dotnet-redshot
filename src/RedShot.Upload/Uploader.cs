@@ -12,7 +12,7 @@ namespace RedShot.Upload
 
         public static void UploadImage(Bitmap image, Rectangle rect)
         {
-            image.Clone(rect).Save(Path.Combine(path, $"{DateTime.Now.ToFileTime()}.jpeg"), ImageFormat.Jpeg);
+            image.Clone(rect).Save(Path.Combine(path, $"{DateTime.Now.ToFileTime()}.bmp"), ImageFormat.Bitmap);
         }
     }
 }

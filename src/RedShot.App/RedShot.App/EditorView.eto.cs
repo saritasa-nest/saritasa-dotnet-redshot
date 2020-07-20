@@ -5,15 +5,17 @@ using RedShot.ScreenshotCapture;
 using System.Threading.Tasks;
 using System.Linq;
 using RedShot.Upload;
+using System;
 
 namespace RedShot.App
 {
     partial class EditorView : Eto.Forms.Form
     {
+        int indent = 5;
         ImageView imageview = new ImageView();
         Bitmap sourceImage;
-        PointF startLocation;
-        PointF endLocation;
+        Point startLocation;
+        Point endLocation;
         PixelLayout pixelLayout;
         Form form;
         bool capturing;
@@ -34,12 +36,22 @@ namespace RedShot.App
             pixelLayout.Size = new Size(-1, -1);
             pixelLayout.Add(imageview, 0, 0);
             Content = pixelLayout;
+            this.Topmost = true;
+            this.KeyDown += EditorView_KeyDown;
 
             Style = "mystyle";
 
             WindowState = WindowState.Maximized;
 
             Closing += EditorView_Closing;
+        }
+
+        private void EditorView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Keys.Escape)
+            {
+                Close();
+            }
         }
 
         private void EditorView_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -70,7 +82,7 @@ namespace RedShot.App
         {
             if (capturing)
             {
-                endLocation = e.Location;
+                endLocation = new Point(e.Location);
                 RenderRectangle();
             }
         }
@@ -81,7 +93,7 @@ namespace RedShot.App
             {
                 if (capturing)
                 {
-                    endLocation = e.Location;
+                    endLocation = new Point(e.Location);
                     capturing = false;
                     RenderRectangle();
                     form.Visible = false;
@@ -91,7 +103,7 @@ namespace RedShot.App
                 }
                 else
                 {
-                    startLocation = e.Location;
+                    startLocation = new Point(e.Location);
                     capturing = true;
                     form.Visible = true;
                 }
@@ -115,12 +127,12 @@ namespace RedShot.App
                 // 1st state.
                 if (startLocation.Y < endLocation.Y)
                 {
-                    location = new Point(startLocation);
+                    location = startLocation;
                 }
                 // 3nd state.
                 else
                 {
-                    location = new Point((int)startLocation.X, (int)endLocation.Y);
+                    location = new Point(startLocation.X, endLocation.Y);
                 }
             }
             else
@@ -128,40 +140,22 @@ namespace RedShot.App
                 // 2st state.
                 if (startLocation.Y < endLocation.Y)
                 {
-                    location = new Point((int)endLocation.X, (int)startLocation.Y);
+                    location = new Point(endLocation.X, startLocation.Y);
                 }
                 // 4nd state.
                 else
                 {
-                    location = new Point(endLocation);
+                    location = new Point(endLocation.X + indent, endLocation.Y + indent);
                 }
             }
 
-            int formWidth;
-            int formHeight;
-
-            if (startLocation.X < endLocation.X)
-            {
-                formWidth = (int)endLocation.X - (int)startLocation.X;
-            }
-            else
-            {
-                formWidth = (int)startLocation.X - (int)endLocation.X;
-            }
-
-            if (startLocation.Y < endLocation.Y)
-            {
-                formHeight = (int)endLocation.Y - (int)startLocation.Y;
-            }
-            else
-            {
-                formHeight = (int)startLocation.Y - (int)endLocation.Y;
-            }
+            int formWidth = Math.Abs(endLocation.X - startLocation.X);
+            int formHeight = Math.Abs(endLocation.Y - startLocation.Y);
 
             form.Location = location;
             form.Size = new Size(
-                width: formWidth,
-                height: formHeight);
+                width: formWidth - indent,
+                height: formHeight - indent);
         }
 
         private Bitmap SetDisplayImage()
