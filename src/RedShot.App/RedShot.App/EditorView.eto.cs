@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace RedShot.App
 {
-    partial class EditorView : Form
+    partial class EditorView : Eto.Forms.Form
     {
         ImageView imageview = new ImageView();
         Bitmap sourceImage;
@@ -29,15 +29,7 @@ namespace RedShot.App
             ClientSize = size;
 
             imageview.Image = sourceImage = SetDisplayImage();
-            form = new Form();
-            form.Location = new Point(100, 100);
-            form.BackgroundColor = Colors.Red;
-            form.Topmost = true;
-            form.Opacity = 0.5;
-            form.Size = new Size(300, 300);
-            form.ShowInTaskbar = false;
-            form.Show();
-            form.Style = "mystyle";
+            InitHighlightForm();
             pixelLayout = new PixelLayout();
             pixelLayout.Size = new Size(300, 300);
             pixelLayout.Add(imageview, 0, 0);
@@ -46,6 +38,26 @@ namespace RedShot.App
             Style = "mystyle";
 
             WindowState = WindowState.Maximized;
+
+            Closing += EditorView_Closing;
+        }
+
+        private void EditorView_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            form?.Close();
+        }
+
+        private void InitHighlightForm()
+        {
+            form = new Eto.Forms.Form();
+            form.BackgroundColor = Colors.Red;
+            form.Topmost = true;
+            form.Opacity = 0.5;
+            form.ShowInTaskbar = false;
+            form.Style = "mystyle";
+            form.Show();
+
+            form.Visible = false;
         }
 
         private void ClearImageView()
@@ -72,6 +84,7 @@ namespace RedShot.App
                     endLocation = e.Location;
                     RenderRectangle();
                     capturing = false;
+                    form.Visible = false;
 
                     //Some save functions
                     Close();
@@ -80,6 +93,7 @@ namespace RedShot.App
                 {
                     startLocation = e.Location;
                     capturing = true;
+                    form.Visible = true;
                 }
             }
             else if (e.Buttons == MouseButtons.Alternate)
@@ -87,6 +101,7 @@ namespace RedShot.App
                 if (capturing)
                 {
                     capturing = false;
+                    form.Visible = false;
                 }
             }
             ClearImageView();
@@ -94,28 +109,60 @@ namespace RedShot.App
 
         private void RenderRectangle()
         {
-            form.Location = new Point(startLocation);
-            form.Size = new Size(
-                width: (int)endLocation.X - (int)startLocation.X,
-                height: (int)endLocation.Y - (int)startLocation.Y);
-            return;
-            image = sourceImage.Clone();
-            using (var graphics = new Graphics(image))
+            Point location;
+
+            if (startLocation.X < endLocation.X)
             {
-                using (var brush = new SolidBrush(Color.FromRgb(int.Parse("808080", System.Globalization.NumberStyles.HexNumber))))
+                // 1st state.
+                if (startLocation.Y < endLocation.Y)
                 {
-                    if (startLocation.Y < endLocation.Y)
-                    {
-                        graphics.FillRectangle(brush, new RectangleF(startLocation, endLocation));
-                    }
-                    else
-                    {
-                        graphics.FillRectangle(brush, new RectangleF(endLocation, startLocation));
-                    }
-                    imageview.Image = image;
-                    //UpdateContent();
+                    location = new Point(startLocation);
+                }
+                // 3nd state.
+                else
+                {
+                    location = new Point((int)startLocation.X, (int)endLocation.Y);
                 }
             }
+            else
+            {
+                // 2st state.
+                if (startLocation.Y < endLocation.Y)
+                {
+                    location = new Point((int)endLocation.X, (int)startLocation.Y);
+                }
+                // 4nd state.
+                else
+                {
+                    location = new Point(endLocation);
+                }
+            }
+
+            int formWidth;
+            int formHeight;
+
+            if (startLocation.X < endLocation.X)
+            {
+                formWidth = (int)endLocation.X - (int)startLocation.X;
+            }
+            else
+            {
+                formWidth = (int)startLocation.X - (int)endLocation.X;
+            }
+
+            if (startLocation.Y < endLocation.Y)
+            {
+                formHeight = (int)endLocation.Y - (int)startLocation.Y;
+            }
+            else
+            {
+                formHeight = (int)startLocation.Y - (int)endLocation.Y;
+            }
+
+            form.Location = location;
+            form.Size = new Size(
+                width: formWidth,
+                height: formHeight);
         }
 
         private Bitmap SetDisplayImage()
