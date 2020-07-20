@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <CodeAnalysisRuleSet>../../../tools/Saritasa.ruleset</CodeAnalysisRuleSet>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\RedShot.App\RedShot.App.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Condition=" '$(OS)' != 'Windows_NT' " Include="Eto.Platform.Gtk" Version="2.5.2" />
+    <PackageReference Condition=" '$(OS)' == 'Windows_NT' " Include="Eto.Platform.Windows" Version="2.5.2" />
+    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="3.0.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
+  </ItemGroup>
+
+</Project>

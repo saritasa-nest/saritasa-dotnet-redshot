@@ -22,14 +22,16 @@ namespace RedShot.ScreenshotCapture
         }
 
         #region  Private static methods
-        
 
         /// <summary>
         /// Capture screenshot with .NET standard implementation.
         /// </summary>
         private static Image WindowsCapture(bool onlyPrimaryScreen)
         {
-            if (onlyPrimaryScreen) return ScreenCapture(Screen.PrimaryScreen);
+            if (onlyPrimaryScreen)
+            {
+                return ScreenCapture(Screen.PrimaryScreen);
+            }
             var bitmaps = (Screen.AllScreens.OrderBy(s => s.Bounds.Left).Select(ScreenCapture)).ToArray();
             return CombineBitmap(bitmaps);
         }
@@ -43,7 +45,7 @@ namespace RedShot.ScreenshotCapture
 
             if (screen.Bounds.Width / screen.WorkingArea.Width > 1 || screen.Bounds.Height / screen.WorkingArea.Height > 1)
             {
-                // Trick  to restore original bounds of screen.
+                // Trick to restore original bounds of screen.
                 bounds = new Rectangle(
                     0,
                     0,
@@ -73,11 +75,13 @@ namespace RedShot.ScreenshotCapture
         /// Combime images collection in one bitmap.
         /// </summary>
         /// <param name="images"></param>
-        /// <returns>Combined image</returns>
+        /// <returns>Combined image.</returns>
         private static Image CombineBitmap(ICollection<Image> images)
         {
             if (images.Count == 1)
+            {
                 return images.First();
+            }
 
             Image finalImage = null;
 
@@ -110,12 +114,14 @@ namespace RedShot.ScreenshotCapture
             catch (Exception ex)
             {
                 if (finalImage != null)
+                {
                     finalImage.Dispose();
+                }
                 throw ex;
             }
             finally
             {
-                //clean up memory
+                // Clean up memory.
                 foreach (var image in images)
                 {
                     image.Dispose();

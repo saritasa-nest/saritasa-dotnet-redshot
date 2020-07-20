@@ -6,7 +6,7 @@ using System.Linq;
 using Eto.Drawing;
 using System.IO;
 
-namespace RedShot.EtoForms
+namespace RedShot.App
 {
     public class WindowsTrayIcon : Eto.Forms.Form
     {
@@ -55,5 +55,3 @@ namespace RedShot.EtoForms
         }
     }
 }
-
-

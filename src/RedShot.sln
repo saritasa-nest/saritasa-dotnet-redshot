@@ -3,17 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Desktop", "RedShot.Desktop\RedShot.Desktop.csproj", "{C3A164C0-8867-4E5A-9526-7BB3ADC2B8EE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Infrastructure", "RedShot.Infrastructure\RedShot.Infrastructure.csproj", "{ABC4ED2E-B948-474C-A9B2-5338C6258DE7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.ScreenshotCapture", "RedShot.ScreenshotCapture\RedShot.ScreenshotCapture.csproj", "{E6B67C95-0BEF-4A55-98C3-387F9A59BF06}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.EtoForms", "RedShot.EtoForms\RedShot.EtoForms\RedShot.EtoForms.csproj", "{F2F65109-EBFC-46A7-86F2-5EDBC3918C61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.App", "RedShot.App\RedShot.App\RedShot.App.csproj", "{F2F65109-EBFC-46A7-86F2-5EDBC3918C61}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.EtoForms.Gtk", "RedShot.EtoForms\RedShot.EtoForms.Gtk\RedShot.EtoForms.Gtk.csproj", "{2C660016-9B6B-4D18-9646-7913A4385854}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.EtoForms.Wpf", "RedShot.EtoForms\RedShot.EtoForms.Wpf\RedShot.EtoForms.Wpf.csproj", "{D110C5D5-34A1-4A3D-84A1-25FE711BBACD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.EtoForms.Desktop", "RedShot.App\RedShot.App.Desktop\RedShot.EtoForms.Desktop.csproj", "{AAE18E45-C33E-4D68-AF9D-F64669F98ADC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C3A164C0-8867-4E5A-9526-7BB3ADC2B8EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C3A164C0-8867-4E5A-9526-7BB3ADC2B8EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C3A164C0-8867-4E5A-9526-7BB3ADC2B8EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C3A164C0-8867-4E5A-9526-7BB3ADC2B8EE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ABC4ED2E-B948-474C-A9B2-5338C6258DE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ABC4ED2E-B948-474C-A9B2-5338C6258DE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABC4ED2E-B948-474C-A9B2-5338C6258DE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -37,14 +29,10 @@ Global
 		{F2F65109-EBFC-46A7-86F2-5EDBC3918C61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2F65109-EBFC-46A7-86F2-5EDBC3918C61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2F65109-EBFC-46A7-86F2-5EDBC3918C61}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2C660016-9B6B-4D18-9646-7913A4385854}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2C660016-9B6B-4D18-9646-7913A4385854}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2C660016-9B6B-4D18-9646-7913A4385854}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2C660016-9B6B-4D18-9646-7913A4385854}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D110C5D5-34A1-4A3D-84A1-25FE711BBACD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D110C5D5-34A1-4A3D-84A1-25FE711BBACD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D110C5D5-34A1-4A3D-84A1-25FE711BBACD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D110C5D5-34A1-4A3D-84A1-25FE711BBACD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAE18E45-C33E-4D68-AF9D-F64669F98ADC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAE18E45-C33E-4D68-AF9D-F64669F98ADC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAE18E45-C33E-4D68-AF9D-F64669F98ADC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAE18E45-C33E-4D68-AF9D-F64669F98ADC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
