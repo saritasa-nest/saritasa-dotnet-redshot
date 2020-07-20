@@ -25,7 +25,7 @@ namespace RedShot.App
             this.MouseDown += EditorView_MouseDown;
             this.MouseMove += EditorView_MouseMove;
 
-            var rect = ScreenshotCapture.ScreenShot.GetMainWindowSize();
+            var rect = new Rectangle(ScreenShot.GetMainWindowSize());
             var size = new Size(rect.Width, rect.Height);
 
             ClientSize = size;
@@ -160,14 +160,7 @@ namespace RedShot.App
 
         private Bitmap SetDisplayImage()
         {
-            using (var ms = new MemoryStream())
-            {
-                var bitmap = ScreenShot.TakeScreenshot();
-                bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
-                ms.Seek(0, SeekOrigin.Begin);
-
-                return new Eto.Drawing.Bitmap(ms);
-            }
+            return (Bitmap)ScreenShot.TakeScreenshot();
         }
     }
 }
