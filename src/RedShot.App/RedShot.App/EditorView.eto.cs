@@ -4,6 +4,7 @@ using System.IO;
 using RedShot.ScreenshotCapture;
 using System.Threading.Tasks;
 using System.Linq;
+using RedShot.Upload;
 
 namespace RedShot.App
 {
@@ -11,7 +12,6 @@ namespace RedShot.App
     {
         ImageView imageview = new ImageView();
         Bitmap sourceImage;
-        Bitmap image;
         PointF startLocation;
         PointF endLocation;
         PixelLayout pixelLayout;
@@ -31,7 +31,7 @@ namespace RedShot.App
             imageview.Image = sourceImage = SetDisplayImage();
             InitHighlightForm();
             pixelLayout = new PixelLayout();
-            pixelLayout.Size = new Size(300, 300);
+            pixelLayout.Size = new Size(-1, -1);
             pixelLayout.Add(imageview, 0, 0);
             Content = pixelLayout;
 
@@ -56,14 +56,14 @@ namespace RedShot.App
             form.ShowInTaskbar = false;
             form.Style = "mystyle";
             form.Show();
-
             form.Visible = false;
         }
 
-        private void ClearImageView()
+        private void Upload()
         {
-            image = sourceImage.Clone();
-            imageview.Image = image;
+            var rect = new Rectangle(form.Location, form.Size);
+
+            Uploader.UploadImage(sourceImage, rect);
         }
 
         private void EditorView_MouseMove(object sender, MouseEventArgs e)
@@ -82,11 +82,11 @@ namespace RedShot.App
                 if (capturing)
                 {
                     endLocation = e.Location;
-                    RenderRectangle();
                     capturing = false;
+                    RenderRectangle();
                     form.Visible = false;
 
-                    //Some save functions
+                    Upload();
                     Close();
                 }
                 else
@@ -104,7 +104,6 @@ namespace RedShot.App
                     form.Visible = false;
                 }
             }
-            ClearImageView();
         }
 
         private void RenderRectangle()
