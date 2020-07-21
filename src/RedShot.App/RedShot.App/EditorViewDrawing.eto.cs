@@ -120,7 +120,7 @@ namespace RedShot.App
                 if (capturing)
                 {
                     capturing = false;
-                    image = sourceImage.Clone();
+                    graphics.DrawImage(sourceImage, new PointF(0, 0));
                     Content.Invalidate();
                 }
                 else
