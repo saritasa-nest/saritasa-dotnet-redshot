@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.App", "RedShot.App\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.EtoForms.Desktop", "RedShot.App\RedShot.App.Desktop\RedShot.EtoForms.Desktop.csproj", "{AAE18E45-C33E-4D68-AF9D-F64669F98ADC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedShot.Upload", "RedShot.Upload\RedShot.Upload.csproj", "{63AB96CA-57CF-4513-A5FB-58A9D87B526E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Upload", "RedShot.Upload\RedShot.Upload.csproj", "{63AB96CA-57CF-4513-A5FB-58A9D87B526E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

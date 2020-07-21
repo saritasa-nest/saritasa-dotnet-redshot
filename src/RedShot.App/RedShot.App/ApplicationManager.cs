@@ -22,5 +22,15 @@ namespace RedShot.App
 
             TrayIcon.Visible = true;
         }
+
+        public static void RunScreenShotEditorDrawing()
+        {
+            TrayIcon.Visible = false;
+
+            var view = new EditorViewDrawing();
+            view.Show();
+
+            TrayIcon.Visible = true;
+        }
     }
 }

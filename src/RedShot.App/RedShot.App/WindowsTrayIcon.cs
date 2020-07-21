@@ -16,7 +16,7 @@ namespace RedShot.App
             menu.Items.Add(new ButtonMenuItem()
             {
                 Text = "Capture",
-                Command = new Command((e, o) => ApplicationManager.RunScreenShotRedactor())
+                Command = new Command((e, o) => ApplicationManager.RunScreenShotEditorDrawing())
             });
             menu.Items.Add(new ButtonMenuItem()
             {

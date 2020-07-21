@@ -19,22 +19,22 @@ namespace RedShot.App
         void InitializeComponent()
         {
             var rect = new Rectangle(ScreenShot.GetMainWindowSize());
-            ClientSize = new Size(rect.Width, rect.Height);
+            var size = new Size(rect.Width, rect.Height);
+
+            ClientSize = size;
 
             imageview.Image = sourceImage = SetDisplayImage();
             InitHighlightForm();
             pixelLayout = new PixelLayout();
-            pixelLayout.Size = new Size(-1, -1);
+            pixelLayout.Size = size;
             pixelLayout.Add(imageview, 0, 0);
             Content = pixelLayout;
-            this.Topmost = true;
-            this.KeyDown += EditorView_KeyDown;
+            Topmost = true;
 
             Style = "FullScreenStyle";
 
             WindowState = WindowState.Maximized;
 
-            Closing += EditorView_Closing;
             this.Shown += EditorView_Shown;
         }
 
@@ -42,6 +42,8 @@ namespace RedShot.App
         {
             this.MouseDown += EditorView_MouseDown;
             this.MouseMove += EditorView_MouseMove;
+            this.KeyDown += EditorView_KeyDown;
+            this.Closing += EditorView_Closing;
         }
 
         private void EditorView_KeyDown(object sender, KeyEventArgs e)
@@ -104,6 +106,10 @@ namespace RedShot.App
                 else
                 {
                     startLocation = new Point(e.Location);
+                    endLocation = new Point(e.Location);
+
+                    RenderRectangle();
+
                     capturing = true;
                     form.Visible = true;
                 }
@@ -122,30 +128,37 @@ namespace RedShot.App
         {
             Point location;
 
-            if (startLocation.X < endLocation.X)
+            if (startLocation == endLocation)
             {
-                // 1st state.
-                if (startLocation.Y < endLocation.Y)
-                {
-                    location = startLocation;
-                }
-                // 3nd state.
-                else
-                {
-                    location = new Point(startLocation.X, endLocation.Y);
-                }
+                location = startLocation;
             }
             else
             {
-                // 2st state.
-                if (startLocation.Y < endLocation.Y)
+                if (startLocation.X < endLocation.X)
                 {
-                    location = new Point(endLocation.X, startLocation.Y);
+                    // 1st state.
+                    if (startLocation.Y < endLocation.Y)
+                    {
+                        location = startLocation;
+                    }
+                    // 3nd state.
+                    else
+                    {
+                        location = new Point(startLocation.X, endLocation.Y);
+                    }
                 }
-                // 4nd state.
                 else
                 {
-                    location = new Point(endLocation.X, endLocation.Y);
+                    // 2st state.
+                    if (startLocation.Y < endLocation.Y)
+                    {
+                        location = new Point(endLocation.X, startLocation.Y);
+                    }
+                    // 4nd state.
+                    else
+                    {
+                        location = new Point(endLocation.X, endLocation.Y);
+                    }
                 }
             }
 
