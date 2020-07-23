@@ -7,16 +7,14 @@ namespace Eto.Forms.Controls.SkiaSharp.GTK
 {
     public class SKControlHandler : GtkControl<EventBox, SKControl, Control.ICallback>, ISKControl
     {
-        private SKControlGTK nativecontrol;
+        private SKControlGtk nativecontrol;
         private bool disposed;
 
         public SKControlHandler()
         {
-            nativecontrol = new SKControlGTK();
+            nativecontrol = new SKControlGtk();
             Control = nativecontrol;
         }
-
-        public override Eto.Drawing.Color BackgroundColor { get; set; }
 
         public void Execute(Action<SKSurface> surface)
         {

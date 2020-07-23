@@ -7,6 +7,7 @@ namespace Eto.Forms.Controls.SkiaSharp
     public class SKControl : Control
     {
         bool disposed;
+
         new ISKControl Handler => (ISKControl)base.Handler;
 
         public void Execute(Action<SKSurface> surface)
@@ -19,10 +20,6 @@ namespace Eto.Forms.Controls.SkiaSharp
             if (disposed == false)
             {
                 disposed = true;
-                if (IsDisposed)
-                {
-                    base.Dispose();
-                }
 
                 Handler?.DisposeControl();
             }

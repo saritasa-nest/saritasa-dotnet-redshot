@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Markup;
 using Cairo;
 using Gdk;
 using Gtk;
@@ -7,7 +6,7 @@ using SkiaSharp;
 
 namespace Eto.Forms.Controls.SkiaSharp.GTK
 {
-    public class SKControlGTK : EventBox
+    public class SKControlGtk : EventBox
     {
         private SKBitmap bitmap;
         private SKSurface skSurface;
@@ -32,7 +31,7 @@ namespace Eto.Forms.Controls.SkiaSharp.GTK
             QueueDraw();
         }
 
-        public SKControlGTK()
+        public SKControlGtk()
         {
             AddEvents((int)EventMask.PointerMotionMask);
         }
