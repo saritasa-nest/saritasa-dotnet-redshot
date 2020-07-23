@@ -1,22 +1,21 @@
 ﻿using Eto.Forms;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace RedShot.App
 {
     public static class ApplicationManager
     {
-        private static Form TrayIcon;
+        private static TrayIcon trayIcon;
 
         public static Form GetTrayApp()
         {
-            TrayIcon = new WindowsTrayIcon("RedShot", Path.Combine(Directory.GetCurrentDirectory(), "Resources", "red-circle.png"));
-            return TrayIcon;
+            trayIcon = new TrayIcon("RedShot", Path.Combine(Directory.GetCurrentDirectory(), "Resources", "red-circle.png"));
+            return trayIcon;
         }
 
         public static void RunScreenShotEditorDrawing()
         {
-            TrayIcon.Visible = false;
+            trayIcon.Tray.Visible = false;
 
             var view = new EditorViewDrawingSkiaSharp();
             view.Closed += View_Closed;
@@ -25,7 +24,7 @@ namespace RedShot.App
 
         private static void View_Closed(object sender, System.EventArgs e)
         {
-            TrayIcon.Visible = true;
+            trayIcon.Tray.Visible = true;
         }
     }
 }

@@ -51,29 +51,6 @@ namespace RedShot.App
             UnLoad += EditorViewDrawingSkiaSharp_UnLoad;
         }
 
-        private void EditorViewDrawingSkiaSharp_UnLoad(object sender, EventArgs e)
-        {
-            Dispose();
-        }
-
-        private void EditorView_Shown(object sender, EventArgs e)
-        {
-            timer.Start();
-            MouseDown += EditorView_MouseDown;
-            MouseMove += EditorView_MouseMove;
-            KeyDown += EditorView_KeyDown;
-
-            skcontrol.Execute((surface) => PaintClearImage(surface));
-        }
-
-        private void EditorView_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Keys.Escape)
-            {
-                Close();
-            }
-        }
-
         private void Timer_Elapsed(object sender, System.EventArgs e)
         {
             if (disposed == false)
@@ -90,6 +67,15 @@ namespace RedShot.App
             }
         }
 
+        private void Upload()
+        {
+            if (selectionRectangle != default)
+            {
+                Uploader.UploadImage(etoScreenImage.Clone((Rectangle)selectionRectangle));
+            }
+        }
+
+        #region WindowEvents
         private void EditorView_MouseMove(object sender, MouseEventArgs e)
         {
             if (capturing)
@@ -131,26 +117,31 @@ namespace RedShot.App
             }
         }
 
-        public new void Dispose()
+        private void EditorViewDrawingSkiaSharp_UnLoad(object sender, EventArgs e)
         {
-            if (disposed == false)
-            {
-                disposed = true;
-                timer?.Dispose();
-                etoScreenImage?.Dispose();
-                skScreenImage?.Dispose();
-                skcontrol?.Dispose();
-            }
+            Dispose();
         }
 
-        private void Upload()
+        private void EditorView_Shown(object sender, EventArgs e)
         {
-            if (selectionRectangle != default)
-            {
-                Uploader.UploadImage(etoScreenImage.Clone((Rectangle)selectionRectangle));
-            }
+            timer.Start();
+            MouseDown += EditorView_MouseDown;
+            MouseMove += EditorView_MouseMove;
+            KeyDown += EditorView_KeyDown;
+
+            skcontrol.Execute((surface) => PaintClearImage(surface));
         }
 
+        private void EditorView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Keys.Escape)
+            {
+                Close();
+            }
+        }
+        #endregion WindowEvents
+
+        #region SkiaSharpCommands
         private void PaintClearImage(SKSurface surface)
         {
             var canvas = surface.Canvas;
@@ -200,6 +191,19 @@ namespace RedShot.App
 
             canvas.DrawRect(rect, rectPaint);
             canvas.DrawRect(rect, rectPaintDash);
+        }
+        #endregion SkiaSharpCommands
+
+        public new void Dispose()
+        {
+            if (disposed == false)
+            {
+                disposed = true;
+                timer?.Dispose();
+                etoScreenImage?.Dispose();
+                skScreenImage?.Dispose();
+                skcontrol?.Dispose();
+            }
         }
     }
 }

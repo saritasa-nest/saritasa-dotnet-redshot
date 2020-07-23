@@ -4,12 +4,12 @@ using Eto.Drawing;
 
 namespace RedShot.App
 {
-    public class WindowsTrayIcon : Eto.Forms.Form
+    public class TrayIcon : Eto.Forms.Form
     {
-        public readonly TrayIndicator tray;
+        public readonly TrayIndicator Tray;
 
         // Everything has to be sent in on the constructor since things do not auto-refresh / update this is a limitation.
-        public WindowsTrayIcon(string title, string iconPath)
+        public TrayIcon(string title, string iconPath)
         {
             var menu = new ContextMenu();
 
@@ -24,7 +24,7 @@ namespace RedShot.App
                 Command = new Command((e, o) => Exit())
             });
 
-            tray = new TrayIndicator
+            Tray = new TrayIndicator
             {
                 Menu = menu,
                 Title = title,
@@ -35,14 +35,14 @@ namespace RedShot.App
         protected override void OnShown(EventArgs e)
         {
             Visible = false;
-            tray.Show();
-            tray.Visible = true;
+            Tray.Show();
+            Tray.Visible = true;
         }
 
         protected override void OnUnLoad(EventArgs e)
         {
             base.OnUnLoad(e);
-            tray.Hide();
+            Tray.Hide();
         }
 
         private void Exit()
