@@ -1,5 +1,6 @@
 ﻿using Eto.Forms;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace RedShot.App
 {
@@ -27,7 +28,7 @@ namespace RedShot.App
         {
             TrayIcon.Visible = false;
 
-            var view = new EditorViewDrawing();
+            var view = new EditorViewDrawingSkiaSharp();
             view.Show();
 
             TrayIcon.Visible = true;

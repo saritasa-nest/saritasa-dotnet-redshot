@@ -1,28 +1,29 @@
 using Eto.Drawing;
 using Eto.Forms;
+using Eto.Forms.Controls.SkiaSharp;
 using RedShot.ScreenshotCapture;
 using RedShot.Upload;
+using SkiaSharp;
 using System;
 using System.Diagnostics;
-using System.Threading;
+using System.IO;
 
 namespace RedShot.App
 {
-    internal partial class EditorViewDrawing : Eto.Forms.Form
+    internal partial class EditorViewDrawingSkiaSharp : Eto.Forms.Form
     {
-        PixelLayout pixelLayout;
-        ImageView imageview = new ImageView();
-        Bitmap sourceImage;
-        Bitmap image;
+        bool disposed;
+        SKControl skcontrol;
+        SKBitmap skScreenImage;
+        Bitmap etoScreenImage;
         PointF startLocation;
         PointF endLocation;
         bool capturing;
         UITimer timer;
         RectangleF selectionRectangle;
         Rectangle screenRectangle;
-        Pen borderDotPen, borderDotPen2;
         Stopwatch penTimer;
-        Graphics graphics;
+        float[] dash = new float[] { 5, 5 };
 
         void InitializeComponent()
         {
@@ -30,45 +31,40 @@ namespace RedShot.App
             var size = new Size(screenRectangle.Width, screenRectangle.Height);
 
             ClientSize = size;
-            imageview.Image = image = SetDisplayImage();
-
-            sourceImage = image.Clone();
-
-            pixelLayout = new PixelLayout();
-            pixelLayout.Size = size;
-            pixelLayout.Add(imageview, 0, 0);
-
-            Content = pixelLayout;
-
-            Style = "FullScreenStyle";
 
             WindowState = WindowState.Maximized;
             WindowStyle = WindowStyle.None;
 
-            borderDotPen = new Pen(Colors.Red, 1);
-            borderDotPen2 = new Pen(Colors.White, 1);
-            borderDotPen2.DashStyle = new DashStyle(5, 5);
-            penTimer = Stopwatch.StartNew();
+            etoScreenImage = SetDisplayImage();
 
-            graphics = new Graphics(image);
-            graphics.ImageInterpolation = ImageInterpolation.None;
-            graphics.AntiAlias = false;
-            graphics.PixelOffsetMode = PixelOffsetMode.Half;
+            skScreenImage = ConvertBitmap(etoScreenImage);
+
+            penTimer = Stopwatch.StartNew();
 
             timer = new UITimer();
             timer.Elapsed += Timer_Elapsed;
             timer.Interval = 0.01;
 
+            skcontrol = new SKControl();
+            Content = skcontrol;
+
             Shown += EditorView_Shown;
+            Closed += EditorViewDrawingSkiaSharp_Closed;
+        }
+
+        private void EditorViewDrawingSkiaSharp_Closed(object sender, EventArgs e)
+        {
+            Dispose();
         }
 
         private void EditorView_Shown(object sender, EventArgs e)
         {
             timer.Start();
-
             this.MouseDown += EditorView_MouseDown;
             this.MouseMove += EditorView_MouseMove;
             this.KeyDown += EditorView_KeyDown;
+
+            skcontrol.Execute((surface) => PaintClearImage(surface));
         }
 
         private void EditorView_KeyDown(object sender, KeyEventArgs e)
@@ -81,11 +77,10 @@ namespace RedShot.App
 
         private void Timer_Elapsed(object sender, System.EventArgs e)
         {
-            if (capturing)
+            if (capturing && disposed == false)
             {
                 selectionRectangle = CreateRectangle();
                 RenderRectangle();
-                Invalidate(true);
             }
         }
 
@@ -121,8 +116,7 @@ namespace RedShot.App
                 if (capturing)
                 {
                     capturing = false;
-                    graphics.DrawImage(sourceImage, new PointF(0, 0));
-                    Content.Invalidate();
+                    skcontrol.Execute((surface) => PaintClearImage(surface));
                 }
                 else
                 {
@@ -133,20 +127,7 @@ namespace RedShot.App
 
         private void RenderRectangle()
         {
-           
-            graphics.DrawImage(sourceImage, new PointF(0, 0));
-
-            borderDotPen2.DashStyle = new DashStyle((float)penTimer.Elapsed.TotalSeconds * -15, new float[] { 5, 5 });
-
-            try
-            {
-                graphics.DrawRectangle(borderDotPen, selectionRectangle);
-                graphics.DrawRectangle(borderDotPen2, selectionRectangle);
-            }
-            catch (OutOfMemoryException)
-            {
-
-            }
+            skcontrol.Execute((surface) => PaintRegion(surface));
         }
 
         private Bitmap SetDisplayImage()
@@ -186,13 +167,18 @@ namespace RedShot.App
 
         public new void Dispose()
         {
-            if (IsDisposed == false)
+            if (disposed == false)
             {
-                graphics?.Dispose();
-                borderDotPen?.Dispose();
-                borderDotPen2?.Dispose();
+                disposed = true;
+                skcontrol?.Dispose();
                 timer?.Dispose();
-                base.Dispose();
+                skScreenImage?.Dispose();
+                etoScreenImage?.Dispose();
+
+                if (IsDisposed == false)
+                {
+                    base.Dispose();
+                }
             }
         }
 
@@ -200,9 +186,58 @@ namespace RedShot.App
         {
             if (selectionRectangle != default)
             {
-                Uploader.UploadImage(sourceImage.Clone((Rectangle)selectionRectangle));
+                Uploader.UploadImage(etoScreenImage.Clone((Rectangle)selectionRectangle));
+            }
+        }
+
+        private void PaintClearImage(SKSurface surface)
+        {
+            var canvas = surface.Canvas;
+
+            canvas.DrawBitmap(skScreenImage, new SKPoint(0, 0));
+        }
+
+        private void PaintRegion(SKSurface surface)
+        {
+            var canvas = surface.Canvas;
+
+            canvas.DrawBitmap(skScreenImage, new SKPoint(0, 0));
+
+            var rectPaint = new SKPaint
+            {
+                IsAntialias = false,
+                Style = SKPaintStyle.Stroke,
+                Color = SKColors.White,
+                FilterQuality = SKFilterQuality.Low
+            };
+
+            var rectPaintDash = new SKPaint
+            {
+                IsAntialias = false,
+                Style = SKPaintStyle.Stroke,
+                Color = SKColors.Black,
+                FilterQuality = SKFilterQuality.Low,
+                PathEffect = SKPathEffect.CreateDash(dash, (float)penTimer.Elapsed.TotalSeconds * -15)
+            };
+
+            var size = new SKSize(selectionRectangle.Width, selectionRectangle.Height);
+            var point = new SKPoint(selectionRectangle.X, selectionRectangle.Y);
+
+            var rect = SKRect.Create(point, size);
+
+            canvas.DrawRect(rect, rectPaint);
+            canvas.DrawRect(rect, rectPaintDash);
+        }
+
+        private SKBitmap ConvertBitmap(Bitmap bitmap)
+        {
+            using (var ms = new MemoryStream())
+            {
+                bitmap.Save(ms, ImageFormat.Bitmap);
+                ms.Seek(0, SeekOrigin.Begin);
+
+                return SKBitmap.Decode(ms);
             }
         }
     }
 }
-

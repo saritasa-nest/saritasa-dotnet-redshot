@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Eto.Forms;
+using Eto.Forms.Controls.SkiaSharp;
 using RedShot.App;
 
 namespace RedShot.EtoForms.Wpf
@@ -26,6 +27,7 @@ namespace RedShot.EtoForms.Wpf
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
+                Eto.Platform.Detect.Add<ISKControl>(() => new Eto.Forms.Controls.SkiaSharp.GTK.SKControlHandler());
                 Eto.Style.Add<Eto.GtkSharp.Forms.FormHandler>("FullScreenStyle",
                     h =>
                     {
@@ -36,6 +38,7 @@ namespace RedShot.EtoForms.Wpf
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
+                Eto.Platform.Detect.Add<ISKControl>(() => new Eto.Forms.Controls.SkiaSharp.WinForms.SKControlHandler());
                 Eto.Style.Add<Eto.WinForms.Forms.FormHandler>("FullScreenStyle", h =>
                 {
                     // Windows Forms.
@@ -51,6 +54,7 @@ namespace RedShot.EtoForms.Wpf
                         prop.SetValue(h.Control, 0);
                     }
                 });
+
             }
         }
 
