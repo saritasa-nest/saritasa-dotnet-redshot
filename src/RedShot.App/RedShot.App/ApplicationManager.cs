@@ -14,23 +14,17 @@ namespace RedShot.App
             return TrayIcon;
         }
 
-        public static void RunScreenShotRedactor()
-        {
-            TrayIcon.Visible = false;
-
-            var view = new EditorView();
-            view.Show();
-
-            TrayIcon.Visible = true;
-        }
-
         public static void RunScreenShotEditorDrawing()
         {
             TrayIcon.Visible = false;
 
             var view = new EditorViewDrawingSkiaSharp();
+            view.Closed += View_Closed;
             view.Show();
+        }
 
+        private static void View_Closed(object sender, System.EventArgs e)
+        {
             TrayIcon.Visible = true;
         }
     }

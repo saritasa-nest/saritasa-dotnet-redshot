@@ -1,20 +1,20 @@
 ﻿using Eto.Drawing;
 using Eto.Forms;
 
-namespace RedShot.ScreenshotCapture
+namespace RedShot.Helpers
 {
     /// <summary>
     /// Represents functions to work with screen.
     /// </summary>
-    public static class ScreenShot
+    public static class ScreenHelper
     {
         /// <summary>
         /// Gives image of screen.
         /// </summary>
         /// <returns></returns>
-        public static Image TakeScreenshot()
+        public static Bitmap TakeScreenshot()
         {
-            return Screen.PrimaryScreen.GetImage(GetMainWindowSize());
+            return (Bitmap)Screen.PrimaryScreen.GetImage(GetMainWindowSize());
         }
 
         /// <summary>

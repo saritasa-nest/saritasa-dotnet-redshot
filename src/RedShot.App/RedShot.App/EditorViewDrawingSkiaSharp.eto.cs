@@ -1,12 +1,11 @@
 using Eto.Drawing;
 using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
-using RedShot.ScreenshotCapture;
+using RedShot.Helpers;
 using RedShot.Upload;
 using SkiaSharp;
 using System;
 using System.Diagnostics;
-using System.IO;
 
 namespace RedShot.App
 {
@@ -27,7 +26,7 @@ namespace RedShot.App
 
         void InitializeComponent()
         {
-            screenRectangle = new Rectangle(ScreenShot.GetMainWindowSize());
+            screenRectangle = new Rectangle(ScreenHelper.GetMainWindowSize());
             var size = new Size(screenRectangle.Width, screenRectangle.Height);
 
             ClientSize = size;
@@ -35,9 +34,9 @@ namespace RedShot.App
             WindowState = WindowState.Maximized;
             WindowStyle = WindowStyle.None;
 
-            etoScreenImage = SetDisplayImage();
+            etoScreenImage = ScreenHelper.TakeScreenshot();
 
-            skScreenImage = ConvertBitmap(etoScreenImage);
+            skScreenImage = SkiaSharpHelper.ConvertFromEtoBitmap(etoScreenImage);
 
             penTimer = Stopwatch.StartNew();
 
@@ -49,10 +48,10 @@ namespace RedShot.App
             Content = skcontrol;
 
             Shown += EditorView_Shown;
-            Closed += EditorViewDrawingSkiaSharp_Closed;
+            UnLoad += EditorViewDrawingSkiaSharp_UnLoad;
         }
 
-        private void EditorViewDrawingSkiaSharp_Closed(object sender, EventArgs e)
+        private void EditorViewDrawingSkiaSharp_UnLoad(object sender, EventArgs e)
         {
             Dispose();
         }
@@ -60,9 +59,9 @@ namespace RedShot.App
         private void EditorView_Shown(object sender, EventArgs e)
         {
             timer.Start();
-            this.MouseDown += EditorView_MouseDown;
-            this.MouseMove += EditorView_MouseMove;
-            this.KeyDown += EditorView_KeyDown;
+            MouseDown += EditorView_MouseDown;
+            MouseMove += EditorView_MouseMove;
+            KeyDown += EditorView_KeyDown;
 
             skcontrol.Execute((surface) => PaintClearImage(surface));
         }
@@ -77,10 +76,17 @@ namespace RedShot.App
 
         private void Timer_Elapsed(object sender, System.EventArgs e)
         {
-            if (capturing && disposed == false)
+            if (disposed == false)
             {
-                selectionRectangle = CreateRectangle();
-                RenderRectangle();
+                if (capturing)
+                {
+                    selectionRectangle = EtoDrawingHelper.CreateRectangle(startLocation, endLocation);
+                    skcontrol.Execute((surface) => PaintRegion(surface));
+                }
+                else
+                {
+                    skcontrol.Execute((surface) => PaintClearImage(surface));
+                }
             }
         }
 
@@ -125,60 +131,15 @@ namespace RedShot.App
             }
         }
 
-        private void RenderRectangle()
-        {
-            skcontrol.Execute((surface) => PaintRegion(surface));
-        }
-
-        private Bitmap SetDisplayImage()
-        {
-            return (Bitmap)ScreenShot.TakeScreenshot();
-        }
-
-        private RectangleF CreateRectangle()
-        {
-            float width, height;
-            float x, y;
-
-            if (startLocation.X <= endLocation.X)
-            {
-                width = endLocation.X - startLocation.X + 1;
-                x = startLocation.X;
-            }
-            else
-            {
-                width = startLocation.X - endLocation.X + 1;
-                x = endLocation.X;
-            }
-
-            if (startLocation.Y <= endLocation.Y)
-            {
-                height = endLocation.Y - startLocation.Y + 1;
-                y = startLocation.Y;
-            }
-            else
-            {
-                height = startLocation.Y - endLocation.Y + 1;
-                y = endLocation.Y;
-            }
-
-            return new RectangleF(x, y, width, height);
-        }
-
         public new void Dispose()
         {
             if (disposed == false)
             {
                 disposed = true;
-                skcontrol?.Dispose();
                 timer?.Dispose();
-                skScreenImage?.Dispose();
                 etoScreenImage?.Dispose();
-
-                if (IsDisposed == false)
-                {
-                    base.Dispose();
-                }
+                skScreenImage?.Dispose();
+                skcontrol?.Dispose();
             }
         }
 
@@ -195,6 +156,9 @@ namespace RedShot.App
             var canvas = surface.Canvas;
 
             canvas.DrawBitmap(skScreenImage, new SKPoint(0, 0));
+
+            var editorRect = SKRect.Create(new SKPoint(0, 0), new SKSize(Width - 1, Height - 1));
+            PaintDashAround(surface, editorRect, SKColors.Black, SKColors.Red);
         }
 
         private void PaintRegion(SKSurface surface)
@@ -203,11 +167,25 @@ namespace RedShot.App
 
             canvas.DrawBitmap(skScreenImage, new SKPoint(0, 0));
 
+            var size = new SKSize(selectionRectangle.Width, selectionRectangle.Height);
+            var point = new SKPoint(selectionRectangle.X, selectionRectangle.Y);
+
+            var regionRect = SKRect.Create(point, size);
+            var editorRect = SKRect.Create(new SKPoint(0, 0), new SKSize(Width - 1, Height - 1));
+
+            PaintDashAround(surface, regionRect, SKColors.White, SKColors.Black);
+            PaintDashAround(surface, editorRect, SKColors.Black, SKColors.Red);
+        }
+
+        private void PaintDashAround(SKSurface surface, SKRect rect, SKColor backColor, SKColor dashColor)
+        {
+            var canvas = surface.Canvas;
+
             var rectPaint = new SKPaint
             {
                 IsAntialias = false,
                 Style = SKPaintStyle.Stroke,
-                Color = SKColors.White,
+                Color = backColor,
                 FilterQuality = SKFilterQuality.Low
             };
 
@@ -215,29 +193,13 @@ namespace RedShot.App
             {
                 IsAntialias = false,
                 Style = SKPaintStyle.Stroke,
-                Color = SKColors.Black,
+                Color = dashColor,
                 FilterQuality = SKFilterQuality.Low,
                 PathEffect = SKPathEffect.CreateDash(dash, (float)penTimer.Elapsed.TotalSeconds * -15)
             };
 
-            var size = new SKSize(selectionRectangle.Width, selectionRectangle.Height);
-            var point = new SKPoint(selectionRectangle.X, selectionRectangle.Y);
-
-            var rect = SKRect.Create(point, size);
-
             canvas.DrawRect(rect, rectPaint);
             canvas.DrawRect(rect, rectPaintDash);
-        }
-
-        private SKBitmap ConvertBitmap(Bitmap bitmap)
-        {
-            using (var ms = new MemoryStream())
-            {
-                bitmap.Save(ms, ImageFormat.Bitmap);
-                ms.Seek(0, SeekOrigin.Begin);
-
-                return SKBitmap.Decode(ms);
-            }
         }
     }
 }

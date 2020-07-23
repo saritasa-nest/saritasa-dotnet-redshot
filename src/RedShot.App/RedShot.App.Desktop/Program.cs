@@ -28,33 +28,10 @@ namespace RedShot.EtoForms.Wpf
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 Eto.Platform.Detect.Add<ISKControl>(() => new Eto.Forms.Controls.SkiaSharp.GTK.SKControlHandler());
-                Eto.Style.Add<Eto.GtkSharp.Forms.FormHandler>("FullScreenStyle",
-                    h =>
-                    {
-                        h.WindowStyle = WindowStyle.None;
-                        h.WindowState = WindowState.Maximized;
-                        h.Maximizable = true;
-                    });
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 Eto.Platform.Detect.Add<ISKControl>(() => new Eto.Forms.Controls.SkiaSharp.WinForms.SKControlHandler());
-                Eto.Style.Add<Eto.WinForms.Forms.FormHandler>("FullScreenStyle", h =>
-                {
-                    // Windows Forms.
-                    var prop = h.Control.GetType().GetProperty("FormBorderStyle");
-                    if (prop != null)
-                    {
-                        prop.SetValue(h.Control, 0);
-                    }
-                    // WPF.
-                    prop = h.Control.GetType().GetProperty("WindowStyle");
-                    if (prop != null)
-                    {
-                        prop.SetValue(h.Control, 0);
-                    }
-                });
-
             }
         }
 

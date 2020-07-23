@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Infrastructure", "RedShot.Infrastructure\RedShot.Infrastructure.csproj", "{ABC4ED2E-B948-474C-A9B2-5338C6258DE7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.ScreenshotCapture", "RedShot.ScreenshotCapture\RedShot.ScreenshotCapture.csproj", "{E6B67C95-0BEF-4A55-98C3-387F9A59BF06}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.App", "RedShot.App\RedShot.App\RedShot.App.csproj", "{F2F65109-EBFC-46A7-86F2-5EDBC3918C61}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.EtoForms.Desktop", "RedShot.App\RedShot.App.Desktop\RedShot.EtoForms.Desktop.csproj", "{AAE18E45-C33E-4D68-AF9D-F64669F98ADC}"
@@ -21,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eto.Forms.Controls.SkiaShar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eto.Forms.Controls.SkiaSharp.WinForms", "RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.WinForms\Eto.Forms.Controls.SkiaSharp.WinForms.csproj", "{5D82503F-82ED-4C75-95E9-B6FB7767D499}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedShot.Helpers", "RedShot.Helpers\RedShot.Helpers.csproj", "{B34930DE-F4A4-413E-8246-A9AFDFB564F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,10 +31,6 @@ Global
 		{ABC4ED2E-B948-474C-A9B2-5338C6258DE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABC4ED2E-B948-474C-A9B2-5338C6258DE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABC4ED2E-B948-474C-A9B2-5338C6258DE7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E6B67C95-0BEF-4A55-98C3-387F9A59BF06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E6B67C95-0BEF-4A55-98C3-387F9A59BF06}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E6B67C95-0BEF-4A55-98C3-387F9A59BF06}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E6B67C95-0BEF-4A55-98C3-387F9A59BF06}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F2F65109-EBFC-46A7-86F2-5EDBC3918C61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F2F65109-EBFC-46A7-86F2-5EDBC3918C61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2F65109-EBFC-46A7-86F2-5EDBC3918C61}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -59,6 +55,10 @@ Global
 		{5D82503F-82ED-4C75-95E9-B6FB7767D499}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D82503F-82ED-4C75-95E9-B6FB7767D499}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D82503F-82ED-4C75-95E9-B6FB7767D499}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B34930DE-F4A4-413E-8246-A9AFDFB564F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B34930DE-F4A4-413E-8246-A9AFDFB564F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B34930DE-F4A4-413E-8246-A9AFDFB564F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B34930DE-F4A4-413E-8246-A9AFDFB564F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
