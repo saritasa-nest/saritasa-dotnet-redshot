@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eto.Forms.Controls.SkiaShar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eto.Forms.Controls.SkiaSharp.WinForms", "RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.WinForms\Eto.Forms.Controls.SkiaSharp.WinForms.csproj", "{5D82503F-82ED-4C75-95E9-B6FB7767D499}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedShot.Helpers", "RedShot.Helpers\RedShot.Helpers.csproj", "{B34930DE-F4A4-413E-8246-A9AFDFB564F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Helpers", "RedShot.Helpers\RedShot.Helpers.csproj", "{B34930DE-F4A4-413E-8246-A9AFDFB564F2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,5 @@
 ﻿using Eto.Drawing;
+using RedShot.Upload.Forms;
 using System;
 using System.IO;
 
@@ -15,7 +16,7 @@ namespace RedShot.Upload
 
         public static void UploadImage(Bitmap image)
         {
-            image.Save(Path.Combine(path, $"{DateTime.Now.ToFileTime()}.bmp"), ImageFormat.Bitmap);
+            image.Save(Path.Combine(path, $"{DateTime.Now.ToFileTime()}.bmp"), ImageFormat.Bitmap);           
         }
     }
 }

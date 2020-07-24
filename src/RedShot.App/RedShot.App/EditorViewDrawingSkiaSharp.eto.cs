@@ -3,6 +3,7 @@ using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
 using RedShot.Helpers;
 using RedShot.Upload;
+using RedShot.Upload.Forms;
 using SkiaSharp;
 using System;
 using System.Diagnostics;
@@ -71,7 +72,11 @@ namespace RedShot.App
         {
             if (selectionRectangle != default)
             {
+                var image = etoScreenImage.Clone((Rectangle)selectionRectangle);
+
                 Uploader.UploadImage(etoScreenImage.Clone((Rectangle)selectionRectangle));
+
+                ApplicationManager.RunUploaderView(image);
             }
         }
 
