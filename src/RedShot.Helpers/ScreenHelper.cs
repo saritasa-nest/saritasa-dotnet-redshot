@@ -28,7 +28,7 @@ namespace RedShot.Helpers
 
         public static int GetSixteenthPartOfDisplay()
         {
-            return (int)Screen.PrimaryScreen.Bounds.Size.Height / 16;
+            return (int)(Screen.PrimaryScreen.Bounds.Size.Height / 16);
         }
 
         public static Size GetMiniSizeDisplay()

@@ -19,18 +19,25 @@ namespace RedShot.App
         PointF startLocation;
         PointF endLocation;
         bool capturing;
+        bool captured;
         UITimer timer;
         RectangleF selectionRectangle;
         Rectangle screenRectangle;
         Stopwatch penTimer;
         float[] dash = new float[] { 5, 5 };
 
+        #region Movingfields
+        bool moving;
+        float relativeX;
+        float relativeY;
+        #endregion Movingfields
+
         void InitializeComponent()
         {
             screenRectangle = new Rectangle(ScreenHelper.GetMainWindowSize());
             var size = new Size(screenRectangle.Width, screenRectangle.Height);
 
-            ClientSize = size;
+            Size = size;
 
             WindowState = WindowState.Maximized;
             WindowStyle = WindowStyle.None;
@@ -61,6 +68,10 @@ namespace RedShot.App
                     selectionRectangle = EtoDrawingHelper.CreateRectangle(startLocation, endLocation);
                     skcontrol.Execute((surface) => PaintRegion(surface));
                 }
+                else if (captured || moving)
+                {
+                    skcontrol.Execute((surface) => PaintRegion(surface));
+                }
                 else
                 {
                     skcontrol.Execute((surface) => PaintClearImage(surface));
@@ -81,11 +92,33 @@ namespace RedShot.App
         }
 
         #region WindowEvents
+        private void EditorView_Shown(object sender, EventArgs e)
+        {
+            timer.Start();
+            MouseUp += EditorViewDrawingSkiaSharp_MouseUp;
+            MouseDown += EditorView_MouseDown;
+            MouseMove += EditorView_MouseMove;
+            KeyDown += EditorView_KeyDown;
+
+            skcontrol.Execute((surface) => PaintClearImage(surface));
+        }
+
         private void EditorView_MouseMove(object sender, MouseEventArgs e)
         {
             if (capturing)
             {
                 endLocation = e.Location;
+            }
+            else if (moving)
+            {
+                var newXcoord = e.Location.X - relativeX;
+                var newYcoord = e.Location.Y - relativeY;
+
+                if (newXcoord > 0 && newYcoord > 0)
+                {
+                    selectionRectangle.X = newXcoord;
+                    selectionRectangle.Y = newYcoord;
+                }
             }
         }
 
@@ -98,8 +131,22 @@ namespace RedShot.App
                     endLocation = e.Location;
                     capturing = false;
 
-                    Upload();
-                    Close();
+                    captured = true;
+                }
+                else if (captured)
+                {
+                    if (e.Buttons == MouseButtons.Primary)
+                    {
+                        if (e.Location.X >= selectionRectangle.X && e.Location.X <= selectionRectangle.X + selectionRectangle.Width)
+                        {
+                            if (e.Location.Y >= selectionRectangle.Y && e.Location.Y <= selectionRectangle.Y + selectionRectangle.Height)
+                            {
+                                moving = true;
+                                relativeX = e.Location.X - selectionRectangle.X;
+                                relativeY = e.Location.Y - selectionRectangle.Y;
+                            }
+                        }
+                    }
                 }
                 else
                 {
@@ -115,9 +162,24 @@ namespace RedShot.App
                     capturing = false;
                     skcontrol.Execute((surface) => PaintClearImage(surface));
                 }
+                else if (captured)
+                {
+                    captured = false;
+                }
                 else
                 {
                     Close();
+                }
+            }
+        }
+
+        private void EditorViewDrawingSkiaSharp_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Buttons == MouseButtons.Primary)
+            {
+                if (moving)
+                {
+                    moving = false;
                 }
             }
         }
@@ -127,21 +189,21 @@ namespace RedShot.App
             Dispose();
         }
 
-        private void EditorView_Shown(object sender, EventArgs e)
-        {
-            timer.Start();
-            MouseDown += EditorView_MouseDown;
-            MouseMove += EditorView_MouseMove;
-            KeyDown += EditorView_KeyDown;
-
-            skcontrol.Execute((surface) => PaintClearImage(surface));
-        }
-
         private void EditorView_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Keys.Escape)
+            switch (e.Key)
             {
-                Close();
+                case Keys.Escape:
+                    Close();
+                    break;
+
+                case Keys.Enter:
+                    if (captured)
+                    {
+                        Upload();
+                        Close();
+                    }
+                    break;
             }
         }
         #endregion WindowEvents
