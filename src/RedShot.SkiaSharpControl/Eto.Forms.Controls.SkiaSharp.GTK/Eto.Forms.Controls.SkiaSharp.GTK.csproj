@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFramework>netcoreapp3.1</TargetFramework>
-	  <CodeAnalysisRuleSet>../../../tools/Saritasa.ruleset</CodeAnalysisRuleSet>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <CodeAnalysisRuleSet>../../../tools/Saritasa.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +17,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Eto.Forms.Controls.SkiaSharp\Eto.Forms.Controls.SkiaSharp.csproj" />
   </ItemGroup>
-
 
 </Project>
