@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
 using RedShot.App;
@@ -25,14 +24,13 @@ namespace RedShot.EtoForms.Wpf
 
         private static void AddStyle()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                Eto.Platform.Detect.Add<ISKControl>(() => new Eto.Forms.Controls.SkiaSharp.GTK.SKControlHandler());
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                Eto.Platform.Detect.Add<ISKControl>(() => new Eto.Forms.Controls.SkiaSharp.WinForms.SKControlHandler());
-            }
+#if _WINDOWS
+            Eto.Platform.Detect.Add<ISKControl>(() => new Eto.Forms.Controls.SkiaSharp.WinForms.SKControlHandler());
+#elif _UNIX
+            Eto.Platform.Detect.Add<ISKControl>(() => new Eto.Forms.Controls.SkiaSharp.GTK.SKControlHandler());
+#else
+            throw new NotImplementedException();
+#endif
         }
 
         private static void InstanceOnUnhandledException(object sender, Eto.UnhandledExceptionEventArgs e)

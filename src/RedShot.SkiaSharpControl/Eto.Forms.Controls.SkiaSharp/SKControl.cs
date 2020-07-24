@@ -6,14 +6,14 @@ namespace Eto.Forms.Controls.SkiaSharp
     [Handler(typeof(ISKControl))]
     public class SKControl : Control
     {
-        bool disposed;
-
-        new ISKControl Handler => (ISKControl)base.Handler;
+        private new ISKControl Handler => (ISKControl)base.Handler;
 
         public void Execute(Action<SKSurface> surface)
         {
             Handler.Execute(surface);
         }
+
+        private bool disposed;
 
         public new void Dispose()
         {
