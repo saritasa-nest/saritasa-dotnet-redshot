@@ -336,6 +336,81 @@ namespace RedShot.App
         #endregion WindowEvents
 
         #region SkiaSharpCommands
+
+        private void PaintTopMessage(SKSurface surface)
+        {
+            string message = "Please select a region to capture";
+
+            SKPaint textPaint = new SKPaint
+            {
+                Color = SKColors.White,
+                TextSize = 25
+            };
+
+            SKRect textBounds = default;
+            textPaint.MeasureText(message, ref textBounds);
+
+            var xText = Width / 2 - textBounds.MidX;
+
+            surface.Canvas.DrawText(message, xText, 60, textPaint);
+        }
+
+        private void PaintCoordinatePanel(SKSurface surface)
+        {
+            var canvas = surface.Canvas;
+
+            var paint = new SKPaint()
+            {
+                Color = SKColors.Black,
+                TextSize = 14,
+                IsAntialias = true
+            };
+
+            var text = $"X: {selectionRectangle.X} Y: {selectionRectangle.Y}   W: {selectionRectangle.Width} H: {selectionRectangle.Height}";
+
+            var textWidth = paint.MeasureText(text);
+
+            var strokeRectPaint = new SKPaint
+            {
+                Style = SKPaintStyle.Stroke,
+                Color = SKColors.White
+            };
+
+            var fillRectPaint = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                Color = SKColors.DeepSkyBlue.WithAlpha(200)
+            };
+
+            SKPoint drawCoords = default;
+            SKRect textStrokeRect = default;
+            SKRect textfillRect = default;
+
+            if (selectionRectangle.Y > paint.TextSize + 10)
+            {
+                drawCoords = new SKPoint(selectionRectangle.X + 2, selectionRectangle.Y - 15);
+            }
+            else if (selectionRectangle.Y + selectionRectangle.Height < Height - paint.TextSize - 10)
+            {
+                drawCoords = new SKPoint(selectionRectangle.X + 2, selectionRectangle.Y + selectionRectangle.Height + 20);
+            }
+            else
+            {
+                drawCoords = new SKPoint(selectionRectangle.X + 6, selectionRectangle.Y + paint.TextSize + 6);
+            }
+
+            textStrokeRect.Location = new SKPoint(drawCoords.X - 2, drawCoords.Y - paint.TextSize);
+            textStrokeRect.Size = new SKSize(textWidth + 4, paint.TextSize + 4);
+
+            textfillRect.Location = new SKPoint(textStrokeRect.Location.X + 1, textStrokeRect.Location.Y + 1);
+            textfillRect.Size = new SKSize(textStrokeRect.Width - 1, textStrokeRect.Height - 1);
+
+            canvas.DrawRect(textfillRect, fillRectPaint);
+            canvas.DrawRect(textStrokeRect, strokeRectPaint);
+
+            surface.Canvas.DrawText(text, drawCoords, paint);
+        }
+
         private void PaintClearImage(SKSurface surface)
         {
             var canvas = surface.Canvas;
@@ -347,6 +422,8 @@ namespace RedShot.App
             PaintDarkregion(surface, editorRect);
 
             PaintDashAround(surface, editorRect, SKColors.Black, SKColors.Red);
+
+            PaintTopMessage(surface);
         }
 
         private void PaintRegion(SKSurface surface)
@@ -365,6 +442,8 @@ namespace RedShot.App
 
             PaintDashAround(surface, regionRect, SKColors.White, SKColors.Black);
             PaintDashAround(surface, editorRect, SKColors.Black, SKColors.Red);
+
+            PaintCoordinatePanel(surface);
         }
 
         private void PaintDarkregion(SKSurface surface, SKRect editorRect, SKRect selectionRect = default)
