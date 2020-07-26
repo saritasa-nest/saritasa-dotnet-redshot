@@ -1,9 +1,9 @@
 using Eto.Drawing;
 using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
+using RedShot.App.Helpers;
 using RedShot.Helpers;
 using RedShot.Upload;
-using RedShot.Upload.Forms;
 using SkiaSharp;
 using System;
 using System.Diagnostics;
@@ -31,6 +31,13 @@ namespace RedShot.App
         float relativeX;
         float relativeY;
         #endregion Movingfields
+
+        #region ResizingFields
+        bool resizing;
+        ResizePart resizePart;
+        LineF oppositeBorder;
+        PointF oppositeAngle;
+        #endregion Resizingfields
 
         void InitializeComponent()
         {
@@ -68,7 +75,7 @@ namespace RedShot.App
                     selectionRectangle = EtoDrawingHelper.CreateRectangle(startLocation, endLocation);
                     skcontrol.Execute((surface) => PaintRegion(surface));
                 }
-                else if (captured || moving)
+                else if (captured || moving || resizing)
                 {
                     skcontrol.Execute((surface) => PaintRegion(surface));
                 }
@@ -89,6 +96,96 @@ namespace RedShot.App
 
                 ApplicationManager.RunUploaderView(image);
             }
+        }
+
+        private bool CheckOnResizing(PointF mouseLocation)
+        {
+            if (ResizeHelper.ApproximatelyEquals(selectionRectangle.Y, mouseLocation.Y))
+            {
+                if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X, mouseLocation.X))
+                {
+                    resizePart = ResizePart.Angle;
+                    oppositeAngle = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y + selectionRectangle.Height);
+                }
+                else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X + selectionRectangle.Width, mouseLocation.X))
+                {
+                    resizePart = ResizePart.Angle;
+                    oppositeAngle = new PointF(selectionRectangle.X, selectionRectangle.Y + selectionRectangle.Height);
+                }
+                else if (mouseLocation.X > selectionRectangle.X && mouseLocation.X < selectionRectangle.X + selectionRectangle.Width)
+                {
+                    resizePart = ResizePart.HorizontalBorder;
+
+                    var start = new PointF(selectionRectangle.X, selectionRectangle.Y + selectionRectangle.Height);
+                    var end = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y + selectionRectangle.Height);
+                    oppositeBorder = new LineF(start, end);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.Y + selectionRectangle.Height, mouseLocation.Y))
+            {
+                if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X, mouseLocation.X))
+                {
+                    resizePart = ResizePart.Angle;
+                    oppositeAngle = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y);
+                }
+                else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X + selectionRectangle.Width, mouseLocation.X))
+                {
+                    resizePart = ResizePart.Angle;
+                    oppositeAngle = new PointF(selectionRectangle.X, selectionRectangle.Y);
+                }
+                else if (mouseLocation.X > selectionRectangle.X && mouseLocation.X < selectionRectangle.X + selectionRectangle.Width)
+                {
+                    resizePart = ResizePart.HorizontalBorder;
+
+                    var start = new PointF(selectionRectangle.X, selectionRectangle.Y);
+                    var end = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y);
+                    oppositeBorder = new LineF(start, end);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X, mouseLocation.X))
+            {
+                if (mouseLocation.Y > selectionRectangle.Y && mouseLocation.Y < selectionRectangle.Y + Height)
+                {
+                    resizePart = ResizePart.VerticalBorder;
+
+                    var start = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y);
+                    var end = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y + selectionRectangle.Height);
+                    oppositeBorder = new LineF(start, end);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X + selectionRectangle.Width, mouseLocation.X))
+            {
+                if (mouseLocation.Y > selectionRectangle.Y && mouseLocation.Y < selectionRectangle.Y + Height)
+                {
+                    resizePart = ResizePart.VerticalBorder;
+
+                    var start = new PointF(selectionRectangle.X, selectionRectangle.Y);
+                    var end = new PointF(selectionRectangle.X, selectionRectangle.Y + selectionRectangle.Height);
+                    oppositeBorder = new LineF(start, end);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+            return true;
         }
 
         #region WindowEvents
@@ -114,10 +211,37 @@ namespace RedShot.App
                 var newXcoord = e.Location.X - relativeX;
                 var newYcoord = e.Location.Y - relativeY;
 
-                if (newXcoord > 0 && newYcoord > 0)
+                if ((newXcoord >= 0 && newYcoord >= 0) &&
+                    (newXcoord + selectionRectangle.Width <= Size.Width)
+                    && (newYcoord + selectionRectangle.Height <= Size.Height))
                 {
                     selectionRectangle.X = newXcoord;
                     selectionRectangle.Y = newYcoord;
+                }
+            }
+            else if (resizing)
+            {
+                if (resizePart == ResizePart.Angle)
+                {
+                    selectionRectangle = EtoDrawingHelper.CreateRectangle(e.Location, oppositeAngle);
+                }
+                else if (resizePart == ResizePart.HorizontalBorder)
+                {
+                    if (e.Location.Y > oppositeBorder.StartPoint.Y)
+                    {
+                        var point = new PointF(oppositeBorder.EndPoint.X, e.Location.Y);
+                        selectionRectangle = new RectangleF(oppositeBorder.StartPoint, point);
+                    }
+                    else if (e.Location.Y < oppositeBorder.StartPoint.Y)
+                    {
+                        var point = new PointF(oppositeBorder.StartPoint.X, e.Location.Y);
+                        selectionRectangle = new RectangleF(point, oppositeBorder.EndPoint);
+                    }
+                }
+                else if (resizePart == ResizePart.VerticalBorder)
+                {
+                    var point = new PointF(e.Location.X, oppositeBorder.StartPoint.Y);
+                    selectionRectangle = EtoDrawingHelper.CreateRectangle(point, oppositeBorder.EndPoint);                    
                 }
             }
         }
@@ -137,7 +261,11 @@ namespace RedShot.App
                 {
                     if (e.Buttons == MouseButtons.Primary)
                     {
-                        if (e.Location.X >= selectionRectangle.X && e.Location.X <= selectionRectangle.X + selectionRectangle.Width)
+                        if (CheckOnResizing(e.Location))
+                        {
+                            resizing = true;
+                        }
+                        else if (e.Location.X >= selectionRectangle.X && e.Location.X <= selectionRectangle.X + selectionRectangle.Width)
                         {
                             if (e.Location.Y >= selectionRectangle.Y && e.Location.Y <= selectionRectangle.Y + selectionRectangle.Height)
                             {
@@ -165,6 +293,9 @@ namespace RedShot.App
                 else if (captured)
                 {
                     captured = false;
+                    moving = false;
+                    resizing = false;
+                    skcontrol.Execute((surface) => PaintClearImage(surface));
                 }
                 else
                 {
@@ -180,6 +311,10 @@ namespace RedShot.App
                 if (moving)
                 {
                     moving = false;
+                }
+                else if (resizing)
+                {
+                    resizing = false;
                 }
             }
         }
