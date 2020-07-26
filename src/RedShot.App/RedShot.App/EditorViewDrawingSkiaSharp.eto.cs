@@ -75,7 +75,7 @@ namespace RedShot.App
                     selectionRectangle = EtoDrawingHelper.CreateRectangle(startLocation, endLocation);
                     skcontrol.Execute((surface) => PaintRegion(surface));
                 }
-                else if (captured || moving || resizing)
+                else if (captured)
                 {
                     skcontrol.Execute((surface) => PaintRegion(surface));
                 }
@@ -227,21 +227,13 @@ namespace RedShot.App
                 }
                 else if (resizePart == ResizePart.HorizontalBorder)
                 {
-                    if (e.Location.Y > oppositeBorder.StartPoint.Y)
-                    {
-                        var point = new PointF(oppositeBorder.EndPoint.X, e.Location.Y);
-                        selectionRectangle = new RectangleF(oppositeBorder.StartPoint, point);
-                    }
-                    else if (e.Location.Y < oppositeBorder.StartPoint.Y)
-                    {
-                        var point = new PointF(oppositeBorder.StartPoint.X, e.Location.Y);
-                        selectionRectangle = new RectangleF(point, oppositeBorder.EndPoint);
-                    }
+                    var point = new PointF(oppositeBorder.StartPoint.X, e.Location.Y);
+                    selectionRectangle = EtoDrawingHelper.CreateRectangle(point, oppositeBorder.EndPoint);
                 }
                 else if (resizePart == ResizePart.VerticalBorder)
                 {
                     var point = new PointF(e.Location.X, oppositeBorder.StartPoint.Y);
-                    selectionRectangle = EtoDrawingHelper.CreateRectangle(point, oppositeBorder.EndPoint);                    
+                    selectionRectangle = EtoDrawingHelper.CreateRectangle(point, oppositeBorder.EndPoint);
                 }
             }
         }
@@ -351,6 +343,9 @@ namespace RedShot.App
             canvas.DrawBitmap(skScreenImage, new SKPoint(0, 0));
 
             var editorRect = SKRect.Create(new SKPoint(0, 0), new SKSize(Width - 1, Height - 1));
+
+            PaintDarkregion(surface, editorRect);
+
             PaintDashAround(surface, editorRect, SKColors.Black, SKColors.Red);
         }
 
@@ -366,8 +361,30 @@ namespace RedShot.App
             var regionRect = SKRect.Create(point, size);
             var editorRect = SKRect.Create(new SKPoint(0, 0), new SKSize(Width - 1, Height - 1));
 
+            PaintDarkregion(surface, editorRect, regionRect);
+
             PaintDashAround(surface, regionRect, SKColors.White, SKColors.Black);
             PaintDashAround(surface, editorRect, SKColors.Black, SKColors.Red);
+        }
+
+        private void PaintDarkregion(SKSurface surface, SKRect editorRect, SKRect selectionRect = default)
+        {
+            // the path to use as a mask
+            var maskPath = new SKPath();
+            maskPath.FillType = SKPathFillType.EvenOdd; // make the first rect dark, cut the next
+            maskPath.AddRect(editorRect);
+            if (selectionRect != default)
+            {
+                maskPath.AddRect(selectionRect);
+            }
+
+            // the dark paint overlay
+            var maskPaint = new SKPaint();
+            maskPaint.Color = SKColors.Black.WithAlpha(100);
+            maskPaint.Style = SKPaintStyle.Fill;
+
+            // draw
+            surface.Canvas.DrawPath(maskPath, maskPaint);
         }
 
         private void PaintDashAround(SKSurface surface, SKRect rect, SKColor backColor, SKColor dashColor)
@@ -388,7 +405,7 @@ namespace RedShot.App
                 Style = SKPaintStyle.Stroke,
                 Color = dashColor,
                 FilterQuality = SKFilterQuality.Low,
-                PathEffect = SKPathEffect.CreateDash(dash, (float)penTimer.Elapsed.TotalSeconds * -15)
+                PathEffect = SKPathEffect.CreateDash(dash, (float)penTimer.Elapsed.TotalSeconds * -20)
             };
 
             canvas.DrawRect(rect, rectPaint);
