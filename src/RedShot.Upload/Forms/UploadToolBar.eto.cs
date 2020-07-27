@@ -2,14 +2,20 @@ using System;
 using Eto.Forms;
 using Eto.Drawing;
 using RedShot.Helpers;
+using System.Linq;
 
 namespace RedShot.Upload.Forms
 {
 	partial class UploadToolBar : Panel
 	{
+		public UploadToolBarButton ClipBoardButton;
+		public UploadToolBarButton SaveToFileButton;
 		void InitializeComponent()
 		{
 			ClientSize = new Size(ScreenHelper.GetSixteenthPartOfDisplay(), ScreenHelper.GetSixteenthPartOfDisplay() * 4);
+
+			ClipBoardButton = new UploadToolBarButton("ClipB");
+			SaveToFileButton = new UploadToolBarButton("File");
 
 			Content = new StackLayout
 			{
@@ -17,11 +23,11 @@ namespace RedShot.Upload.Forms
 				Items =
 				{
 					new UploadToolBarButton("Cloud"),
-					new UploadToolBarButton("ClipB"),
-					new UploadToolBarButton("File"),
+					ClipBoardButton,
+					SaveToFileButton,
 					new UploadToolBarButton("Del"),
 				}
 			};
 		}
-	}
+    }
 }

@@ -17,5 +17,6 @@ namespace RedShot.Upload.Abstractions
 
         bool CheckConfig(IUploaderConfig config);
 
+        IUploader CreateUploader();
     }
 }

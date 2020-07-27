@@ -1,7 +1,4 @@
 ﻿using Eto.Drawing;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RedShot.App.Helpers
 {

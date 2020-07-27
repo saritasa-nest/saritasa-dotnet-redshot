@@ -7,21 +7,31 @@ namespace RedShot.Upload.Forms
 {
 	partial class UploadToolBarButton : Panel
 	{
+		public event EventHandler<EventArgs> Clicked;
 		void InitializeComponent()
 		{
 			Width = ScreenHelper.GetSixteenthPartOfDisplay();
 			Height = ScreenHelper.GetSixteenthPartOfDisplay();
 
-			BackgroundColor = Colors.Aqua;
+			var btn = new Button();
+			btn.Width = Width;
+			btn.Height = Height;
+			btn.Text = name;
+            btn.Click += Btn_Click;
 
 			Content = new StackLayout
 			{
 				Items =
 				{
-					name
+					btn
 				}
 			};
 
 		}
-	}
+
+        private void Btn_Click(object sender, EventArgs e)
+        {
+			Clicked?.Invoke(this, EventArgs.Empty);
+        }
+    }
 }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RedShot.Upload.Abstractions
+namespace RedShot.Upload.Uploaders.FTP
 {
-    interface IImageUploader
+    class FtpAccount
     {
     }
 }
