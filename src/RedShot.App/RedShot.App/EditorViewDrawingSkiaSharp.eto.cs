@@ -64,6 +64,13 @@ namespace RedShot.App
 
             Shown += EditorView_Shown;
             UnLoad += EditorViewDrawingSkiaSharp_UnLoad;
+
+            SetDefaultPointer();
+        }
+
+        private void SetDefaultPointer()
+        {
+            Cursor = Cursors.Arrow;
         }
 
         private void Timer_Elapsed(object sender, System.EventArgs e)
@@ -96,6 +103,22 @@ namespace RedShot.App
 
                 ApplicationManager.RunUploaderView(image);
             }
+        }
+
+        private bool CheckOnMoving(PointF mouseLocation)
+        {
+            if (mouseLocation.X >= selectionRectangle.X && mouseLocation.X <= selectionRectangle.X + selectionRectangle.Width)
+            {
+                if (mouseLocation.Y >= selectionRectangle.Y && mouseLocation.Y <= selectionRectangle.Y + selectionRectangle.Height)
+                {
+                    relativeX = mouseLocation.X - selectionRectangle.X;
+                    relativeY = mouseLocation.Y - selectionRectangle.Y;
+
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private bool CheckOnResizing(PointF mouseLocation)
@@ -206,35 +229,65 @@ namespace RedShot.App
             {
                 endLocation = e.Location;
             }
-            else if (moving)
+            else if (captured)
             {
-                var newXcoord = e.Location.X - relativeX;
-                var newYcoord = e.Location.Y - relativeY;
-
-                if ((newXcoord >= 0 && newYcoord >= 0) &&
-                    (newXcoord + selectionRectangle.Width <= Size.Width)
-                    && (newYcoord + selectionRectangle.Height <= Size.Height))
+                if (moving)
                 {
-                    selectionRectangle.X = newXcoord;
-                    selectionRectangle.Y = newYcoord;
+                    var newXcoord = e.Location.X - relativeX;
+                    var newYcoord = e.Location.Y - relativeY;
+
+                    if ((newXcoord >= 0 && newYcoord >= 0) &&
+                        (newXcoord + selectionRectangle.Width <= Size.Width)
+                        && (newYcoord + selectionRectangle.Height <= Size.Height))
+                    {
+                        selectionRectangle.X = newXcoord;
+                        selectionRectangle.Y = newYcoord;
+                    }
+                }
+                else if (resizing)
+                {
+                    if (resizePart == ResizePart.Angle)
+                    {
+                        selectionRectangle = EtoDrawingHelper.CreateRectangle(e.Location, oppositeAngle);
+                    }
+                    else if (resizePart == ResizePart.HorizontalBorder)
+                    {
+                        var point = new PointF(oppositeBorder.StartPoint.X, e.Location.Y);
+                        selectionRectangle = EtoDrawingHelper.CreateRectangle(point, oppositeBorder.EndPoint);
+                    }
+                    else if (resizePart == ResizePart.VerticalBorder)
+                    {
+                        var point = new PointF(e.Location.X, oppositeBorder.StartPoint.Y);
+                        selectionRectangle = EtoDrawingHelper.CreateRectangle(point, oppositeBorder.EndPoint);
+                    }
+                }
+                else if (CheckOnResizing(e.Location))
+                {
+                    if (resizePart == ResizePart.Angle)
+                    {
+                        Cursor = Cursors.Crosshair;
+                    }
+                    else if (resizePart == ResizePart.HorizontalBorder)
+                    {
+                        Cursor = Cursors.HorizontalSplit;
+                    }
+                    else if (resizePart == ResizePart.VerticalBorder)
+                    {
+                        Cursor = Cursors.VerticalSplit;
+                    }
+                }
+                else if (CheckOnMoving(e.Location))
+                {
+                    Cursor = Cursors.Move;
+                }
+                else
+                {
+                    SetDefaultPointer();
                 }
             }
-            else if (resizing)
+            else
             {
-                if (resizePart == ResizePart.Angle)
-                {
-                    selectionRectangle = EtoDrawingHelper.CreateRectangle(e.Location, oppositeAngle);
-                }
-                else if (resizePart == ResizePart.HorizontalBorder)
-                {
-                    var point = new PointF(oppositeBorder.StartPoint.X, e.Location.Y);
-                    selectionRectangle = EtoDrawingHelper.CreateRectangle(point, oppositeBorder.EndPoint);
-                }
-                else if (resizePart == ResizePart.VerticalBorder)
-                {
-                    var point = new PointF(e.Location.X, oppositeBorder.StartPoint.Y);
-                    selectionRectangle = EtoDrawingHelper.CreateRectangle(point, oppositeBorder.EndPoint);
-                }
+                SetDefaultPointer();
             }
         }
 
@@ -257,14 +310,9 @@ namespace RedShot.App
                         {
                             resizing = true;
                         }
-                        else if (e.Location.X >= selectionRectangle.X && e.Location.X <= selectionRectangle.X + selectionRectangle.Width)
+                        else if (CheckOnMoving(e.Location))
                         {
-                            if (e.Location.Y >= selectionRectangle.Y && e.Location.Y <= selectionRectangle.Y + selectionRectangle.Height)
-                            {
-                                moving = true;
-                                relativeX = e.Location.X - selectionRectangle.X;
-                                relativeY = e.Location.Y - selectionRectangle.Y;
-                            }
+                            moving = true;
                         }
                     }
                 }
@@ -308,6 +356,7 @@ namespace RedShot.App
                 {
                     resizing = false;
                 }
+                SetDefaultPointer();
             }
         }
 

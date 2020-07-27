@@ -8,7 +8,7 @@ namespace RedShot.App.Helpers
     {
         public static bool ApproximatelyEquals(float a, float b)
         {
-            return Math.Abs(a - b) < 3;
+            return Math.Abs(a - b) < 5;
         }
     }
 }
