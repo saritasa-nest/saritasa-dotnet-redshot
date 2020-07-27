@@ -57,7 +57,7 @@ namespace RedShot.App
 
             timer = new UITimer();
             timer.Elapsed += Timer_Elapsed;
-            timer.Interval = 0.001;
+            timer.Interval = 0.01;
 
             skcontrol = new SKControl();
             Content = skcontrol;
@@ -97,6 +97,15 @@ namespace RedShot.App
         {
             if (selectionRectangle != default)
             {
+                if (selectionRectangle.X + selectionRectangle.Width > Width)
+                {
+                    selectionRectangle.Width = Width - selectionRectangle.X;
+                }
+                if (selectionRectangle.Y + selectionRectangle.Height > Height)
+                {
+                    selectionRectangle.Height = Height - selectionRectangle.Y;
+                }
+
                 var image = etoScreenImage.Clone((Rectangle)selectionRectangle);
 
                 UploadManager.UploadImage(etoScreenImage.Clone((Rectangle)selectionRectangle));
