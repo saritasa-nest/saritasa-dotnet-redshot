@@ -479,9 +479,15 @@ namespace RedShot.App
 
             PaintDarkregion(surface, editorRect);
 
-            PaintDashAround(surface, editorRect, SKColors.Black, SKColors.Red);
+            PaintEditorBorder(surface);
 
             PaintTopMessage(surface);
+        }
+
+        private void PaintEditorBorder(SKSurface surface)
+        {
+            var editorRect = SKRect.Create(new SKPoint(0, 0), new SKSize(Width - 1, Height - 1));
+            PaintDashAround(surface, editorRect, SKColors.Black, SKColors.Red);
         }
 
         private void PaintRegion(SKSurface surface)
@@ -494,12 +500,14 @@ namespace RedShot.App
             var point = new SKPoint(selectionRectangle.X, selectionRectangle.Y);
 
             var regionRect = SKRect.Create(point, size);
-            var editorRect = SKRect.Create(new SKPoint(0, 0), new SKSize(Width - 1, Height - 1));
+
+            var editorRect = SKRect.Create(new SKPoint(0, 0), new SKSize(Width, Height));
 
             PaintDarkregion(surface, editorRect, regionRect);
 
             PaintDashAround(surface, regionRect, SKColors.White, SKColors.Black);
-            PaintDashAround(surface, editorRect, SKColors.Black, SKColors.Red);
+
+            PaintEditorBorder(surface);
 
             PaintCoordinatePanel(surface);
         }
@@ -533,7 +541,7 @@ namespace RedShot.App
                 IsAntialias = false,
                 Style = SKPaintStyle.Stroke,
                 Color = backColor,
-                FilterQuality = SKFilterQuality.Low
+                FilterQuality = SKFilterQuality.High
             };
 
             var rectPaintDash = new SKPaint
@@ -541,12 +549,13 @@ namespace RedShot.App
                 IsAntialias = false,
                 Style = SKPaintStyle.Stroke,
                 Color = dashColor,
-                FilterQuality = SKFilterQuality.Low,
+                FilterQuality = SKFilterQuality.High,
                 PathEffect = SKPathEffect.CreateDash(dash, (float)penTimer.Elapsed.TotalSeconds * -20)
             };
 
             canvas.DrawRect(rect, rectPaint);
             canvas.DrawRect(rect, rectPaintDash);
+
         }
         #endregion SkiaSharpCommands
 

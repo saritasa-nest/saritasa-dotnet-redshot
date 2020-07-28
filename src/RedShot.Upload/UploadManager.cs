@@ -16,16 +16,9 @@ namespace RedShot.Upload
             Uploaders = Assembly.GetExecutingAssembly().GetTypes()
                 .Where(t => typeof(IUploaderService).IsAssignableFrom(t) && !t.IsInterface)
                 .Select(t => (IUploaderService)Activator.CreateInstance(t));
-
-            //var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images");
-
-            //if (Directory.Exists(imagePath))
-            //{
-            //    Directory.Delete(imagePath, true);
-            //}
         }
 
-        private static string path => Directory.CreateDirectory("Images").FullName;
+        private static string path = Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "RedShot")).FullName;
 
         public static IEnumerable<IUploaderService> Uploaders { get; }
 

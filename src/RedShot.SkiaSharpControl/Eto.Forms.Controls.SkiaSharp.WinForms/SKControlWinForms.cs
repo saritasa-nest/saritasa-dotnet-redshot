@@ -30,6 +30,8 @@ namespace Eto.Forms.Controls.SkiaSharp.WinForms
             surfaceAction.Invoke(surface);
             OnPaintSurface(new SKPaintSurfaceEventArgs(surface, info));
 
+            surface.Canvas.Flush();
+
             bitmap.UnlockBits(data);
             Refresh();
         }

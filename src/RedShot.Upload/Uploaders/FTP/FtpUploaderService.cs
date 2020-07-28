@@ -1,10 +1,11 @@
 ﻿using Eto.Drawing;
 using RedShot.Upload.Abstractions;
+using RedShot.Upload.Basics;
 using System;
 
 namespace RedShot.Upload.Uploaders.FTP
 {
-    class FtpUploaderService : IUploaderService
+    public class FtpUploaderService : IUploaderService
     {
         public string ServiceIdentifier => "FTP/SFTP/FTPS";
 
@@ -21,7 +22,26 @@ namespace RedShot.Upload.Uploaders.FTP
 
         public IUploader CreateUploader()
         {
-            throw new NotImplementedException();
+            var account = GetFtpAccount();
+
+            if (account != null)
+            {
+                if (account.Protocol == FtpProtocol.FTP || account.Protocol == FtpProtocol.FTPS)
+                {
+                    return new Ftp(account);
+                }
+                else if (account.Protocol == FtpProtocol.SFTP)
+                {
+                    return new Sftp(account);
+                }
+            }
+
+            return null;
+        }
+
+        private FtpAccount GetFtpAccount()
+        {
+            return null;
         }
     }
 }

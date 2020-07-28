@@ -8,5 +8,7 @@ namespace RedShot.Upload.Abstractions
     public interface IUploader
     {
         IUploaderResponse Upload(Stream stream, string filename);
+
+        void StopUpload();
     }
 }
