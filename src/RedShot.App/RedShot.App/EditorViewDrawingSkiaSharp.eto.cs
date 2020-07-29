@@ -108,12 +108,12 @@ namespace RedShot.App
 
                 var image = etoScreenImage.Clone((Rectangle)selectionRectangle);
 
-                UploadManager.UploadImage(etoScreenImage.Clone((Rectangle)selectionRectangle));
-
+                UploadManager.UploadToImagesFolder(image);
                 ApplicationManager.RunUploaderView(image);
             }
         }
 
+        #region Checking
         private bool CheckOnMoving(PointF mouseLocation)
         {
             if (mouseLocation.X >= selectionRectangle.X && mouseLocation.X <= selectionRectangle.X + selectionRectangle.Width)
@@ -219,6 +219,8 @@ namespace RedShot.App
 
             return true;
         }
+
+        #endregion Checking
 
         #region WindowEvents
         private void EditorView_Shown(object sender, EventArgs e)

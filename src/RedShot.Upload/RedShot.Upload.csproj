@@ -17,6 +17,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\RedShot.Configuration\RedShot.Configuration.csproj" />
 	  <ProjectReference Include="..\RedShot.Helpers\RedShot.Helpers.csproj" />
 	</ItemGroup>
 

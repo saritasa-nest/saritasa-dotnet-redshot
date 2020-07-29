@@ -15,6 +15,7 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\..\RedShot.Configuration\RedShot.Configuration.csproj" />
     <ProjectReference Condition=" '$(OS)' != 'Windows_NT' " Include="..\..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.GTK\Eto.Forms.Controls.SkiaSharp.GTK.csproj" />
     <ProjectReference Condition=" '$(OS)' == 'Windows_NT' " Include="..\..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.WinForms\Eto.Forms.Controls.SkiaSharp.WinForms.csproj" />
     <ProjectReference Include="..\..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp\Eto.Forms.Controls.SkiaSharp.csproj" />

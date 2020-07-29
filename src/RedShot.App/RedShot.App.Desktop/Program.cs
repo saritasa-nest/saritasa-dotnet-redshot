@@ -3,6 +3,7 @@ using System.Reflection;
 using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
 using RedShot.App;
+using RedShot.Configuration;
 
 namespace RedShot.EtoForms.Wpf
 {
@@ -17,9 +18,15 @@ namespace RedShot.EtoForms.Wpf
             var app = new Application(Eto.Platform.Detect);
             app.UnhandledException += InstanceOnUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += DomainUnhandledException;
+            app.Terminating += App_Terminating;
 
             AddStyle();
             app.Run(ApplicationManager.GetTrayApp());
+        }
+
+        private static void App_Terminating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            ConfigurationManager.Save();
         }
 
         private static void AddStyle()

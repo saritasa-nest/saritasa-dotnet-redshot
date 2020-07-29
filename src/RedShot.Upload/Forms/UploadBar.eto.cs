@@ -2,6 +2,7 @@ using System;
 using Eto.Forms;
 using Eto.Drawing;
 using RedShot.Helpers;
+using RedShot.Upload.Forms.Ftp;
 
 namespace RedShot.Upload.Forms
 {
@@ -39,7 +40,7 @@ namespace RedShot.Upload.Forms
 			var imageview = new ImageView();
 			imageview.Image = imageOnUpload;
 			imageview.Size = size;
-			Topmost = true;
+			imageview.MouseDoubleClick += Imageview_MouseDoubleClick;
 
 			toolBar = new UploadToolBar();
 
@@ -52,13 +53,28 @@ namespace RedShot.Upload.Forms
 					imageview
 				}
 			};
-
+			Topmost = true;
             this.MouseMove += UploadBar_MouseMove;
             toolBar.ClipBoardButton.Clicked += ClipBoardButton_Clicked;
             toolBar.SaveToFileButton.Clicked += SaveToFileButton_Clicked;
+			toolBar.SaveToFtpButton.Clicked += SaveToFtpButton_Clicked;
 		}
 
-        private void SaveToFileButton_Clicked(object sender, EventArgs e)
+		private void SaveToFtpButton_Clicked(object sender, EventArgs e)
+		{
+			var form = new FtpConfig();
+
+			blocked = true;
+			form.Show();
+		}
+
+		private void Imageview_MouseDoubleClick(object sender, MouseEventArgs e)
+		{
+			UploadManager.OpenLastImage();
+			RefreshTimer();
+		}
+
+		private void SaveToFileButton_Clicked(object sender, EventArgs e)
         {
 			blocked = true;
 			var res = UploadManager.UploadToFile(imageOnUpload, this);
@@ -109,7 +125,7 @@ namespace RedShot.Upload.Forms
 
         private void Timer_Elapsed1(object sender, EventArgs e)
         {
-			Opacity = Opacity / 1.5;
+			Opacity = Opacity / 1.7;
         }
     }
 }

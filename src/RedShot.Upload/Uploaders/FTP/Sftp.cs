@@ -1,4 +1,5 @@
 ﻿using RedShot.Helpers;
+using RedShot.Helpers.FtpModels;
 using RedShot.Upload.Abstractions;
 using RedShot.Upload.Basics;
 using Renci.SshNet;

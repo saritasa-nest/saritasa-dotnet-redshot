@@ -3,14 +3,17 @@ using Eto.Forms;
 using RedShot.Upload.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace RedShot.Upload
 {
     public static class UploadManager
     {
+        public static string LastImagePath { get; private set; }
         static UploadManager()
         {
             Uploaders = Assembly.GetExecutingAssembly().GetTypes()
@@ -22,19 +25,38 @@ namespace RedShot.Upload
 
         public static IEnumerable<IUploaderService> Uploaders { get; }
 
-        public static void UploadImage(Bitmap image, Rectangle rect)
+        public static void UploadToImagesFolder(Bitmap image)
         {
-            image.Clone(rect).Save(Path.Combine(path, $"{DateTime.Now.ToFileTime()}.bmp"), ImageFormat.Bitmap);
-        }
-
-        public static void UploadImage(Bitmap image)
-        {
-            image.Save(Path.Combine(path, $"{DateTime.Now.ToFileTime()}.bmp"), ImageFormat.Bitmap);
+            LastImagePath = Path.Combine(path, $"{DateTime.Now.ToFileTime()}.png");
+            image.Save(LastImagePath, ImageFormat.Png);
         }
 
         public static void UploadToClipboard(Bitmap image)
         {
             Clipboard.Instance.Image = image;
+        }
+
+        public static void OpenLastImage()
+        {
+            if (!string.IsNullOrEmpty(LastImagePath))
+            {
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        Process.Start(
+                            new ProcessStartInfo
+                            {
+                                FileName = LastImagePath,
+                                UseShellExecute = true
+                            });
+                    }
+                    catch
+                    {
+
+                    }
+                });
+            }
         }
 
         public static bool UploadToFile(Bitmap image, Control parent)
