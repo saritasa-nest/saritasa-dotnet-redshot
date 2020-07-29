@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RedShot.Upload.Uploaders
+﻿namespace RedShot.Helpers.FtpModels
 {
     public enum BrowserProtocol
     {

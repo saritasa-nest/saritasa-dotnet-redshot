@@ -1,4 +1,4 @@
-﻿namespace RedShot.Upload.Uploaders.FTP
+﻿namespace RedShot.Helpers.FtpModels
 {
     public enum FtpsEncryption
     {

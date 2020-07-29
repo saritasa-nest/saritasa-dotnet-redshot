@@ -1,4 +1,5 @@
 ﻿using Eto.Drawing;
+using RedShot.Helpers.FtpModels;
 using RedShot.Upload.Abstractions;
 using RedShot.Upload.Basics;
 using System;

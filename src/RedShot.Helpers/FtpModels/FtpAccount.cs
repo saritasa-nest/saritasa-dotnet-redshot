@@ -1,4 +1,6 @@
-﻿namespace RedShot.Upload.Uploaders.FTP
+﻿using System;
+
+namespace RedShot.Helpers.FtpModels
 {
     public class FtpAccount
     {
@@ -16,7 +18,10 @@
             HttpHomePathNoExtension = false;
             FTPSEncryption = FtpsEncryption.Explicit;
             FTPSCertificateLocation = "";
+            Id = Guid.NewGuid();
         }
+
+        public Guid Id { get; set; }
 
         public string Name { get; set; }
 

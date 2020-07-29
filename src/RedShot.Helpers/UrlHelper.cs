@@ -8,72 +8,7 @@ namespace RedShot.Helpers
 {
     public static class UrlHelper
     {
-        public const string URLCharacters = Helpers.Alphanumeric + "-._~"; // 45 46 95 126
-        public const string URLPathCharacters = URLCharacters + "/"; // 47
-        public const string ValidURLCharacters = URLPathCharacters + ":?#[]@!$&'()*+,;= ";
-
         public static readonly char[] BidiControlCharacters = new char[] { '\u200E', '\u200F', '\u202A', '\u202B', '\u202C', '\u202D', '\u202E' };
-
-        public static string URLEncode(string text, bool isPath = false, bool ignoreEmoji = false)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            if (!string.IsNullOrEmpty(text))
-            {
-                string unreservedCharacters;
-
-                if (isPath)
-                {
-                    unreservedCharacters = URLPathCharacters;
-                }
-                else
-                {
-                    unreservedCharacters = URLCharacters;
-                }
-
-                foreach (char c in Encoding.UTF8.GetBytes(text))
-                {
-                    if (unreservedCharacters.IndexOf(c) != -1)
-                    {
-                        sb.Append(c);
-                    }
-                    else
-                    {
-                        sb.AppendFormat(CultureInfo.InvariantCulture, "%{0:X2}", (int)c);
-                    }
-                }
-            }
-
-            return sb.ToString();
-        }
-
-        public static string ReplaceReservedCharacters(string text, string replace)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            string last = null;
-
-            foreach (char c in text)
-            {
-                if (URLCharacters.Contains(c))
-                {
-                    last = c.ToString();
-                }
-                else if (last != replace)
-                {
-                    last = replace;
-                }
-                else
-                {
-                    continue;
-                }
-
-                sb.Append(last);
-            }
-
-            return sb.ToString();
-        }
-
 
         public static string CombineURL(string url1, string url2)
         {
@@ -265,5 +200,4 @@ namespace RedShot.Helpers
             return builder.Uri.AbsoluteUri;
         }
     }
-}
 }
