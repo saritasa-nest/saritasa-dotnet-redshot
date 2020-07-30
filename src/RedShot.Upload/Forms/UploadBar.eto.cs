@@ -62,11 +62,11 @@ namespace RedShot.Upload.Forms
 
 		private void SaveToFtpButton_Clicked(object sender, EventArgs e)
 		{
-			var form = new FtpConfig();
-
 			blocked = true;
-			form.Show();
+			UploadManager.UploadToFtp(imageOnUpload);
+			blocked = false;
 		}
+
 
 		private void Imageview_MouseDoubleClick(object sender, MouseEventArgs e)
 		{

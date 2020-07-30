@@ -1,6 +1,8 @@
 ﻿using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Upload.Abstractions;
+using RedShot.Upload.Forms;
+using RedShot.Upload.Forms.Ftp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,6 +15,7 @@ namespace RedShot.Upload
 {
     public static class UploadManager
     {
+        private static UploadBar uploadBar;
         public static string LastImagePath { get; private set; }
         static UploadManager()
         {
@@ -88,10 +91,45 @@ namespace RedShot.Upload
             return true;
         }
 
+        public static bool UploadToFtp(Bitmap image)
+        {
+            var form = new FtpUploaderForm(image);
+
+            form.ShowModal();
+
+            return true;
+        }
+
         public static IUploaderService GetUploaderService(string name)
         {
             return Uploaders.Where(u => u.ServiceName == name).FirstOrDefault();
         }
 
+        public static Form RunUploaderView(Bitmap image)
+        {
+            UploadToImagesFolder(image);
+
+            CloseUploaderView();
+
+            uploadBar = new UploadBar(image);
+            uploadBar.Show();
+
+            return uploadBar;
+        }
+
+        public static void CloseUploaderView()
+        {
+            if (uploadBar != null)
+            {
+                try
+                {
+                    uploadBar.Close();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+            }
+        }
     }
 }

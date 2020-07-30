@@ -1,5 +1,6 @@
 ﻿using Eto.Drawing;
 using Eto.Forms;
+using RedShot.Upload;
 using RedShot.Upload.Forms;
 using System.IO;
 
@@ -18,15 +19,10 @@ namespace RedShot.App
         public static void RunScreenShotEditorDrawing()
         {
             trayIcon.Tray.Visible = false;
+            UploadManager.CloseUploaderView();
 
             var view = new EditorViewDrawingSkiaSharp();
             view.Closed += View_Closed;
-            view.Show();
-        }
-
-        public static void RunUploaderView(Bitmap image)
-        {
-            var view = new UploadBar(image);
             view.Show();
         }
 

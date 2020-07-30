@@ -44,5 +44,11 @@ namespace RedShot.Helpers
             var sixteenSize = GetSixteenthPartOfDisplay();
             return new Point((int)(size.Width - minisize.Width - sixteenSize), (int)(size.Height - minisize.Height) - 50);
         }
+
+        public static Point GetCentralCoordsOfScreen()
+        {
+            var size = GetMainWindowSize();
+            return new Point((int)(size.Width / 2), (int)(size.Height / 2));
+        }
     }
 }

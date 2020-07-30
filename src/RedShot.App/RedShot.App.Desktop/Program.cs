@@ -18,13 +18,13 @@ namespace RedShot.EtoForms.Wpf
             var app = new Application(Eto.Platform.Detect);
             app.UnhandledException += InstanceOnUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += DomainUnhandledException;
-            app.Terminating += App_Terminating;
 
             AddStyle();
             app.Run(ApplicationManager.GetTrayApp());
+            AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
         }
 
-        private static void App_Terminating(object sender, System.ComponentModel.CancelEventArgs e)
+        private static void CurrentDomain_ProcessExit(object sender, EventArgs e)
         {
             ConfigurationManager.Save();
         }

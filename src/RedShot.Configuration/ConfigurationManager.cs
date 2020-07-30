@@ -24,27 +24,37 @@ namespace RedShot.Configuration
 
         private static YamlConfig GetConfig()
         {
-            using (var reader = new StringReader(GetYamlString()))
+            if (TryGetYamlString(out var conf))
             {
-                var deserializer = new DeserializerBuilder()
-                            .WithNamingConvention(CamelCaseNamingConvention.Instance)
-                            .Build();
+                using (var reader = new StringReader(conf))
+                {
+                    var deserializer = new DeserializerBuilder()
+                        .IgnoreUnmatchedProperties()
+                        .Build();
 
-                return deserializer.Deserialize<YamlConfig>(reader);
+                    return deserializer.Deserialize<YamlConfig>(reader);
+                }
             }
+            else
+            {
+                return new YamlConfig();
+            }
+          
         }
 
-        private static string GetYamlString()
+        private static bool TryGetYamlString(out string conf)
         {
             var fullpath = GetFullPath();
 
             if (File.Exists(fullpath))
             {
-                return File.ReadAllText(fullpath);
+                conf = File.ReadAllText(fullpath);
+                return true;
             }
             else
             {
-                return string.Empty;
+                conf = string.Empty;
+                return false;
             }
         }
 

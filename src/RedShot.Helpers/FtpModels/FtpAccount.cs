@@ -13,9 +13,9 @@ namespace RedShot.Helpers.FtpModels
             IsActive = false;
             SubFolderPath = "";
             BrowserProtocol = BrowserProtocol.http;
-            HttpHomePath = "";
-            HttpHomePathAutoAddSubFolderPath = true;
-            HttpHomePathNoExtension = false;
+            //HttpHomePath = "";
+            //HttpHomePathAutoAddSubFolderPath = true;
+            //HttpHomePathNoExtension = false;
             FTPSEncryption = FtpsEncryption.Explicit;
             FTPSCertificateLocation = "";
             Id = Guid.NewGuid();
@@ -41,11 +41,11 @@ namespace RedShot.Helpers.FtpModels
 
         public BrowserProtocol BrowserProtocol { get; set; }
 
-        public string HttpHomePath { get; set; }
+        //public string HttpHomePath { get; set; }
 
-        public bool HttpHomePathAutoAddSubFolderPath { get; set; }
+        //public bool HttpHomePathAutoAddSubFolderPath { get; set; }
 
-        public bool HttpHomePathNoExtension { get; set; }
+        //public bool HttpHomePathNoExtension { get; set; }
 
         public string FTPAddress
         {

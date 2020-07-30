@@ -8,6 +8,11 @@ namespace RedShot.Upload.Uploaders.FTP
 {
     public class FtpUploaderService : IUploaderService
     {
+        public FtpUploaderService(FtpAccount account)
+        {
+            Account = account;
+        }
+        public FtpAccount Account { get; }
         public string ServiceIdentifier => "FTP/SFTP/FTPS";
 
         public string ServiceName => "FTP/SFTP/FTPS";
@@ -23,25 +28,18 @@ namespace RedShot.Upload.Uploaders.FTP
 
         public IUploader CreateUploader()
         {
-            var account = GetFtpAccount();
-
-            if (account != null)
+            if (Account != null)
             {
-                if (account.Protocol == FtpProtocol.FTP || account.Protocol == FtpProtocol.FTPS)
+                if (Account.Protocol == FtpProtocol.FTP || Account.Protocol == FtpProtocol.FTPS)
                 {
-                    return new Ftp(account);
+                    return new Ftp(Account);
                 }
-                else if (account.Protocol == FtpProtocol.SFTP)
+                else if (Account.Protocol == FtpProtocol.SFTP)
                 {
-                    return new Sftp(account);
+                    return new Sftp(Account);
                 }
             }
 
-            return null;
-        }
-
-        private FtpAccount GetFtpAccount()
-        {
             return null;
         }
     }

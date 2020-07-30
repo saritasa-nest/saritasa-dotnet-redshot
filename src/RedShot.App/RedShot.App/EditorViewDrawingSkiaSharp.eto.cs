@@ -107,9 +107,7 @@ namespace RedShot.App
                 }
 
                 var image = etoScreenImage.Clone((Rectangle)selectionRectangle);
-
-                UploadManager.UploadToImagesFolder(image);
-                ApplicationManager.RunUploaderView(image);
+                UploadManager.RunUploaderView(image);
             }
         }
 
