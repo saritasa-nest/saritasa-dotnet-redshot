@@ -7,6 +7,7 @@ namespace RedShot.Configuration
 {
     public static class ConfigurationManager
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private static readonly string defaultFolderName = "RedShot";
         private static readonly string configName = "config.yaml";
 
@@ -19,7 +20,15 @@ namespace RedShot.Configuration
 
             var fullpath = GetFullPath();
 
-            File.WriteAllText(fullpath, yaml);
+            try
+            {
+                File.WriteAllText(fullpath, yaml);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                throw;
+            }
         }
 
         private static YamlConfig GetConfig()
@@ -37,6 +46,7 @@ namespace RedShot.Configuration
             }
             else
             {
+                Logger.Info("There is not a config file in the system");
                 return new YamlConfig();
             }
           
@@ -48,7 +58,15 @@ namespace RedShot.Configuration
 
             if (File.Exists(fullpath))
             {
-                conf = File.ReadAllText(fullpath);
+                try
+                {
+                    conf = File.ReadAllText(fullpath);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex, "Error occured in reading config file");
+                    throw;
+                }
                 return true;
             }
             else
@@ -66,7 +84,15 @@ namespace RedShot.Configuration
 
         private static string GetDefaultFolder()
         {
-            return Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), defaultFolderName)).FullName;
+            try
+            {
+                return Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), defaultFolderName)).FullName;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Error occured in creating RedShot config folder");
+                throw;
+            }
         }
     }
 }

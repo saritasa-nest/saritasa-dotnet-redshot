@@ -13,6 +13,7 @@ namespace RedShot.Upload.Forms.Ftp
 {
     public partial class FtpUploaderForm : Dialog
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private List<FtpAccount> ftpAccounts => ConfigurationManager.YamlConfig.FtpAccounts;
         private ComboBox accounts;
         private Button uploadButton;
@@ -141,19 +142,25 @@ namespace RedShot.Upload.Forms.Ftp
 
                 try
                 {
-                    var response = ((BaseUploader)service.CreateUploader()).UploadImage(image, imageName, ImageFormat.Png);
+                    using (var uploader = (BaseUploader)service.CreateUploader())
+                    {
+                        var response = uploader.UploadImage(image, imageName, ImageFormat.Png);
 
-                    if (response.IsSuccess)
-                    {
-                        MessageBox.Show("Image uploaded", "Success", MessageBoxButtons.OK, MessageBoxType.Information);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Image uploading failed", MessageBoxButtons.OK, MessageBoxType.Information);
+                        if (response.IsSuccess)
+                        {
+                            Logger.Trace("Image uploaded to FTP server", response);
+                            MessageBox.Show("Image uploaded", "Success", MessageBoxButtons.OK, MessageBoxType.Information);
+                        }
+                        else
+                        {
+                            Logger.Trace("Image uploaded to FTP server failed", response);
+                            MessageBox.Show("Image uploading failed", MessageBoxButtons.OK, MessageBoxType.Information);
+                        }
                     }
                 }
                 catch (Exception ex)
                 {
+                    Logger.Error(ex, "Ftp uploading error");
                     MessageBox.Show(ex.Message, "Ftp upload error!", MessageBoxButtons.OK, MessageBoxType.Error);
                 }
             }

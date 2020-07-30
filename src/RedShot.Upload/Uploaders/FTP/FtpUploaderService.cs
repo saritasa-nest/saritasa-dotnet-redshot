@@ -13,6 +13,7 @@ namespace RedShot.Upload.Uploaders.FTP
             Account = account;
         }
         public FtpAccount Account { get; }
+
         public string ServiceIdentifier => "FTP/SFTP/FTPS";
 
         public string ServiceName => "FTP/SFTP/FTPS";

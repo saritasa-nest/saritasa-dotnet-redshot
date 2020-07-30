@@ -10,10 +10,11 @@ using System.IO;
 
 namespace RedShot.Upload.Uploaders.FTP
 {
-    public sealed class Sftp : BaseUploader, IDisposable
+    public sealed class Sftp : BaseUploader
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private bool disposed;
         private SftpClient client;
-
         public Sftp(FtpAccount account)
         {
             Account = account;
@@ -47,16 +48,18 @@ namespace RedShot.Upload.Uploaders.FTP
                     Uploaded?.Invoke(this, EventArgs.Empty);
                     return new BaseUploaderResponse(true);
                 }
-                else
-                {
-                    return new BaseUploaderResponse(false);
-                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Error occured while SFTP client was uploading data");
             }
             finally
             {
                 Dispose();
                 IsUploading = false;
             }
+
+            return new BaseUploaderResponse(false);
         }
 
         public override void StopUpload()
@@ -71,7 +74,7 @@ namespace RedShot.Upload.Uploaders.FTP
                 }
                 catch (Exception e)
                 {
-
+                    Logger.Error(e, "Error while uploading was stopping");
                 }
             }
         }
@@ -135,8 +138,9 @@ namespace RedShot.Upload.Uploaders.FTP
                 {
                     client.ChangeDirectory(path);
                 }
-                catch (SftpPathNotFoundException) when (autoCreateDirectory)
+                catch (SftpPathNotFoundException ex) when (autoCreateDirectory)
                 {
+                    Logger.Warn(ex);
                     CreateDirectory(path, true);
                     ChangeDirectory(path);
                 }
@@ -214,15 +218,21 @@ namespace RedShot.Upload.Uploaders.FTP
             return false;
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
-            if (client != null)
+            if (disposed == false && client != null)
             {
                 try
                 {
                     client.Dispose();
                 }
-                catch (Exception e) { }
+                catch (Exception e) 
+                {
+                    client = null;
+                    Logger.Error(e, "Error in disposing FTP client");
+                }
+
+                disposed = true;
             }
         }
     }

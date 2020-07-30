@@ -6,7 +6,7 @@ using System.Text;
 
 namespace RedShot.Upload.Basics
 {
-    public abstract class BaseUploader : IUploader
+    public abstract class BaseUploader : IUploader, IDisposable
     {
         public bool IsUploading { get; protected set; }
 
@@ -58,5 +58,7 @@ namespace RedShot.Upload.Basics
         public abstract void StopUpload();
 
         public abstract IUploaderResponse Upload(Stream stream, string filename);
+
+        public abstract void Dispose();
     }
 }

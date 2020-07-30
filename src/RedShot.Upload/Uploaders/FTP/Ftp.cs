@@ -13,9 +13,12 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace RedShot.Upload.Uploaders.FTP
 {
-    public class Ftp : BaseUploader, IDisposable
+    public sealed class Ftp : BaseUploader
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         private FtpClient client;
+        private bool disposed;
 
         public override event EventHandler Uploaded;
 
@@ -110,6 +113,8 @@ namespace RedShot.Upload.Uploaders.FTP
             }
             catch (FtpCommandException e)
             {
+                Logger.Warn(e, "Ftp command error");
+
                 // Probably directory not exist, try creating it
                 if (e.CompletionCode == "550" || e.CompletionCode == "553")
                 {
@@ -210,7 +215,10 @@ namespace RedShot.Upload.Uploaders.FTP
                     client.CreateDirectory(remotePath);
                     return true;
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    Logger.Warn(ex, "Error in creating directory on FTP server");
+                }
             }
 
             return false;
@@ -236,29 +244,21 @@ namespace RedShot.Upload.Uploaders.FTP
             }
         }
 
-        public bool SendCommand(string command)
+        public override void Dispose()
         {
-            if (Connect())
+            if (disposed == false && client != null)
             {
                 try
                 {
-                    client.Execute(command);
-                    return true;
+                    client.Dispose();
+                    client = null;
                 }
-                catch
+                catch (Exception e)
                 {
-
+                    Logger.Error(e, "Error in disposing FTP client");
                 }
-            }
 
-            return false;
-        }
-
-        public void Dispose()
-        {
-            if (client != null)
-            {
-                client.Dispose();
+                disposed = true;
             }
         }
     }

@@ -12,14 +12,18 @@ namespace RedShot.EtoForms.Wpf
     /// </summary>
     internal class MainClass
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         [STAThread]
         public static void Main(string[] args)
         {
+            Logger.Debug("The app was started!");
+
             var app = new Application(Eto.Platform.Detect);
             app.UnhandledException += InstanceOnUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += DomainUnhandledException;
 
-            AddStyle();
+            AddControl();
             app.Run(ApplicationManager.GetTrayApp());
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
         }
@@ -29,7 +33,7 @@ namespace RedShot.EtoForms.Wpf
             ConfigurationManager.Save();
         }
 
-        private static void AddStyle()
+        private static void AddControl()
         {
 #if _WINDOWS
             Eto.Platform.Detect.Add<ISKControl>(() => new Eto.Forms.Controls.SkiaSharp.WinForms.SKControlHandler());
@@ -69,6 +73,9 @@ namespace RedShot.EtoForms.Wpf
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxType.Error);
             }
+
+            Logger.Fatal(ex);
+
             Application.Instance.Quit();
         }
     }

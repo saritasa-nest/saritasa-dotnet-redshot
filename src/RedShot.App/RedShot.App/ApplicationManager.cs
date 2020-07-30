@@ -1,29 +1,45 @@
-﻿using Eto.Drawing;
-using Eto.Forms;
+﻿using Eto.Forms;
 using RedShot.Upload;
-using RedShot.Upload.Forms;
+using System;
 using System.IO;
 
 namespace RedShot.App
 {
     public static class ApplicationManager
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private static TrayIcon trayIcon;
 
         public static Form GetTrayApp()
         {
-            trayIcon = new TrayIcon("RedShot", Path.Combine(Directory.GetCurrentDirectory(), "Resources", "red-circle.png"));
+            try
+            {
+                trayIcon = new TrayIcon("RedShot", Path.Combine(Directory.GetCurrentDirectory(), "Resources", "red-circle.png"));
+            }
+            catch (Exception ex)
+            {
+                Logger.Fatal(ex, "Error occured in creating tray icon form");
+                throw;
+            }
             return trayIcon;
         }
 
         public static void RunScreenShotEditorDrawing()
         {
-            trayIcon.Tray.Visible = false;
-            UploadManager.CloseUploaderView();
+            try
+            {
+                trayIcon.Tray.Visible = false;
+                UploadManager.CloseUploaderView();
 
-            var view = new EditorViewDrawingSkiaSharp();
-            view.Closed += View_Closed;
-            view.Show();
+                var view = new EditorViewDrawingSkiaSharp();
+                view.Closed += View_Closed;
+                view.Show();
+            }
+            catch (Exception ex)
+            {
+                Logger.Fatal(ex, "Error occured in creating tray screen editor form");
+                throw;
+            }
         }
 
         private static void View_Closed(object sender, System.EventArgs e)
