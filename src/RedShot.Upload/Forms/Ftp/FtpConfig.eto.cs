@@ -18,7 +18,7 @@ namespace RedShot.Upload.Forms.Ftp
         private TextBox host;
         private NumericStepper port;
         private TextBox username;
-        private MaskedTextBox password;
+        private PasswordBox password;
         private CheckBox isActive = new CheckBox();
         private TextBox subFolderPath;
 
@@ -30,7 +30,7 @@ namespace RedShot.Upload.Forms.Ftp
         private ComboBox ftpsEncryption;
         private TextBox ftpsCertificateLocation;
         private TextBox keypath;
-        private MaskedTextBox passphrase;
+        private PasswordBox passphrase;
 
         private Button ftpsCertificateLocationButton;
         private Button keyPathButton;
@@ -54,11 +54,11 @@ namespace RedShot.Upload.Forms.Ftp
                 Size = new Eto.Drawing.Size(200, 21)
             };
 
-            password = new MaskedTextBox()
+            password = new PasswordBox()
             {
-                Size = new Eto.Drawing.Size(200, 21),
-                ShowPromptMode = ShowPromptMode.Always
+                Size = new Eto.Drawing.Size(200, 21)        
             };
+
 
             subFolderPath = new TextBox()
             {
@@ -75,7 +75,7 @@ namespace RedShot.Upload.Forms.Ftp
                 Size = new Eto.Drawing.Size(200, 21)
             };
 
-            passphrase = new MaskedTextBox()
+            passphrase = new PasswordBox()
             {
                 Size = new Eto.Drawing.Size(200, 21)
             };
