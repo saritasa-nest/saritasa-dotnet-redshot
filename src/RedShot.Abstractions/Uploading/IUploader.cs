@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Eto.Drawing;
 using System.IO;
-using System.Text;
 
-namespace RedShot.Upload.Abstractions
+namespace RedShot.Abstractions.Uploading
 {
     public interface IUploader
     {
         IUploaderResponse Upload(Stream stream, string filename);
+
+        IUploaderResponse UploadImage(Bitmap bitmap, string filename, ImageFormat format);
 
         void StopUpload();
     }

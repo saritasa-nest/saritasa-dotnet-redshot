@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RedShot.Helpers.Encryption;
+using System;
 using System.IO;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
@@ -15,6 +16,8 @@ namespace RedShot.Configuration
 
         public static void Save()
         {
+            EncryptFtpAccountPasswords();
+
             var serializer = new SerializerBuilder().Build();
             var yaml = serializer.Serialize(YamlConfig);
 
@@ -41,7 +44,10 @@ namespace RedShot.Configuration
                         .IgnoreUnmatchedProperties()
                         .Build();
 
-                    return deserializer.Deserialize<YamlConfig>(reader);
+                    var config = deserializer.Deserialize<YamlConfig>(reader);
+                    DecryptFtpAccountPasswords(config);
+
+                    return config;
                 }
             }
             else
@@ -92,6 +98,36 @@ namespace RedShot.Configuration
             {
                 Logger.Error(ex, "Error occured in creating RedShot config folder");
                 throw;
+            }
+        }
+
+        private static void EncryptFtpAccountPasswords()
+        {
+            var encryptService = new Base64Encrypter();
+
+            foreach (var account in YamlConfig.FtpAccounts)
+            {
+                account.Password = encryptService.Encrypt(account.Password);
+
+                account.Passphrase = encryptService.Encrypt(account.Passphrase);
+            }
+        }
+
+        private static void DecryptFtpAccountPasswords(YamlConfig config)
+        {
+            var encryptService = new Base64Encrypter();
+
+            foreach (var account in config.FtpAccounts)
+            {
+                try
+                {
+                    account.Password = encryptService.Decrypt(account.Password);
+                    account.Passphrase = encryptService.Decrypt(account.Passphrase);
+                }
+                catch
+                {
+
+                }
             }
         }
     }

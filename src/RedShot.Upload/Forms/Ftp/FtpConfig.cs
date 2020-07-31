@@ -96,7 +96,8 @@ namespace RedShot.Upload.Forms.Ftp
         {
             using (var dialog = new OpenFileDialog())
             {
-                dialog.Title = "Ftps certificate";
+                dialog.Title = "FTPS certificate";
+                dialog.Filters.Add(new FileFilter("*.cer format", ".cer"));
 
                 if (dialog.ShowDialog(this) == DialogResult.Ok)
                 {

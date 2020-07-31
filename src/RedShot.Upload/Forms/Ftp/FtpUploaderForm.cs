@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using RedShot.Configuration;
 using System.Linq;
 using RedShot.Upload.Uploaders.FTP;
-using RedShot.Upload.Basics;
 using RedShot.Helpers;
 
 namespace RedShot.Upload.Forms.Ftp
@@ -38,62 +37,102 @@ namespace RedShot.Upload.Forms.Ftp
 
         private void InitializeComponents()
         {
+            BackgroundColor = StylesHelper.BackgroundColor;
+
             accounts = new ComboBox()
             {
                 DataStore = ftpAccounts,
-                Size = new Eto.Drawing.Size(150, 21)
+                Size = new Eto.Drawing.Size(250, 21),
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor
             };
 
             imageNameBox = new TextBox()
             {
-                Size = new Eto.Drawing.Size(150, 21)
+                Size = new Eto.Drawing.Size(150, 21),
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor
             };
 
             uploadButton = new Button()
             {
                 Text = "Upload",
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor,
             };
 
             ftpSettingsButton = new Button()
             {
-                Text = "Ftp Settings"
+                Text = "Ftp Settings",
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor
             };
 
             Content = new StackLayout
             {
+                VerticalContentAlignment = VerticalAlignment.Center,
                 HorizontalContentAlignment = HorizontalAlignment.Center,
                 Orientation = Orientation.Vertical,
                 Padding = 20,
                 Items =
                 {
-                    new StackLayout()
-                    {
-                        Orientation = Orientation.Horizontal,
-                        Items =
-                        {
-                            new Label()
-                            {
-                                Text = "Account:",
-                                Width = 100
-                            },
-                            accounts
-                        }
-                    },
-                    new StackLayout()
-                    {
-                        Orientation = Orientation.Horizontal,
-                        Items =
-                        {
-                            new Label()
-                            {
-                                Text = "Image name:",
-                                Width = 100
-                            },
-                            imageNameBox
-                        }
-                    },
-                    uploadButton,
+                    GetConfigLayout(),
+                    GetAccountLayout(),
+                    GetImageNameLayout(),
+                    uploadButton
+                }
+            };
+        }
+
+        private StackLayout GetConfigLayout()
+        {
+            return new StackLayout()
+            {
+                Orientation = Orientation.Vertical,
+                HorizontalContentAlignment = HorizontalAlignment.Right,
+                Items =
+                {
                     ftpSettingsButton
+                }
+            };
+        }
+
+        private StackLayout GetImageNameLayout()
+        {
+            return new StackLayout()
+            {
+                Padding = 20,
+                Orientation = Orientation.Vertical,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                Items =
+                {
+                    new Label()
+                    {
+                        Text = "Image name",
+                        Width = 100,
+                        TextColor = StylesHelper.TextColor,
+                    },
+                    imageNameBox
+                }
+            };
+        }
+
+        private StackLayout GetAccountLayout()
+        {
+            return new StackLayout()
+            {
+                Padding = 20,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                Orientation = Orientation.Vertical,
+                Items =
+                {
+                    new Label()
+                    {
+                        Text = "Select account",
+                        Width = 100,
+                        TextColor = StylesHelper.TextColor,
+                    },
+                    accounts
                 }
             };
         }
@@ -142,21 +181,26 @@ namespace RedShot.Upload.Forms.Ftp
 
                 try
                 {
-                    using (var uploader = (BaseUploader)service.CreateUploader())
-                    {
-                        var response = uploader.UploadImage(image, imageName, ImageFormat.Png);
+                    var uploader = service.CreateUploader();
 
-                        if (response.IsSuccess)
-                        {
-                            Logger.Trace("Image uploaded to FTP server", response);
-                            MessageBox.Show("Image uploaded", "Success", MessageBoxButtons.OK, MessageBoxType.Information);
-                        }
-                        else
-                        {
-                            Logger.Trace("Image uploaded to FTP server failed", response);
-                            MessageBox.Show("Image uploading failed", MessageBoxButtons.OK, MessageBoxType.Information);
-                        }
+                    var response = uploader.UploadImage(image, imageName, ImageFormat.Png);
+
+                    if (response.IsSuccess)
+                    {
+                        Logger.Trace("Image uploaded to FTP server", response);
+                        MessageBox.Show("Image uploaded", "Success", MessageBoxButtons.OK, MessageBoxType.Information);
                     }
+                    else
+                    {
+                        Logger.Trace("Image uploaded to FTP server failed", response);
+                        MessageBox.Show("Image uploading failed", MessageBoxButtons.OK, MessageBoxType.Information);
+                    }
+
+                    if (uploader is IDisposable disposable)
+                    {
+                        disposable.Dispose();
+                    }
+
                 }
                 catch (Exception ex)
                 {

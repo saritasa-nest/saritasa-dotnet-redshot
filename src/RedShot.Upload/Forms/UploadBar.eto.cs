@@ -63,7 +63,7 @@ namespace RedShot.Upload.Forms
 		private void SaveToFtpButton_Clicked(object sender, EventArgs e)
 		{
 			blocked = true;
-			UploadManager.UploadToFtp(imageOnUpload);
+			UploadManager.RunFtpUploaderView(imageOnUpload);
 			blocked = false;
 		}
 
@@ -112,7 +112,7 @@ namespace RedShot.Upload.Forms
 				return;
             }
 
-			if(canClose == false)
+			if (canClose == false)
             {
 				closingTimer.Start();
 				canClose = true;

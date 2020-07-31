@@ -1,8 +1,5 @@
-﻿using RedShot.Upload.Abstractions;
-using System;
+﻿using RedShot.Abstractions.Uploading;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace RedShot.Upload.Basics
 {

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace RedShot.Upload.Abstractions
+namespace RedShot.Abstractions.Uploading
 {
     public interface IUploaderResponse
     {

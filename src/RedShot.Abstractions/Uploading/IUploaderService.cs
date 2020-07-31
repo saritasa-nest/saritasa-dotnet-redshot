@@ -1,9 +1,6 @@
 ﻿using Eto.Drawing;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace RedShot.Upload.Abstractions
+namespace RedShot.Abstractions.Uploading
 {
     public interface IUploaderService
     {

@@ -1,6 +1,6 @@
 ﻿using RedShot.Helpers;
 using RedShot.Helpers.FtpModels;
-using RedShot.Upload.Abstractions;
+using RedShot.Abstractions.Uploading;
 using RedShot.Upload.Basics;
 using Renci.SshNet;
 using Renci.SshNet.Common;
@@ -10,11 +10,12 @@ using System.IO;
 
 namespace RedShot.Upload.Uploaders.FTP
 {
-    public sealed class Sftp : BaseUploader
+    public sealed class Sftp : BaseUploader, IDisposable
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private bool disposed;
         private SftpClient client;
+
         public Sftp(FtpAccount account)
         {
             Account = account;
@@ -218,7 +219,7 @@ namespace RedShot.Upload.Uploaders.FTP
             return false;
         }
 
-        public override void Dispose()
+        public void Dispose()
         {
             if (disposed == false && client != null)
             {

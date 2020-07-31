@@ -1,4 +1,6 @@
+using Eto.Drawing;
 using Eto.Forms;
+using RedShot.Helpers;
 using RedShot.Helpers.FtpModels;
 using System;
 using System.Linq;
@@ -40,44 +42,62 @@ namespace RedShot.Upload.Forms.Ftp
 
         private void InitializeComponents()
         {
+            BackgroundColor = StylesHelper.BackgroundColor;
+
             name = new TextBox()
             {
-                Size = new Eto.Drawing.Size(200, 21)
+                Size = new Eto.Drawing.Size(200, 21),
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor,
             };
             host = new TextBox()
             {
-                Size = new Eto.Drawing.Size(200, 21)
+                Size = new Eto.Drawing.Size(200, 21),
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor,
             };
 
             username = new TextBox()
             {
-                Size = new Eto.Drawing.Size(200, 21)
+                Size = new Eto.Drawing.Size(200, 21),
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor,
             };
 
             password = new PasswordBox()
             {
-                Size = new Eto.Drawing.Size(200, 21)        
+                Size = new Eto.Drawing.Size(200, 21),
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor,
             };
 
 
             subFolderPath = new TextBox()
             {
-                Size = new Eto.Drawing.Size(200, 21)
+                Size = new Eto.Drawing.Size(200, 21),
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor,
             };
 
             ftpsCertificateLocation = new TextBox()
             {
-                Size = new Eto.Drawing.Size(200, 21)
+                Size = new Eto.Drawing.Size(200, 21),
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor,
             };
 
             keypath = new TextBox()
             {
-                Size = new Eto.Drawing.Size(200, 21)
+                Size = new Eto.Drawing.Size(200, 21),
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor,
             };
 
             passphrase = new PasswordBox()
             {
-                Size = new Eto.Drawing.Size(200, 21)
+                Size = new Eto.Drawing.Size(200, 21),
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor,
             };
 
             port = new NumericStepper()
@@ -86,14 +106,18 @@ namespace RedShot.Upload.Forms.Ftp
                 MaxValue = 65535,
                 Increment = 1,
                 Value = 21, 
-                Size = new Eto.Drawing.Size(40, 21)
+                Size = new Eto.Drawing.Size(40, 21),
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor,
             };
 
             ftpProtocol = new ComboBox()
             {
                 DataStore = Enum.GetValues(typeof(FtpProtocol)).Cast<FtpProtocol>()
                 .Select(p => p.ToString()),
-                Size = new Eto.Drawing.Size(200, 21)
+                Size = new Eto.Drawing.Size(200, 21),
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor,
             };
 
             //browserProtocol = new ComboBox()
@@ -107,19 +131,25 @@ namespace RedShot.Upload.Forms.Ftp
             {
                 DataStore = Enum.GetValues(typeof(FtpsEncryption)).Cast<FtpsEncryption>()
                 .Select(p => p.ToString()),
-                Size = new Eto.Drawing.Size(200, 21)
+                Size = new Eto.Drawing.Size(200, 21),
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor,
             };
 
             accounts = new ComboBox()
             {
                 DataStore = ftpAccounts,
-                Size = new Eto.Drawing.Size(150, 21)
+                Size = new Eto.Drawing.Size(150, 21),
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor,
             };
 
             addButton = new Button()
             {
                 Text = "Add",
-                Size = new Eto.Drawing.Size(100, 30)
+                Size = new Eto.Drawing.Size(100, 30),
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor,
             };
 
             addButton.Click += AddButton_Click;
@@ -127,7 +157,9 @@ namespace RedShot.Upload.Forms.Ftp
             delButton = new Button()
             {
                 Text = "Delete",
-                Size = new Eto.Drawing.Size(100, 30)
+                Size = new Eto.Drawing.Size(100, 30),
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor,
             };
 
             delButton.Click += DelButton_Click;
@@ -135,7 +167,9 @@ namespace RedShot.Upload.Forms.Ftp
             copyButton = new Button()
             {
                 Text = "Copy",
-                Size = new Eto.Drawing.Size(100, 30)
+                Size = new Eto.Drawing.Size(100, 30),
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor,
             };
 
             copyButton.Click += CopyButton_Click;
@@ -143,7 +177,9 @@ namespace RedShot.Upload.Forms.Ftp
             saveButton = new Button()
             {
                 Text = "Save",
-                Size = new Eto.Drawing.Size(100, 30)
+                Size = new Eto.Drawing.Size(100, 30),
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor,
             };
 
             saveButton.Click += SaveButton_Click;
@@ -151,7 +187,9 @@ namespace RedShot.Upload.Forms.Ftp
             ftpsCertificateLocationButton = new Button()
             {
                 Text = "...",
-                Size = new Eto.Drawing.Size(35, 21)
+                Size = new Eto.Drawing.Size(35, 21),
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor,
             };
 
             ftpsCertificateLocationButton.Click += FtpsCertificateLocationButton_Click;
@@ -159,7 +197,9 @@ namespace RedShot.Upload.Forms.Ftp
             keyPathButton = new Button()
             {
                 Text = "...",
-                Size = new Eto.Drawing.Size(35, 21)
+                Size = new Eto.Drawing.Size(35, 21),
+                BackgroundColor = StylesHelper.BackgroundColor,
+                TextColor = StylesHelper.TextColor,
             };
 
             keyPathButton.Click += KeyPathButton_Click;
@@ -176,6 +216,7 @@ namespace RedShot.Upload.Forms.Ftp
 
             Content = new StackLayout
             {
+                VerticalContentAlignment = VerticalAlignment.Center,
                 Orientation = Orientation.Vertical,
                 Padding = 10,
                 Items =
@@ -183,6 +224,8 @@ namespace RedShot.Upload.Forms.Ftp
                     GetAccountsPanel(),
                     new GroupBox()
                     {
+                        BackgroundColor = StylesHelper.BackgroundColor,
+                        TextColor = StylesHelper.TextColor,
                         Content = new StackLayout()
                         {
                             Orientation = Orientation.Vertical,
@@ -253,7 +296,8 @@ namespace RedShot.Upload.Forms.Ftp
                 {
                     new Label()
                     {
-                        Text = "Accounts:"
+                        Text = "Accounts:",
+                        TextColor = StylesHelper.TextColor,
                     },
                     accounts,
                     addButton,
@@ -279,7 +323,8 @@ namespace RedShot.Upload.Forms.Ftp
                         {
                             new Label()
                             {
-                                Text = name
+                                Text = name,
+                                TextColor = StylesHelper.TextColor,
                             }
                         }
                     },
@@ -300,8 +345,9 @@ namespace RedShot.Upload.Forms.Ftp
         {
             return new GroupBox()
             {
-                Text = "Ftps",
-                Width = 500,
+                Text = "FTPS",
+                TextColor = StylesHelper.TextColor,
+                Width = 400,
                 Content = new StackLayout
                 {
                     Orientation = Orientation.Vertical,
@@ -323,7 +369,8 @@ namespace RedShot.Upload.Forms.Ftp
                                     {
                                         new Label()
                                         {
-                                            Text = "Location of the certificate"
+                                            Text = "Location of the certificate",
+                                            TextColor = StylesHelper.TextColor,
                                         }
                                     }
                                 },
@@ -348,10 +395,11 @@ namespace RedShot.Upload.Forms.Ftp
         {
             return new GroupBox()
             {
-                Text = "Sftp",
+                Text = "SFTP",
+                TextColor = StylesHelper.TextColor,
                 Content = new StackLayout
                 {
-                    Width = 500,
+                    Width = 400,
                     Orientation = Orientation.Vertical,
                     Items =
                     {
@@ -369,7 +417,8 @@ namespace RedShot.Upload.Forms.Ftp
                                     {
                                         new Label()
                                         {
-                                            Text = "Location of the key:"
+                                            Text = "Location of the key:",
+                                            TextColor = StylesHelper.TextColor,
                                         }
                                     }
                                 },
@@ -403,18 +452,21 @@ namespace RedShot.Upload.Forms.Ftp
         {
             return new StackLayout
             {
+                VerticalContentAlignment = VerticalAlignment.Center,
                 Orientation = Orientation.Horizontal,
                 Padding = 5,
                 Items =
                 {
                     new Label()
                     {
-                        Text = "Host:"
+                        Text = "Host:",
+                        TextColor = StylesHelper.TextColor,
                     },
                     host,
                     new Label()
                     {
-                        Text = "Port:"
+                        Text = "Port:",
+                        TextColor = StylesHelper.TextColor,
                     },
                     port,
                 }

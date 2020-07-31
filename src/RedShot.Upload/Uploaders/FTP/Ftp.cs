@@ -1,7 +1,7 @@
 ﻿using FluentFTP;
+using RedShot.Abstractions.Uploading;
 using RedShot.Helpers;
 using RedShot.Helpers.FtpModels;
-using RedShot.Upload.Abstractions;
 using RedShot.Upload.Basics;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace RedShot.Upload.Uploaders.FTP
 {
-    public sealed class Ftp : BaseUploader
+    public sealed class Ftp : BaseUploader, IDisposable
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -69,12 +69,12 @@ namespace RedShot.Upload.Uploaders.FTP
                         break;
                 }
 
-                client.SslProtocols = SslProtocols.Tls | SslProtocols.Tls11 | SslProtocols.Tls12;
+                client.SslProtocols = SslProtocols.Tls | SslProtocols.Tls11 | SslProtocols.Tls12 | SslProtocols.Tls13;
                 client.DataConnectionEncryption = true;
 
                 if (!string.IsNullOrEmpty(account.FTPSCertificateLocation) && File.Exists(account.FTPSCertificateLocation))
                 {
-                    X509Certificate cert = X509Certificate.CreateFromSignedFile(Account.FTPSCertificateLocation);
+                    var cert = X509Certificate.CreateFromSignedFile(Account.FTPSCertificateLocation);
                     client.ClientCertificates.Add(cert);
                 }
                 else
@@ -244,7 +244,7 @@ namespace RedShot.Upload.Uploaders.FTP
             }
         }
 
-        public override void Dispose()
+        public void Dispose()
         {
             if (disposed == false && client != null)
             {
