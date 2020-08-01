@@ -1,4 +1,3 @@
-using System;
 using Eto.Forms;
 using Eto.Drawing;
 
@@ -16,13 +15,12 @@ namespace RedShot.App
         {
             WindowStyle = WindowStyle.None;
             Topmost = true;
-
-            Size = new Size(60, 180);
+            Size = new Size(180, 60);
 
             SelectionModeEnabledButton = new Button()
             {
                 Text = "Select",
-                Size = new Size(59, 59)
+                Size = new Size(60, 60)
             };
 
             ClearButton = new Button()
@@ -40,7 +38,7 @@ namespace RedShot.App
             Content = new StackLayout
             {
                 Size = new Size(60, 180),
-                Orientation = Orientation.Vertical,
+                Orientation = Orientation.Horizontal,
                 Items =
                 {
                     SelectionModeEnabledButton,

@@ -15,6 +15,7 @@ namespace RedShot.Upload
 {
     public static class UploadManager
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private static UploadBar uploadBar;
 
         public static string LastImagePath { get; private set; }
@@ -38,7 +39,13 @@ namespace RedShot.Upload
 
         public static void UploadToClipboard(Bitmap image)
         {
-            Clipboard.Instance.Image = image;
+            using (var stream = new MemoryStream())
+            {
+                image.Save(stream, ImageFormat.Png);
+                var paintedImage = new Bitmap(stream);
+                Clipboard.Instance.Clear();
+                Clipboard.Instance.Image = paintedImage;
+            }
         }
 
         public static void OpenLastImage()
@@ -56,9 +63,9 @@ namespace RedShot.Upload
                                 UseShellExecute = true
                             });
                     }
-                    catch
+                    catch (Exception e)
                     {
-
+                        Logger.Error(e, "An error occured in opening image");
                     }
                 });
             }

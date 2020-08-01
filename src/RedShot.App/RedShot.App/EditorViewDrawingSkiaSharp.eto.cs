@@ -8,18 +8,19 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 
 namespace RedShot.App
 {
     internal partial class EditorViewDrawingSkiaSharp : Eto.Forms.Form
     {
+        // Milliseconds.
+        double renderFrameTime = 10;
         bool disposed;
         SKControl skcontrol;
         SKBitmap skScreenImage;
         Bitmap etoScreenImage;
-        PointF startLocation; 
+        PointF startLocation;
         PointF endLocation;
         bool capturing;
         bool captured;
@@ -30,8 +31,6 @@ namespace RedShot.App
         float[] dash = new float[] { 5, 5 };
 
         #region PointPainting
-
-        UITimer pointPaintingTimer;
 
         List<HashSet<PointF>> pointPolygons = new List<HashSet<PointF>>();
 
@@ -62,54 +61,54 @@ namespace RedShot.App
         {
             screenRectangle = new Rectangle(ScreenHelper.GetMainWindowSize());
             var size = new Size(screenRectangle.Width, screenRectangle.Height);
-
             Size = size;
 
             WindowState = WindowState.Maximized;
             WindowStyle = WindowStyle.None;
 
             etoScreenImage = ScreenHelper.TakeScreenshot();
-
             skScreenImage = SkiaSharpHelper.ConvertFromEtoBitmap(etoScreenImage);
 
             penTimer = Stopwatch.StartNew();
 
             timer = new UITimer();
             timer.Elapsed += Timer_Elapsed;
-            timer.Interval = 0.01;
+            timer.Interval = renderFrameTime / 1000;
 
             skcontrol = new SKControl();
-
             Content = skcontrol;
 
             Shown += EditorView_Shown;
             UnLoad += EditorViewDrawingSkiaSharp_UnLoad;
 
             SetDefaultPointer();
-
-            pointPaintingTimer = new UITimer();
-            pointPaintingTimer.Elapsed += PointPaintingTimer_Elapsed;
-            pointPaintingTimer.Interval = 0.001;
-
-            pointPaintingPanel = new PointPaintingView();
-
-            pointPaintingPanel.ClearButton.Click += PointPaintingPanel_Clear;
-            pointPaintingPanel.PaintingModeEnabledButton.Click += PointPaintingPanel_PaintingModeEnabled;
-            pointPaintingPanel.SelectionModeEnabledButton.Click += PointPaintingPanel_SelectionModeEnabled;
-            pointPaintingPanel.Visible = false;
-
-            pointPolygons.Add(currentPointPolygons);
-
-            pointPaintingPanel.Show();
+            InitializePainting();
         }
 
-        private void PointPaintingTimer_Elapsed(object sender, EventArgs e)
+        /// <summary>
+        /// Render image for this editor.
+        /// </summary>
+        private void Timer_Elapsed(object sender, System.EventArgs e)
         {
-            if (pointsPainting)
+            if (disposed == false)
             {
-                currentPointPolygons.Add(Mouse.Position);
+                if (capturing)
+                {
+                    selectionRectangle = EtoDrawingHelper.CreateRectangle(startLocation, endLocation);
+                    skcontrol.Execute((surface) => PaintRegion(surface));
+                }
+                else if (captured)
+                {
+                    skcontrol.Execute((surface) => PaintRegion(surface));
+                }
+                else
+                {
+                    skcontrol.Execute((surface) => PaintClearImage(surface));
+                }
             }
         }
+
+        #region PointerFunctions
 
         private void SetDefaultPointer()
         {
@@ -118,7 +117,11 @@ namespace RedShot.App
 
         private void SetMousePointer(PointF location)
         {
-            if (CheckOnResizing(location))
+            if (paintPointsRequested)
+            {
+                // Set some drawing pointer :) .
+            }
+            else if (CheckOnResizing(location))
             {
                 if (resizePart == ResizePart.Angle)
                 {
@@ -143,69 +146,7 @@ namespace RedShot.App
             }
         }
 
-        private void Timer_Elapsed(object sender, System.EventArgs e)
-        {
-            if (disposed == false)
-            {
-                if (capturing)
-                {
-                    selectionRectangle = EtoDrawingHelper.CreateRectangle(startLocation, endLocation);
-                    skcontrol.Execute((surface) => PaintRegion(surface));
-                }
-                else if (captured)
-                {
-                    skcontrol.Execute((surface) => PaintRegion(surface));
-                }
-                else
-                {
-                    skcontrol.Execute((surface) => PaintClearImage(surface));
-                }
-            }
-        }
-
-        private void Upload()
-        {
-            if (selectionRectangle != default)
-            {
-                if (selectionRectangle.X + selectionRectangle.Width > Width)
-                {
-                    selectionRectangle.Width = Width - selectionRectangle.X;
-                }
-                if (selectionRectangle.Y + selectionRectangle.Height > Height)
-                {
-                    selectionRectangle.Height = Height - selectionRectangle.Y;
-                }
-
-                Bitmap screenshot;
-
-                if (pointPolygons.Count > 0)
-                {
-                    var pix = skScreenImage.PeekPixels();
-                    using (var surface = SKSurface.Create(pix))
-                    {
-                        PaintMarks(surface);
-
-                        using (var shapshot = surface.Snapshot())
-                        {
-                            using (var data = shapshot.Encode())
-                            {
-                                using (var stream = data.AsStream())
-                                {
-                                    var paintedImage = new Bitmap(stream);
-                                    screenshot = paintedImage.Clone((Rectangle)selectionRectangle);
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    screenshot = etoScreenImage.Clone((Rectangle)selectionRectangle);
-                }
-
-                UploadManager.RunUploaderView(screenshot);
-            }
-        }
+        #endregion PointerFunctions
 
         #region Checking
         private bool CheckOnMoving(PointF mouseLocation)
@@ -341,13 +282,27 @@ namespace RedShot.App
                     var newXcoord = e.Location.X - relativeX;
                     var newYcoord = e.Location.Y - relativeY;
 
-                    if ((newXcoord >= 0 && newYcoord >= 0) &&
-                        (newXcoord + selectionRectangle.Width <= Size.Width)
-                        && (newYcoord + selectionRectangle.Height <= Size.Height))
+                    if (newXcoord >= 0 && newYcoord >= 0)
                     {
-                        selectionRectangle.X = newXcoord;
-                        selectionRectangle.Y = newYcoord;
+                        if (newXcoord + selectionRectangle.Width < Size.Width)
+                        {
+                            selectionRectangle.X = newXcoord;
+                        }
+                        else
+                        {
+                            selectionRectangle.X = Size.Width - selectionRectangle.Width;
+                        }
+
+                        if (newYcoord + selectionRectangle.Height <= Size.Height)
+                        {
+                            selectionRectangle.Y = newYcoord;
+                        }
+                        else
+                        {
+                            selectionRectangle.Y = Size.Height - selectionRectangle.Height;
+                        }
                     }
+
                 }
                 else if (resizing)
                 {
@@ -365,6 +320,10 @@ namespace RedShot.App
                         var point = new PointF(e.Location.X, oppositeBorder.StartPoint.Y);
                         selectionRectangle = EtoDrawingHelper.CreateRectangle(point, oppositeBorder.EndPoint);
                     }
+                }
+                else if (pointsPainting)
+                {
+                    currentPointPolygons.Add(e.Location);
                 }
                 else
                 {
@@ -387,22 +346,24 @@ namespace RedShot.App
                 }
                 else if (captured)
                 {
-                    if (CheckOnResizing(e.Location))
-                    {
-                        resizing = true;
-                        HidePointPaintingView();
-                    }
-                    else if (CheckOnMoving(e.Location))
-                    {
-                        moving = true;
-                        HidePointPaintingView();
-                    } 
-                    else if (paintPointsRequested)
+                    if (paintPointsRequested)
                     {
                         pointsPainting = true;
                         currentPointPolygons = new HashSet<PointF>();
                         pointPolygons.Add(currentPointPolygons);
-                        pointPaintingTimer.Start();
+                    }
+                    else
+                    {
+                        if (CheckOnResizing(e.Location))
+                        {
+                            resizing = true;
+                            HidePointPaintingView();
+                        }
+                        else if (CheckOnMoving(e.Location))
+                        {
+                            moving = true;
+                            HidePointPaintingView();
+                        }
                     }
                 }
                 else
@@ -428,6 +389,7 @@ namespace RedShot.App
                     resizing = false;
                     skcontrol.Execute((surface) => PaintClearImage(surface));
                     HidePointPaintingView();
+                    pointPolygons.Clear();
                 }
                 else
                 {
@@ -443,10 +405,9 @@ namespace RedShot.App
                 moving = false;
                 resizing = false;
                 pointsPainting = false;
-                pointPaintingTimer.Stop();
                 SetDefaultPointer();
 
-                if (captured)
+                if (captured && paintPointsRequested == false)
                 {
                     ShowPointPaintingView();
                 }
@@ -479,12 +440,14 @@ namespace RedShot.App
 
         #region SkiaSharpCommands
 
-        private void PaintMarks(SKSurface surface)
+        private void PaintPoints(SKSurface surface)
         {
             SKPaint paint = new SKPaint
             {
                 Color = SKColors.Red,
-                StrokeWidth = 6,
+                StrokeWidth = 4,
+                StrokeJoin = SKStrokeJoin.Bevel,
+                IsAntialias = true
             };
 
             foreach (var points in pointPolygons)
@@ -577,7 +540,7 @@ namespace RedShot.App
 
             PaintDarkregion(surface, editorRect);
 
-            PaintMarks(surface);
+            PaintPoints(surface);
 
             PaintEditorBorder(surface);
 
@@ -605,7 +568,7 @@ namespace RedShot.App
 
             PaintDarkregion(surface, editorRect, regionRect);
 
-            PaintMarks(surface);
+            PaintPoints(surface);
 
             PaintDashAround(surface, regionRect, SKColors.White, SKColors.Black);
 
@@ -661,6 +624,109 @@ namespace RedShot.App
         }
         #endregion SkiaSharpCommands
 
+        #region Painting
+
+        private void InitializePainting()
+        {
+            pointPaintingPanel = new PointPaintingView();
+
+            pointPaintingPanel.ClearButton.Click += PointPaintingPanel_Clear;
+            pointPaintingPanel.PaintingModeEnabledButton.Click += PointPaintingPanel_PaintingModeEnabled;
+            pointPaintingPanel.SelectionModeEnabledButton.Click += PointPaintingPanel_SelectionModeEnabled;
+            pointPaintingPanel.Visible = false;
+
+            pointPolygons.Add(currentPointPolygons);
+
+            pointPaintingPanel.Location = new Point(
+                (int)(Size.Width - pointPaintingPanel.Width - Size.Width * 0.1),
+                (int)(Size.Height * 0.1));
+
+            pointPaintingPanel.KeyDown += EditorView_KeyDown;
+
+            pointPaintingPanel.Show();
+            pointPaintingPanel.Visible = false;
+        }
+
+        private void DisablePainting()
+        {
+            paintPointsRequested = false;
+            pointsPainting = false;
+        }
+
+        private void ShowPointPaintingView()
+        {
+            DisablePainting();
+            pointPaintingPanel.Visible = true;
+        }
+
+        private void HidePointPaintingView()
+        {
+            DisablePainting();
+            pointPaintingPanel.Visible = false;
+        }
+
+        private void PointPaintingPanel_Clear(object sender, EventArgs e)
+        {
+            pointPolygons.Clear();
+        }
+
+        private void PointPaintingPanel_SelectionModeEnabled(object sender, EventArgs e)
+        {
+            DisablePainting();
+        }
+
+        private void PointPaintingPanel_PaintingModeEnabled(object sender, EventArgs e)
+        {
+            paintPointsRequested = true;
+        }
+
+        #endregion Painting
+
+        private void Upload()
+        {
+            if (selectionRectangle != default)
+            {
+                if (selectionRectangle.X + selectionRectangle.Width > Width)
+                {
+                    selectionRectangle.Width = Width - selectionRectangle.X;
+                }
+                if (selectionRectangle.Y + selectionRectangle.Height > Height)
+                {
+                    selectionRectangle.Height = Height - selectionRectangle.Y;
+                }
+
+                var screenshot = GetScreenShotWithPainting();
+                UploadManager.RunUploaderView(screenshot);
+            }
+        }
+
+        private Bitmap GetScreenShotWithPainting()
+        {
+            using (var pix = skScreenImage.PeekPixels())
+            {
+
+                using (var surface = SKSurface.Create(pix))
+                {
+                    PaintPoints(surface);
+
+                    SKRectI rect = default;
+                    rect.Location = new SKPointI((int)selectionRectangle.X, (int)selectionRectangle.Y);
+                    rect.Size = new SKSizeI((int)selectionRectangle.Size.Width, (int)selectionRectangle.Size.Height);
+
+                    using (var shapshot = surface.Snapshot(rect))
+                    {
+                        using (var data = shapshot.Encode())
+                        {
+                            using (var stream = data.AsStream())
+                            {
+                                return new Eto.Drawing.Bitmap(stream);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public new void Dispose()
         {
             if (disposed == false)
@@ -673,34 +739,5 @@ namespace RedShot.App
                 pointPaintingPanel?.Close();
             }
         }
-
-        #region Marking
-
-        public void ShowPointPaintingView()
-        {
-            pointPaintingPanel.Content.Visible = true;
-        }
-
-        public void HidePointPaintingView()
-        {
-            pointPaintingPanel.Content.Visible = false;
-        }
-
-        private void PointPaintingPanel_Clear(object sender, EventArgs e)
-        {
-            pointPolygons.Clear();
-        }
-
-        private void PointPaintingPanel_SelectionModeEnabled(object sender, EventArgs e)
-        {
-            paintPointsRequested = false;
-        }
-
-        private void PointPaintingPanel_PaintingModeEnabled(object sender, EventArgs e)
-        {
-            paintPointsRequested = true;
-        }
-
-        #endregion Marking
     }
 }
