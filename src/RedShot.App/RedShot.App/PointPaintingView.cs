@@ -1,5 +1,6 @@
 using Eto.Forms;
 using Eto.Drawing;
+using RedShot.Helpers;
 
 namespace RedShot.App
 {
@@ -13,26 +14,32 @@ namespace RedShot.App
 
         public PointPaintingView()
         {
+            BackgroundColor = StylesHelper.BackgroundColor;
             WindowStyle = WindowStyle.None;
             Topmost = true;
             Size = new Size(180, 60);
 
+            var buttonSize = new Size(60, 60);
+
             SelectionModeEnabledButton = new Button()
             {
                 Text = "Select",
-                Size = new Size(60, 60)
+                TextColor = StylesHelper.TextColor,
+                Size = buttonSize
             };
 
             ClearButton = new Button()
             {
                 Text = "Clear",
-                Size = new Size(59, 59)
+                TextColor = StylesHelper.TextColor,
+                Size = buttonSize
             };
 
             PaintingModeEnabledButton = new Button()
             {
                 Text = "Paint",
-                Size = new Size(59, 59)
+                TextColor = StylesHelper.TextColor,
+                Size = buttonSize
             };
 
             Content = new StackLayout

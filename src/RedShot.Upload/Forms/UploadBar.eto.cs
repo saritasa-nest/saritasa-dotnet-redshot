@@ -58,6 +58,12 @@ namespace RedShot.Upload.Forms
             toolBar.ClipBoardButton.Clicked += ClipBoardButton_Clicked;
             toolBar.SaveToFileButton.Clicked += SaveToFileButton_Clicked;
 			toolBar.SaveToFtpButton.Clicked += SaveToFtpButton_Clicked;
+			toolBar.CloseButton.Clicked += CloseButton_Clicked;
+		}
+
+		private void CloseButton_Clicked(object sender, EventArgs e)
+		{
+			Close();
 		}
 
 		private void SaveToFtpButton_Clicked(object sender, EventArgs e)

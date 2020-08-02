@@ -11,6 +11,7 @@ namespace RedShot.Upload.Forms
 		public UploadToolBarButton ClipBoardButton;
 		public UploadToolBarButton SaveToFileButton;
 		public UploadToolBarButton SaveToFtpButton;
+		public UploadToolBarButton CloseButton;
 		void InitializeComponent()
 		{
 			ClientSize = new Size(ScreenHelper.GetSixteenthPartOfDisplay(), ScreenHelper.GetSixteenthPartOfDisplay() * 4);
@@ -18,6 +19,7 @@ namespace RedShot.Upload.Forms
 			ClipBoardButton = new UploadToolBarButton("ClipB");
 			SaveToFileButton = new UploadToolBarButton("File");
 			SaveToFtpButton = new UploadToolBarButton("FTP");
+			CloseButton = new UploadToolBarButton("Close");
 
 			Content = new StackLayout
 			{
@@ -27,7 +29,7 @@ namespace RedShot.Upload.Forms
 					SaveToFtpButton,
 					ClipBoardButton,
 					SaveToFileButton,
-					new UploadToolBarButton("Del"),
+					CloseButton,
 				}
 			};
 		}

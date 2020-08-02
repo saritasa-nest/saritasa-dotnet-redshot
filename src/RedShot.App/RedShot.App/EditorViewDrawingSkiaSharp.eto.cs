@@ -376,14 +376,13 @@ namespace RedShot.App
                         if (CheckOnResizing(e.Location))
                         {
                             resizing = true;
-                            HidePointPaintingView();
                         }
                         else if (CheckOnMoving(e.Location))
                         {
                             moving = true;
-                            HidePointPaintingView();
                         }
                     }
+                    HidePointPaintingView();
                 }
                 else
                 {
@@ -398,7 +397,6 @@ namespace RedShot.App
                 if (capturing)
                 {
                     capturing = false;
-                    ShowPointPaintingView();
                     skcontrol.Execute((surface) => PaintClearImage(surface));
                 }
                 else if (captured)
@@ -408,6 +406,7 @@ namespace RedShot.App
                     resizing = false;
                     skcontrol.Execute((surface) => PaintClearImage(surface));
                     HidePointPaintingView();
+                    DisablePainting();
                     pointPolygons.Clear();
                     SetDefaultPointer();
                 }
@@ -427,7 +426,7 @@ namespace RedShot.App
                 pointsPainting = false;
                 SetDefaultPointer();
 
-                if (captured && paintPointsRequested == false)
+                if (captured)
                 {
                     ShowPointPaintingView();
                 }
@@ -675,13 +674,12 @@ namespace RedShot.App
 
         private void ShowPointPaintingView()
         {
-            DisablePainting();
             pointPaintingPanel.Visible = true;
         }
 
         private void HidePointPaintingView()
         {
-            DisablePainting();
+            //DisablePainting();
             pointPaintingPanel.Visible = false;
         }
 
