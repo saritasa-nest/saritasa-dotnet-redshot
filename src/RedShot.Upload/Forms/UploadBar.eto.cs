@@ -28,7 +28,7 @@ namespace RedShot.Upload.Forms
 			this.Location = ScreenHelper.GetStartPointForUploadView();
 
 			checkTimer = new UITimer();
-			checkTimer.Interval = 4;
+			checkTimer.Interval = 5;
 			checkTimer.Elapsed += Timer_Elapsed;
 			checkTimer.Start();
 

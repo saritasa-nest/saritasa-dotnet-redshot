@@ -14,6 +14,7 @@ namespace RedShot.App
 
         public PointPaintingView()
         {
+            ShowInTaskbar = false;
             BackgroundColor = StylesHelper.BackgroundColor;
             WindowStyle = WindowStyle.None;
             Topmost = true;

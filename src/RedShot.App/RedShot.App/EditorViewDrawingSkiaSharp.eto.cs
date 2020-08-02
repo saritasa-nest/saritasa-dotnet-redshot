@@ -8,7 +8,6 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 
 namespace RedShot.App
@@ -700,6 +699,7 @@ namespace RedShot.App
 
         #endregion Painting
 
+        #region Uploading
         private void Upload()
         {
             if (selectionRectangle != default)
@@ -726,6 +726,8 @@ namespace RedShot.App
 
             return EtoDrawingHelper.GetEtoBitmapFromSkiaSurface(surface).Clone((Rectangle)selectionRectangle);
         }
+
+        #endregion Uploading
 
         public new void Dispose()
         {
