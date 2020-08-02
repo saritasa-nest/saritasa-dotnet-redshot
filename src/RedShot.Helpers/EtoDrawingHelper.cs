@@ -1,4 +1,6 @@
 ﻿using Eto.Drawing;
+using SkiaSharp;
+using System.IO;
 
 namespace RedShot.Helpers
 {
@@ -32,6 +34,26 @@ namespace RedShot.Helpers
             }
 
             return new RectangleF(x, y, width, height);
+        }
+
+        public static Bitmap GetEtoBitmapFromSkiaSurface(SKSurface surface)
+        {
+            using (var shapshot = surface.Snapshot())
+            {
+                return GetEtoBitmapFromSkiaImage(shapshot);
+            }
+        }
+
+        public static Bitmap GetEtoBitmapFromSkiaImage(SKImage skImage)
+        {
+            using (var data = skImage.Encode())
+            {
+                using (var stream = data.AsStream())
+                {
+                    stream.Seek(0, SeekOrigin.Begin);
+                    return new Eto.Drawing.Bitmap(stream);
+                }
+            }
         }
     }
 }

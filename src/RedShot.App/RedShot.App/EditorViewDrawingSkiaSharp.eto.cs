@@ -16,7 +16,7 @@ namespace RedShot.App
     internal partial class EditorViewDrawingSkiaSharp : Eto.Forms.Form
     {
         // Milliseconds.
-        double renderFrameTime = 10;
+        double renderFrameTime = 1;
         bool disposed;
         SKControl skcontrol;
         SKBitmap skScreenImage;
@@ -32,6 +32,8 @@ namespace RedShot.App
         float[] dash = new float[] { 5, 5 };
 
         #region PointPainting
+
+        Cursor paintingPointer;
 
         List<HashSet<PointF>> pointPolygons = new List<HashSet<PointF>>();
 
@@ -60,6 +62,8 @@ namespace RedShot.App
 
         void InitializeComponent()
         {
+            paintingPointer = CreatePaintingPointer();
+
             screenRectangle = new Rectangle(ScreenHelper.GetMainWindowSize());
             var size = new Size(screenRectangle.Width, screenRectangle.Height);
             Size = size;
@@ -116,11 +120,25 @@ namespace RedShot.App
             Cursor = Cursors.Arrow;
         }
 
+        private Cursor CreatePaintingPointer()
+        {
+            var skImage = SkiaSharpHelper.GetPointerForPainting(SKColors.Red);
+
+            var bitmap = EtoDrawingHelper.GetEtoBitmapFromSkiaImage(skImage);
+
+            return new Cursor(bitmap, new PointF(5, 5));
+        }
+
+        private void SetPaintingPointer()
+        {
+            Cursor = paintingPointer;
+        }
+
         private void SetMousePointer(PointF location)
         {
             if (paintPointsRequested)
             {
-                // Set some drawing pointer :) .
+                SetPaintingPointer();
             }
             else if (CheckOnResizing(location))
             {
@@ -391,6 +409,7 @@ namespace RedShot.App
                     skcontrol.Execute((surface) => PaintClearImage(surface));
                     HidePointPaintingView();
                     pointPolygons.Clear();
+                    SetDefaultPointer();
                 }
                 else
                 {
@@ -703,25 +722,11 @@ namespace RedShot.App
 
         private Bitmap GetScreenShotWithPainting()
         {
-            using var surface = SKSurface.Create(Width, Height, SKColorType.Bgra8888, SKAlphaType.Premul);
+            using var surface = SKSurface.Create(skScreenImage.Width, skScreenImage.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
             surface.Canvas.DrawBitmap(skScreenImage, new SKPoint(0, 0));
             PaintPoints(surface);
 
-            SKRectI rect = default;
-            rect.Location = new SKPointI((int)selectionRectangle.X, (int)selectionRectangle.Y);
-            rect.Size = new SKSizeI((int)selectionRectangle.Size.Width, (int)selectionRectangle.Size.Height);
-
-            using (var shapshot = surface.Snapshot(rect))
-            {
-                using (var data = shapshot.Encode(SKEncodedImageFormat.Png, 100))
-                {
-                    using (var stream = data.AsStream())
-                    {
-                        stream.Seek(0, SeekOrigin.Begin);
-                        return new Eto.Drawing.Bitmap(stream);
-                    }
-                }
-            }
+            return EtoDrawingHelper.GetEtoBitmapFromSkiaSurface(surface).Clone((Rectangle)selectionRectangle);
         }
 
         public new void Dispose()
