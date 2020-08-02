@@ -8,6 +8,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 
 namespace RedShot.App
@@ -702,26 +703,22 @@ namespace RedShot.App
 
         private Bitmap GetScreenShotWithPainting()
         {
-            using (var pix = skScreenImage.PeekPixels())
+            using var surface = SKSurface.Create(Width, Height, SKColorType.Bgra8888, SKAlphaType.Premul);
+            surface.Canvas.DrawBitmap(skScreenImage, new SKPoint(0, 0));
+            PaintPoints(surface);
+
+            SKRectI rect = default;
+            rect.Location = new SKPointI((int)selectionRectangle.X, (int)selectionRectangle.Y);
+            rect.Size = new SKSizeI((int)selectionRectangle.Size.Width, (int)selectionRectangle.Size.Height);
+
+            using (var shapshot = surface.Snapshot(rect))
             {
-
-                using (var surface = SKSurface.Create(pix))
+                using (var data = shapshot.Encode(SKEncodedImageFormat.Png, 100))
                 {
-                    PaintPoints(surface);
-
-                    SKRectI rect = default;
-                    rect.Location = new SKPointI((int)selectionRectangle.X, (int)selectionRectangle.Y);
-                    rect.Size = new SKSizeI((int)selectionRectangle.Size.Width, (int)selectionRectangle.Size.Height);
-
-                    using (var shapshot = surface.Snapshot(rect))
+                    using (var stream = data.AsStream())
                     {
-                        using (var data = shapshot.Encode())
-                        {
-                            using (var stream = data.AsStream())
-                            {
-                                return new Eto.Drawing.Bitmap(stream);
-                            }
-                        }
+                        stream.Seek(0, SeekOrigin.Begin);
+                        return new Eto.Drawing.Bitmap(stream);
                     }
                 }
             }

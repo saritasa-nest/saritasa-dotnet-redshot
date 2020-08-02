@@ -39,13 +39,8 @@ namespace RedShot.Upload
 
         public static void UploadToClipboard(Bitmap image)
         {
-            using (var stream = new MemoryStream())
-            {
-                image.Save(stream, ImageFormat.Png);
-                var paintedImage = new Bitmap(stream);
-                Clipboard.Instance.Clear();
-                Clipboard.Instance.Image = paintedImage;
-            }
+            Clipboard.Instance.Clear();
+            Clipboard.Instance.Image = image;
         }
 
         public static void OpenLastImage()
