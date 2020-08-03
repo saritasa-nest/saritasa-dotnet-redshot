@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace RedShot.Helpers
 {
+    /// <summary>
+    /// Helper for working with Urls and paths.
+    /// </summary>
     public static class UrlHelper
     {
-        public static readonly char[] BidiControlCharacters = new char[] { '\u200E', '\u200F', '\u202A', '\u202B', '\u202C', '\u202D', '\u202E' };
-
+        /// <summary>
+        /// Combine two urls.
+        /// </summary>
         public static string CombineURL(string url1, string url2)
         {
-            bool url1Empty = string.IsNullOrEmpty(url1);
-            bool url2Empty = string.IsNullOrEmpty(url2);
+            var url1Empty = string.IsNullOrEmpty(url1);
+            var url2Empty = string.IsNullOrEmpty(url2);
 
             if (url1Empty && url2Empty)
             {
@@ -43,45 +43,9 @@ namespace RedShot.Helpers
             return url1 + "/" + url2;
         }
 
-        public static string CombineURL(params string[] urls)
-        {
-            return urls.Aggregate(CombineURL);
-        }  
-
-        public static string GetFileName(string path)
-        {
-            if (path.Contains('/'))
-            {
-                path = path.Substring(path.LastIndexOf('/') + 1);
-            }
-
-            if (path.Contains('?'))
-            {
-                path = path.Remove(path.IndexOf('?'));
-            }
-
-            if (path.Contains('#'))
-            {
-                path = path.Remove(path.IndexOf('#'));
-            }
-
-            return path;
-        }
-
-        public static bool IsFileURL(string url)
-        {
-            int index = url.LastIndexOf('/');
-
-            if (index < 0)
-            {
-                return false;
-            }
-
-            string path = url.Substring(index + 1);
-
-            return !string.IsNullOrEmpty(path) && path.Contains(".");
-        }
-
+        /// <summary>
+        /// Gives directory path.
+        /// </summary>
         public static string GetDirectoryPath(string path)
         {
             if (path.Contains("/"))
@@ -92,6 +56,9 @@ namespace RedShot.Helpers
             return path;
         }
 
+        /// <summary>
+        /// Get all paths from path string.
+        /// </summary>
         public static List<string> GetPaths(string path)
         {
             List<string> paths = new List<string>();
@@ -114,90 +81,6 @@ namespace RedShot.Helpers
             }
 
             return paths;
-        }
-
-        private static readonly string[] URLPrefixes = new string[] { "http://", "https://", "ftp://", "ftps://", "file://", "//" };
-
-        public static bool HasPrefix(string url)
-        {
-            return URLPrefixes.Any(x => url.StartsWith(x, StringComparison.InvariantCultureIgnoreCase));
-        }
-
-        public static string FixPrefix(string url, string prefix = "http://")
-        {
-            if (!string.IsNullOrEmpty(url) && !HasPrefix(url))
-            {
-                return prefix + url;
-            }
-
-            return url;
-        }
-
-        public static string ForcePrefix(string url, string prefix = "https://")
-        {
-            if (!string.IsNullOrEmpty(url))
-            {
-                url = prefix + RemovePrefixes(url);
-            }
-
-            return url;
-        }
-
-        public static string RemovePrefixes(string url)
-        {
-            foreach (string prefix in URLPrefixes)
-            {
-                if (url.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    url = url.Remove(0, prefix.Length);
-                    break;
-                }
-            }
-
-            return url;
-        }
-
-        public static string GetHostName(string url)
-        {
-            if (!string.IsNullOrEmpty(url) && Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
-            {
-                string host = uri.Host;
-
-                if (!string.IsNullOrEmpty(host))
-                {
-                    if (host.StartsWith("www.", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        host = host.Substring(4);
-                    }
-
-                    return host;
-                }
-            }
-
-            return url;
-        }
-
-        public static string RemoveQueryString(string url)
-        {
-            if (!string.IsNullOrEmpty(url))
-            {
-                int index = url.IndexOf("?");
-
-                if (index > -1)
-                {
-                    return url.Remove(index);
-                }
-            }
-
-            return url;
-        }
-
-        public static string BuildUri(string root, string path, string query = null)
-        {
-            UriBuilder builder = new UriBuilder(root);
-            builder.Path = path;
-            builder.Query = query;
-            return builder.Uri.AbsoluteUri;
         }
     }
 }

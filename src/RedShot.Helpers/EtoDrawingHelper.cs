@@ -4,8 +4,14 @@ using System.IO;
 
 namespace RedShot.Helpers
 {
+    /// <summary>
+    /// Helpers for working with Eto drawing.
+    /// </summary>
     public static class EtoDrawingHelper
     {
+        /// <summary>
+        /// Creates rectangle via two points.
+        /// </summary>
         public static RectangleF CreateRectangle(PointF startLocation, PointF endLocation)
         {
             float width, height;
@@ -36,6 +42,9 @@ namespace RedShot.Helpers
             return new RectangleF(x, y, width, height);
         }
 
+        /// <summary>
+        /// Converts Skia surface to Eto bitmap.
+        /// </summary>
         public static Bitmap GetEtoBitmapFromSkiaSurface(SKSurface surface)
         {
             using (var shapshot = surface.Snapshot())
@@ -44,6 +53,9 @@ namespace RedShot.Helpers
             }
         }
 
+        /// <summary>
+        /// Converts Skia image to Eto bitmap.
+        /// </summary>
         public static Bitmap GetEtoBitmapFromSkiaImage(SKImage skImage)
         {
             using (var data = skImage.Encode())
@@ -51,7 +63,7 @@ namespace RedShot.Helpers
                 using (var stream = data.AsStream())
                 {
                     stream.Seek(0, SeekOrigin.Begin);
-                    return new Eto.Drawing.Bitmap(stream);
+                    return new Bitmap(stream);
                 }
             }
         }

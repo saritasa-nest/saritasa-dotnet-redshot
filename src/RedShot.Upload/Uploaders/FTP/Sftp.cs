@@ -1,15 +1,18 @@
-﻿using RedShot.Helpers;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using Renci.SshNet;
+using Renci.SshNet.Common;
+using RedShot.Helpers;
 using RedShot.Helpers.FtpModels;
 using RedShot.Abstractions.Uploading;
 using RedShot.Upload.Basics;
-using Renci.SshNet;
-using Renci.SshNet.Common;
-using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace RedShot.Upload.Uploaders.FTP
 {
+    /// <summary>
+    /// SFTP uploader.
+    /// </summary>
     public sealed class Sftp : BaseUploader, IDisposable
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
@@ -227,7 +230,7 @@ namespace RedShot.Upload.Uploaders.FTP
                 {
                     client.Dispose();
                 }
-                catch (Exception e) 
+                catch (Exception e)
                 {
                     client = null;
                     Logger.Error(e, "Error in disposing FTP client");

@@ -1,16 +1,23 @@
-﻿using Eto.Drawing;
+﻿using System;
+using Eto.Drawing;
 using RedShot.Helpers.FtpModels;
 using RedShot.Abstractions.Uploading;
-using System;
 
 namespace RedShot.Upload.Uploaders.FTP
 {
+    /// <summary>
+    /// Manages FTP uploading.
+    /// </summary>
     public class FtpUploaderService : IUploaderService
     {
         public FtpUploaderService(FtpAccount account)
         {
             Account = account;
         }
+
+        /// <summary>
+        /// Selected FTP account.
+        /// </summary>
         public FtpAccount Account { get; }
 
         public string ServiceIdentifier => "FTP/SFTP/FTPS";
@@ -26,6 +33,9 @@ namespace RedShot.Upload.Uploaders.FTP
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Creates either FTP or STPS uploader.
+        /// </summary>
         public IUploader CreateUploader()
         {
             if (Account != null)

@@ -1,34 +1,87 @@
-using Eto.Drawing;
-using Eto.Forms;
-using Eto.Forms.Controls.SkiaSharp;
-using RedShot.App.Helpers;
-using RedShot.Helpers;
-using RedShot.Upload;
-using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Eto.Drawing;
+using Eto.Forms;
+using Eto.Forms.Controls.SkiaSharp;
+using SkiaSharp;
+using RedShot.Helpers.EditorView;
+using RedShot.Helpers;
+using RedShot.Upload;
 
 namespace RedShot.App
 {
-    internal partial class EditorViewDrawingSkiaSharp : Eto.Forms.Form
+    /// <summary>
+    /// Shapshot editor view.
+    /// Functions: Select, Move, Resize, Paint.
+    /// </summary>
+    internal partial class EditorViewDrawingSkiaSharp : Form
     {
-        // Milliseconds.
-        double renderFrameTime = 1;
         bool disposed;
-        SKControl skcontrol;
-        SKBitmap skScreenImage;
-        Bitmap etoScreenImage;
-        PointF startLocation;
-        PointF endLocation;
-        bool capturing;
-        bool captured;
+
+        /// <summary>
+        /// Render frametime in milliseconds.
+        /// </summary>
+        double renderFrameTime = 1;
+
+        /// <summary>
+        /// Timer for rendering.
+        /// </summary>
         UITimer timer;
+
+        /// <summary>
+        /// Control for rendering image of the editor.
+        /// </summary>
+        SKControl skcontrol;
+
+        /// <summary>
+        /// User's screen snapshot in SkiaSharp format.
+        /// </summary>
+        SKBitmap skScreenImage;
+
+        /// <summary>
+        /// User's screen snapshot in Eto format.
+        /// </summary>
+        Bitmap etoScreenImage;
+
+        /// <summary>
+        /// Start location of selecting.
+        /// </summary>
+        PointF startLocation;
+
+        /// <summary>
+        /// End location of selecting.
+        /// </summary>
+        PointF endLocation;
+
+        /// <summary>
+        /// State when user selects region.
+        /// </summary>
+        bool capturing;
+
+        /// <summary>
+        /// State when user has selected region.
+        /// </summary>
+        bool captured;
+
+        /// <summary>
+        /// Selection region size and location.
+        /// </summary>
         RectangleF selectionRectangle;
+
+        /// <summary>
+        /// Size of editor screen.
+        /// </summary>
         Rectangle screenRectangle;
+
+        /// <summary>
+        /// For beauty.
+        /// </summary>
+        #region Styles
         Stopwatch penTimer;
         float[] dash = new float[] { 5, 5 };
+        #endregion Styles
 
         #region PointPainting
 
@@ -59,6 +112,9 @@ namespace RedShot.App
         PointF oppositeAngle;
         #endregion Resizingfields
 
+        /// <summary>
+        /// Initializes whole view.
+        /// </summary>
         void InitializeComponent()
         {
             paintingPointer = CreatePaintingPointer();
@@ -90,7 +146,7 @@ namespace RedShot.App
         }
 
         /// <summary>
-        /// Render image for this editor.
+        /// Renders image for this editor.
         /// </summary>
         private void Timer_Elapsed(object sender, System.EventArgs e)
         {
@@ -167,6 +223,10 @@ namespace RedShot.App
         #endregion PointerFunctions
 
         #region Checking
+
+        /// <summary>
+        /// Checks whether user can move selected area.
+        /// </summary>
         private bool CheckOnMoving(PointF mouseLocation)
         {
             if (mouseLocation.X >= selectionRectangle.X && mouseLocation.X <= selectionRectangle.X + selectionRectangle.Width)
@@ -183,6 +243,9 @@ namespace RedShot.App
             return false;
         }
 
+        /// <summary>
+        /// Checks whether user can resize selected area.
+        /// </summary>
         private bool CheckOnResizing(PointF mouseLocation)
         {
             if (ResizeHelper.ApproximatelyEquals(selectionRectangle.Y, mouseLocation.Y))

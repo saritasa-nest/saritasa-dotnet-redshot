@@ -4,8 +4,14 @@ using Eto.Drawing;
 
 namespace RedShot.App
 {
+    /// <summary>
+    /// Tray icon for the app.
+    /// </summary>
     public class TrayIcon : Eto.Forms.Form
     {
+        /// <summary>
+        /// Tray view.
+        /// </summary>
         public readonly TrayIndicator Tray;
 
         // Everything has to be sent in on the constructor since things do not auto-refresh / update this is a limitation.

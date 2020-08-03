@@ -6,6 +6,9 @@ using System.Text;
 
 namespace RedShot.Upload.Basics
 {
+    /// <summary>
+    /// Base upload functions.
+    /// </summary>
     public abstract class BaseUploader : IUploader
     {
         public bool IsUploading { get; protected set; }

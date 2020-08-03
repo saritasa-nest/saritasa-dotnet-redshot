@@ -1,18 +1,21 @@
-﻿using FluentFTP;
-using RedShot.Abstractions.Uploading;
-using RedShot.Helpers;
-using RedShot.Helpers.FtpModels;
-using RedShot.Upload.Basics;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
+using FluentFTP;
+using RedShot.Abstractions.Uploading;
+using RedShot.Helpers;
+using RedShot.Helpers.FtpModels;
+using RedShot.Upload.Basics;
 
 namespace RedShot.Upload.Uploaders.FTP
 {
+    /// <summary>
+    /// FTP/FTPS uploader.
+    /// </summary>
     public sealed class Ftp : BaseUploader, IDisposable
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();

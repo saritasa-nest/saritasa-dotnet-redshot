@@ -2,18 +2,26 @@
 using System;
 using System.IO;
 using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 
 namespace RedShot.Configuration
 {
+    /// <summary>
+    /// Manages configuration of the app,
+    /// </summary>
     public static class ConfigurationManager
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private static readonly string defaultFolderName = "RedShot";
         private static readonly string configName = "config.yaml";
 
+        /// <summary>
+        /// Gives configuration object.
+        /// </summary>
         public static YamlConfig YamlConfig { get; } = GetConfig();
 
+        /// <summary>
+        /// Saves config in the file.
+        /// </summary>
         public static void Save()
         {
             EncryptFtpAccountPasswords();

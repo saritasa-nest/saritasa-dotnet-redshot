@@ -4,8 +4,14 @@ using System.IO;
 
 namespace RedShot.Helpers
 {
+    /// <summary>
+    /// Helpers to work with Skia Sharp.
+    /// </summary>
     public static class SkiaSharpHelper
     {
+        /// <summary>
+        /// Gives Skia bitmap from Eto bitmap.
+        /// </summary>
         public static SKBitmap ConvertFromEtoBitmap(Bitmap bitmap)
         {
             using (var ms = new MemoryStream())
@@ -17,6 +23,9 @@ namespace RedShot.Helpers
             }
         }
 
+        /// <summary>
+        /// Draws pointer image for painting state.
+        /// </summary>
         public static SKImage GetPointerForPainting(SKColor color)
         {
             using var surface = SKSurface.Create(10, 10, SKColorType.Bgra8888, SKAlphaType.Premul);

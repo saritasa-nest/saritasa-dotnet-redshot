@@ -5,6 +5,9 @@ using System.IO;
 
 namespace RedShot.App
 {
+    /// <summary>
+    /// Manages application views.
+    /// </summary>
     public static class ApplicationManager
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();

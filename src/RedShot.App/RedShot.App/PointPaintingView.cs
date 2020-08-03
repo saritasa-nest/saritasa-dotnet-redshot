@@ -4,14 +4,29 @@ using RedShot.Helpers;
 
 namespace RedShot.App
 {
+    /// <summary>
+    /// Painting panel for editor view.
+    /// </summary>
     public partial class PointPaintingView : Form
     {
+        /// <summary>
+        /// Button for enabling selection mode.
+        /// </summary>
         public Button SelectionModeEnabledButton { get; }
 
+        /// <summary>
+        /// Button for clearing paintings.
+        /// </summary>
         public Button ClearButton { get; }
 
+        /// <summary>
+        /// Button for enabling painting mode.
+        /// </summary>
         public Button PaintingModeEnabledButton { get; }
 
+        /// <summary>
+        /// Initializes painting panel view.
+        /// </summary>
         public PointPaintingView()
         {
             ShowInTaskbar = false;

@@ -1,8 +1,8 @@
 ﻿using Eto.Drawing;
 
-namespace RedShot.App.Helpers
+namespace RedShot.Helpers.EditorView
 {
-    internal struct LineF
+    public struct LineF
     {
         public LineF(PointF start, PointF end)
         {

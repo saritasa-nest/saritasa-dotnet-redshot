@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace RedShot.Upload
 {
+    /// <summary>
+    /// This class manages uploading process.
+    /// </summary>
     public static class UploadManager
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
@@ -27,8 +30,14 @@ namespace RedShot.Upload
                 .Select(t => (IUploaderService)Activator.CreateInstance(t));
         }
 
+        /// <summary>
+        /// Path of screenshot collection.
+        /// </summary>
         private static string path = Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "RedShot")).FullName;
 
+        /// <summary>
+        /// Will be changed.
+        /// </summary>
         public static IEnumerable<IUploaderService> Uploaders { get; }
 
         public static void UploadToImagesFolder(Bitmap image)
@@ -37,12 +46,18 @@ namespace RedShot.Upload
             image.Save(LastImagePath, ImageFormat.Png);
         }
 
+        /// <summary>
+        /// Uploads to clip board.
+        /// </summary>
         public static void UploadToClipboard(Bitmap image)
         {
             Clipboard.Instance.Clear();
             Clipboard.Instance.Image = image;
         }
 
+        /// <summary>
+        /// Opens last screenshot.
+        /// </summary>
         public static void OpenLastImage()
         {
             if (!string.IsNullOrEmpty(LastImagePath))
@@ -66,6 +81,9 @@ namespace RedShot.Upload
             }
         }
 
+        /// <summary>
+        /// Upload to seleted file.
+        /// </summary>
         public static bool UploadToFile(Bitmap image, Control parent)
         {
             using (var dialog = new SaveFileDialog())
@@ -95,6 +113,9 @@ namespace RedShot.Upload
             return true;
         }
 
+        /// <summary>
+        /// Runs view for FTP uploading.
+        /// </summary>
         public static bool RunFtpUploaderView(Bitmap image)
         {
             var form = new FtpUploaderForm(image);
@@ -109,6 +130,9 @@ namespace RedShot.Upload
             return Uploaders.Where(u => u.ServiceName == name).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Run uploading panel.
+        /// </summary>
         public static Form RunUploaderView(Bitmap image)
         {
             UploadToImagesFolder(image);
@@ -121,6 +145,9 @@ namespace RedShot.Upload
             return uploadBar;
         }
 
+        /// <summary>
+        /// Closes uploader view.
+        /// </summary>
         public static void CloseUploaderView()
         {
             if (uploadBar != null)

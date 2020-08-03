@@ -5,33 +5,38 @@ using RedShot.Helpers;
 
 namespace RedShot.Upload.Forms
 {
-	partial class UploadToolBarButton : Panel
-	{
-		public event EventHandler<EventArgs> Clicked;
-		void InitializeComponent()
-		{
-			Width = ScreenHelper.GetSixteenthPartOfDisplay();
-			Height = ScreenHelper.GetSixteenthPartOfDisplay();
+    /// <summary>
+    /// Tool bar button.
+    /// Will be improved.
+    /// </summary>
+    internal partial class UploadToolBarButton : Panel
+    {
+        public event EventHandler<EventArgs> Clicked;
 
-			var btn = new Button();
-			btn.Width = Width;
-			btn.Height = Height;
-			btn.Text = name;
+        void InitializeComponent()
+        {
+            Width = ScreenHelper.GetSixteenthPartOfDisplay();
+            Height = ScreenHelper.GetSixteenthPartOfDisplay();
+
+            var btn = new Button();
+            btn.Width = Width;
+            btn.Height = Height;
+            btn.Text = name;
             btn.Click += Btn_Click;
 
-			Content = new StackLayout
-			{
-				Items =
-				{
-					btn
-				}
-			};
+            Content = new StackLayout
+            {
+                Items =
+                {
+                    btn
+                }
+            };
 
-		}
+        }
 
         private void Btn_Click(object sender, EventArgs e)
         {
-			Clicked?.Invoke(this, EventArgs.Empty);
+            Clicked?.Invoke(this, EventArgs.Empty);
         }
     }
 }
