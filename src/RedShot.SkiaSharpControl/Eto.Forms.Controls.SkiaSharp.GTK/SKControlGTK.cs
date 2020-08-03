@@ -6,12 +6,18 @@ using SkiaSharp;
 
 namespace Eto.Forms.Controls.SkiaSharp.GTK
 {
+    /// <summary>
+    /// SkiaSharp drawing control for GTK (Linux OS).
+    /// </summary>
     public class SKControlGtk : EventBox
     {
         private SKBitmap bitmap;
         private SKSurface skSurface;
         private bool disposed;
 
+        /// <summary>
+        /// Executes SkiaSharp commands.
+        /// </summary>
         public void Execute(Action<SKSurface> surfaceAction)
         {
             if (bitmap == null || skSurface == null)

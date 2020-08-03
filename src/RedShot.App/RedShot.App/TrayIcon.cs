@@ -7,14 +7,16 @@ namespace RedShot.App
     /// <summary>
     /// Tray icon for the app.
     /// </summary>
-    public class TrayIcon : Eto.Forms.Form
+    public class TrayIcon : Form
     {
         /// <summary>
         /// Tray view.
         /// </summary>
         public readonly TrayIndicator Tray;
 
-        // Everything has to be sent in on the constructor since things do not auto-refresh / update this is a limitation.
+        /// <summary>
+        /// Inits tray icon.
+        /// </summary>
         public TrayIcon(string title, string iconPath)
         {
             var menu = new ContextMenu();

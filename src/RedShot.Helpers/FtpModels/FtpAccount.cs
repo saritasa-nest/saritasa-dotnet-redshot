@@ -2,8 +2,14 @@
 
 namespace RedShot.Helpers.FtpModels
 {
+    /// <summary>
+    /// Ftp account model.
+    /// </summary>
     public class FtpAccount
     {
+        /// <summary>
+        /// Inits base values.
+        /// </summary>
         public FtpAccount()
         {
             Name = "FTP account";
@@ -12,41 +18,59 @@ namespace RedShot.Helpers.FtpModels
             Port = 21;
             IsActive = false;
             SubFolderPath = "";
-            BrowserProtocol = BrowserProtocol.http;
-            //HttpHomePath = "";
-            //HttpHomePathAutoAddSubFolderPath = true;
-            //HttpHomePathNoExtension = false;
             FTPSEncryption = FtpsEncryption.Explicit;
             FTPSCertificateLocation = "";
             Id = Guid.NewGuid();
         }
 
+        /// <summary>
+        /// Unique Id of the account.
+        /// </summary>
         public Guid Id { get; set; }
 
+        /// <summary>
+        /// Name of the account.
+        /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Ftp protocol of the account.
+        /// </summary>
         public FtpProtocol Protocol { get; set; }
 
+        /// <summary>
+        /// Host of account's FTP server.
+        /// </summary>
         public string Host { get; set; }
 
+        /// <summary>
+        /// Port of account's FTP server.
+        /// </summary>
         public int Port { get; set; }
 
+        /// <summary>
+        /// Username of the account.
+        /// </summary>
         public string Username { get; set; }
 
+        /// <summary>
+        /// Password of the account.
+        /// </summary>
         public string Password { get; set; }
 
+        /// <summary>
+        /// Active flag.
+        /// </summary>
         public bool IsActive { get; set; }
 
+        /// <summary>
+        /// Sub folder path on FTP server.
+        /// </summary>
         public string SubFolderPath { get; set; }
 
-        public BrowserProtocol BrowserProtocol { get; set; }
-
-        //public string HttpHomePath { get; set; }
-
-        //public bool HttpHomePathAutoAddSubFolderPath { get; set; }
-
-        //public bool HttpHomePathNoExtension { get; set; }
-
+        /// <summary>
+        /// FTP adress property.
+        /// </summary>
         public string FTPAddress
         {
             get
@@ -76,22 +100,32 @@ namespace RedShot.Helpers.FtpModels
             }
         }
 
+        /// <summary>
+        /// FTPS encryption method.
+        /// </summary>
         public FtpsEncryption FTPSEncryption { get; set; }
 
+        /// <summary>
+        /// FTPS Certificate location.
+        /// </summary>
         public string FTPSCertificateLocation { get; set; }
 
+        /// <summary>
+        /// Keypath.
+        /// </summary>
         public string Keypath { get; set; }
 
+        /// <summary>
+        /// Passphrase.
+        /// </summary>
         public string Passphrase { get; set; }
 
+        /// <summary>
+        /// Return understandable full name of the account.
+        /// </summary>
         public override string ToString()
         {
-            return $"{Name} ({Host}:{Port})";
-        }
-
-        public FtpAccount Clone()
-        {
-            return MemberwiseClone() as FtpAccount;
+            return $"{Name}||({Host}:{Port})";
         }
     }
 }

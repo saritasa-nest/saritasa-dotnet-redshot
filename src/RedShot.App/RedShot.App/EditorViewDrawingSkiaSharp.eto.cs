@@ -83,6 +83,9 @@ namespace RedShot.App
         float[] dash = new float[] { 5, 5 };
         #endregion Styles
 
+        /// <summary>
+        /// Fields for painting when user has captured region.
+        /// </summary>
         #region PointPainting
 
         Cursor paintingPointer;
@@ -105,6 +108,9 @@ namespace RedShot.App
         float relativeY;
         #endregion Movingfields
 
+        /// <summary>
+        /// Fileds for resizing selected area.
+        /// </summary>
         #region ResizingFields
         bool resizing;
         ResizePart resizePart;
@@ -168,6 +174,9 @@ namespace RedShot.App
             }
         }
 
+        /// <summary>
+        /// For changing mouse pointer.
+        /// </summary>
         #region PointerFunctions
 
         private void SetDefaultPointer()
@@ -338,6 +347,9 @@ namespace RedShot.App
 
         #endregion Checking
 
+        /// <summary>
+        /// Handlers for window events.
+        /// </summary>
         #region WindowEvents
         private void EditorView_Shown(object sender, EventArgs e)
         {
@@ -519,6 +531,9 @@ namespace RedShot.App
         }
         #endregion WindowEvents
 
+        /// <summary>
+        /// Skia sharp drawing functions.
+        /// </summary>
         #region SkiaSharpCommands
 
         private void PaintPoints(SKSurface surface)
@@ -762,6 +777,9 @@ namespace RedShot.App
 
         #endregion Painting
 
+        /// <summary>
+        /// Runs uploader functions.
+        /// </summary>
         #region Uploading
         private void Upload()
         {
@@ -792,6 +810,9 @@ namespace RedShot.App
 
         #endregion Uploading
 
+        /// <summary>
+        /// Disposes UI elements.
+        /// </summary>
         public new void Dispose()
         {
             if (disposed == false)

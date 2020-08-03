@@ -1,13 +1,17 @@
-﻿using SkiaSharp;
-using System;
+﻿using System;
+using SkiaSharp;
 
 namespace Eto.Forms.Controls.SkiaSharp
 {
+    /// <summary>
+    /// Common implementation for SkiaSharp control.
+    /// </summary>
     [Handler(typeof(ISKControl))]
     public class SKControl : Control
     {
         private new ISKControl Handler => (ISKControl)base.Handler;
 
+        /// <inheritdoc cref="ISKControl"/>.
         public void Execute(Action<SKSurface> surface)
         {
             Handler.Execute(surface);

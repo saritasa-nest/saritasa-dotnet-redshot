@@ -9,17 +9,22 @@ namespace Eto.Forms.Controls.SkiaSharp.WinForms
         private SKControlWinForms nativecontrol;
         private bool disposed;
 
+        /// <summary>
+        /// Inits WIN OS SkiaSharp control.
+        /// </summary>
         public SKControlHandler()
         {
             nativecontrol = new SKControlWinForms();
             Control = nativecontrol;
         }
 
+        /// <inheritdoc cref="ISKControl"/>.
         public void Execute(Action<SKSurface> surface)
         {
             nativecontrol.Execute(surface);
         }
 
+        /// <inheritdoc cref="ISKControl"/>.
         void ISKControl.DisposeControl()
         {
             if (disposed == false)

@@ -6,7 +6,7 @@ using YamlDotNet.Serialization;
 namespace RedShot.Configuration
 {
     /// <summary>
-    /// Manages configuration of the app,
+    /// Manages configuration of the app.
     /// </summary>
     public static class ConfigurationManager
     {
@@ -63,7 +63,6 @@ namespace RedShot.Configuration
                 Logger.Info("There is not a config file in the system");
                 return new YamlConfig();
             }
-          
         }
 
         private static bool TryGetYamlString(out string conf)
@@ -132,9 +131,10 @@ namespace RedShot.Configuration
                     account.Password = encryptService.Decrypt(account.Password);
                     account.Passphrase = encryptService.Decrypt(account.Passphrase);
                 }
-                catch
+                catch (Exception ex)
                 {
-
+                    Logger.Warn(ex);
+                    // Occures when passwords are null.
                 }
             }
         }

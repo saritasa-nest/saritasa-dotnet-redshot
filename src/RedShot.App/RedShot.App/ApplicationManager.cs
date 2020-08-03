@@ -1,7 +1,7 @@
-﻿using Eto.Forms;
-using RedShot.Upload;
-using System;
+﻿using System;
 using System.IO;
+using Eto.Forms;
+using RedShot.Upload;
 
 namespace RedShot.App
 {
@@ -13,6 +13,10 @@ namespace RedShot.App
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private static TrayIcon trayIcon;
 
+        /// <summary>
+        /// Gives tray icon form.
+        /// </summary>
+        /// <returns></returns>
         public static Form GetTrayApp()
         {
             try
@@ -27,6 +31,9 @@ namespace RedShot.App
             return trayIcon;
         }
 
+        /// <summary>
+        /// Runs screenshot editor.
+        /// </summary>
         public static void RunScreenShotEditorDrawing()
         {
             try

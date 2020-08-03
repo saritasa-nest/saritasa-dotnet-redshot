@@ -1,14 +1,10 @@
 ﻿using Eto.Drawing;
 using Eto.Forms;
-using RedShot.Abstractions.Uploading;
 using RedShot.Upload.Forms;
 using RedShot.Upload.Forms.Ftp;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace RedShot.Upload
@@ -23,23 +19,14 @@ namespace RedShot.Upload
 
         public static string LastImagePath { get; private set; }
 
-        static UploadManager()
-        {
-            Uploaders = Assembly.GetExecutingAssembly().GetTypes()
-                .Where(t => typeof(IUploaderService).IsAssignableFrom(t) && !t.IsInterface)
-                .Select(t => (IUploaderService)Activator.CreateInstance(t));
-        }
-
         /// <summary>
         /// Path of screenshot collection.
         /// </summary>
         private static string path = Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "RedShot")).FullName;
 
         /// <summary>
-        /// Will be changed.
+        /// Uploads image to the default folder.
         /// </summary>
-        public static IEnumerable<IUploaderService> Uploaders { get; }
-
         public static void UploadToImagesFolder(Bitmap image)
         {
             LastImagePath = Path.Combine(path, $"{DateTime.Now.ToFileTime()}.png");
@@ -123,11 +110,6 @@ namespace RedShot.Upload
             form.ShowModal();
 
             return true;
-        }
-
-        public static IUploaderService GetUploaderService(string name)
-        {
-            return Uploaders.Where(u => u.ServiceName == name).FirstOrDefault();
         }
 
         /// <summary>

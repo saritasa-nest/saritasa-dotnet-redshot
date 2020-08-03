@@ -19,18 +19,22 @@ namespace RedShot.Upload.Uploaders.FTP
     public sealed class Ftp : BaseUploader, IDisposable
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-
+        private readonly FtpAccount account;
         private FtpClient client;
         private bool disposed;
 
+        /// <inheritdoc cref="BaseUploader"/>.
         public override event EventHandler Uploaded;
 
+        /// <inheritdoc cref="BaseUploader"/>.
         public override event EventHandler UploadStoped;
 
+        /// <inheritdoc cref="BaseUploader"/>.
         public override event EventHandler UploadStarted;
 
-        public FtpAccount Account { get; private set; }
-
+        /// <summary>
+        /// Connection flag.
+        /// </summary>
         public bool IsConnected
         {
             get
@@ -39,15 +43,18 @@ namespace RedShot.Upload.Uploaders.FTP
             }
         }
 
+        /// <summary>
+        /// Initializes FTP/FTPS uploader.
+        /// </summary>
         public Ftp(FtpAccount account)
         {
-            Account = account;
+            this.account = account;
 
             client = new FtpClient()
             {
-                Host = Account.Host,
-                Port = Account.Port,
-                Credentials = new NetworkCredential(Account.Username, Account.Password)
+                Host = account.Host,
+                Port = account.Port,
+                Credentials = new NetworkCredential(account.Username, account.Password)
             };
 
             if (account.IsActive)
@@ -61,7 +68,7 @@ namespace RedShot.Upload.Uploaders.FTP
 
             if (account.Protocol == FtpProtocol.FTPS)
             {
-                switch (Account.FTPSEncryption)
+                switch (account.FTPSEncryption)
                 {
                     default:
                     case FtpsEncryption.Explicit:
@@ -77,7 +84,7 @@ namespace RedShot.Upload.Uploaders.FTP
 
                 if (!string.IsNullOrEmpty(account.FTPSCertificateLocation) && File.Exists(account.FTPSCertificateLocation))
                 {
-                    var cert = X509Certificate.CreateFromSignedFile(Account.FTPSCertificateLocation);
+                    var cert = X509Certificate.CreateFromSignedFile(account.FTPSCertificateLocation);
                     client.ClientCertificates.Add(cert);
                 }
                 else
@@ -93,9 +100,10 @@ namespace RedShot.Upload.Uploaders.FTP
             }
         }
 
+        /// <inheritdoc cref="BaseUploader"/>.
         public override IUploaderResponse Upload(Stream stream, string fileName)
         {
-            string subFolderPath = Account.SubFolderPath;
+            string subFolderPath = account.SubFolderPath;
             string path = UrlHelper.CombineURL(subFolderPath, fileName);
 
             IsUploading = true;
@@ -135,6 +143,7 @@ namespace RedShot.Upload.Uploaders.FTP
             }
         }
 
+        /// <inheritdoc cref="BaseUploader"/>.
         public override void StopUpload()
         {
             if (IsUploading && !StopUploadRequested)
@@ -144,6 +153,9 @@ namespace RedShot.Upload.Uploaders.FTP
             }
         }
 
+        /// <summary>
+        /// Connects to destination FTP server.
+        /// </summary>
         public bool Connect()
         {
             if (!client.IsConnected)
@@ -154,6 +166,9 @@ namespace RedShot.Upload.Uploaders.FTP
             return client.IsConnected;
         }
 
+        /// <summary>
+        /// Disconnects from destination FTP server.
+        /// </summary>
         public void Disconnect()
         {
             if (client != null)
@@ -169,46 +184,9 @@ namespace RedShot.Upload.Uploaders.FTP
             return result.IsSuccess();
         }
 
-        public void UploadFiles(string[] localPaths, string remotePath)
-        {
-            foreach (string file in localPaths)
-            {
-                if (!string.IsNullOrEmpty(file))
-                {
-                    string filename = Path.GetFileName(file);
-
-                    if (File.Exists(file))
-                    {
-                        UploadFile(file, UrlHelper.CombineURL(remotePath, filename));
-                    }
-                    else if (Directory.Exists(file))
-                    {
-                        List<string> filesList = new List<string>();
-                        filesList.AddRange(Directory.GetFiles(file));
-                        filesList.AddRange(Directory.GetDirectories(file));
-                        string path = UrlHelper.CombineURL(remotePath, filename);
-                        CreateDirectory(path);
-                        UploadFiles(filesList.ToArray(), path);
-                    }
-                }
-            }
-        }
-
-        public IEnumerable<FtpListItem> GetListing(string remotePath)
-        {
-            return client.GetListing(remotePath);
-        }
-
-        public bool DirectoryExists(string remotePath)
-        {
-            if (Connect())
-            {
-                return client.DirectoryExists(remotePath);
-            }
-
-            return false;
-        }
-
+        /// <summary>
+        /// Creates directory on remote FTP server.
+        /// </summary>
         public bool CreateDirectory(string remotePath)
         {
             if (Connect())
@@ -227,6 +205,9 @@ namespace RedShot.Upload.Uploaders.FTP
             return false;
         }
 
+        /// <summary>
+        /// Creates directories if need.
+        /// </summary>
         public IEnumerable<string> CreateMultiDirectory(string remotePath)
         {
             var paths = UrlHelper.GetPaths(remotePath);
@@ -239,14 +220,9 @@ namespace RedShot.Upload.Uploaders.FTP
             return paths;
         }
 
-        public void Rename(string fromRemotePath, string toRemotePath)
-        {
-            if (Connect())
-            {
-                client.Rename(fromRemotePath, toRemotePath);
-            }
-        }
-
+        /// <summary>
+        /// Disposes FTP client.
+        /// </summary>
         public void Dispose()
         {
             if (disposed == false && client != null)

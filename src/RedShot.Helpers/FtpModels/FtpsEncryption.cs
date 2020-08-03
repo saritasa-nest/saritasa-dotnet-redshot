@@ -1,5 +1,8 @@
 ﻿namespace RedShot.Helpers.FtpModels
 {
+    /// <summary>
+    /// FtpsEncryption enum.
+    /// </summary>
     public enum FtpsEncryption
     {
         /// <summary>

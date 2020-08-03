@@ -11,10 +11,6 @@ namespace RedShot.Upload.Basics
         /// <summary>
         /// Initialize properties.
         /// </summary>
-        /// <param name="isSuccess"></param>
-        /// <param name="fileUrl"></param>
-        /// <param name="statusCode"></param>
-        /// <param name="errors"></param>
         public BaseUploaderResponse(bool isSuccess, string fileUrl = default, int statusCode = default, IEnumerable<string> errors = default)
         {
             IsSuccess = isSuccess;

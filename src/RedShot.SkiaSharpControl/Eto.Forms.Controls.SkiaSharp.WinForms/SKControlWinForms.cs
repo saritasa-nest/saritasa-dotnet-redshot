@@ -6,11 +6,17 @@ using SkiaSharp.Views.Desktop;
 
 namespace Eto.Forms.Controls.SkiaSharp.WinForms
 {
+    /// <summary>
+    /// SkiaSharp drawing control for WIN OS.
+    /// </summary>
     public class SKControlWinForms : global::SkiaSharp.Views.Desktop.SKControl
     {
         private Bitmap bitmap;
         private SKSurface surface;
 
+        /// <summary>
+        /// Executes SkiaSharp commands.
+        /// </summary>
         public void Execute(Action<SKSurface> surfaceAction)
         {
             if (bitmap == null)

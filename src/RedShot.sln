@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Infrastructure", "RedShot.Infrastructure\RedShot.Infrastructure.csproj", "{ABC4ED2E-B948-474C-A9B2-5338C6258DE7}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.App", "RedShot.App\RedShot.App\RedShot.App.csproj", "{F2F65109-EBFC-46A7-86F2-5EDBC3918C61}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.EtoForms.Desktop", "RedShot.App\RedShot.App.Desktop\RedShot.EtoForms.Desktop.csproj", "{AAE18E45-C33E-4D68-AF9D-F64669F98ADC}"
@@ -31,10 +29,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{ABC4ED2E-B948-474C-A9B2-5338C6258DE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ABC4ED2E-B948-474C-A9B2-5338C6258DE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ABC4ED2E-B948-474C-A9B2-5338C6258DE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ABC4ED2E-B948-474C-A9B2-5338C6258DE7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F2F65109-EBFC-46A7-86F2-5EDBC3918C61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F2F65109-EBFC-46A7-86F2-5EDBC3918C61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2F65109-EBFC-46A7-86F2-5EDBC3918C61}.Release|Any CPU.ActiveCfg = Release|Any CPU

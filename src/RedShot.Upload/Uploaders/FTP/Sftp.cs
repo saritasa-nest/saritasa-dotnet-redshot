@@ -19,26 +19,39 @@ namespace RedShot.Upload.Uploaders.FTP
         private bool disposed;
         private SftpClient client;
 
+        /// <summary>
+        /// Initializes SFTP uploader.
+        /// </summary>
         public Sftp(FtpAccount account)
         {
-            Account = account;
+            this.account = account;
         }
 
+        /// <inheritdoc cref="BaseUploader"/>.
         public override event EventHandler Uploaded;
 
+        /// <inheritdoc cref="BaseUploader"/>.
         public override event EventHandler UploadStoped;
 
+        /// <inheritdoc cref="BaseUploader"/>.
         public override event EventHandler UploadStarted;
 
-        public FtpAccount Account { get; private set; }
+        private FtpAccount account;
 
-        public bool IsValidAccount => (!string.IsNullOrEmpty(Account.Keypath) && File.Exists(Account.Keypath)) || !string.IsNullOrEmpty(Account.Password);
+        /// <summary>
+        /// Valid account flag.
+        /// </summary>
+        public bool IsValidAccount => (!string.IsNullOrEmpty(account.Keypath) && File.Exists(account.Keypath)) || !string.IsNullOrEmpty(account.Password);
 
+        /// <summary>
+        /// Connection flag.
+        /// </summary>
         public bool IsConnected => client != null && client.IsConnected;
 
+        /// <inheritdoc cref="BaseUploader"/>.
         public override IUploaderResponse Upload(Stream stream, string fileName)
         {
-            string subFolderPath = Account.SubFolderPath;
+            string subFolderPath = account.SubFolderPath;
             string path = UrlHelper.CombineURL(subFolderPath, fileName);
 
             IsUploading = true;
@@ -66,6 +79,7 @@ namespace RedShot.Upload.Uploaders.FTP
             return new BaseUploaderResponse(false);
         }
 
+        /// <inheritdoc cref="BaseUploader"/>.
         public override void StopUpload()
         {
             if (IsUploading && !StopUploadRequested)
@@ -83,33 +97,36 @@ namespace RedShot.Upload.Uploaders.FTP
             }
         }
 
+        /// <summary>
+        /// Connects to destination FTP server.
+        /// </summary>
         public bool Connect()
         {
             if (client == null)
             {
-                if (!string.IsNullOrEmpty(Account.Keypath))
+                if (!string.IsNullOrEmpty(account.Keypath))
                 {
-                    if (!File.Exists(Account.Keypath))
+                    if (!File.Exists(account.Keypath))
                     {
                         throw new Exception("Key not found");
                     }
 
                     PrivateKeyFile keyFile;
 
-                    if (string.IsNullOrEmpty(Account.Passphrase))
+                    if (string.IsNullOrEmpty(account.Passphrase))
                     {
-                        keyFile = new PrivateKeyFile(Account.Keypath);
+                        keyFile = new PrivateKeyFile(account.Keypath);
                     }
                     else
                     {
-                        keyFile = new PrivateKeyFile(Account.Keypath, Account.Passphrase);
+                        keyFile = new PrivateKeyFile(account.Keypath, account.Passphrase);
                     }
 
-                    client = new SftpClient(Account.Host, Account.Port, Account.Username, keyFile);
+                    client = new SftpClient(account.Host, account.Port, account.Username, keyFile);
                 }
-                else if (!string.IsNullOrEmpty(Account.Password))
+                else if (!string.IsNullOrEmpty(account.Password))
                 {
-                    client = new SftpClient(Account.Host, Account.Port, Account.Username, Account.Password);
+                    client = new SftpClient(account.Host, account.Port, account.Username, account.Password);
                 }
 
                 if (client != null)
@@ -126,6 +143,9 @@ namespace RedShot.Upload.Uploaders.FTP
             return IsConnected;
         }
 
+        /// <summary>
+        /// Disconnects from destination FTP server.
+        /// </summary>
         public void Disconnect()
         {
             if (client != null && client.IsConnected)
@@ -134,23 +154,9 @@ namespace RedShot.Upload.Uploaders.FTP
             }
         }
 
-        public void ChangeDirectory(string path, bool autoCreateDirectory = false)
-        {
-            if (Connect())
-            {
-                try
-                {
-                    client.ChangeDirectory(path);
-                }
-                catch (SftpPathNotFoundException ex) when (autoCreateDirectory)
-                {
-                    Logger.Warn(ex);
-                    CreateDirectory(path, true);
-                    ChangeDirectory(path);
-                }
-            }
-        }
-
+        /// <summary>
+        /// Checks if directory exists.
+        /// </summary>
         public bool DirectoryExists(string path)
         {
             if (Connect())
@@ -161,6 +167,9 @@ namespace RedShot.Upload.Uploaders.FTP
             return false;
         }
 
+        /// <summary>
+        /// Creates directory on remote SFTP server.
+        /// </summary>
         public void CreateDirectory(string path, bool createMultiDirectory = false)
         {
             if (Connect())
@@ -179,6 +188,9 @@ namespace RedShot.Upload.Uploaders.FTP
             }
         }
 
+        /// <summary>
+        /// Creates directories if need.
+        /// </summary>
         public List<string> CreateMultiDirectory(string path)
         {
             List<string> directoryList = new List<string>();
@@ -208,20 +220,22 @@ namespace RedShot.Upload.Uploaders.FTP
                 }
                 catch (SftpPathNotFoundException) when (autoCreateDirectory)
                 {
-                    // Happens when directory not exist, create directory and retry uploading
-
+                    Logger.Info($"Directory not exist, path:{remotePath}");
                     CreateDirectory(UrlHelper.GetDirectoryPath(remotePath), true);
                     return UploadStream(stream, remotePath);
                 }
                 catch (NullReferenceException)
                 {
-                    // Happens when disconnect while uploading
+                    Logger.Warn("Error occured by disconnect while uploading");
                 }
             }
 
             return false;
         }
 
+        /// <summary>
+        /// Disposes SFTP client.
+        /// </summary>
         public void Dispose()
         {
             if (disposed == false && client != null)
