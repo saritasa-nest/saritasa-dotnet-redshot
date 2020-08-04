@@ -22,8 +22,9 @@ namespace RedShot.App
 
         /// <summary>
         /// Render frametime in milliseconds.
+        /// Should be more than 10 in Linux OS.
         /// </summary>
-        double renderFrameTime = 1;
+        const double renderFrameTime = 10;
 
         /// <summary>
         /// Timer for rendering.

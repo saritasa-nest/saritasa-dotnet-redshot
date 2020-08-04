@@ -7,6 +7,7 @@ using RedShot.Configuration;
 using System.Linq;
 using RedShot.Upload.Uploaders.FTP;
 using RedShot.Helpers;
+using RedShot.Helpers.Forms;
 
 namespace RedShot.Upload.Forms.Ftp
 {
@@ -26,7 +27,7 @@ namespace RedShot.Upload.Forms.Ftp
         public FtpUploaderForm(Bitmap image)
         {
             Title = "FTP Upload";
-            Size = new Size(350, 300);
+            MinimumSize = new Size(350, 250);
 
             ShowInTaskbar = true;
 
@@ -50,7 +51,7 @@ namespace RedShot.Upload.Forms.Ftp
 
             imageNameBox = new TextBox()
             {
-                Size = new Eto.Drawing.Size(150, 21),
+                Size = new Eto.Drawing.Size(250, 21),
             };
 
             uploadButton = new Button()
@@ -74,6 +75,7 @@ namespace RedShot.Upload.Forms.Ftp
                     GetConfigLayout(),
                     GetAccountLayout(),
                     GetImageNameLayout(),
+                    FormsHelper.VoidBox(10),
                     uploadButton
                 }
             };
@@ -96,7 +98,7 @@ namespace RedShot.Upload.Forms.Ftp
         {
             return new StackLayout()
             {
-                Padding = 20,
+                Padding = 10,
                 Orientation = Orientation.Vertical,
                 HorizontalContentAlignment = HorizontalAlignment.Center,
                 Items =
@@ -106,6 +108,7 @@ namespace RedShot.Upload.Forms.Ftp
                         Text = "Image name",
                         Width = 100,
                     },
+                    FormsHelper.VoidBox(10),
                     imageNameBox
                 }
             };
@@ -115,7 +118,7 @@ namespace RedShot.Upload.Forms.Ftp
         {
             return new StackLayout()
             {
-                Padding = 20,
+                Padding = 10,
                 HorizontalContentAlignment = HorizontalAlignment.Center,
                 Orientation = Orientation.Vertical,
                 Items =
@@ -125,7 +128,9 @@ namespace RedShot.Upload.Forms.Ftp
                         Text = "Select account",
                         Width = 100,
                     },
-                    accounts
+                    FormsHelper.VoidBox(10),
+                    accounts,
+                    FormsHelper.VoidBox(10)
                 }
             };
         }

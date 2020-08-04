@@ -1,4 +1,5 @@
 using Eto.Forms;
+using RedShot.Helpers.Forms;
 using RedShot.Helpers.FtpModels;
 using System;
 using System.Linq;
@@ -183,9 +184,10 @@ namespace RedShot.Upload.Forms.Ftp
                             }
                         },
                         Text = "Account",
-                        MinimumSize = new Eto.Drawing.Size(550, 400),
+                        MinimumSize = new Eto.Drawing.Size(600, 400),
                         Padding = 20
                     },
+                    FormsHelper.VoidBox(20),
                     saveButton
                 }
             };
@@ -244,9 +246,13 @@ namespace RedShot.Upload.Forms.Ftp
                     {
                         Text = "Accounts:",
                     },
+                    FormsHelper.VoidBox(10),
                     accounts,
+                    FormsHelper.VoidBox(10),
                     addButton,
+                    FormsHelper.VoidBox(10),
                     delButton,
+                    FormsHelper.VoidBox(10),
                     copyButton
                 }
             };
@@ -290,7 +296,7 @@ namespace RedShot.Upload.Forms.Ftp
             return new GroupBox()
             {
                 Text = "FTPS",
-                Width = 400,
+                Width = 550,
                 Content = new StackLayout
                 {
                     Orientation = Orientation.Vertical,
@@ -323,6 +329,7 @@ namespace RedShot.Upload.Forms.Ftp
                                     Items =
                                     {
                                         ftpsCertificateLocation,
+                                        FormsHelper.VoidBox(10),
                                         ftpsCertificateLocationButton
                                     }
                                 }
@@ -340,7 +347,7 @@ namespace RedShot.Upload.Forms.Ftp
                 Text = "SFTP",
                 Content = new StackLayout
                 {
-                    Width = 400,
+                    Width = 550,
                     Orientation = Orientation.Vertical,
                     Items =
                     {
@@ -359,7 +366,7 @@ namespace RedShot.Upload.Forms.Ftp
                                         new Label()
                                         {
                                             Text = "Location of the key:",
-                                        }
+                                        },
                                     }
                                 },
                                 new StackLayout()
@@ -369,6 +376,7 @@ namespace RedShot.Upload.Forms.Ftp
                                     Items =
                                     {
                                         keypath,
+                                        FormsHelper.VoidBox(10),
                                         keyPathButton
                                     }
                                 }
@@ -401,11 +409,14 @@ namespace RedShot.Upload.Forms.Ftp
                     {
                         Text = "Host:",
                     },
+                    FormsHelper.VoidBox(10),
                     host,
+                    FormsHelper.VoidBox(10),
                     new Label()
                     {
                         Text = "Port:",
                     },
+                    FormsHelper.VoidBox(10),
                     port,
                 }
             };
