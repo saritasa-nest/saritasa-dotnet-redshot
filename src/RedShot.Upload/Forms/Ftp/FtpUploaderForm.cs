@@ -13,12 +13,16 @@ namespace RedShot.Upload.Forms.Ftp
     public partial class FtpUploaderForm : Dialog
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         private List<FtpAccount> ftpAccounts => ConfigurationManager.YamlConfig.FtpAccounts;
+
         private ComboBox accounts;
+
         private Button uploadButton;
         private Button ftpSettingsButton;
         private TextBox imageNameBox;
         private Bitmap image;
+
         public FtpUploaderForm(Bitmap image)
         {
             Title = "FTP Upload";
@@ -37,35 +41,26 @@ namespace RedShot.Upload.Forms.Ftp
 
         private void InitializeComponents()
         {
-            BackgroundColor = StylesHelper.BackgroundColor;
 
             accounts = new ComboBox()
             {
                 DataStore = ftpAccounts,
                 Size = new Eto.Drawing.Size(250, 21),
-                BackgroundColor = StylesHelper.BackgroundColor,
-                TextColor = StylesHelper.TextColor
             };
 
             imageNameBox = new TextBox()
             {
                 Size = new Eto.Drawing.Size(150, 21),
-                BackgroundColor = StylesHelper.BackgroundColor,
-                TextColor = StylesHelper.TextColor
             };
 
             uploadButton = new Button()
             {
                 Text = "Upload",
-                BackgroundColor = StylesHelper.BackgroundColor,
-                TextColor = StylesHelper.TextColor,
             };
 
             ftpSettingsButton = new Button()
             {
                 Text = "Ftp Settings",
-                BackgroundColor = StylesHelper.BackgroundColor,
-                TextColor = StylesHelper.TextColor
             };
 
             Content = new StackLayout
@@ -110,7 +105,6 @@ namespace RedShot.Upload.Forms.Ftp
                     {
                         Text = "Image name",
                         Width = 100,
-                        TextColor = StylesHelper.TextColor,
                     },
                     imageNameBox
                 }
@@ -130,7 +124,6 @@ namespace RedShot.Upload.Forms.Ftp
                     {
                         Text = "Select account",
                         Width = 100,
-                        TextColor = StylesHelper.TextColor,
                     },
                     accounts
                 }

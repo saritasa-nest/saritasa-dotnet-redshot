@@ -1,6 +1,7 @@
 ﻿using RedShot.Helpers.Encryption;
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using YamlDotNet.Serialization;
 
 namespace RedShot.Configuration
@@ -99,7 +100,14 @@ namespace RedShot.Configuration
         {
             try
             {
-                return Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), defaultFolderName)).FullName;
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    return Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Roaming", defaultFolderName)).FullName;
+                }
+                else
+                {
+                    return Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), defaultFolderName)).FullName;
+                }
             }
             catch (Exception ex)
             {
