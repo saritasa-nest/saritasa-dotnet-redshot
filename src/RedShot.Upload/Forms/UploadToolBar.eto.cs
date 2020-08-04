@@ -1,6 +1,7 @@
 using Eto.Forms;
 using Eto.Drawing;
 using RedShot.Helpers;
+using RedShot.Helpers.Forms;
 
 namespace RedShot.Upload.Forms
 {
@@ -12,31 +13,33 @@ namespace RedShot.Upload.Forms
         /// <summary>
         /// Clipbaord upload button.
         /// </summary>
-        public UploadToolBarButton ClipBoardButton { get; private set; }
+        public DefaultButton ClipBoardButton { get; private set; }
 
         /// <summary>
         /// Save to file button.
         /// </summary>
-        public UploadToolBarButton SaveToFileButton { get; private set; }
+        public DefaultButton SaveToFileButton { get; private set; }
 
         /// <summary>
         /// Save to ftp button.
         /// </summary>
-        public UploadToolBarButton SaveToFtpButton { get; private set; }
+        public DefaultButton SaveToFtpButton { get; private set; }
 
         /// <summary>
         /// Close button.
         /// </summary>
-        public UploadToolBarButton CloseButton { get; private set; }
+        public DefaultButton CloseButton { get; private set; }
 
         void InitializeComponent()
         {
             ClientSize = new Size(ScreenHelper.GetSixteenthPartOfDisplay(), ScreenHelper.GetSixteenthPartOfDisplay() * 4);
 
-            ClipBoardButton = new UploadToolBarButton("ClipB");
-            SaveToFileButton = new UploadToolBarButton("File");
-            SaveToFtpButton = new UploadToolBarButton("FTP");
-            CloseButton = new UploadToolBarButton("Close");
+            var buttonSize = ScreenHelper.GetSixteenthPartOfDisplay();
+
+            ClipBoardButton = new DefaultButton("ClipB", buttonSize, buttonSize);
+            SaveToFileButton = new DefaultButton("File", buttonSize, buttonSize);
+            SaveToFtpButton = new DefaultButton("FTP", buttonSize, buttonSize);
+            CloseButton = new DefaultButton("Close", buttonSize, buttonSize);
 
             Content = new StackLayout
             {

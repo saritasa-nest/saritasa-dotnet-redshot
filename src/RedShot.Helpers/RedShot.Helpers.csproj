@@ -19,4 +19,10 @@
     <ProjectReference Include="..\RedShot.Abstractions\RedShot.Abstractions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Forms\DefaultButton.eto.cs">
+      <DependentUpon>DefaultButton.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>

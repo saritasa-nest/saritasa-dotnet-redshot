@@ -100,6 +100,8 @@ namespace RedShot.App
 
         PointPaintingView pointPaintingPanel;
 
+        Point panelLocation;
+
         #endregion PointPainting
 
         #region Movingfields
@@ -372,47 +374,11 @@ namespace RedShot.App
             {
                 if (moving)
                 {
-                    var newXcoord = e.Location.X - relativeX;
-                    var newYcoord = e.Location.Y - relativeY;
-
-                    if (newXcoord >= 0 && newYcoord >= 0)
-                    {
-                        if (newXcoord + selectionRectangle.Width < Size.Width)
-                        {
-                            selectionRectangle.X = newXcoord;
-                        }
-                        else
-                        {
-                            selectionRectangle.X = Size.Width - selectionRectangle.Width;
-                        }
-
-                        if (newYcoord + selectionRectangle.Height <= Size.Height)
-                        {
-                            selectionRectangle.Y = newYcoord;
-                        }
-                        else
-                        {
-                            selectionRectangle.Y = Size.Height - selectionRectangle.Height;
-                        }
-                    }
-
+                    MoveSelectionArea(e.Location);
                 }
                 else if (resizing)
                 {
-                    if (resizePart == ResizePart.Angle)
-                    {
-                        selectionRectangle = EtoDrawingHelper.CreateRectangle(e.Location, oppositeAngle);
-                    }
-                    else if (resizePart == ResizePart.HorizontalBorder)
-                    {
-                        var point = new PointF(oppositeBorder.StartPoint.X, e.Location.Y);
-                        selectionRectangle = EtoDrawingHelper.CreateRectangle(point, oppositeBorder.EndPoint);
-                    }
-                    else if (resizePart == ResizePart.VerticalBorder)
-                    {
-                        var point = new PointF(e.Location.X, oppositeBorder.StartPoint.Y);
-                        selectionRectangle = EtoDrawingHelper.CreateRectangle(point, oppositeBorder.EndPoint);
-                    }
+                    ResizeSelectionArea(e.Location);
                 }
                 else if (pointsPainting)
                 {
@@ -521,11 +487,7 @@ namespace RedShot.App
                     break;
 
                 case Keys.Enter:
-                    if (captured)
-                    {
-                        Upload();
-                        Close();
-                    }
+                    SaveScreenShot();
                     break;
             }
         }
@@ -581,7 +543,7 @@ namespace RedShot.App
                 IsAntialias = true
             };
 
-            var text = $"X: {selectionRectangle.X} Y: {selectionRectangle.Y}   W: {selectionRectangle.Width} H: {selectionRectangle.Height}";
+            var text = $"X: {(int)selectionRectangle.X} Y: {(int)selectionRectangle.Y}   W: {(int)selectionRectangle.Width} H: {(int)selectionRectangle.Height}";
 
             var textWidth = paint.MeasureText(text);
 
@@ -726,21 +688,28 @@ namespace RedShot.App
         {
             pointPaintingPanel = new PointPaintingView();
 
-            pointPaintingPanel.ClearButton.Click += PointPaintingPanel_Clear;
-            pointPaintingPanel.PaintingModeEnabledButton.Click += PointPaintingPanel_PaintingModeEnabled;
-            pointPaintingPanel.SelectionModeEnabledButton.Click += PointPaintingPanel_SelectionModeEnabled;
-            pointPaintingPanel.Visible = false;
+            pointPaintingPanel.ClearButton.Clicked += PointPaintingPanel_Clear;
+            pointPaintingPanel.PaintingModeEnabledButton.Clicked += PointPaintingPanel_PaintingModeEnabled;
+            pointPaintingPanel.SelectionModeEnabledButton.Clicked += PointPaintingPanel_SelectionModeEnabled;
+            pointPaintingPanel.SaveScreenShotButton.Clicked += SaveScreenShotButton_Clicked;
 
             pointPolygons.Add(currentPointPolygons);
 
-            pointPaintingPanel.Location = new Point(
+            panelLocation = new Point(
                 (int)(Size.Width - pointPaintingPanel.Width - Size.Width * 0.1),
                 (int)(Size.Height * 0.1));
+
+            pointPaintingPanel.Location = panelLocation;
 
             pointPaintingPanel.KeyDown += EditorView_KeyDown;
 
             pointPaintingPanel.Show();
             pointPaintingPanel.Visible = false;
+        }
+
+        private void SaveScreenShotButton_Clicked(object sender, EventArgs e)
+        {
+            SaveScreenShot();
         }
 
         private void DisablePainting()
@@ -752,11 +721,11 @@ namespace RedShot.App
         private void ShowPointPaintingView()
         {
             pointPaintingPanel.Visible = true;
+            pointPaintingPanel.Location = panelLocation;
         }
 
         private void HidePointPaintingView()
         {
-            //DisablePainting();
             pointPaintingPanel.Visible = false;
         }
 
@@ -809,6 +778,66 @@ namespace RedShot.App
         }
 
         #endregion Uploading
+
+        /// <summary>
+        /// Moves selection area.
+        /// </summary>
+        private void MoveSelectionArea(PointF location)
+        {
+            var newXcoord = location.X - relativeX;
+            var newYcoord = location.Y - relativeY;
+
+            if (newXcoord >= 0 && newYcoord >= 0)
+            {
+                if (newXcoord + selectionRectangle.Width < Size.Width)
+                {
+                    selectionRectangle.X = newXcoord;
+                }
+                else
+                {
+                    selectionRectangle.X = Size.Width - selectionRectangle.Width;
+                }
+
+                if (newYcoord + selectionRectangle.Height <= Size.Height)
+                {
+                    selectionRectangle.Y = newYcoord;
+                }
+                else
+                {
+                    selectionRectangle.Y = Size.Height - selectionRectangle.Height;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Resizes selection area.
+        /// </summary>
+        private void ResizeSelectionArea(PointF location)
+        {
+            if (resizePart == ResizePart.Angle)
+            {
+                selectionRectangle = EtoDrawingHelper.CreateRectangle(location, oppositeAngle);
+            }
+            else if (resizePart == ResizePart.HorizontalBorder)
+            {
+                var point = new PointF(oppositeBorder.StartPoint.X, location.Y);
+                selectionRectangle = EtoDrawingHelper.CreateRectangle(point, oppositeBorder.EndPoint);
+            }
+            else if (resizePart == ResizePart.VerticalBorder)
+            {
+                var point = new PointF(location.X, oppositeBorder.StartPoint.Y);
+                selectionRectangle = EtoDrawingHelper.CreateRectangle(point, oppositeBorder.EndPoint);
+            }
+        }
+
+        private void SaveScreenShot()
+        {
+            if (captured)
+            {
+                Upload();
+                Close();
+            }
+        }
 
         /// <summary>
         /// Disposes UI elements.

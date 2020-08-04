@@ -1,26 +1,21 @@
 using System;
 using Eto.Forms;
-using Eto.Drawing;
-using RedShot.Helpers;
 
-namespace RedShot.Upload.Forms
+namespace RedShot.Helpers.Forms
 {
     /// <summary>
     /// Tool bar button.
     /// Will be improved.
     /// </summary>
-    internal partial class UploadToolBarButton : Panel
+    public partial class DefaultButton : Panel
     {
         public event EventHandler<EventArgs> Clicked;
 
         void InitializeComponent()
         {
-            Width = ScreenHelper.GetSixteenthPartOfDisplay();
-            Height = ScreenHelper.GetSixteenthPartOfDisplay();
-
             var btn = new Button();
-            btn.Width = Width;
-            btn.Height = Height;
+            btn.Width = width;
+            btn.Height = height;
             btn.Text = name;
             btn.Click += Btn_Click;
 
