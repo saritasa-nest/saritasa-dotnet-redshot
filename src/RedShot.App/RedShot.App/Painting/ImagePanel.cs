@@ -23,6 +23,7 @@ namespace RedShot.App.Painting
         private List<IPaintingAction> paintingActions;
 
         private List<IPaintingAction> previousPaintingActions;
+        private SKImage cachedImage;
 
         private IPaintingAction currentAction;
         public PaintingState PaintingState { get; set; }
@@ -40,6 +41,7 @@ namespace RedShot.App.Painting
 
             this.image = SkiaSharpHelper.ConvertFromEtoBitmap(image);
             paintingActions = new List<IPaintingAction>();
+            previousPaintingActions = new List<IPaintingAction>();
 
             this.MouseDown += ImagePanel_MouseDown;
             this.MouseMove += ImagePanel_MouseMove;
@@ -56,7 +58,9 @@ namespace RedShot.App.Painting
         {
             if (e.Buttons == MouseButtons.Primary)
             {
+                paintingActions.Add(currentAction);
                 painting = false;
+                previousPaintingActions.Clear();
             }
         }
 
@@ -88,15 +92,7 @@ namespace RedShot.App.Painting
             }
             else if (e.Buttons == MouseButtons.Alternate)
             {
-                if (painting)
-                {
-                    painting = false;
-                    paintingActions.Remove(currentAction);
-                }
-                else
-                {
-                    paintingActions.Remove(paintingActions.LastOrDefault());
-                }
+                PaintBack();
             }
         }
 
@@ -105,7 +101,6 @@ namespace RedShot.App.Painting
             if (painting)
             {
                 painting = false;
-                paintingActions.Remove(currentAction);
             }
             else
             {
@@ -116,7 +111,6 @@ namespace RedShot.App.Painting
         private void SetAction()
         {
             currentAction = PaintingActionsService.MapFromState(PaintingState, skPaint.Clone(), image);
-            paintingActions.Add(currentAction);
         }
 
         private void InitializeComponents()
@@ -140,37 +134,54 @@ namespace RedShot.App.Painting
         {
             var canvas = surface.Canvas;
 
-            canvas.DrawBitmap(image, new SKPoint(0, 0));
+            if (PaintActionsWithCaching(surface) && cachedImage != null)
+            {
+                canvas.DrawImage(cachedImage, new SKPoint(0, 0));
+            }
+            else
+            {
+                canvas.DrawBitmap(image, new SKPoint(0, 0));
 
-            paintingActions.ForEach(a => a.Paint(surface));
-            previousPaintingActions = paintingActions.ToList();
+                paintingActions.ForEach(a => a.Paint(surface));
+            }
+
+            if (painting)
+            {
+                currentAction.Paint(surface);
+            }
         }
 
-        //private bool PaintActionsWithCaching(SKSurface surface)
-        //{
-        //    if (previousPaintingActions != null && previousPaintingActions.Count > 0 )
-        //    {
-        //        var renderlist = paintingActions.Except(new List<IPaintingAction>(1) { currentAction });
+        private bool PaintActionsWithCaching(SKSurface surface)
+        {
+            if (paintingActions.Count == 0)
+            {
+                return false;
+            }
 
-        //        var diffResult = CollectionUtils.Diff(previousPaintingActions, renderlist, (a1, a2) => a1 == a2);
+            var diffResult = CollectionUtils.Diff(previousPaintingActions, paintingActions, (a1, a2) => a1 == a2);
 
-        //        if (diffResult.Removed.Count == 0)
-        //        {
-        //            if (diffResult.Added.Count > 0)
-        //            {
-        //                foreach (var action in diffResult.Added)
-        //                {
-        //                    action.Paint(surface);
-        //                }
-        //                previousPaintingActions.AddRange(diffResult.Added);
-        //            }
+            if (diffResult.Removed.Count == 0)
+            {
+                if (diffResult.Added.Count > 0)
+                {
+                    foreach (var action in diffResult.Added)
+                    {
+                        action.Paint(surface);
+                    }
+                    previousPaintingActions.AddRange(diffResult.Added);
 
-        //            return true;
-        //        }
-        //    }
+                    cachedImage = surface.Snapshot();
+                }
 
-        //    return false;
-        //}
+                return true;
+            }
+            else
+            {
+                previousPaintingActions.Clear();
+            }
+
+            return false;
+        }
 
         public Bitmap ScreenShot()
         {
