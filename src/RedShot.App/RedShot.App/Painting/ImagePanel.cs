@@ -1,16 +1,16 @@
-﻿using Eto.Drawing;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Eto.Drawing;
 using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
+using Saritasa.Tools.Common.Utils;
+using SkiaSharp;
 using RedShot.Abstractions.Painting;
 using RedShot.App.Painting.PaintingActions;
 using RedShot.App.Painting.States;
 using RedShot.Helpers;
-using Saritasa.Tools.Common.Utils;
-using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using RedShot.Helpers.Forms;
 
 namespace RedShot.App.Painting
 {
@@ -19,17 +19,11 @@ namespace RedShot.App.Painting
         private readonly SKBitmap image;
         private SKControl skControl;
         private UITimer renderTimer;
-
         private List<IPaintingAction> paintingActions;
-
         private List<IPaintingAction> previousPaintingActions;
-        private SKImage cachedImage;
-
+        private SKBitmap cachedImage;
         private IPaintingAction currentAction;
-        public PaintingState PaintingState { get; set; }
-
-        Cursor paintingPointer;
-
+        private PaintingState paintingState;
         private bool painting;
         private SKPaint skPaint;
 
@@ -43,15 +37,56 @@ namespace RedShot.App.Painting
             paintingActions = new List<IPaintingAction>();
             previousPaintingActions = new List<IPaintingAction>();
 
-            this.MouseDown += ImagePanel_MouseDown;
-            this.MouseMove += ImagePanel_MouseMove;
-            this.MouseUp += ImagePanel_MouseUp;
             Shown += ImagePanel_Shown;
+        }
+
+        public void ChangePaintingState(PaintingState paintingState)
+        {
+            if (this.paintingState != paintingState)
+            {
+                this.paintingState = paintingState;
+                ChangeMouseCursor();
+            }
+        }
+
+        public Bitmap ScreenShot()
+        {
+            using var surface = SKSurface.Create(image.Width, image.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
+            RenderImage(surface);
+
+            return EtoDrawingHelper.GetEtoBitmapFromSkiaSurface(surface);
+        }
+
+        public void ChangePaint(SKPaint paint)
+        {
+            skPaint = paint;
+            ChangeMouseCursor();
         }
 
         private void ImagePanel_Shown(object sender, EventArgs e)
         {
             renderTimer.Start();
+
+            this.MouseDown += ImagePanel_MouseDown;
+            this.MouseMove += ImagePanel_MouseMove;
+            this.MouseUp += ImagePanel_MouseUp;
+        }
+
+        private void ChangeMouseCursor()
+        {
+            switch (paintingState)
+            {
+                case PaintingState.Points:
+                    Cursor = FormsHelper.GetPointerCursor(skPaint.Color,
+                        (int)skPaint.StrokeWidth > 3 ? (int)skPaint.StrokeWidth : 4);
+                    break;
+                case PaintingState.Rectangle:
+                    Cursor = Cursors.Crosshair;
+                    break;
+                case PaintingState.None:
+                    Cursor = Cursors.Arrow;
+                    break;
+            }
         }
 
         private void ImagePanel_MouseUp(object sender, MouseEventArgs e)
@@ -60,7 +95,6 @@ namespace RedShot.App.Painting
             {
                 paintingActions.Add(currentAction);
                 painting = false;
-                previousPaintingActions.Clear();
             }
         }
 
@@ -82,7 +116,7 @@ namespace RedShot.App.Painting
                 }
                 else
                 {
-                    if (PaintingState != PaintingState.None)
+                    if (paintingState != PaintingState.None)
                     {
                         SetAction();
                         painting = true;
@@ -110,19 +144,7 @@ namespace RedShot.App.Painting
 
         private void SetAction()
         {
-            currentAction = PaintingActionsService.MapFromState(PaintingState, skPaint.Clone(), image);
-        }
-
-        private void InitializeComponents()
-        {
-            renderTimer = new UITimer()
-            {
-                Interval = 0.01
-            };
-            renderTimer.Elapsed += RenderTimer_Elapsed;
-
-            skControl = new SKControl();
-            Content = skControl;
+            currentAction = PaintingActionsService.MapFromState(paintingState, skPaint.Clone(), image);
         }
 
         private void RenderTimer_Elapsed(object sender, EventArgs e)
@@ -136,7 +158,7 @@ namespace RedShot.App.Painting
 
             if (PaintActionsWithCaching(surface) && cachedImage != null)
             {
-                canvas.DrawImage(cachedImage, new SKPoint(0, 0));
+                canvas.DrawBitmap(cachedImage, new SKPoint(0, 0));
             }
             else
             {
@@ -170,7 +192,7 @@ namespace RedShot.App.Painting
                     }
                     previousPaintingActions.AddRange(diffResult.Added);
 
-                    cachedImage = surface.Snapshot();
+                    cachedImage = SKBitmap.FromImage(surface.Snapshot());
                 }
 
                 return true;
@@ -183,17 +205,16 @@ namespace RedShot.App.Painting
             return false;
         }
 
-        public Bitmap ScreenShot()
+        private void InitializeComponents()
         {
-            using var surface = SKSurface.Create(image.Width, image.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
-            RenderImage(surface);
+            renderTimer = new UITimer()
+            {
+                Interval = 0.01
+            };
+            renderTimer.Elapsed += RenderTimer_Elapsed;
 
-            return EtoDrawingHelper.GetEtoBitmapFromSkiaSurface(surface);
-        }
-
-        public void ChangePaint(SKPaint paint)
-        {
-            skPaint = paint;
+            skControl = new SKControl();
+            Content = skControl;
         }
     }
 }

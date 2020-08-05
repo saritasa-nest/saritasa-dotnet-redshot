@@ -27,10 +27,6 @@ namespace RedShot.App.Painting
 
             Resizable = false;
 
-            // To be added.
-            //Resizable = true;
-            //this.SizeChanged += PaintingView_SizeChanged;
-
             this.image = image;
 
             InitializeComponents();
@@ -80,7 +76,7 @@ namespace RedShot.App.Painting
 
         private void PaintingPanel_StateChanged(object sender, PaintingState state)
         {
-            imagePanel.PaintingState = state;
+            imagePanel.ChangePaintingState(state);
         }
 
         private void PaintingPanel_ColorChanged(object sender, Color color)

@@ -26,18 +26,17 @@ namespace RedShot.Helpers
         /// <summary>
         /// Draws pointer image for painting state.
         /// </summary>
-        public static SKImage GetPointerForPainting(SKColor color)
+        public static SKImage GetPointerForPainting(SKColor color, int radius)
         {
-            using var surface = SKSurface.Create(10, 10, SKColorType.Bgra8888, SKAlphaType.Premul);
+            using var surface = SKSurface.Create(radius * 2, radius * 2, SKColorType.Bgra8888, SKAlphaType.Premul);
 
             var paint = new SKPaint()
             {
                 Style = SKPaintStyle.Fill,
-                StrokeWidth = 2,
                 Color = color
             };
 
-            surface.Canvas.DrawCircle(5, 5, 4, paint);
+            surface.Canvas.DrawCircle(radius, radius, radius, paint);
 
             return surface.Snapshot();
         }

@@ -1,4 +1,6 @@
-﻿using Eto.Forms;
+﻿using Eto.Drawing;
+using Eto.Forms;
+using SkiaSharp;
 
 namespace RedShot.Helpers.Forms
 {
@@ -13,6 +15,26 @@ namespace RedShot.Helpers.Forms
                 Size = new Eto.Drawing.Size(size, size),
                 Padding = size
             };
+        }
+
+        public static Cursor GetPointerCursor(Color color, int radius)
+        {
+            var skColor = SkiaSharpHelper.GetSKColorFromEtoColor(color);
+
+            var skImage = SkiaSharpHelper.GetPointerForPainting(skColor, radius);
+
+            var bitmap = EtoDrawingHelper.GetEtoBitmapFromSkiaImage(skImage);
+
+            return new Cursor(bitmap, new PointF(radius, radius));
+        }
+
+        public static Cursor GetPointerCursor(SKColor color, int radius)
+        {
+            var skImage = SkiaSharpHelper.GetPointerForPainting(color, radius);
+
+            var bitmap = EtoDrawingHelper.GetEtoBitmapFromSkiaImage(skImage);
+
+            return new Cursor(bitmap, new PointF(radius, radius));
         }
     }
 }

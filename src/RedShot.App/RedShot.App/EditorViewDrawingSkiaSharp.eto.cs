@@ -1,14 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
 using SkiaSharp;
 using RedShot.Helpers.EditorView;
 using RedShot.Helpers;
-using RedShot.Upload;
 
 namespace RedShot.App
 {
@@ -18,107 +15,89 @@ namespace RedShot.App
     /// </summary>
     internal partial class EditorViewDrawingSkiaSharp : Form
     {
-        bool disposed;
+        private bool disposed;
+
+        private ScreenShotPanel screenShotPanel;
+        private Point screenShotPanelLocation;
 
         /// <summary>
         /// Render frametime in milliseconds.
         /// Should be more than 10 in Linux OS.
         /// </summary>
-        const double renderFrameTime = 10;
+        private const double renderFrameTime = 10;
 
         /// <summary>
         /// Timer for rendering.
         /// </summary>
-        UITimer timer;
+        private UITimer timer;
 
         /// <summary>
         /// Control for rendering image of the editor.
         /// </summary>
-        SKControl skcontrol;
+        private SKControl skcontrol;
 
         /// <summary>
         /// User's screen snapshot in SkiaSharp format.
         /// </summary>
-        SKBitmap skScreenImage;
+        private SKBitmap skScreenImage;
 
         /// <summary>
         /// User's screen snapshot in Eto format.
         /// </summary>
-        Bitmap etoScreenImage;
+        private Bitmap etoScreenImage;
 
         /// <summary>
         /// Start location of selecting.
         /// </summary>
-        PointF startLocation;
+        private PointF startLocation;
 
         /// <summary>
         /// End location of selecting.
         /// </summary>
-        PointF endLocation;
+        private PointF endLocation;
 
         /// <summary>
         /// State when user selects region.
         /// </summary>
-        bool capturing;
+        private bool capturing;
 
         /// <summary>
         /// State when user has selected region.
         /// </summary>
-        bool captured;
+        private bool captured;
 
         /// <summary>
         /// Selection region size and location.
         /// </summary>
-        RectangleF selectionRectangle;
+        private RectangleF selectionRectangle;
 
         /// <summary>
         /// Size of editor screen.
         /// </summary>
-        Rectangle screenRectangle;
+        private Rectangle screenRectangle;
 
         /// <summary>
         /// For beauty.
         /// </summary>
         #region Styles
-        Stopwatch penTimer;
-        float[] dash = new float[] { 5, 5 };
+        private Stopwatch penTimer;
+        private float[] dash = new float[] { 5, 5 };
         #endregion Styles
 
-        /// <summary>
-        /// Fields for painting when user has captured region.
-        /// </summary>
-        #region PointPainting
-
-        Cursor paintingPointer;
-
-        List<HashSet<PointF>> pointPolygons = new List<HashSet<PointF>>();
-
-        HashSet<PointF> currentPointPolygons = new HashSet<PointF>();
-
-        bool paintPointsRequested;
-
-        bool pointsPainting;
-
-        PointPaintingView pointPaintingPanel;
-
-        Point panelLocation;
-
-        #endregion PointPainting
-
         #region Movingfields
-        bool moving;
-        float relativeX;
-        float relativeY;
+        private bool moving;
+        private float relativeX;
+        private float relativeY;
         #endregion Movingfields
 
         /// <summary>
         /// Fileds for resizing selected area.
         /// </summary>
         #region ResizingFields
-        bool resizing;
-        ResizePart resizePart;
-        LineF oppositeBorder;
-        PointF oppositeAngle;
+        private bool resizing;
+        private ResizePart resizePart;
+        private LineF oppositeBorder;
+        private PointF oppositeAngle;
         #endregion Resizingfields
 
         /// <summary>
@@ -126,8 +105,6 @@ namespace RedShot.App
         /// </summary>
         void InitializeComponent()
         {
-            paintingPointer = CreatePaintingPointer();
-
             screenRectangle = new Rectangle(ScreenHelper.GetMainWindowSize());
             var size = new Size(screenRectangle.Width, screenRectangle.Height);
             Size = size;
@@ -150,8 +127,7 @@ namespace RedShot.App
             Shown += EditorView_Shown;
             UnLoad += EditorViewDrawingSkiaSharp_UnLoad;
 
-            SetDefaultPointer();
-            InitializePainting();
+            InitializeScreenShotPanel();
         }
 
         /// <summary>
@@ -187,27 +163,9 @@ namespace RedShot.App
             Cursor = Cursors.Arrow;
         }
 
-        private Cursor CreatePaintingPointer()
-        {
-            var skImage = SkiaSharpHelper.GetPointerForPainting(SKColors.Red);
-
-            var bitmap = EtoDrawingHelper.GetEtoBitmapFromSkiaImage(skImage);
-
-            return new Cursor(bitmap, new PointF(5, 5));
-        }
-
-        private void SetPaintingPointer()
-        {
-            Cursor = paintingPointer;
-        }
-
         private void SetMousePointer(PointF location)
         {
-            if (paintPointsRequested)
-            {
-                SetPaintingPointer();
-            }
-            else if (CheckOnResizing(location))
+            if (CheckOnResizing(location))
             {
                 if (resizePart == ResizePart.Angle)
                 {
@@ -381,10 +339,6 @@ namespace RedShot.App
                 {
                     ResizeSelectionArea(e.Location);
                 }
-                else if (pointsPainting)
-                {
-                    currentPointPolygons.Add(e.Location);
-                }
                 else
                 {
                     SetMousePointer(e.Location);
@@ -406,22 +360,13 @@ namespace RedShot.App
                 }
                 else if (captured)
                 {
-                    if (paintPointsRequested)
+                    if (CheckOnResizing(e.Location))
                     {
-                        pointsPainting = true;
-                        currentPointPolygons = new HashSet<PointF>();
-                        pointPolygons.Add(currentPointPolygons);
+                        resizing = true;
                     }
-                    else
+                    else if (CheckOnMoving(e.Location))
                     {
-                        if (CheckOnResizing(e.Location))
-                        {
-                            resizing = true;
-                        }
-                        else if (CheckOnMoving(e.Location))
-                        {
-                            moving = true;
-                        }
+                        moving = true;
                     }
                     HidePointPaintingView();
                 }
@@ -447,8 +392,6 @@ namespace RedShot.App
                     resizing = false;
                     skcontrol.Execute((surface) => PaintClearImage(surface));
                     HidePointPaintingView();
-                    DisablePainting();
-                    pointPolygons.Clear();
                     SetDefaultPointer();
                 }
                 else
@@ -464,7 +407,6 @@ namespace RedShot.App
             {
                 moving = false;
                 resizing = false;
-                pointsPainting = false;
                 SetDefaultPointer();
 
                 if (captured)
@@ -498,22 +440,6 @@ namespace RedShot.App
         /// Skia sharp drawing functions.
         /// </summary>
         #region SkiaSharpCommands
-
-        private void PaintPoints(SKSurface surface)
-        {
-            SKPaint paint = new SKPaint
-            {
-                Color = SKColors.Red,
-                StrokeWidth = 4,
-                StrokeJoin = SKStrokeJoin.Bevel,
-                IsAntialias = true
-            };
-
-            foreach (var points in pointPolygons)
-            {
-                surface.Canvas.DrawPoints(SKPointMode.Polygon, points.Select(p => new SKPoint(p.X, p.Y)).ToArray(), paint);
-            }
-        }
 
         private void PaintTopMessage(SKSurface surface)
         {
@@ -599,8 +525,6 @@ namespace RedShot.App
 
             PaintDarkregion(surface, editorRect);
 
-            PaintPoints(surface);
-
             PaintEditorBorder(surface);
 
             PaintTopMessage(surface);
@@ -626,8 +550,6 @@ namespace RedShot.App
             var editorRect = SKRect.Create(new SKPoint(0, 0), new SKSize(Width, Height));
 
             PaintDarkregion(surface, editorRect, regionRect);
-
-            PaintPoints(surface);
 
             PaintDashAround(surface, regionRect, SKColors.White, SKColors.Black);
 
@@ -683,29 +605,26 @@ namespace RedShot.App
         }
         #endregion SkiaSharpCommands
 
-        #region Painting
+        #region ScreenShotPanel
 
-        private void InitializePainting()
+        private void InitializeScreenShotPanel()
         {
-            pointPaintingPanel = new PointPaintingView();
+            screenShotPanel = new ScreenShotPanel();
 
-            pointPaintingPanel.ClearButton.Clicked += PointPaintingPanel_Clear;
-            pointPaintingPanel.PaintingModeEnabledButton.Clicked += PointPaintingPanel_PaintingModeEnabled;
-            pointPaintingPanel.SelectionModeEnabledButton.Clicked += PointPaintingPanel_SelectionModeEnabled;
-            pointPaintingPanel.SaveScreenShotButton.Clicked += SaveScreenShotButton_Clicked;
+            screenShotPanel.EnablePaintingModeButton.Clicked += PointPaintingPanel_PaintingModeEnabled;
+            screenShotPanel.SaveScreenShotButton.Clicked += SaveScreenShotButton_Clicked;
 
-            pointPolygons.Add(currentPointPolygons);
 
-            panelLocation = new Point(
-                (int)(Size.Width - pointPaintingPanel.Width - Size.Width * 0.1),
-                (int)(Size.Height * 0.1));
+            screenShotPanelLocation = new Point(
+                (int)(Size.Width - screenShotPanel.Width - Size.Width * 0.05),
+                (int)(Size.Height * 0.05));
 
-            pointPaintingPanel.Location = panelLocation;
+            screenShotPanel.Location = screenShotPanelLocation;
 
-            pointPaintingPanel.KeyDown += EditorView_KeyDown;
+            screenShotPanel.KeyDown += EditorView_KeyDown;
 
-            pointPaintingPanel.Show();
-            pointPaintingPanel.Visible = false;
+            screenShotPanel.Show();
+            screenShotPanel.Visible = false;
         }
 
         private void SaveScreenShotButton_Clicked(object sender, EventArgs e)
@@ -713,47 +632,30 @@ namespace RedShot.App
             SaveScreenShot();
         }
 
-        private void DisablePainting()
-        {
-            paintPointsRequested = false;
-            pointsPainting = false;
-        }
-
         private void ShowPointPaintingView()
         {
-            pointPaintingPanel.Visible = true;
-            pointPaintingPanel.Location = panelLocation;
+            screenShotPanel.Visible = true;
+            screenShotPanel.Location = screenShotPanelLocation;
         }
 
         private void HidePointPaintingView()
         {
-            pointPaintingPanel.Visible = false;
-        }
-
-        private void PointPaintingPanel_Clear(object sender, EventArgs e)
-        {
-            pointPolygons.Clear();
-        }
-
-        private void PointPaintingPanel_SelectionModeEnabled(object sender, EventArgs e)
-        {
-            DisablePainting();
+            screenShotPanel.Visible = false;
         }
 
         private void PointPaintingPanel_PaintingModeEnabled(object sender, EventArgs e)
         {
-            //paintPointsRequested = true;
-            var screenshot = GetScreenShotWithPainting();
+            var screenshot = GetScreenShot();
             ApplicationManager.RunPaintingView(screenshot);
         }
 
-        #endregion Painting
+        #endregion ScreenShotPanel
 
         /// <summary>
         /// Runs uploader functions.
         /// </summary>
         #region Uploading
-        private void Upload()
+        private Bitmap GetScreenShot()
         {
             if (selectionRectangle != default)
             {
@@ -766,18 +668,10 @@ namespace RedShot.App
                     selectionRectangle.Height = Height - selectionRectangle.Y;
                 }
 
-                var screenshot = GetScreenShotWithPainting();
-                ApplicationManager.RunUploadView(screenshot);
+                return etoScreenImage.Clone((Rectangle)selectionRectangle);
             }
-        }
 
-        private Bitmap GetScreenShotWithPainting()
-        {
-            using var surface = SKSurface.Create(skScreenImage.Width, skScreenImage.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
-            surface.Canvas.DrawBitmap(skScreenImage, new SKPoint(0, 0));
-            PaintPoints(surface);
-
-            return EtoDrawingHelper.GetEtoBitmapFromSkiaSurface(surface).Clone((Rectangle)selectionRectangle);
+            return null;
         }
 
         #endregion Uploading
@@ -837,7 +731,7 @@ namespace RedShot.App
         {
             if (captured)
             {
-                Upload();
+                ApplicationManager.RunUploadView(GetScreenShot());
                 Close();
             }
         }
@@ -854,7 +748,7 @@ namespace RedShot.App
                 etoScreenImage?.Dispose();
                 skScreenImage?.Dispose();
                 skcontrol?.Dispose();
-                pointPaintingPanel?.Close();
+                screenShotPanel?.Dispose();
             }
         }
     }
