@@ -73,6 +73,7 @@ namespace RedShot.Upload.Forms.Ftp
                 Items =
                 {
                     GetConfigLayout(),
+                    FormsHelper.VoidBox(10),
                     GetAccountLayout(),
                     GetImageNameLayout(),
                     FormsHelper.VoidBox(10),

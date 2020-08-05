@@ -1,7 +1,10 @@
 ﻿using System;
 using System.IO;
+using Eto.Drawing;
 using Eto.Forms;
+using RedShot.App.Painting;
 using RedShot.Upload;
+using RedShot.Upload.Forms;
 
 namespace RedShot.App
 {
@@ -12,6 +15,9 @@ namespace RedShot.App
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private static TrayIcon trayIcon;
+        private static UploadBar uploadBar;
+        private static PaintingView paintingView;
+        private static EditorViewDrawingSkiaSharp editorView;
 
         /// <summary>
         /// Gives tray icon form.
@@ -39,16 +45,49 @@ namespace RedShot.App
             try
             {
                 trayIcon.Tray.Visible = false;
-                UploadManager.CloseUploaderView();
 
-                var view = new EditorViewDrawingSkiaSharp();
-                view.Closed += View_Closed;
-                view.Show();
+                CloseViews();
+
+                editorView = new EditorViewDrawingSkiaSharp();
+                editorView.Closed += View_Closed;
+                editorView.Show();
             }
             catch (Exception ex)
             {
                 Logger.Fatal(ex, "Error occured in creating tray screen editor form");
                 throw;
+            }
+        }
+
+        public static void RunPaintingView(Bitmap bitmap)
+        {
+            CloseViews();
+            paintingView = new PaintingView(bitmap);
+            paintingView.Show();
+        }
+
+        public static void RunUploadView(Bitmap bitmap)
+        {
+            CloseViews();
+            uploadBar = new UploadBar(bitmap);
+            uploadBar.Show();
+        }
+
+        private static void CloseViews()
+        {
+            if (editorView != null && !editorView.IsDisposed)
+            {
+                editorView.Close();
+            }
+
+            if (uploadBar != null && !uploadBar.IsDisposed)
+            {
+                uploadBar.Close();
+            }
+
+            if (paintingView != null && !paintingView.IsDisposed)
+            {
+                paintingView.Close();
             }
         }
 

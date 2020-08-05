@@ -50,10 +50,11 @@ namespace Eto.Forms.Controls.SkiaSharp.GTK
         {
             var res = base.OnDrawn(cr);
 
-            cr.Save();
-            cr.SetSourceSurface(surface, 0, 0);
-            cr.Paint();
-            cr.Restore();
+            if (surface != null)
+            {
+                cr.SetSourceSurface(surface, 0, 0);
+                cr.Paint();
+            }
 
             return res;
         }

@@ -742,7 +742,9 @@ namespace RedShot.App
 
         private void PointPaintingPanel_PaintingModeEnabled(object sender, EventArgs e)
         {
-            paintPointsRequested = true;
+            //paintPointsRequested = true;
+            var screenshot = GetScreenShotWithPainting();
+            ApplicationManager.RunPaintingView(screenshot);
         }
 
         #endregion Painting
@@ -765,7 +767,7 @@ namespace RedShot.App
                 }
 
                 var screenshot = GetScreenShotWithPainting();
-                UploadManager.RunUploaderView(screenshot);
+                ApplicationManager.RunUploadView(screenshot);
             }
         }
 

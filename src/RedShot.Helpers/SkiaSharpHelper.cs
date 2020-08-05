@@ -41,5 +41,10 @@ namespace RedShot.Helpers
 
             return surface.Snapshot();
         }
+
+        public static SKColor GetSKColorFromEtoColor(Color color)
+        {
+            return new SKColor((byte)color.Rb, (byte)color.Gb, (byte)color.Bb, (byte)color.Ab);
+        }
     }
 }
