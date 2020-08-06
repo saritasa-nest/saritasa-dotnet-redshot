@@ -31,7 +31,7 @@ namespace RedShot.App.Painting
             InitializeComponents();
             Content = GetContent();
 
-            MinimumSize = new Size(500, 50);
+            MinimumSize = new Size(500, 40);
         }
 
         private void InitializeComponents()
@@ -42,7 +42,7 @@ namespace RedShot.App.Painting
                 MaxValue = 30,
                 Increment = 1,
                 Width = 60,
-                Height = 40
+                Height = 30
             };
 
             drawSizeStepper.ValueChanged += DrawSizeStepper_ValueChanged;
@@ -56,8 +56,8 @@ namespace RedShot.App.Painting
 
             colorPicker.ValueChanged += ColorPicker_ValueChanged;
 
-            var buttonSize = new Size(70, 40);
-            var imageSize = new Size(25, 25);
+            var buttonSize = new Size(60, 30);
+            var imageSize = new Size(20, 20);
 
             var paintImage = new Bitmap(Resources.paint_brush);
             var saveImage = new Bitmap(Resources.upload);

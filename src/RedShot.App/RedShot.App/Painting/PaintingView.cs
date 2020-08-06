@@ -47,7 +47,7 @@ namespace RedShot.App.Painting
                 Color = SKColors.Red,
                 StrokeWidth = 1,
                 Style = SKPaintStyle.Stroke,
-                StrokeJoin = SKStrokeJoin.Bevel,
+                StrokeJoin = SKStrokeJoin.Miter,
                 IsAntialias = true
             };
 
