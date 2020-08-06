@@ -36,6 +36,7 @@ namespace RedShot.App.Painting
             this.image = SkiaSharpHelper.ConvertFromEtoBitmap(image);
             paintingActions = new List<IPaintingAction>();
             previousPaintingActions = new List<IPaintingAction>();
+            paintingState = PaintingState.None;
 
             Shown += ImagePanel_Shown;
         }
@@ -93,8 +94,11 @@ namespace RedShot.App.Painting
         {
             if (e.Buttons == MouseButtons.Primary)
             {
-                painting = false;
-                paintingActions.Add(currentAction);
+                if (painting)
+                {
+                    painting = false;
+                    paintingActions.Add(currentAction);
+                }
             }
         }
 
