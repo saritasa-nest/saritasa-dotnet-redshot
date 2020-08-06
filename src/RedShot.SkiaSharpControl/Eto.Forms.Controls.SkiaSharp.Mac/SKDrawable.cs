@@ -31,9 +31,13 @@ namespace Eto.Forms.Controls.SkiaSharp.Mac
             {
                 lastLength = newLength;
                 if (bitmapData != IntPtr.Zero)
+                {
                     bitmapData = Marshal.ReAllocCoTaskMem(bitmapData, newLength);
+                }
                 else
+                {
                     bitmapData = Marshal.AllocCoTaskMem(newLength);
+                }
             }
 
             return SKSurface.Create(info, bitmapData, info.RowBytes);

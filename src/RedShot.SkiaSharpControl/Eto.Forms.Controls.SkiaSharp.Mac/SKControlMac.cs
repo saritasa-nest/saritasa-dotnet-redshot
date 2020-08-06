@@ -10,13 +10,14 @@ namespace Eto.Forms.Controls.SkiaSharp.Mac
     {
         private SKSurface surface;
         private SKImageInfo skInfo;
+        private bool disposed;
 
         /// <summary>
         /// Executes SkiaSharp commands.
         /// </summary>
         public void Execute(Action<SKSurface> surfaceAction)
         {
-            if (drawable == null)
+            if (surface == null)
             {
                 // create the skia context
                 surface = drawable.CreateSurface(Bounds, 1.0f, out SKImageInfo info);
@@ -28,9 +29,6 @@ namespace Eto.Forms.Controls.SkiaSharp.Mac
         }
 
         private NSTrackingArea trackarea;
-
-        public float _lastTouchX;
-        public float _lastTouchY;
 
         private SKDrawable drawable;
 
@@ -76,6 +74,16 @@ namespace Eto.Forms.Controls.SkiaSharp.Mac
             if (drawable != null)
             {
                 drawable.DrawSurface(ctx, Bounds, skInfo, surface);
+            }
+        }
+
+        public new void Dispose()
+        {
+            if (disposed == false)
+            {
+                surface?.Dispose();
+                drawable?.Dispose();
+                base.Dispose();
             }
         }
 

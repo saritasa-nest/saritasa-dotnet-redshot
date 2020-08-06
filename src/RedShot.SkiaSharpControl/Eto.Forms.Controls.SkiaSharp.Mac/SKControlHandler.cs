@@ -1,9 +1,7 @@
 ﻿using Eto.Mac.Forms;
+using System;
 using MonoMac.AppKit;
 using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Eto.Forms.Controls.SkiaSharp.Mac
 {
