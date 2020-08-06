@@ -1,6 +1,7 @@
 using Eto.Forms;
 using Eto.Drawing;
 using RedShot.Helpers.Forms;
+using RedShot.App.Properties;
 
 namespace RedShot.App
 {
@@ -12,9 +13,9 @@ namespace RedShot.App
         /// <summary>
         /// Button for enabling painting mode.
         /// </summary>
-        public DefaultButton EnablePaintingModeButton { get; }
+        public ImageButton EnablePaintingModeButton { get; }
 
-        public DefaultButton SaveScreenShotButton { get; }
+        public ImageButton SaveScreenShotButton { get; }
 
         /// <summary>
         /// Initializes painting panel view.
@@ -26,9 +27,15 @@ namespace RedShot.App
             Topmost = true;
             Size = new Size(160, 50);
 
-            EnablePaintingModeButton = new DefaultButton("Paint", 80, 50);
+            var buttonSize = new Size(80, 50);
+            var imageSize = new Size(40, 40);
 
-            SaveScreenShotButton = new DefaultButton("Save", 80, 50);
+            var paintImage = new Bitmap(Resources.paint);
+            var saveImage = new Bitmap(Resources.upload);
+
+            EnablePaintingModeButton = new ImageButton(buttonSize, paintImage, scaleImageSize: imageSize);
+
+            SaveScreenShotButton = new ImageButton(buttonSize, saveImage, scaleImageSize: imageSize);
 
             Content = new StackLayout
             {

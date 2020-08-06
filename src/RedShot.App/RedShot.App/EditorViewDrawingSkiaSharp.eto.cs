@@ -192,122 +192,6 @@ namespace RedShot.App
 
         #endregion PointerFunctions
 
-        #region Checking
-
-        /// <summary>
-        /// Checks whether user can move selected area.
-        /// </summary>
-        private bool CheckOnMoving(PointF mouseLocation)
-        {
-            if (mouseLocation.X >= selectionRectangle.X && mouseLocation.X <= selectionRectangle.X + selectionRectangle.Width)
-            {
-                if (mouseLocation.Y >= selectionRectangle.Y && mouseLocation.Y <= selectionRectangle.Y + selectionRectangle.Height)
-                {
-                    relativeX = mouseLocation.X - selectionRectangle.X;
-                    relativeY = mouseLocation.Y - selectionRectangle.Y;
-
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Checks whether user can resize selected area.
-        /// </summary>
-        private bool CheckOnResizing(PointF mouseLocation)
-        {
-            if (ResizeHelper.ApproximatelyEquals(selectionRectangle.Y, mouseLocation.Y))
-            {
-                if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X, mouseLocation.X))
-                {
-                    resizePart = ResizePart.Angle;
-                    oppositeAngle = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y + selectionRectangle.Height);
-                }
-                else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X + selectionRectangle.Width, mouseLocation.X))
-                {
-                    resizePart = ResizePart.Angle;
-                    oppositeAngle = new PointF(selectionRectangle.X, selectionRectangle.Y + selectionRectangle.Height);
-                }
-                else if (mouseLocation.X > selectionRectangle.X && mouseLocation.X < selectionRectangle.X + selectionRectangle.Width)
-                {
-                    resizePart = ResizePart.HorizontalBorder;
-
-                    var start = new PointF(selectionRectangle.X, selectionRectangle.Y + selectionRectangle.Height);
-                    var end = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y + selectionRectangle.Height);
-                    oppositeBorder = new LineF(start, end);
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.Y + selectionRectangle.Height, mouseLocation.Y))
-            {
-                if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X, mouseLocation.X))
-                {
-                    resizePart = ResizePart.Angle;
-                    oppositeAngle = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y);
-                }
-                else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X + selectionRectangle.Width, mouseLocation.X))
-                {
-                    resizePart = ResizePart.Angle;
-                    oppositeAngle = new PointF(selectionRectangle.X, selectionRectangle.Y);
-                }
-                else if (mouseLocation.X > selectionRectangle.X && mouseLocation.X < selectionRectangle.X + selectionRectangle.Width)
-                {
-                    resizePart = ResizePart.HorizontalBorder;
-
-                    var start = new PointF(selectionRectangle.X, selectionRectangle.Y);
-                    var end = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y);
-                    oppositeBorder = new LineF(start, end);
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X, mouseLocation.X))
-            {
-                if (mouseLocation.Y > selectionRectangle.Y && mouseLocation.Y < selectionRectangle.Y + Height)
-                {
-                    resizePart = ResizePart.VerticalBorder;
-
-                    var start = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y);
-                    var end = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y + selectionRectangle.Height);
-                    oppositeBorder = new LineF(start, end);
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X + selectionRectangle.Width, mouseLocation.X))
-            {
-                if (mouseLocation.Y > selectionRectangle.Y && mouseLocation.Y < selectionRectangle.Y + Height)
-                {
-                    resizePart = ResizePart.VerticalBorder;
-
-                    var start = new PointF(selectionRectangle.X, selectionRectangle.Y);
-                    var end = new PointF(selectionRectangle.X, selectionRectangle.Y + selectionRectangle.Height);
-                    oppositeBorder = new LineF(start, end);
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        #endregion Checking
-
         /// <summary>
         /// Handlers for window events.
         /// </summary>
@@ -676,6 +560,124 @@ namespace RedShot.App
 
         #endregion Uploading
 
+        #region MovingResizing
+
+        #region Checking
+
+        /// <summary>
+        /// Checks whether user can move selected area.
+        /// </summary>
+        private bool CheckOnMoving(PointF mouseLocation)
+        {
+            if (mouseLocation.X >= selectionRectangle.X && mouseLocation.X <= selectionRectangle.X + selectionRectangle.Width)
+            {
+                if (mouseLocation.Y >= selectionRectangle.Y && mouseLocation.Y <= selectionRectangle.Y + selectionRectangle.Height)
+                {
+                    relativeX = mouseLocation.X - selectionRectangle.X;
+                    relativeY = mouseLocation.Y - selectionRectangle.Y;
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks whether user can resize selected area.
+        /// </summary>
+        private bool CheckOnResizing(PointF mouseLocation)
+        {
+            if (ResizeHelper.ApproximatelyEquals(selectionRectangle.Y, mouseLocation.Y))
+            {
+                if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X, mouseLocation.X))
+                {
+                    resizePart = ResizePart.Angle;
+                    oppositeAngle = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y + selectionRectangle.Height);
+                }
+                else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X + selectionRectangle.Width, mouseLocation.X))
+                {
+                    resizePart = ResizePart.Angle;
+                    oppositeAngle = new PointF(selectionRectangle.X, selectionRectangle.Y + selectionRectangle.Height);
+                }
+                else if (mouseLocation.X > selectionRectangle.X && mouseLocation.X < selectionRectangle.X + selectionRectangle.Width)
+                {
+                    resizePart = ResizePart.HorizontalBorder;
+
+                    var start = new PointF(selectionRectangle.X, selectionRectangle.Y + selectionRectangle.Height);
+                    var end = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y + selectionRectangle.Height);
+                    oppositeBorder = new LineF(start, end);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.Y + selectionRectangle.Height, mouseLocation.Y))
+            {
+                if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X, mouseLocation.X))
+                {
+                    resizePart = ResizePart.Angle;
+                    oppositeAngle = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y);
+                }
+                else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X + selectionRectangle.Width, mouseLocation.X))
+                {
+                    resizePart = ResizePart.Angle;
+                    oppositeAngle = new PointF(selectionRectangle.X, selectionRectangle.Y);
+                }
+                else if (mouseLocation.X > selectionRectangle.X && mouseLocation.X < selectionRectangle.X + selectionRectangle.Width)
+                {
+                    resizePart = ResizePart.HorizontalBorder;
+
+                    var start = new PointF(selectionRectangle.X, selectionRectangle.Y);
+                    var end = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y);
+                    oppositeBorder = new LineF(start, end);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X, mouseLocation.X))
+            {
+                if (mouseLocation.Y > selectionRectangle.Y && mouseLocation.Y < selectionRectangle.Y + Height)
+                {
+                    resizePart = ResizePart.VerticalBorder;
+
+                    var start = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y);
+                    var end = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y + selectionRectangle.Height);
+                    oppositeBorder = new LineF(start, end);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X + selectionRectangle.Width, mouseLocation.X))
+            {
+                if (mouseLocation.Y > selectionRectangle.Y && mouseLocation.Y < selectionRectangle.Y + Height)
+                {
+                    resizePart = ResizePart.VerticalBorder;
+
+                    var start = new PointF(selectionRectangle.X, selectionRectangle.Y);
+                    var end = new PointF(selectionRectangle.X, selectionRectangle.Y + selectionRectangle.Height);
+                    oppositeBorder = new LineF(start, end);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        #endregion Checking
+
         /// <summary>
         /// Moves selection area.
         /// </summary>
@@ -726,6 +728,8 @@ namespace RedShot.App
                 selectionRectangle = EtoDrawingHelper.CreateRectangle(point, oppositeBorder.EndPoint);
             }
         }
+
+        #endregion MovingResizing
 
         private void SaveScreenShot()
         {

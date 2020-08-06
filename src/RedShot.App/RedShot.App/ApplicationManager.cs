@@ -3,7 +3,6 @@ using System.IO;
 using Eto.Drawing;
 using Eto.Forms;
 using RedShot.App.Painting;
-using RedShot.Upload;
 using RedShot.Upload.Forms;
 
 namespace RedShot.App
@@ -27,7 +26,7 @@ namespace RedShot.App
         {
             try
             {
-                trayIcon = new TrayIcon("RedShot", Path.Combine(Directory.GetCurrentDirectory(), "Resources", "red-circle.png"));
+                trayIcon = new TrayIcon("RedShot", new Bitmap(Properties.Resources.red_circle));
             }
             catch (Exception ex)
             {

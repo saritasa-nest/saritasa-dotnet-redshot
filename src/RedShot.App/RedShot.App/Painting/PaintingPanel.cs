@@ -1,10 +1,9 @@
-﻿using Eto.Drawing;
+﻿using System;
+using Eto.Drawing;
 using Eto.Forms;
 using RedShot.App.Painting.States;
 using RedShot.Helpers.Forms;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using RedShot.App.Properties;
 
 namespace RedShot.App.Painting
 {
@@ -19,16 +18,20 @@ namespace RedShot.App.Painting
 
         public event EventHandler<Color> ColorChanged;
 
-        public DefaultButton SaveImageButton { get; private set; }
+        public ImageButton PointsEnableButton { get; private set; }
 
-        public DefaultButton PaintBackButton { get; private set; }
+        public ImageButton RectangleEnableButton { get; private set; }
+
+        public ImageButton SaveImageButton { get; private set; }
+
+        public ImageButton PaintBackButton { get; private set; }
 
         public PaintingPanel()
         {
-            BackgroundColor = Colors.WhiteSmoke;
-
             InitializeComponents();
             Content = GetContent();
+
+            MinimumSize = new Size(500, 50);
         }
 
         private void InitializeComponents()
@@ -38,7 +41,8 @@ namespace RedShot.App.Painting
                 MinValue = 1,
                 MaxValue = 30,
                 Increment = 1,
-                Width = 60
+                Width = 60,
+                Height = 40
             };
 
             drawSizeStepper.ValueChanged += DrawSizeStepper_ValueChanged;
@@ -52,9 +56,21 @@ namespace RedShot.App.Painting
 
             colorPicker.ValueChanged += ColorPicker_ValueChanged;
 
-            SaveImageButton = new DefaultButton("Save", 100, 40);
+            var buttonSize = new Size(70, 40);
+            var imageSize = new Size(25, 25);
 
-            PaintBackButton = new DefaultButton("Back", 100, 40);
+            var paintImage = new Bitmap(Resources.paint_brush);
+            var saveImage = new Bitmap(Resources.upload);
+            var backImage = new Bitmap(Resources.back);
+            var rectangleImage = new Bitmap(Resources.rectangle);
+
+            PointsEnableButton = new ImageButton(buttonSize, paintImage, scaleImageSize: imageSize);
+            RectangleEnableButton = new ImageButton(buttonSize, rectangleImage, scaleImageSize: imageSize);
+            SaveImageButton = new ImageButton(buttonSize, saveImage, scaleImageSize: imageSize);
+            PaintBackButton = new ImageButton(buttonSize, backImage, scaleImageSize: imageSize);
+
+            PointsEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, PaintingState.Points);
+            RectangleEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, PaintingState.Rectangle);
         }
 
         private StackLayout GetContent()
@@ -66,45 +82,20 @@ namespace RedShot.App.Painting
                 Orientation = Orientation.Horizontal,
                 Items =
                 {
+                    FormsHelper.VoidBox(10),
                     colorPicker,
                     FormsHelper.VoidBox(10),
                     drawSizeStepper,
                     FormsHelper.VoidBox(10),
-                    GetPaintingButtons(),
+                    PointsEnableButton,
+                    FormsHelper.VoidBox(10),
+                    RectangleEnableButton,
                     FormsHelper.VoidBox(20),
                     PaintBackButton,
                     FormsHelper.VoidBox(10),
                     SaveImageButton
                 }
             };
-        }
-
-        private Control GetPaintingButtons()
-        {
-            var array = Enum.GetNames(typeof(PaintingState));
-
-            var layout = new StackLayout()
-            {
-                VerticalContentAlignment = VerticalAlignment.Center,
-                HorizontalContentAlignment = HorizontalAlignment.Right,
-                Orientation = Orientation.Horizontal,
-            };
-
-            foreach (var state in array)
-            {
-                var button = new DefaultButton(state, 100, 40);
-                button.Clicked += (o, e) => RequestStateChaging(state);
-
-                layout.Items.Add(button);
-                layout.Items.Add(FormsHelper.VoidBox(10));
-            }
-
-            return layout;
-        }
-
-        private void RequestStateChaging(string state)
-        {
-            StateChanged?.Invoke(this, Enum.Parse<PaintingState>(state));
         }
 
         private void ColorPicker_ValueChanged(object sender, EventArgs e)

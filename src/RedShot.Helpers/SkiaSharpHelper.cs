@@ -45,5 +45,16 @@ namespace RedShot.Helpers
         {
             return new SKColor((byte)color.Rb, (byte)color.Gb, (byte)color.Bb, (byte)color.Ab);
         }
+
+        public static SKImage GetScaledImage(Bitmap bitmap, Size size)
+        {
+            using var surface = SKSurface.Create(size.Width, size.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
+
+            var image = ConvertFromEtoBitmap(bitmap).Resize(new SKImageInfo(size.Width, size.Height), SKFilterQuality.High);
+
+            surface.Canvas.DrawBitmap(image, new SKPoint(0, 0));
+
+            return surface.Snapshot();
+        }
     }
 }

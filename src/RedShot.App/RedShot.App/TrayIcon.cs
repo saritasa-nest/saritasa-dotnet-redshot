@@ -17,7 +17,7 @@ namespace RedShot.App
         /// <summary>
         /// Inits tray icon.
         /// </summary>
-        public TrayIcon(string title, string iconPath)
+        public TrayIcon(string title, Bitmap image)
         {
             var menu = new ContextMenu();
 
@@ -36,7 +36,7 @@ namespace RedShot.App
             {
                 Menu = menu,
                 Title = title,
-                Image = new Bitmap(iconPath)
+                Image = image
             };
         }
 

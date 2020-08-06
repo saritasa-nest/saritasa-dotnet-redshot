@@ -93,8 +93,8 @@ namespace RedShot.App.Painting
         {
             if (e.Buttons == MouseButtons.Primary)
             {
-                paintingActions.Add(currentAction);
                 painting = false;
+                paintingActions.Add(currentAction);
             }
         }
 
@@ -156,7 +156,7 @@ namespace RedShot.App.Painting
         {
             var canvas = surface.Canvas;
 
-            if (PaintActionsWithCaching(surface) && cachedImage != null)
+            if (PaintActionsWithCaching(surface))
             {
                 canvas.DrawBitmap(cachedImage, new SKPoint(0, 0));
             }
@@ -186,16 +186,18 @@ namespace RedShot.App.Painting
             {
                 if (diffResult.Added.Count > 0)
                 {
-                    foreach (var action in diffResult.Added)
-                    {
-                        action.Paint(surface);
-                    }
+                    surface.Canvas.DrawBitmap(image, new SKPoint(0, 0));
+                    paintingActions.ForEach(a => a.Paint(surface));
+
                     previousPaintingActions.AddRange(diffResult.Added);
 
                     cachedImage = SKBitmap.FromImage(surface.Snapshot());
                 }
 
-                return true;
+                if (cachedImage != null)
+                {
+                    return true;
+                }
             }
             else
             {
