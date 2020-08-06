@@ -106,7 +106,7 @@ namespace RedShot.Configuration
                 }
                 else
                 {
-                    return Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), defaultFolderName)).FullName;
+                    return Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), defaultFolderName)).FullName;
                 }
             }
             catch (Exception ex)

@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Configuration", "Re
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Abstractions", "RedShot.Abstractions\RedShot.Abstractions.csproj", "{FADC06AE-B99A-4B59-94FA-B4A8E80135A4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eto.Forms.Controls.SkiaSharp.Mac", "RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.Mac\Eto.Forms.Controls.SkiaSharp.Mac.csproj", "{FA18038D-FC49-440B-8AE8-5CAB3013827B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,10 @@ Global
 		{FADC06AE-B99A-4B59-94FA-B4A8E80135A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FADC06AE-B99A-4B59-94FA-B4A8E80135A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FADC06AE-B99A-4B59-94FA-B4A8E80135A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA18038D-FC49-440B-8AE8-5CAB3013827B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA18038D-FC49-440B-8AE8-5CAB3013827B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA18038D-FC49-440B-8AE8-5CAB3013827B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA18038D-FC49-440B-8AE8-5CAB3013827B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,6 +79,7 @@ Global
 		{C6C791D0-9F93-43D5-A25E-DC56E015A77B} = {74B70C37-AE6C-4F87-920F-0E67ED5DAF09}
 		{8FF8D9D9-8344-425D-BF84-F0A65CF73938} = {74B70C37-AE6C-4F87-920F-0E67ED5DAF09}
 		{5D82503F-82ED-4C75-95E9-B6FB7767D499} = {74B70C37-AE6C-4F87-920F-0E67ED5DAF09}
+		{FA18038D-FC49-440B-8AE8-5CAB3013827B} = {74B70C37-AE6C-4F87-920F-0E67ED5DAF09}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {29605F2C-E5EE-416A-9711-11917A3A250F}
