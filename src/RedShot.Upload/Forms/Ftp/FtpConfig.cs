@@ -10,11 +10,15 @@ namespace RedShot.Upload.Forms.Ftp
     internal partial class FtpConfig : Dialog
     {
         private List<FtpAccount> ftpAccounts => ConfigurationManager.YamlConfig.FtpAccounts;
+
+        private FtpAccount selectedAccount;
+
         public FtpConfig()
         {
             InitializeComponents();
 
             Title = "FTP/FTPS/SFTP Configuration";
+
             this.accounts.SelectedValueChanged += Accounts_SelectedValueChanged;
         }
 
@@ -22,62 +26,83 @@ namespace RedShot.Upload.Forms.Ftp
         {
             if (accounts.DataStore.Count() > 0 && accounts.SelectedValue != null)
             {
-                var acc = (FtpAccount)accounts.SelectedValue;
-                FillData(acc);
+                selectedAccount = (FtpAccount)accounts.SelectedValue;
+                BindBoxes();
             }
         }
 
-        private void ClearBoxes()
+        //private void ClearBoxes()
+        //{
+        //    name.Text = string.Empty;
+        //    ftpProtocol.SelectedIndex = 0;
+        //    host.Text = string.Empty;
+        //    port.Value = 21;
+        //    username.Text = string.Empty;
+        //    password.Text = string.Empty;
+        //    isActive.Checked = false;
+        //    subFolderPath.Text = string.Empty;
+        //    ftpsEncryption.SelectedIndex = 0;
+        //    ftpsCertificateLocation.Text = string.Empty;
+        //    keypath.Text = string.Empty;
+        //    passphrase.Text = string.Empty;
+        //}
+
+        private void BindBoxes()
         {
-            name.Text = string.Empty;
-            ftpProtocol.SelectedIndex = 0;
-            host.Text = string.Empty;
-            port.Value = 21;
-            username.Text = string.Empty;
-            password.Text = string.Empty;
-            isActive.Checked = false;
-            subFolderPath.Text = string.Empty;
-            ftpsEncryption.SelectedIndex = 0;
-            ftpsCertificateLocation.Text = string.Empty;
-            keypath.Text = string.Empty;
-            passphrase.Text = string.Empty;
+            name.Bind(t => t.Text, selectedAccount, account => account.Name);
+            ftpProtocol.DataContext = selectedAccount;
+            ftpProtocol.SelectedValueBinding.Convert(l => Enum.Parse(typeof(FtpProtocol), (string)l), v => v.ToString()).BindDataContext((FtpAccount m) => m.Protocol);
+            host.Bind(t => t.Text, selectedAccount, account => account.Host);
+            port.DataContext = selectedAccount;
+            port.ValueBinding.Convert(f => (int)f, t => t).BindDataContext((FtpAccount m) => m.Port);
+            username.Bind(t => t.Text, selectedAccount, account => account.Username);
+            password.Bind(t => t.Text, selectedAccount, account => account.Password);
+            isActive.Bind(t => t.Checked, selectedAccount, account => account.IsActive);
+            subFolderPath.Bind(t => t.Text, selectedAccount, account => account.SubFolderPath);
+
+            ftpsEncryption.DataContext = selectedAccount;
+            ftpsEncryption.SelectedValueBinding.Convert(l => Enum.Parse(typeof(FtpsEncryption), (string)l), v => v.ToString()).BindDataContext((FtpAccount m) => m.FTPSEncryption);
+
+            ftpsCertificateLocation.Bind(t => t.Text, selectedAccount, account => account.FTPSCertificateLocation);
+            keypath.Bind(t => t.Text, selectedAccount, account => account.Keypath);
+            passphrase.Bind(t => t.Text, selectedAccount, account => account.Passphrase);
         }
 
-        private void FillData(FtpAccount account)
-        {
-            name.Text = account.Name;
-            ftpProtocol.SelectedValue = account.Protocol.ToString();
-            host.Text = account.Host;
-            port.Value = account.Port;
-            username.Text = account.Username;
-            password.Text = account.Password;
-            isActive.Checked = account.IsActive;
-            subFolderPath.Text = account.SubFolderPath;
-            ftpsEncryption.SelectedValue = account.FTPSEncryption.ToString();
-            ftpsCertificateLocation.Text = account.FTPSCertificateLocation;
-            keypath.Text = account.Keypath;
-            passphrase.Text = account.Passphrase;
-        }
+        //private void FillData(FtpAccount account)
+        //{
+        //    name.Text = account.Name;
+        //    ftpProtocol.SelectedValue = account.Protocol.ToString();
+        //    host.Text = account.Host;
+        //    port.Value = account.Port;
+        //    username.Text = account.Username;
+        //    password.Text = account.Password;
+        //    isActive.Checked = account.IsActive;
+        //    subFolderPath.Text = account.SubFolderPath;
+        //    ftpsEncryption.SelectedValue = account.FTPSEncryption.ToString();
+        //    ftpsCertificateLocation.Text = account.FTPSCertificateLocation;
+        //    keypath.Text = account.Keypath;
+        //    passphrase.Text = account.Passphrase;
+        //}
 
-        private FtpAccount GetAccountFromBoxes()
-        {
-            var account = new FtpAccount();
+        //private FtpAccount GetAccountFromBoxes()
+        //{
+        //    var account = new FtpAccount();
 
-            account.Name = name.Text;
-            account.Protocol = (FtpProtocol)Enum.Parse(typeof(FtpProtocol), (string)ftpProtocol.SelectedValue);
-            account.Host = host.Text;
-            account.Port = Convert.ToInt32(port.Value);
-            account.Username = username.Text;
-            account.Password = password.Text;
-            account.IsActive = isActive.Checked ?? false;
-            account.SubFolderPath = subFolderPath.Text;
-            account.FTPSEncryption = (FtpsEncryption)Enum.Parse(typeof(FtpsEncryption), (string)ftpsEncryption.SelectedValue);
-            account.FTPSCertificateLocation = ftpsCertificateLocation.Text;
-            account.Keypath = keypath.Text;
-            account.Passphrase = passphrase.Text;
+        //    account.Name = name.Text;
+        //    account.Protocol = (FtpProtocol)Enum.Parse(typeof(FtpProtocol), (string)ftpProtocol.SelectedValue);
+        //    account.Host = host.Text;
+        //    account.Port = Convert.ToInt32(port.Value);
+        //    account.Username = username.Text;
+        //    account.Password = password.Text;
+        //    account.IsActive = isActive.Checked ?? false;
+        //    account.SubFolderPath = subFolderPath.Text;
+        //    account.FTPSEncryption = (FtpsEncryption)Enum.Parse(typeof(FtpsEncryption), (string)ftpsEncryption.SelectedValue);
+        //    account.FTPSCertificateLocation = ftpsCertificateLocation.Text;
+        //    account.Keypath = keypath.Text;
+        //    account.Passphrase = passphrase.Text;
 
-            return account;
-        }
+        //    return account;
+        //}
 
         private void KeyPathButton_Click(object sender, EventArgs e)
         {
@@ -108,7 +133,7 @@ namespace RedShot.Upload.Forms.Ftp
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            SaveAccount();
+            //SaveAccount();
         }
 
         private void CopyButton_Click(object sender, EventArgs e)
@@ -140,7 +165,7 @@ namespace RedShot.Upload.Forms.Ftp
         
         private void CreateNewAccount(FtpAccount account = null)
         {
-            ClearBoxes();
+            //ClearBoxes();
 
             var acc = new FtpAccount();
 
@@ -148,32 +173,32 @@ namespace RedShot.Upload.Forms.Ftp
             accounts.DataStore = ftpAccounts;
             accounts.SelectedValue = acc;
 
-            if (account != null)
-            {
-                FillData(account);
-            }
-            else
-            {
-                FillData(acc);
-            }
+            //if (account != null)
+            //{
+            //    FillData(account);
+            //}
+            //else
+            //{
+            //    FillData(acc);
+            //}
         }
 
-        private void SaveAccount()
-        {
-            if (accounts.SelectedValue != null)
-            {
-                if (accounts.SelectedValue is FtpAccount account)
-                {
-                    var changedAcc = GetAccountFromBoxes();
-                    changedAcc.Id = account.Id;
+        //private void SaveAccount()
+        //{
+        //    if (selectedAccount != null)
+        //    {
+        //        if (accounts.SelectedValue is FtpAccount account)
+        //        {
+        //            var changedAcc = GetAccountFromBoxes();
+        //            changedAcc.Id = account.Id;
 
-                    ftpAccounts.Remove(ftpAccounts.Where(a => a.Id == account.Id).FirstOrDefault());
-                    ftpAccounts.Add(changedAcc);
+        //            ftpAccounts.Remove(ftpAccounts.Where(a => a.Id == account.Id).FirstOrDefault());
+        //            ftpAccounts.Add(changedAcc);
 
-                    accounts.DataStore = ftpAccounts;
-                    accounts.SelectedValue = changedAcc;
-                }
-            }
-        }
+        //            accounts.DataStore = ftpAccounts;
+        //            accounts.SelectedValue = changedAcc;
+        //        }
+        //    }
+        //}
     }
 }

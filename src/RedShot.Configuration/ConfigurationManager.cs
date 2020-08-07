@@ -102,7 +102,7 @@ namespace RedShot.Configuration
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    return Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Roaming", defaultFolderName)).FullName;
+                    return Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), defaultFolderName)).FullName;
                 }
                 else
                 {

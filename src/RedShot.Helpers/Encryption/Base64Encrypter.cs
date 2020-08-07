@@ -14,8 +14,15 @@ namespace RedShot.Helpers.Encryption
         /// </summary>
         public string Decrypt(string value)
         {
-            var base64EncodedBytes = Convert.FromBase64String(value);
-            return Encoding.UTF8.GetString(base64EncodedBytes);
+            try
+            {
+                var base64EncodedBytes = Convert.FromBase64String(value);
+                return Encoding.UTF8.GetString(base64EncodedBytes);
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
 
         /// <summary>
@@ -23,8 +30,15 @@ namespace RedShot.Helpers.Encryption
         /// </summary>
         public string Encrypt(string value)
         {
-            var plainTextBytes = Encoding.UTF8.GetBytes(value);
-            return Convert.ToBase64String(plainTextBytes);
+            try
+            {
+                var plainTextBytes = Encoding.UTF8.GetBytes(value);
+                return Convert.ToBase64String(plainTextBytes);
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
     }
 }

@@ -161,6 +161,7 @@ namespace RedShot.Upload.Forms.Ftp
             sftpBoxes = GetSftpBoxes();
             sftpBoxes.Visible = false;
 
+            ftpsEncryption.SelectedIndex = 0;
             ftpProtocol.SelectedIndex = 0;
 
             Content = new StackLayout
