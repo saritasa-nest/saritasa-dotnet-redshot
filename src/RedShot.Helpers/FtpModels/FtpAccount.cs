@@ -293,5 +293,10 @@ namespace RedShot.Helpers.FtpModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public FtpAccount Clone()
+        {
+            return MemberwiseClone() as FtpAccount;
+        }
     }
 }

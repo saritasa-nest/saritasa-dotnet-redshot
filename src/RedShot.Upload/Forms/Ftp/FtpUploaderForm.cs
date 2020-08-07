@@ -27,15 +27,16 @@ namespace RedShot.Upload.Forms.Ftp
         public FtpUploaderForm(Bitmap image)
         {
             Title = "FTP Upload";
-            MinimumSize = new Size(350, 250);
+            Size = new Size(350, 280);
 
             ShowInTaskbar = true;
 
-            SetLocation();
             InitializeComponents();
 
             ftpSettingsButton.Click += FtpSettingsButton_Click;
             uploadButton.Click += UploadButton_Click;
+
+            Location = FormsHelper.SetCenterLocation(Size);
 
             this.image = image;
         }
@@ -72,24 +73,24 @@ namespace RedShot.Upload.Forms.Ftp
                 Padding = 20,
                 Items =
                 {
-                    GetConfigLayout(),
-                    FormsHelper.VoidBox(10),
                     GetAccountLayout(),
                     GetImageNameLayout(),
-                    FormsHelper.VoidBox(10),
-                    uploadButton
+                    FormsHelper.VoidBox(20),
+                    GetButtonsLayout()
                 }
             };
         }
 
-        private StackLayout GetConfigLayout()
+        private StackLayout GetButtonsLayout()
         {
             return new StackLayout()
             {
-                Orientation = Orientation.Vertical,
-                HorizontalContentAlignment = HorizontalAlignment.Right,
+                Orientation = Orientation.Horizontal,
+                VerticalContentAlignment = VerticalAlignment.Center,
                 Items =
                 {
+                    uploadButton,
+                    FormsHelper.VoidBox(20),
                     ftpSettingsButton
                 }
             };
@@ -131,25 +132,8 @@ namespace RedShot.Upload.Forms.Ftp
                     },
                     FormsHelper.VoidBox(10),
                     accounts,
-                    FormsHelper.VoidBox(10)
                 }
             };
-        }
-
-        private void SetLocation()
-        {
-            var center = ScreenHelper.GetCentralCoordsOfScreen();
-
-            var location = new Point(center.X - Size.Width / 2, center.Y - Size.Height / 2);
-
-            if (location.X >= 0 && location.Y >= 0)
-            {
-                Location = location;
-            }
-            else
-            {
-                Location = center;
-            }
         }
 
         private void FtpSettingsButton_Click(object sender, EventArgs e)

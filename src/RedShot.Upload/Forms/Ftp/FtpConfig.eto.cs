@@ -1,20 +1,20 @@
+using System;
+using System.Linq;
 using Eto.Forms;
 using RedShot.Helpers.Forms;
 using RedShot.Helpers.FtpModels;
-using System;
-using System.Linq;
 
 namespace RedShot.Upload.Forms.Ftp
 {
     internal partial class FtpConfig : Dialog
     {
-        private ComboBox accounts;
         private Button addButton;
         private Button delButton;
         private Button copyButton;
-        private Button saveButton;
-        private TextBox name;
+        private Button okButton;
 
+        private ComboBox accounts;
+        private TextBox name;
         private ComboBox ftpProtocol;
         private TextBox host;
         private NumericStepper port;
@@ -22,7 +22,6 @@ namespace RedShot.Upload.Forms.Ftp
         private PasswordBox password;
         private CheckBox isActive = new CheckBox();
         private TextBox subFolderPath;
-
         private ComboBox ftpsEncryption;
         private TextBox ftpsCertificateLocation;
         private TextBox keypath;
@@ -101,7 +100,6 @@ namespace RedShot.Upload.Forms.Ftp
 
             accounts = new ComboBox()
             {
-                DataStore = ftpAccounts,
                 Size = new Eto.Drawing.Size(150, 21),
             };
 
@@ -129,13 +127,13 @@ namespace RedShot.Upload.Forms.Ftp
 
             copyButton.Click += CopyButton_Click;
 
-            saveButton = new Button()
+            okButton = new Button()
             {
-                Text = "Save",
+                Text = "Ok",
                 Size = new Eto.Drawing.Size(100, 30),
             };
 
-            saveButton.Click += SaveButton_Click;
+            okButton.Click += OkButton_Click;
 
             ftpsCertificateLocationButton = new Button()
             {
@@ -188,8 +186,8 @@ namespace RedShot.Upload.Forms.Ftp
                         MinimumSize = new Eto.Drawing.Size(600, 400),
                         Padding = 20
                     },
-                    FormsHelper.VoidBox(20),
-                    saveButton
+                    FormsHelper.VoidBox(10),
+                    okButton
                 }
             };
         }
