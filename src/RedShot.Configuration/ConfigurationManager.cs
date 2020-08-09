@@ -1,8 +1,8 @@
-﻿using RedShot.Helpers.Encryption;
-using System;
+﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using YamlDotNet.Serialization;
+using RedShot.Helpers.Encryption;
 
 namespace RedShot.Configuration
 {
@@ -25,10 +25,10 @@ namespace RedShot.Configuration
         /// </summary>
         public static void Save()
         {
-            EncryptFtpAccountPasswords();
+            var encrypted = EncryptFtpAccountPasswords(YamlConfig);
 
             var serializer = new SerializerBuilder().Build();
-            var yaml = serializer.Serialize(YamlConfig);
+            var yaml = serializer.Serialize(encrypted);
 
             var fullpath = GetFullPath();
 
@@ -54,9 +54,10 @@ namespace RedShot.Configuration
                         .Build();
 
                     var config = deserializer.Deserialize<YamlConfig>(reader);
-                    DecryptFtpAccountPasswords(config);
 
-                    return config;
+                    var decrypted = DecryptFtpAccountPasswords(config);
+
+                    return decrypted;
                 }
             }
             else
@@ -116,23 +117,29 @@ namespace RedShot.Configuration
             }
         }
 
-        private static void EncryptFtpAccountPasswords()
+        private static YamlConfig EncryptFtpAccountPasswords(YamlConfig config)
         {
+            var clone = config.Clone();
+
             var encryptService = new Base64Encrypter();
 
-            foreach (var account in YamlConfig.FtpAccounts)
+            foreach (var account in clone.FtpAccounts)
             {
                 account.Password = encryptService.Encrypt(account.Password);
 
                 account.Passphrase = encryptService.Encrypt(account.Passphrase);
             }
+
+            return clone;
         }
 
-        private static void DecryptFtpAccountPasswords(YamlConfig config)
+        private static YamlConfig DecryptFtpAccountPasswords(YamlConfig config)
         {
+            var clone = config.Clone();
+
             var encryptService = new Base64Encrypter();
 
-            foreach (var account in config.FtpAccounts)
+            foreach (var account in clone.FtpAccounts)
             {
                 try
                 {
@@ -145,6 +152,8 @@ namespace RedShot.Configuration
                     // Occures when passwords are null.
                 }
             }
+
+            return clone;
         }
     }
 }

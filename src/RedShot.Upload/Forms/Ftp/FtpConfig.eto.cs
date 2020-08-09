@@ -12,6 +12,7 @@ namespace RedShot.Upload.Forms.Ftp
         private Button delButton;
         private Button copyButton;
         private Button okButton;
+        private Button cancelButton;
 
         private ComboBox accounts;
         private TextBox name;
@@ -32,6 +33,7 @@ namespace RedShot.Upload.Forms.Ftp
 
         private Control ftpsBoxes;
         private Control sftpBoxes;
+        private Control accountFields;
 
         private void InitializeComponents()
         {
@@ -135,6 +137,14 @@ namespace RedShot.Upload.Forms.Ftp
 
             okButton.Click += OkButton_Click;
 
+            cancelButton = new Button()
+            {
+                Text = "Cancel",
+                Size = new Eto.Drawing.Size(100, 30),
+            };
+
+            cancelButton.Click += CancelButton_Click;
+
             ftpsCertificateLocationButton = new Button()
             {
                 Text = "...",
@@ -162,6 +172,9 @@ namespace RedShot.Upload.Forms.Ftp
             ftpsEncryption.SelectedIndex = 0;
             ftpProtocol.SelectedIndex = 0;
 
+            accountFields = GetAccountFieldsControl();
+            accountFields.Enabled = false;
+
             Content = new StackLayout
             {
                 VerticalContentAlignment = VerticalAlignment.Center,
@@ -170,25 +183,45 @@ namespace RedShot.Upload.Forms.Ftp
                 Items =
                 {
                     GetAccountsPanel(),
-                    new GroupBox()
-                    {
-                        Content = new StackLayout()
-                        {
-                            Orientation = Orientation.Vertical,
-                            Items =
-                            {
-                                BaseAccountBoxes(),
-                                ftpsBoxes,
-                                sftpBoxes
-                            }
-                        },
-                        Text = "Account",
-                        MinimumSize = new Eto.Drawing.Size(600, 400),
-                        Padding = 20
-                    },
+                    accountFields,
                     FormsHelper.VoidBox(10),
-                    okButton
+                    GetFinishButtons()
                 }
+            };
+        }
+
+        private Control GetFinishButtons()
+        {
+            return new StackLayout()
+            {
+                Orientation = Orientation.Horizontal,
+                Padding = 10,
+                Items =
+                {
+                    okButton,
+                    FormsHelper.VoidBox(10),
+                    cancelButton
+                }
+            };
+        }
+
+        private Control GetAccountFieldsControl()
+        {
+            return new GroupBox()
+            {
+                Content = new StackLayout()
+                {
+                    Orientation = Orientation.Vertical,
+                    Items =
+                    {
+                        BaseAccountBoxes(),
+                        ftpsBoxes,
+                        sftpBoxes
+                    }
+                },
+                Text = "Account",
+                MinimumSize = new Eto.Drawing.Size(600, 400),
+                Padding = 20
             };
         }
 

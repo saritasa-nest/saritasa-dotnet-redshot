@@ -7,7 +7,7 @@ namespace RedShot.Helpers.FtpModels
     /// <summary>
     /// Ftp account model.
     /// </summary>
-    public class FtpAccount : INotifyPropertyChanged
+    public class FtpAccount : INotifyPropertyChanged, ICloneable
     {
         private string name;
         private FtpProtocol protocol;
@@ -284,7 +284,7 @@ namespace RedShot.Helpers.FtpModels
         /// </summary>
         public override string ToString()
         {
-            return $"{Name}||({Host}:{Port})";
+            return $"{Name} | {Host}:{Port}";
         }
 
         void OnPropertyChanged([CallerMemberName] string memberName = null)
@@ -297,6 +297,11 @@ namespace RedShot.Helpers.FtpModels
         public FtpAccount Clone()
         {
             return MemberwiseClone() as FtpAccount;
+        }
+
+        object ICloneable.Clone()
+        {
+            return Clone();
         }
     }
 }

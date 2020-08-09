@@ -21,30 +21,39 @@ namespace RedShot.Upload.Forms.Ftp
             Title = "FTP/FTPS/SFTP Configuration";
 
             this.accounts.SelectedValueChanged += Accounts_SelectedValueChanged;
+            this.accounts.DropDownClosed += Accounts_SelectedValueChanged;
 
             bindingList = new ObservableCollection<FtpAccount>(ftpAccounts);
-            bindingList.CollectionChanged += BindingList_CollectionChanged;
             accounts.Bind(a => a.DataStore, bindingList, b => b);
-        }
-
-        private void BindingList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            ftpAccounts.Clear();
-            ftpAccounts.AddRange(bindingList);
         }
 
         private void Accounts_SelectedValueChanged(object sender, EventArgs e)
         {
+            RefreshAccountFields();
+        }
+
+        private void RefreshAccountFields()
+        {
             BindBoxes();
+
+            if (accounts.SelectedValue == null)
+            {
+                accountFields.Enabled = false;
+            }
+            else
+            {
+                accountFields.Enabled = true;
+            }
         }
 
         private void BindBoxes()
         {
             var selectedAccount = (FtpAccount)accounts.SelectedValue;
 
-            UnBindBoxes();
+            accountFields.Unbind();
 
             name.Bind(t => t.Text, selectedAccount, account => account.Name);
+
             ftpProtocol.DataContext = selectedAccount;
             ftpProtocol.SelectedValueBinding.Convert(l => Enum.Parse(typeof(FtpProtocol), (string)l), v => v?.ToString() ?? FtpProtocol.FTP.ToString())
                 .BindDataContext((FtpAccount m) => m.Protocol);
@@ -63,22 +72,6 @@ namespace RedShot.Upload.Forms.Ftp
             ftpsCertificateLocation.Bind(t => t.Text, selectedAccount, account => account.FTPSCertificateLocation);
             keypath.Bind(t => t.Text, selectedAccount, account => account.Keypath);
             passphrase.Bind(t => t.Text, selectedAccount, account => account.Passphrase);
-        }
-
-        private void UnBindBoxes()
-        {
-            name.Unbind();
-            ftpProtocol.Unbind();
-            host.Unbind();
-            port.Unbind();
-            username.Unbind();
-            password.Unbind();
-            isActive.Unbind();
-            subFolderPath.Unbind();
-            ftpsEncryption.Unbind();
-            ftpsCertificateLocation.Unbind();
-            keypath.Unbind();
-            passphrase.Unbind();
         }
 
         private void KeyPathButton_Click(object sender, EventArgs e)
@@ -110,6 +103,14 @@ namespace RedShot.Upload.Forms.Ftp
 
         private void OkButton_Click(object sender, EventArgs e)
         {
+            ftpAccounts.Clear();
+            ftpAccounts.AddRange(bindingList);
+            ConfigurationManager.Save();
+            Close();
+        }
+
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
             Close();
         }
 
@@ -131,6 +132,11 @@ namespace RedShot.Upload.Forms.Ftp
                 bindingList.Remove(acc);
 
                 accounts.SelectedIndex = -1;
+                RefreshAccountFields();
+
+                //accounts.SelectedIndex = -1;
+                //accounts.In
+                //RefreshAccountFields();
             }
         }
 
