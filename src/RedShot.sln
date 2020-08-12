@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Abstractions", "Red
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eto.Forms.Controls.SkiaSharp.Mac", "RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.Mac\Eto.Forms.Controls.SkiaSharp.Mac.csproj", "{FA18038D-FC49-440B-8AE8-5CAB3013827B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedShot.Recording", "RedShot.Recording\RedShot.Recording.csproj", "{54800911-FE86-4F47-979F-B693ACA22637}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{FA18038D-FC49-440B-8AE8-5CAB3013827B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA18038D-FC49-440B-8AE8-5CAB3013827B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA18038D-FC49-440B-8AE8-5CAB3013827B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54800911-FE86-4F47-979F-B693ACA22637}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54800911-FE86-4F47-979F-B693ACA22637}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54800911-FE86-4F47-979F-B693ACA22637}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54800911-FE86-4F47-979F-B693ACA22637}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

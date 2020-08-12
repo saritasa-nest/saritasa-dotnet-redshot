@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
 using RedShot.App;
@@ -38,7 +37,6 @@ namespace RedShot.EtoForms.Wpf
         {
 #if _WINDOWS
             Eto.Platform.Detect.Add<ISKControl>(() => new Eto.Forms.Controls.SkiaSharp.WinForms.SKControlHandler());
-
 #elif _UNIX
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {

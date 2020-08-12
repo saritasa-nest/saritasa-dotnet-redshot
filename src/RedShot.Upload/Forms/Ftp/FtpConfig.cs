@@ -53,7 +53,6 @@ namespace RedShot.Upload.Forms.Ftp
             accountFields.Unbind();
 
             name.Bind(t => t.Text, selectedAccount, account => account.Name);
-
             ftpProtocol.DataContext = selectedAccount;
             ftpProtocol.SelectedValueBinding.Convert(l => Enum.Parse(typeof(FtpProtocol), (string)l), v => v?.ToString() ?? FtpProtocol.FTP.ToString())
                 .BindDataContext((FtpAccount m) => m.Protocol);
@@ -64,11 +63,9 @@ namespace RedShot.Upload.Forms.Ftp
             password.Bind(t => t.Text, selectedAccount, account => account.Password);
             isActive.Bind(t => t.Checked, selectedAccount, account => account.IsActive);
             subFolderPath.Bind(t => t.Text, selectedAccount, account => account.SubFolderPath);
-
             ftpsEncryption.DataContext = selectedAccount;
             ftpsEncryption.SelectedValueBinding.Convert(l => Enum.Parse(typeof(FtpsEncryption), (string)l), v => v?.ToString() ?? FtpsEncryption.Explicit.ToString())
                 .BindDataContext((FtpAccount m) => m.FTPSEncryption);
-
             ftpsCertificateLocation.Bind(t => t.Text, selectedAccount, account => account.FTPSCertificateLocation);
             keypath.Bind(t => t.Text, selectedAccount, account => account.Keypath);
             passphrase.Bind(t => t.Text, selectedAccount, account => account.Passphrase);
@@ -133,10 +130,6 @@ namespace RedShot.Upload.Forms.Ftp
 
                 accounts.SelectedIndex = -1;
                 RefreshAccountFields();
-
-                //accounts.SelectedIndex = -1;
-                //accounts.In
-                //RefreshAccountFields();
             }
         }
 

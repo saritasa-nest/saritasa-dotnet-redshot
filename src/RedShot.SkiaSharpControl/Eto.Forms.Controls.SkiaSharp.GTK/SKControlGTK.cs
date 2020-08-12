@@ -48,7 +48,7 @@ namespace Eto.Forms.Controls.SkiaSharp.GTK
 
         protected override bool OnDrawn(Context cr)
         {
-            var res = base.OnDrawn(cr);
+            //var res = base.OnDrawn(cr);
 
             if (surface != null)
             {
@@ -56,7 +56,7 @@ namespace Eto.Forms.Controls.SkiaSharp.GTK
                 cr.Paint();
             }
 
-            return res;
+            return true;
         }
 
         public new void Dispose()

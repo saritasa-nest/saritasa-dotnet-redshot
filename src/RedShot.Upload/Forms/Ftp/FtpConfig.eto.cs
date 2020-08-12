@@ -37,6 +37,25 @@ namespace RedShot.Upload.Forms.Ftp
 
         private void InitializeComponents()
         {
+            InitializeFileds();
+
+            Content = new StackLayout
+            {
+                VerticalContentAlignment = VerticalAlignment.Center,
+                Orientation = Orientation.Vertical,
+                Padding = 10,
+                Items =
+                {
+                    GetAccountsPanel(),
+                    accountFields,
+                    FormsHelper.VoidBox(10),
+                    GetFinishButtons()
+                }
+            };
+        }
+
+        private void InitializeFileds()
+        {
             var defaultSize = new Eto.Drawing.Size(200, 21);
             name = new TextBox()
             {
@@ -82,7 +101,7 @@ namespace RedShot.Upload.Forms.Ftp
                 MinValue = 0,
                 MaxValue = 65535,
                 Increment = 1,
-                Value = 21, 
+                Value = 21,
                 Size = new Eto.Drawing.Size(40, 21),
             };
 
@@ -174,20 +193,6 @@ namespace RedShot.Upload.Forms.Ftp
 
             accountFields = GetAccountFieldsControl();
             accountFields.Enabled = false;
-
-            Content = new StackLayout
-            {
-                VerticalContentAlignment = VerticalAlignment.Center,
-                Orientation = Orientation.Vertical,
-                Padding = 10,
-                Items =
-                {
-                    GetAccountsPanel(),
-                    accountFields,
-                    FormsHelper.VoidBox(10),
-                    GetFinishButtons()
-                }
-            };
         }
 
         private Control GetFinishButtons()
@@ -195,7 +200,6 @@ namespace RedShot.Upload.Forms.Ftp
             return new StackLayout()
             {
                 Orientation = Orientation.Horizontal,
-                Padding = 10,
                 Items =
                 {
                     okButton,
@@ -323,6 +327,32 @@ namespace RedShot.Upload.Forms.Ftp
             };
         }
 
+        private StackLayout GetAdressBoxes()
+        {
+            return new StackLayout
+            {
+                VerticalContentAlignment = VerticalAlignment.Center,
+                Orientation = Orientation.Horizontal,
+                Padding = 5,
+                Items =
+                {
+                    new Label()
+                    {
+                        Text = "Host:",
+                    },
+                    FormsHelper.VoidBox(10),
+                    host,
+                    FormsHelper.VoidBox(10),
+                    new Label()
+                    {
+                        Text = "Port:",
+                    },
+                    FormsHelper.VoidBox(10),
+                    port,
+                }
+            };
+        }
+
         private GroupBox GetFtpsBoxes()
         {
             return new GroupBox()
@@ -424,32 +454,6 @@ namespace RedShot.Upload.Forms.Ftp
                             }
                         }
                     }
-                }
-            };
-        }
-
-        private StackLayout GetAdressBoxes()
-        {
-            return new StackLayout
-            {
-                VerticalContentAlignment = VerticalAlignment.Center,
-                Orientation = Orientation.Horizontal,
-                Padding = 5,
-                Items =
-                {
-                    new Label()
-                    {
-                        Text = "Host:",
-                    },
-                    FormsHelper.VoidBox(10),
-                    host,
-                    FormsHelper.VoidBox(10),
-                    new Label()
-                    {
-                        Text = "Port:",
-                    },
-                    FormsHelper.VoidBox(10),
-                    port,
                 }
             };
         }

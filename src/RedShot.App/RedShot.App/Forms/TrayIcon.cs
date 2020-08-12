@@ -1,6 +1,7 @@
 ﻿using System;
 using Eto.Forms;
 using Eto.Drawing;
+using RedShot.Recording.Forms;
 
 namespace RedShot.App
 {
@@ -21,6 +22,15 @@ namespace RedShot.App
         {
             var menu = new ContextMenu();
 
+            menu.Items.Add(new ButtonMenuItem()
+            {
+                Text = "Record",
+                Command = new Command((o, e) =>
+                {
+                    var view = new RecordingView();
+                    view.Show();
+                })
+            });
             menu.Items.Add(new ButtonMenuItem()
             {
                 Text = "Capture",

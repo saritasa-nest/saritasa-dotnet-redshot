@@ -44,7 +44,6 @@ namespace Eto.Forms.Controls.SkiaSharp.WinForms
 
         protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
         {
-            base.OnPaint(e);
             if (bitmap != null)
             {
                 e.Graphics.DrawImage(bitmap, 0, 0);

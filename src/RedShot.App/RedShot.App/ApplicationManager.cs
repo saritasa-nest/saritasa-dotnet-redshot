@@ -72,6 +72,11 @@ namespace RedShot.App
             uploadBar.Show();
         }
 
+        public static void RunRecodringView()
+        {
+
+        }
+
         private static void CloseViews()
         {
             if (editorView != null && !editorView.IsDisposed)

@@ -43,7 +43,6 @@ namespace RedShot.Upload.Forms.Ftp
 
         private void InitializeComponents()
         {
-
             accounts = new ComboBox()
             {
                 DataStore = ftpAccounts,
@@ -62,7 +61,7 @@ namespace RedShot.Upload.Forms.Ftp
 
             ftpSettingsButton = new Button()
             {
-                Text = "Ftp Settings",
+                Text = "Settings",
             };
 
             Content = new StackLayout

@@ -19,12 +19,16 @@
   
   <ItemGroup>
     <ProjectReference Include="..\..\RedShot.Helpers\RedShot.Helpers.csproj" />
+    <ProjectReference Include="..\..\RedShot.Recording\RedShot.Recording.csproj" />
     <ProjectReference Include="..\..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp\Eto.Forms.Controls.SkiaSharp.csproj" />
     <ProjectReference Include="..\..\RedShot.Upload\RedShot.Upload.csproj" />
   </ItemGroup>
   
   <ItemGroup>
-    <Compile Update="EditorViewDrawingSkiaSharp.eto.cs">
+    <Compile Update="Forms\EditorViewDrawable.eto.cs">
+      <DependentUpon>$([System.String]::Copy('%(Filename)').Replace('.eto', ''))%(Extension)</DependentUpon>
+    </Compile>
+    <Compile Update="Forms\EditorViewDrawingSkiaSharp.eto.cs">
       <DependentUpon>EditorViewDrawingSkiaSharp.cs</DependentUpon>
     </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
