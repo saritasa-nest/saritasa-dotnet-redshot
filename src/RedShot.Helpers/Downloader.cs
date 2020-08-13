@@ -35,6 +35,15 @@ namespace RedShot.Helpers
             return path;
         }
 
+        public string Download(string url, string fileName)
+        {
+            var path = Path.Combine(downloadDirectory, fileName);
+
+            webClient.DownloadFile(url, path);
+
+            return path;
+        }
+
         private void WebClient_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             DownloadFileCompleted?.Invoke(sender, e);

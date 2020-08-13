@@ -61,13 +61,12 @@ namespace RedShot.Recording.Helpers
             return args.ToString();
         }
 
-        public static string GetArgsForOutput(string filepath, FFmpegOptions options)
+        public static string GetArgsForOutput(string filepath)
         {
             var args = new StringBuilder();
 
             args.Append("-y "); // overwrite file
-            var output = Path.ChangeExtension(filepath, options.Extension);
-            args.AppendFormat("\"{0}\"", output);
+            args.AppendFormat("\"{0}\"", filepath);
 
             return args.ToString();
         }

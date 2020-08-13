@@ -25,7 +25,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Abstractions", "Red
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eto.Forms.Controls.SkiaSharp.Mac", "RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.Mac\Eto.Forms.Controls.SkiaSharp.Mac.csproj", "{FA18038D-FC49-440B-8AE8-5CAB3013827B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedShot.Recording", "RedShot.Recording\RedShot.Recording.csproj", "{54800911-FE86-4F47-979F-B693ACA22637}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Recording", "RedShot.Recording\RedShot.Recording.csproj", "{54800911-FE86-4F47-979F-B693ACA22637}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RedShot.Platforms", "RedShot.Platforms", "{D9CC7E96-A037-4614-A072-D0D0E7A078F0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Platforms.Windows", "RedShot.Platforms.Windows\RedShot.Platforms.Windows.csproj", "{60B9AC05-2789-4B16-8F38-DD40BDAC447D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,6 +81,10 @@ Global
 		{54800911-FE86-4F47-979F-B693ACA22637}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54800911-FE86-4F47-979F-B693ACA22637}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54800911-FE86-4F47-979F-B693ACA22637}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60B9AC05-2789-4B16-8F38-DD40BDAC447D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60B9AC05-2789-4B16-8F38-DD40BDAC447D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60B9AC05-2789-4B16-8F38-DD40BDAC447D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60B9AC05-2789-4B16-8F38-DD40BDAC447D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -86,6 +94,7 @@ Global
 		{8FF8D9D9-8344-425D-BF84-F0A65CF73938} = {74B70C37-AE6C-4F87-920F-0E67ED5DAF09}
 		{5D82503F-82ED-4C75-95E9-B6FB7767D499} = {74B70C37-AE6C-4F87-920F-0E67ED5DAF09}
 		{FA18038D-FC49-440B-8AE8-5CAB3013827B} = {74B70C37-AE6C-4F87-920F-0E67ED5DAF09}
+		{60B9AC05-2789-4B16-8F38-DD40BDAC447D} = {D9CC7E96-A037-4614-A072-D0D0E7A078F0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {29605F2C-E5EE-416A-9711-11917A3A250F}

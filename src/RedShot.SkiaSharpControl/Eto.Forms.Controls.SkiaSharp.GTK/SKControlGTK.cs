@@ -48,8 +48,6 @@ namespace Eto.Forms.Controls.SkiaSharp.GTK
 
         protected override bool OnDrawn(Context cr)
         {
-            //var res = base.OnDrawn(cr);
-
             if (surface != null)
             {
                 cr.SetSourceSurface(surface, 0, 0);

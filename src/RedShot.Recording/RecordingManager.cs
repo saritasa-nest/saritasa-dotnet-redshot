@@ -1,18 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Eto.Drawing;
+using RedShot.Recording.Forms;
+using RedShot.Recording.Recorders.Windows;
 
 namespace RedShot.Recording
 {
-    public class RecordingManager
+    public static class RecordingManager
     {
-        public void InitiateRecording()
+        public static void InitiateRecording()
         {
-            //Selecting region
-            //recordsettings
-            //recording
-            //saving
-            //
+            var manager = new WindowsRecordingManager();
+
+            if (!manager.CheckFFmpeg())
+            {
+                manager.InstallFFmpeg();
+            }
+
+            var recorder = manager.GetRecorder(new FFmpegOptions());
+
+            using var areaForm = new AreaSelectingView();
+
+            areaForm.ShowModal();
+
+            if (areaForm.DialogResult == Eto.Forms.DialogResult.Ok)
+            {
+                var view = new RecordingView(recorder, (Rectangle)areaForm.SelectionRectangle);
+                view.Show();
+            }
         }
     }
 }

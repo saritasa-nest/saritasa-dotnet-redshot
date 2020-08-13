@@ -11,7 +11,7 @@ namespace RedShot.Recording
             DrawCursor = true;
             VideoCodec = FFmpegVideoCodec.libx264;
             AudioCodec = FFmpegAudioCodec.libvoaacenc;
-            X264Preset = FFmpegX264Preset.medium;
+            X264Preset = FFmpegX264Preset.faster;
             X264Crf = 28;
             XviDQscale = 10;
             Bitrate = 3000;
@@ -25,28 +25,40 @@ namespace RedShot.Recording
         }
 
         public int Fps { get; set; }
+
         public bool DrawCursor { get; set; }
 
         // General
         public Device VideoDevice { get; set; }
+
         public Device AudioDevice { get; set; }
 
         public FFmpegVideoCodec VideoCodec { get; set; }
+
         public FFmpegAudioCodec AudioCodec { get; set; }
+
         public string UserArgs { get; set; }
 
         // Video
         public FFmpegX264Preset X264Preset { get; set; }
+
         public int X264Crf { get; set; }
+
         public int XviDQscale { get; set; }
+
         public int Bitrate { get; set; }
+
         public FFmpegNVENCPreset NVENCPreset { get; set; }
+
         public FFmpegQSVPreset QSVPreset { get; set; }
 
         // Audio
         public int AACBitrate { get; set; }
+
         public int OpusBitrate { get; set; }
+
         public int VorbisQscale { get; set; }
+
         public int MP3Qscale { get; set; }
 
         public string Extension

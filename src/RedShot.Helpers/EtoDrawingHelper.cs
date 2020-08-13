@@ -67,5 +67,10 @@ namespace RedShot.Helpers
                 }
             }
         }
+
+        public static Rectangle OffsetRectangle(this Rectangle rect, int i)
+        {
+            return new Rectangle(rect.X + i, rect.Y + i, rect.Width - i * 2, rect.Height - i * 2);
+        }
     }
 }

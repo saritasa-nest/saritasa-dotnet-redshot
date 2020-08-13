@@ -1,8 +1,8 @@
 ﻿using System;
-using System.IO;
 using Eto.Drawing;
 using Eto.Forms;
 using RedShot.App.Painting;
+using RedShot.Recording;
 using RedShot.Upload.Forms;
 
 namespace RedShot.App
@@ -30,7 +30,7 @@ namespace RedShot.App
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex, "Error occured in creating tray icon form");
+                Logger.Fatal(ex, "Error occurred in creating tray icon form");
                 throw;
             }
             return trayIcon;
@@ -53,7 +53,7 @@ namespace RedShot.App
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex, "Error occured in creating tray screen editor form");
+                Logger.Fatal(ex, "Error occurred in creating tray screen editor form");
                 throw;
             }
         }
@@ -74,7 +74,7 @@ namespace RedShot.App
 
         public static void RunRecodringView()
         {
-
+            RecordingManager.InitiateRecording();
         }
 
         private static void CloseViews()

@@ -4,6 +4,7 @@ using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
 using RedShot.App;
 using RedShot.Configuration;
+using static RedShot.Recording.RecordingControl;
 
 namespace RedShot.EtoForms.Wpf
 {

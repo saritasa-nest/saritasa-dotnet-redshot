@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using NLog.Fluent;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,6 +8,8 @@ namespace RedShot.Recording.Helpers
 {
     public class FFmpegCliManager
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("Ffmpeg");
+
         public event DataReceivedEventHandler OutputDataReceived;
 
         public event DataReceivedEventHandler ErrorDataReceived;
@@ -29,7 +32,7 @@ namespace RedShot.Recording.Helpers
             ErrorDataReceived += FFmpeg_DataReceived;
         }
 
-        public bool Run(string args)
+        public void Run(string args)
         {
             Output.Clear();
 
@@ -38,55 +41,53 @@ namespace RedShot.Recording.Helpers
                 Stop();
             }
 
-            int errorCode = Open(FFmpegPath, args);
-            return errorCode == 0;
+            Open(FFmpegPath, args);
         }
 
-        public int Open(string path, string args = null)
+        public void Open(string path, string args = null)
         {
             if (File.Exists(path))
             {
-                using (process = new Process())
+                Task.Run(() =>
                 {
-                    var processInfo = new ProcessStartInfo()
+                    using (process = new Process())
                     {
-                        FileName = path,
-                        WorkingDirectory = Path.GetDirectoryName(path),
-                        Arguments = args,
-                        UseShellExecute = false,
-                        CreateNoWindow = true,
-                        RedirectStandardInput = true,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        StandardOutputEncoding = Encoding.UTF8,
-                        StandardErrorEncoding = Encoding.UTF8
-                    };
+                        var processInfo = new ProcessStartInfo()
+                        {
+                            FileName = path,
+                            WorkingDirectory = Path.GetDirectoryName(path),
+                            Arguments = args,
+                            UseShellExecute = false,
+                            CreateNoWindow = true,
+                            RedirectStandardInput = true,
+                            RedirectStandardOutput = true,
+                            RedirectStandardError = true,
+                            StandardOutputEncoding = Encoding.UTF8,
+                            StandardErrorEncoding = Encoding.UTF8
+                        };
 
-                    process.EnableRaisingEvents = true;
+                        process.EnableRaisingEvents = true;
 
-                    process.OutputDataReceived += CliOutputDataReceived;
-                    process.ErrorDataReceived += CliErrorDataReceived;
+                        process.OutputDataReceived += CliOutputDataReceived;
+                        process.ErrorDataReceived += CliErrorDataReceived;
 
-                    process.StartInfo = processInfo;
+                        process.StartInfo = processInfo;
 
-                    IsProcessRunning = true;
-                    try
-                    {
-                        process.Start();
-                        process.BeginOutputReadLine();
-                        process.BeginErrorReadLine();
-                        process.WaitForExit();
+                        IsProcessRunning = true;
+                        try
+                        {
+                            process.Start();
+                            process.BeginOutputReadLine();
+                            process.BeginErrorReadLine();
+                            process.WaitForExit();
+                        }
+                        finally
+                        {
+                            IsProcessRunning = false;
+                        }
                     }
-                    finally
-                    {
-                        IsProcessRunning = false;
-                    }
-
-                    return process.ExitCode;
-                }
+                });
             }
-
-            return -1;
         }
 
         public void Stop()
@@ -95,7 +96,7 @@ namespace RedShot.Recording.Helpers
             {
                 int closeTryCount = 0;
 
-                while (closeTryCount <= 3)
+                while (closeTryCount <= 5)
                 {
                     if (IsProcessRunning)
                     {
@@ -110,30 +111,33 @@ namespace RedShot.Recording.Helpers
                     }
                 }
 
-                process.Kill();
+                // If still running.
+                if (IsProcessRunning)
+                {
+                    process.Kill();
+                }
             }
         }
 
         private void CliOutputDataReceived(object sender, DataReceivedEventArgs e)
         {
+            Logger.Debug(e.Data);
             OutputDataReceived?.Invoke(sender, e);
         }
 
         private void CliErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
+            Logger.Error(e.Data);
             ErrorDataReceived?.Invoke(sender, e);
         }
 
         private void FFmpeg_DataReceived(object sender, DataReceivedEventArgs e)
         {
-            lock (this)
-            {
-                string data = e.Data;
+            var data = e.Data;
 
-                if (!string.IsNullOrEmpty(data))
-                {
-                    Output.AppendLine(data);
-                }
+            if (!string.IsNullOrEmpty(data))
+            {
+                Output.AppendLine(data);
             }
         }
 
@@ -142,6 +146,14 @@ namespace RedShot.Recording.Helpers
             if (IsProcessRunning)
             {
                 process?.StandardInput.WriteLine(input);
+            }
+        }
+
+        ~FFmpegCliManager()
+        {
+            if (IsProcessRunning)
+            {
+                Stop();
             }
         }
     }

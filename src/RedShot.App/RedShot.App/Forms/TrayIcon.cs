@@ -25,11 +25,7 @@ namespace RedShot.App
             menu.Items.Add(new ButtonMenuItem()
             {
                 Text = "Record",
-                Command = new Command((o, e) =>
-                {
-                    var view = new RecordingView();
-                    view.Show();
-                })
+                Command = new Command((e, o) => ApplicationManager.RunRecodringView())
             });
             menu.Items.Add(new ButtonMenuItem()
             {

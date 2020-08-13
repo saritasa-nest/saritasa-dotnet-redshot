@@ -34,21 +34,32 @@ namespace RedShot.Recording.Recorders.Windows
             var deviceArgs = GetWindowsDeviceArgs(area, options);
             var optionsArgs = FFmpegArgsManager.GetFFmpegArgsFromOptions(options);
 
-            var output = FFmpegArgsManager.GetArgsForOutput(VideoFolderPath, options);
+            var name = DateTime.Now.ToFileTime();
 
-            cliManager.Run($"{deviceArgs} {optionsArgs} {output}");
+            var output = Path.Combine(VideoFolderPath, $"{name}.{options.Extension}");
+
+            var outputArgs = FFmpegArgsManager.GetArgsForOutput(output);
+
+            cliManager.Run($"{deviceArgs} {optionsArgs} {outputArgs}");
         }
 
         public void Stop()
         {
-            if (IsRecording)
-            {
-                cliManager.Stop();
-            }
+            cliManager.Stop();
         }
 
         private string GetWindowsDeviceArgs(Rectangle captureArea, FFmpegOptions options)
         {
+            if (captureArea.Width % 2 != 0)
+            {
+                captureArea.Width--;
+            }
+
+            if (captureArea.Height % 2 != 0)
+            {
+                captureArea.Height--;
+            }
+
             var args = new StringBuilder();
 
             args.Append($"-f gdigrab -framerate {options.Fps} -offset_x {captureArea.Location.X} -offset_y {captureArea.Location.Y} ");

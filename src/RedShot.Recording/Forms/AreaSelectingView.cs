@@ -5,9 +5,9 @@ using SkiaSharp;
 using RedShot.Helpers.EditorView;
 using RedShot.Helpers;
 
-namespace RedShot.App
+namespace RedShot.Recording.Forms
 {
-    internal partial class EditorViewDrawingSkiaSharp : Form
+    internal partial class AreaSelectingView : Dialog
     {
         /// <summary>
         /// Render frametime in milliseconds.
@@ -15,7 +15,7 @@ namespace RedShot.App
         /// </summary>
         private readonly double renderFrameTime = 10;
 
-        public EditorViewDrawingSkiaSharp()
+        public AreaSelectingView()
         {
             InitializeComponent();
         }
@@ -29,7 +29,7 @@ namespace RedShot.App
             {
                 if (capturing)
                 {
-                    selectionRectangle = EtoDrawingHelper.CreateRectangle(startLocation, endLocation);
+                    SelectionRectangle = EtoDrawingHelper.CreateRectangle(startLocation, endLocation);
                     skcontrol.Execute((surface) => PaintRegion(surface));
                 }
                 else if (captured)
@@ -132,7 +132,6 @@ namespace RedShot.App
                     capturing = false;
 
                     captured = true;
-                    ShowPointPaintingView();
                     return;
                 }
 
@@ -153,8 +152,6 @@ namespace RedShot.App
                     endLocation = e.Location;
                     capturing = true;
                 }
-
-                HidePointPaintingView();
             }
             else if (e.Buttons == MouseButtons.Alternate)
             {
@@ -167,7 +164,6 @@ namespace RedShot.App
                     captured = false;
                     moving = false;
                     resizing = false;
-                    HidePointPaintingView();
                     SetDefaultPointer();
                 }
                 else
@@ -184,11 +180,6 @@ namespace RedShot.App
                 moving = false;
                 resizing = false;
                 SetDefaultPointer();
-
-                if (captured)
-                {
-                    ShowPointPaintingView();
-                }
             }
         }
 
@@ -201,12 +192,17 @@ namespace RedShot.App
         {
             switch (e.Key)
             {
-                case Keys.Escape:
+                case Keys.Escape | Keys.Enter:
+                    DialogResult = DialogResult.Cancel;
                     Close();
                     break;
 
                 case Keys.Enter:
-                    SaveScreenShot();
+                    if (captured)
+                    {
+                        DialogResult = DialogResult.Ok;
+                        Close();
+                    }
                     break;
             }
         }
@@ -246,7 +242,7 @@ namespace RedShot.App
                 IsAntialias = true
             };
 
-            var text = $"X: {(int)selectionRectangle.X} Y: {(int)selectionRectangle.Y}   W: {(int)selectionRectangle.Width} H: {(int)selectionRectangle.Height}";
+            var text = $"X: {(int)SelectionRectangle.X} Y: {(int)SelectionRectangle.Y}   W: {(int)SelectionRectangle.Width} H: {(int)SelectionRectangle.Height}";
 
             var textWidth = paint.MeasureText(text);
 
@@ -266,17 +262,17 @@ namespace RedShot.App
             SKRect textStrokeRect = default;
             SKRect textfillRect = default;
 
-            if (selectionRectangle.Y > paint.TextSize + 10)
+            if (SelectionRectangle.Y > paint.TextSize + 10)
             {
-                drawCoords = new SKPoint(selectionRectangle.X + 2, selectionRectangle.Y - 15);
+                drawCoords = new SKPoint(SelectionRectangle.X + 2, SelectionRectangle.Y - 15);
             }
-            else if (selectionRectangle.Y + selectionRectangle.Height < Height - paint.TextSize - 10)
+            else if (SelectionRectangle.Y + SelectionRectangle.Height < Height - paint.TextSize - 10)
             {
-                drawCoords = new SKPoint(selectionRectangle.X + 2, selectionRectangle.Y + selectionRectangle.Height + 20);
+                drawCoords = new SKPoint(SelectionRectangle.X + 2, SelectionRectangle.Y + SelectionRectangle.Height + 20);
             }
             else
             {
-                drawCoords = new SKPoint(selectionRectangle.X + 6, selectionRectangle.Y + paint.TextSize + 6);
+                drawCoords = new SKPoint(SelectionRectangle.X + 6, SelectionRectangle.Y + paint.TextSize + 6);
             }
 
             textStrokeRect.Location = new SKPoint(drawCoords.X - 2, drawCoords.Y - paint.TextSize);
@@ -301,8 +297,6 @@ namespace RedShot.App
 
             PaintDarkregion(surface, editorRect);
 
-            //PaintEditorBorder(surface);
-
             PaintTopMessage(surface);
         }
 
@@ -318,8 +312,8 @@ namespace RedShot.App
 
             canvas.DrawBitmap(skScreenImage, new SKPoint(0, 0));
 
-            var size = new SKSize(selectionRectangle.Width, selectionRectangle.Height);
-            var point = new SKPoint(selectionRectangle.X, selectionRectangle.Y);
+            var size = new SKSize(SelectionRectangle.Width, SelectionRectangle.Height);
+            var point = new SKPoint(SelectionRectangle.X, SelectionRectangle.Y);
 
             var regionRect = SKRect.Create(point, size);
 
@@ -327,9 +321,7 @@ namespace RedShot.App
 
             PaintDarkregion(surface, editorRect, regionRect);
 
-            PaintDashAround(surface, regionRect, SKColors.White, SKColors.Black);
-
-            //PaintEditorBorder(surface);
+            PaintDashAround(surface, regionRect, SKColors.Red, SKColors.Black);
 
             PaintCoordinatePanel(surface);
         }
@@ -381,77 +373,6 @@ namespace RedShot.App
         }
         #endregion SkiaSharpCommands
 
-        #region ScreenShotPanel
-
-        private void InitializeScreenShotPanel()
-        {
-            screenShotPanel = new ScreenShotPanel();
-
-            screenShotPanel.EnablePaintingModeButton.Clicked += PointPaintingPanel_PaintingModeEnabled;
-            screenShotPanel.SaveScreenShotButton.Clicked += SaveScreenShotButton_Clicked;
-
-
-            screenShotPanelLocation = new Point(
-                (int)(Size.Width - screenShotPanel.Width - Size.Width * 0.05),
-                (int)(Size.Height * 0.05));
-
-            screenShotPanel.Location = screenShotPanelLocation;
-
-            screenShotPanel.KeyDown += EditorView_KeyDown;
-
-            screenShotPanel.Show();
-            screenShotPanel.Visible = false;
-        }
-
-        private void SaveScreenShotButton_Clicked(object sender, EventArgs e)
-        {
-            SaveScreenShot();
-        }
-
-        private void ShowPointPaintingView()
-        {
-            screenShotPanel.Visible = true;
-            screenShotPanel.Location = screenShotPanelLocation;
-        }
-
-        private void HidePointPaintingView()
-        {
-            screenShotPanel.Visible = false;
-        }
-
-        private void PointPaintingPanel_PaintingModeEnabled(object sender, EventArgs e)
-        {
-            var screenshot = GetScreenShot();
-            ApplicationManager.RunPaintingView(screenshot);
-        }
-
-        #endregion ScreenShotPanel
-
-        /// <summary>
-        /// Runs uploader functions.
-        /// </summary>
-        #region Uploading
-        private Bitmap GetScreenShot()
-        {
-            if (selectionRectangle != default)
-            {
-                if (selectionRectangle.X + selectionRectangle.Width > Width)
-                {
-                    selectionRectangle.Width = Width - selectionRectangle.X;
-                }
-                if (selectionRectangle.Y + selectionRectangle.Height > Height)
-                {
-                    selectionRectangle.Height = Height - selectionRectangle.Y;
-                }
-
-                return etoScreenImage.Clone((Rectangle)selectionRectangle);
-            }
-
-            return null;
-        }
-
-        #endregion Uploading
-
         #region MovingResizing
 
         #region Checking
@@ -461,12 +382,12 @@ namespace RedShot.App
         /// </summary>
         private bool CheckOnMoving(PointF mouseLocation)
         {
-            if (mouseLocation.X >= selectionRectangle.X && mouseLocation.X <= selectionRectangle.X + selectionRectangle.Width)
+            if (mouseLocation.X >= SelectionRectangle.X && mouseLocation.X <= SelectionRectangle.X + SelectionRectangle.Width)
             {
-                if (mouseLocation.Y >= selectionRectangle.Y && mouseLocation.Y <= selectionRectangle.Y + selectionRectangle.Height)
+                if (mouseLocation.Y >= SelectionRectangle.Y && mouseLocation.Y <= SelectionRectangle.Y + SelectionRectangle.Height)
                 {
-                    relativeX = mouseLocation.X - selectionRectangle.X;
-                    relativeY = mouseLocation.Y - selectionRectangle.Y;
+                    relativeX = mouseLocation.X - SelectionRectangle.X;
+                    relativeY = mouseLocation.Y - SelectionRectangle.Y;
 
                     return true;
                 }
@@ -480,24 +401,24 @@ namespace RedShot.App
         /// </summary>
         private bool CheckOnResizing(PointF mouseLocation)
         {
-            if (ResizeHelper.ApproximatelyEquals(selectionRectangle.Y, mouseLocation.Y))
+            if (ResizeHelper.ApproximatelyEquals(SelectionRectangle.Y, mouseLocation.Y))
             {
-                if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X, mouseLocation.X))
+                if (ResizeHelper.ApproximatelyEquals(SelectionRectangle.X, mouseLocation.X))
                 {
                     resizePart = ResizePart.Angle;
-                    oppositeAngle = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y + selectionRectangle.Height);
+                    oppositeAngle = new PointF(SelectionRectangle.X + SelectionRectangle.Width, SelectionRectangle.Y + SelectionRectangle.Height);
                 }
-                else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X + selectionRectangle.Width, mouseLocation.X))
+                else if (ResizeHelper.ApproximatelyEquals(SelectionRectangle.X + SelectionRectangle.Width, mouseLocation.X))
                 {
                     resizePart = ResizePart.Angle;
-                    oppositeAngle = new PointF(selectionRectangle.X, selectionRectangle.Y + selectionRectangle.Height);
+                    oppositeAngle = new PointF(SelectionRectangle.X, SelectionRectangle.Y + SelectionRectangle.Height);
                 }
-                else if (mouseLocation.X > selectionRectangle.X && mouseLocation.X < selectionRectangle.X + selectionRectangle.Width)
+                else if (mouseLocation.X > SelectionRectangle.X && mouseLocation.X < SelectionRectangle.X + SelectionRectangle.Width)
                 {
                     resizePart = ResizePart.HorizontalBorder;
 
-                    var start = new PointF(selectionRectangle.X, selectionRectangle.Y + selectionRectangle.Height);
-                    var end = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y + selectionRectangle.Height);
+                    var start = new PointF(SelectionRectangle.X, SelectionRectangle.Y + SelectionRectangle.Height);
+                    var end = new PointF(SelectionRectangle.X + SelectionRectangle.Width, SelectionRectangle.Y + SelectionRectangle.Height);
                     oppositeBorder = new LineF(start, end);
                 }
                 else
@@ -505,24 +426,24 @@ namespace RedShot.App
                     return false;
                 }
             }
-            else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.Y + selectionRectangle.Height, mouseLocation.Y))
+            else if (ResizeHelper.ApproximatelyEquals(SelectionRectangle.Y + SelectionRectangle.Height, mouseLocation.Y))
             {
-                if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X, mouseLocation.X))
+                if (ResizeHelper.ApproximatelyEquals(SelectionRectangle.X, mouseLocation.X))
                 {
                     resizePart = ResizePart.Angle;
-                    oppositeAngle = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y);
+                    oppositeAngle = new PointF(SelectionRectangle.X + SelectionRectangle.Width, SelectionRectangle.Y);
                 }
-                else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X + selectionRectangle.Width, mouseLocation.X))
+                else if (ResizeHelper.ApproximatelyEquals(SelectionRectangle.X + SelectionRectangle.Width, mouseLocation.X))
                 {
                     resizePart = ResizePart.Angle;
-                    oppositeAngle = new PointF(selectionRectangle.X, selectionRectangle.Y);
+                    oppositeAngle = new PointF(SelectionRectangle.X, SelectionRectangle.Y);
                 }
-                else if (mouseLocation.X > selectionRectangle.X && mouseLocation.X < selectionRectangle.X + selectionRectangle.Width)
+                else if (mouseLocation.X > SelectionRectangle.X && mouseLocation.X < SelectionRectangle.X + SelectionRectangle.Width)
                 {
                     resizePart = ResizePart.HorizontalBorder;
 
-                    var start = new PointF(selectionRectangle.X, selectionRectangle.Y);
-                    var end = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y);
+                    var start = new PointF(SelectionRectangle.X, SelectionRectangle.Y);
+                    var end = new PointF(SelectionRectangle.X + SelectionRectangle.Width, SelectionRectangle.Y);
                     oppositeBorder = new LineF(start, end);
                 }
                 else
@@ -530,14 +451,14 @@ namespace RedShot.App
                     return false;
                 }
             }
-            else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X, mouseLocation.X))
+            else if (ResizeHelper.ApproximatelyEquals(SelectionRectangle.X, mouseLocation.X))
             {
-                if (mouseLocation.Y > selectionRectangle.Y && mouseLocation.Y < selectionRectangle.Y + Height)
+                if (mouseLocation.Y > SelectionRectangle.Y && mouseLocation.Y < SelectionRectangle.Y + Height)
                 {
                     resizePart = ResizePart.VerticalBorder;
 
-                    var start = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y);
-                    var end = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y + selectionRectangle.Height);
+                    var start = new PointF(SelectionRectangle.X + SelectionRectangle.Width, SelectionRectangle.Y);
+                    var end = new PointF(SelectionRectangle.X + SelectionRectangle.Width, SelectionRectangle.Y + SelectionRectangle.Height);
                     oppositeBorder = new LineF(start, end);
                 }
                 else
@@ -545,14 +466,14 @@ namespace RedShot.App
                     return false;
                 }
             }
-            else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X + selectionRectangle.Width, mouseLocation.X))
+            else if (ResizeHelper.ApproximatelyEquals(SelectionRectangle.X + SelectionRectangle.Width, mouseLocation.X))
             {
-                if (mouseLocation.Y > selectionRectangle.Y && mouseLocation.Y < selectionRectangle.Y + Height)
+                if (mouseLocation.Y > SelectionRectangle.Y && mouseLocation.Y < SelectionRectangle.Y + Height)
                 {
                     resizePart = ResizePart.VerticalBorder;
 
-                    var start = new PointF(selectionRectangle.X, selectionRectangle.Y);
-                    var end = new PointF(selectionRectangle.X, selectionRectangle.Y + selectionRectangle.Height);
+                    var start = new PointF(SelectionRectangle.X, SelectionRectangle.Y);
+                    var end = new PointF(SelectionRectangle.X, SelectionRectangle.Y + SelectionRectangle.Height);
                     oppositeBorder = new LineF(start, end);
                 }
                 else
@@ -580,22 +501,22 @@ namespace RedShot.App
 
             if (newXcoord >= 0 && newYcoord >= 0)
             {
-                if (newXcoord + selectionRectangle.Width < Size.Width)
+                if (newXcoord + SelectionRectangle.Width < Size.Width)
                 {
-                    selectionRectangle.X = newXcoord;
+                    SelectionRectangle.X = newXcoord;
                 }
                 else
                 {
-                    selectionRectangle.X = Size.Width - selectionRectangle.Width;
+                    SelectionRectangle.X = Size.Width - SelectionRectangle.Width;
                 }
 
-                if (newYcoord + selectionRectangle.Height <= Size.Height)
+                if (newYcoord + SelectionRectangle.Height <= Size.Height)
                 {
-                    selectionRectangle.Y = newYcoord;
+                    SelectionRectangle.Y = newYcoord;
                 }
                 else
                 {
-                    selectionRectangle.Y = Size.Height - selectionRectangle.Height;
+                    SelectionRectangle.Y = Size.Height - SelectionRectangle.Height;
                 }
             }
         }
@@ -607,29 +528,20 @@ namespace RedShot.App
         {
             if (resizePart == ResizePart.Angle)
             {
-                selectionRectangle = EtoDrawingHelper.CreateRectangle(location, oppositeAngle);
+                SelectionRectangle = EtoDrawingHelper.CreateRectangle(location, oppositeAngle);
             }
             else if (resizePart == ResizePart.HorizontalBorder)
             {
                 var point = new PointF(oppositeBorder.StartPoint.X, location.Y);
-                selectionRectangle = EtoDrawingHelper.CreateRectangle(point, oppositeBorder.EndPoint);
+                SelectionRectangle = EtoDrawingHelper.CreateRectangle(point, oppositeBorder.EndPoint);
             }
             else if (resizePart == ResizePart.VerticalBorder)
             {
                 var point = new PointF(location.X, oppositeBorder.StartPoint.Y);
-                selectionRectangle = EtoDrawingHelper.CreateRectangle(point, oppositeBorder.EndPoint);
+                SelectionRectangle = EtoDrawingHelper.CreateRectangle(point, oppositeBorder.EndPoint);
             }
         }
 
         #endregion MovingResizing
-
-        private void SaveScreenShot()
-        {
-            if (captured)
-            {
-                ApplicationManager.RunUploadView(GetScreenShot());
-                Close();
-            }
-        }
     }
 }

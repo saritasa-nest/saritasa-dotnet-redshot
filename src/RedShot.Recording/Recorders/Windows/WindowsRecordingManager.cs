@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text.RegularExpressions;
 using RedShot.Helpers;
 using RedShot.Recording.Devices;
@@ -12,31 +13,28 @@ namespace RedShot.Recording.Recorders.Windows
     {
         private readonly string ffmpegPath;
 
-        private string FullFfmpegPath
+        private string GetFullFfmpegPath()
         {
-            get
-            {
-                return ffmpegPath + "ffmpeg.exe";
-            }
+            return Directory.GetFiles(ffmpegPath, "ffmpeg.exe", SearchOption.AllDirectories).First();
         }
 
         public bool IsFFmpegDetected { get; private set; }
 
         public WindowsRecordingManager()
         {
-            ffmpegPath = Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "FFmpeg")).FullName;
+            ffmpegPath = Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FFmpeg")).FullName;
         }
 
         public IRecorder GetRecorder(FFmpegOptions options)
         {
             ThrowIfNotFoundFfmpegBinary();
 
-            return new WindowsRecorder(options, FullFfmpegPath);
+            return new WindowsRecorder(options, GetFullFfmpegPath());
         }
 
         public bool CheckFFmpeg()
         {
-            return File.Exists(FullFfmpegPath);
+            return Directory.GetFiles(ffmpegPath, "ffmpeg.exe", SearchOption.AllDirectories).Any();
         }
 
         public RecordingDevices GetRecordingDevices()
@@ -109,7 +107,7 @@ namespace RedShot.Recording.Recorders.Windows
             var ffmpegZipName = "ffmpeg.zip";
 
             using var downloader = new Downloader();
-            var path = downloader.DownloadAsync(url, ffmpegZipName).GetAwaiter().GetResult();
+            var path = downloader.Download(url, ffmpegZipName);
 
             ZipFile.ExtractToDirectory(path, ffmpegPath);
         }
@@ -118,7 +116,7 @@ namespace RedShot.Recording.Recorders.Windows
         {
             if (!CheckFFmpeg())
             {
-                throw new FileNotFoundException($"{FullFfmpegPath} is not found!");
+                throw new FileNotFoundException($"ffmpeg.exe is not found!");
             }
         }
 
