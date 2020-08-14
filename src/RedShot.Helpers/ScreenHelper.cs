@@ -60,5 +60,11 @@ namespace RedShot.Helpers
             var size = GetMainWindowSize();
             return new Point((int)(size.Width / 2), (int)(size.Height / 2));
         }
+
+        public static RectangleF GetScreenSizeByLocation(PointF mouseLocation)
+        {
+            var screen = Screen.FromPoint(mouseLocation);
+            return screen.Bounds;
+        }
     }
 }

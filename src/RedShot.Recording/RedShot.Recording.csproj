@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RedShot.Configuration\RedShot.Configuration.csproj" />
     <ProjectReference Include="..\RedShot.Helpers\RedShot.Helpers.csproj" />
     <ProjectReference Condition=" '$(OS)' == 'Windows_NT' " Include="..\RedShot.Platforms.Windows\RedShot.Platforms.Windows.csproj" />
     <ProjectReference Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp\Eto.Forms.Controls.SkiaSharp.csproj" />

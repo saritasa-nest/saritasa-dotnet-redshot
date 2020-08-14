@@ -1,7 +1,6 @@
-﻿using System.IO;
-using System.Text;
+﻿using System.Text;
 
-namespace RedShot.Recording.Helpers
+namespace RedShot.Helpers.Ffmpeg
 {
     public static class FFmpegArgsManager
     {

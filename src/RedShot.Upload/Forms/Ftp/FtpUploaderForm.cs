@@ -36,7 +36,7 @@ namespace RedShot.Upload.Forms.Ftp
             ftpSettingsButton.Click += FtpSettingsButton_Click;
             uploadButton.Click += UploadButton_Click;
 
-            Location = FormsHelper.SetCenterLocation(Size);
+            Location = FormsHelper.GetCenterLocation(Size);
 
             this.image = image;
         }

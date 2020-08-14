@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 
-namespace RedShot.Recording.Helpers
+namespace RedShot.Helpers.Ffmpeg
 {
-    public enum FFmpegQSVPreset
+    public enum FFmpegX264Preset
     {
+        [Description("Ultra fast")]
+        ultrafast,
+        [Description("Super fast")]
+        superfast,
         [Description("Very fast")]
         veryfast,
         [Description("Faster")]

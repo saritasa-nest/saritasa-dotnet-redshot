@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace RedShot.Recording.Helpers
+namespace RedShot.Helpers.Ffmpeg
 {
     public enum FFmpegAudioCodec
     {

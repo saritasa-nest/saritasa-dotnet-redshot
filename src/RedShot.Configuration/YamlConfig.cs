@@ -1,4 +1,5 @@
-﻿using RedShot.Helpers.FtpModels;
+﻿using RedShot.Helpers.Ffmpeg;
+using RedShot.Helpers.FtpModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,8 @@ namespace RedShot.Configuration
         /// </summary>
         public List<FtpAccount> FtpAccounts { get; internal set; } = new List<FtpAccount>();
 
+        public FFmpegOptions FFmpegOptions { get; internal set; } = new FFmpegOptions();
+
         /// <summary>
         /// Some extensions if need.
         /// </summary>
@@ -23,6 +26,8 @@ namespace RedShot.Configuration
         public YamlConfig Clone()
         {
             var clone = new YamlConfig();
+
+            clone.FFmpegOptions = FFmpegOptions;
 
             clone.FtpAccounts.AddRange(FtpAccounts.Select(a => a.Clone()));
 

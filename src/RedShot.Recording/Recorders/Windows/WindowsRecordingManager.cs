@@ -4,8 +4,8 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
 using RedShot.Helpers;
-using RedShot.Recording.Devices;
-using RedShot.Recording.Helpers;
+using RedShot.Helpers.Ffmpeg;
+using RedShot.Helpers.Ffmpeg.Devices;
 
 namespace RedShot.Recording.Recorders.Windows
 {
@@ -41,11 +41,13 @@ namespace RedShot.Recording.Recorders.Windows
         {
             ThrowIfNotFoundFfmpegBinary();
 
-            var cli = new FFmpegCliManager(ffmpegPath);
+            var cli = new FFmpegCliManager(GetFullFfmpegPath());
 
             var devices = new RecordingDevices();
 
             cli.Run("-list_devices true -f dshow -i dummy");
+
+            cli.WaitForExit();
 
             string output = cli.Output.ToString();
             string[] lines = GetLines(output);

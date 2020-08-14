@@ -37,7 +37,7 @@ namespace RedShot.Helpers.Forms
             return new Cursor(bitmap, new PointF(radius, radius));
         }
 
-        public static Point SetCenterLocation(Size size)
+        public static Point GetCenterLocation(Size size)
         {
             var center = ScreenHelper.GetCentralCoordsOfScreen();
 

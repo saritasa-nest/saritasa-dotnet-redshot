@@ -1,4 +1,5 @@
-﻿using RedShot.Recording.Devices;
+﻿using RedShot.Helpers.Ffmpeg;
+using RedShot.Helpers.Ffmpeg.Devices;
 
 namespace RedShot.Recording.Recorders
 {

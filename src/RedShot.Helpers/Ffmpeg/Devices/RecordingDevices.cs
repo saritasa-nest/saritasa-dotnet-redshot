@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RedShot.Recording.Devices
+namespace RedShot.Helpers.Ffmpeg.Devices
 {
     public class RecordingDevices
     {

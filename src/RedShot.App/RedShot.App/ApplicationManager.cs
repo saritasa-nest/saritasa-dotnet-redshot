@@ -74,7 +74,7 @@ namespace RedShot.App
 
         public static void RunRecodringView()
         {
-            RecordingManager.InitiateRecording();
+            Recorder.InitiateRecording();
         }
 
         private static void CloseViews()

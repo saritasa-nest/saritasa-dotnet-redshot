@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RedShot.Recording.Devices
+﻿namespace RedShot.Helpers.Ffmpeg.Devices
 {
     public class Device
     {
+        public Device()
+        {
+        }
+
         public Device(string name) : this(name, name)
         {
         }
@@ -16,8 +16,13 @@ namespace RedShot.Recording.Devices
             CompatibleFfmpegName = compatibleFfmpegName;
         }
 
-        public string Name { get; }
+        public string Name { get; set; }
 
-        public string CompatibleFfmpegName { get; }
+        public string CompatibleFfmpegName { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }
