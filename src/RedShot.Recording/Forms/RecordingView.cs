@@ -1,9 +1,10 @@
-﻿using Eto.Drawing;
+﻿using System;
+using System.Diagnostics;
+using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Helpers;
 using RedShot.Helpers.Forms;
 using RedShot.Recording.Recorders;
-using System.Diagnostics;
 
 namespace RedShot.Recording.Forms
 {
@@ -12,12 +13,12 @@ namespace RedShot.Recording.Forms
         private Control managePanel;
         private IRecorder recorder;
         private Rectangle recordingRectangle;
-        private UITimer recordingLabelTimer;
-        private Stopwatch recordingTimer = new Stopwatch();
+        private UITimer labelRenderTimer;
+        private Stopwatch recordingTimer;
 
         private RecordingButton recordingButton;
         private DefaultButton closeButton;
-        private Label timerLabel = new Label();
+        private Label timerLabel;
 
         public RecordingView(IRecorder recorder, Rectangle recordingRectangle)
         {
@@ -44,10 +45,12 @@ namespace RedShot.Recording.Forms
 
             BackgroundColor = Colors.Red;
 
-            recordingLabelTimer = new UITimer();
-            recordingLabelTimer.Interval = 0.01;
-            recordingLabelTimer.Elapsed += RecordingLabelTimer_Elapsed;
-            recordingLabelTimer.Start();
+            recordingTimer = new Stopwatch();
+
+            labelRenderTimer = new UITimer();
+            labelRenderTimer.Interval = 0.01;
+            labelRenderTimer.Elapsed += RecordingLabelTimer_Elapsed;
+            labelRenderTimer.Start();
         }
 
         private void RecordingLabelTimer_Elapsed(object sender, System.EventArgs e)
@@ -58,11 +61,10 @@ namespace RedShot.Recording.Forms
 
         private void SetupLocations()
         {
+#if _WINDOWS
             if ((recordingRectangle.Location.Y - managePanel.Height) > 0)
             {
                 Location = new Point(recordingRectangle.X, recordingRectangle.Y - managePanel.Height - 1);
-
-#if _WINDOWS
                 Size = new Size(recordingRectangle.Width, recordingRectangle.Height + managePanel.Height + 1);
 
                 var excludeRect = new Rectangle(new Point(0, managePanel.Height), new Size(recordingRectangle.Width, recordingRectangle.Height + 1)).OffsetRectangle(1);
@@ -70,7 +72,6 @@ namespace RedShot.Recording.Forms
                 var excludeRect2 = new Rectangle(new Point(managePanel.Width, 0), new Size(recordingRectangle.Width - managePanel.Width, managePanel.Height));
 
                 RedShot.Platforms.Windows.WindowsRegionHelper.Exclude(this.ControlObject, excludeRect, excludeRect2);
-#endif
             }
             else
             {
@@ -80,7 +81,7 @@ namespace RedShot.Recording.Forms
                 {
                     Location = recordingRectangle.Location;
 
-#if _WINDOWS
+
                     Size = new Size(recordingRectangle.Width, recordingRectangle.Height + 1);
 
                     var excludeRect = new Rectangle(new Point(0, managePanel.Height - 1), new Size(recordingRectangle.Width, recordingRectangle.Height - managePanel.Height + 2)).OffsetRectangle(1);
@@ -88,11 +89,9 @@ namespace RedShot.Recording.Forms
                     var excludeRect2 = new Rectangle(new Point(managePanel.Width, 1), new Size(recordingRectangle.Width - managePanel.Width - 1, managePanel.Height));
 
                     RedShot.Platforms.Windows.WindowsRegionHelper.Exclude(this.ControlObject, excludeRect, excludeRect2);
-#endif
                 }
             }
-
-#if _UNIX
+#elif _UNIX
             Location = recordingRectangle.Location;
             Size = new Size(managePanel.Width, managePanel.Height);
 #endif
@@ -102,7 +101,7 @@ namespace RedShot.Recording.Forms
         {
             timerLabel = new Label()
             {
-                Text = recordingTimer.Elapsed.ToString()
+                Text = TimeSpan.Zero.ToString()
             };
 
             recordingButton = new RecordingButton(50, 35);
@@ -118,11 +117,11 @@ namespace RedShot.Recording.Forms
         {
             if (recordingButton.IsRecording)
             {
-                recorder.Stop();
-                recordingTimer.Stop();
+                StopRecording();
             }
             else
             {
+                recordingTimer.Reset();
                 recorder.Start(recordingRectangle.OffsetRectangle(1));
                 recordingTimer.Start();
             }
@@ -130,9 +129,14 @@ namespace RedShot.Recording.Forms
 
         private void CloseButton_Clicked(object sender, System.EventArgs e)
         {
-            recorder.Stop();
-            recordingTimer.Stop();
+            StopRecording();
             Close();
+        }
+
+        private void StopRecording()
+        {
+            recordingTimer.Stop();
+            recorder.Stop();
         }
 
         private Control GetManageControl()

@@ -242,8 +242,8 @@ namespace RedShot.Recording.Forms
                 IsAntialias = true
             };
 
-            var text = $"X: {(int)SelectionRectangle.X} Y: {(int)SelectionRectangle.Y}   W: {(int)SelectionRectangle.Width} H: {(int)SelectionRectangle.Height}";
-
+            var text = $"X: {FormatNumber(SelectionRectangle.X)} Y: {FormatNumber(SelectionRectangle.Y)}" +
+                $"   W: {FormatNumber(SelectionRectangle.Width)} H: {FormatNumber(SelectionRectangle.Height)}";
             var textWidth = paint.MeasureText(text);
 
             var strokeRectPaint = new SKPaint
@@ -287,6 +287,11 @@ namespace RedShot.Recording.Forms
             surface.Canvas.DrawText(text, drawCoords, paint);
         }
 
+        private string FormatNumber(float number)
+        {
+            return number.ToString("F0");
+        }
+
         private void PaintClearImage(SKSurface surface)
         {
             var canvas = surface.Canvas;
@@ -298,12 +303,6 @@ namespace RedShot.Recording.Forms
             PaintDarkregion(surface, editorRect);
 
             PaintTopMessage(surface);
-        }
-
-        private void PaintEditorBorder(SKSurface surface)
-        {
-            var editorRect = SKRect.Create(new SKPoint(0, 0), new SKSize(Width - 1, Height - 1));
-            PaintDashAround(surface, editorRect, SKColors.Black, SKColors.Red);
         }
 
         private void PaintRegion(SKSurface surface)

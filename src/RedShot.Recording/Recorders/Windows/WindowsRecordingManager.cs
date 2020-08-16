@@ -13,16 +13,12 @@ namespace RedShot.Recording.Recorders.Windows
     {
         private readonly string ffmpegPath;
 
-        private string GetFullFfmpegPath()
-        {
-            return Directory.GetFiles(ffmpegPath, "ffmpeg.exe", SearchOption.AllDirectories).First();
-        }
-
-        public bool IsFFmpegDetected { get; private set; }
+        private readonly string ffmpegBinaryName;
 
         public WindowsRecordingManager()
         {
             ffmpegPath = Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FFmpeg")).FullName;
+            ffmpegBinaryName = "ffmpeg.exe";
         }
 
         public IRecorder GetRecorder(FFmpegOptions options)
@@ -34,7 +30,7 @@ namespace RedShot.Recording.Recorders.Windows
 
         public bool CheckFFmpeg()
         {
-            return Directory.GetFiles(ffmpegPath, "ffmpeg.exe", SearchOption.AllDirectories).Any();
+            return GetFfmpegFiles().Any();
         }
 
         public RecordingDevices GetRecordingDevices()
@@ -118,8 +114,18 @@ namespace RedShot.Recording.Recorders.Windows
         {
             if (!CheckFFmpeg())
             {
-                throw new FileNotFoundException($"ffmpeg.exe is not found!");
+                throw new FileNotFoundException($"ffmpeg binary is not found!", ffmpegBinaryName);
             }
+        }
+
+        private string GetFullFfmpegPath()
+        {
+            return GetFfmpegFiles().First();
+        }
+
+        private string[] GetFfmpegFiles()
+        {
+            return Directory.GetFiles(ffmpegPath, ffmpegBinaryName, SearchOption.AllDirectories);
         }
 
         private string[] GetLines(string text)

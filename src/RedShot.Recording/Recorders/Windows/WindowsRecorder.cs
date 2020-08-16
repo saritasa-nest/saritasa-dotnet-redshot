@@ -40,7 +40,7 @@ namespace RedShot.Recording.Recorders.Windows
 
         public void Start(Rectangle area)
         {
-            var deviceArgs = GetWindowsDeviceArgs(area, options);
+            var deviceArgs = GetWindowsDeviceArgs(area);
             var optionsArgs = FFmpegArgsManager.GetFFmpegArgsFromOptions(options);
 
             var name = DateTime.Now.ToFileTime();
@@ -57,7 +57,7 @@ namespace RedShot.Recording.Recorders.Windows
             cliManager.Stop();
         }
 
-        private string GetWindowsDeviceArgs(Rectangle captureArea, FFmpegOptions options)
+        private string GetWindowsDeviceArgs(Rectangle captureArea)
         {
             if (captureArea.Width % 2 != 0)
             {
@@ -81,7 +81,7 @@ namespace RedShot.Recording.Recorders.Windows
                 args.AppendFormat($"-f dshow -framerate {options.Fps} -i video=\"{options.VideoDevice.CompatibleFfmpegName}\" ");
             }
 
-            if (options.AudioDevice != null)
+            if (options.UseMicrophone && options.AudioDevice != null)
             {
                 args.AppendFormat("-f dshow -i audio=\"{0}\" ", options.AudioDevice.CompatibleFfmpegName);
             }

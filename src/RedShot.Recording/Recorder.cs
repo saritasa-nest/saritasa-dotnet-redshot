@@ -1,9 +1,9 @@
 ﻿using Eto.Drawing;
 using RedShot.Configuration;
 using RedShot.Helpers;
-using RedShot.Helpers.Ffmpeg;
 using RedShot.Recording.Forms;
 using RedShot.Recording.Recorders.Windows;
+using System.Threading.Tasks;
 
 namespace RedShot.Recording
 {
@@ -31,6 +31,8 @@ namespace RedShot.Recording
 
             if (options.UseGdigrab || options.VideoDevice == null)
             {
+                Task.Delay(500).Wait();
+
                 using var areaForm = new AreaSelectingView();
 
                 areaForm.ShowModal();

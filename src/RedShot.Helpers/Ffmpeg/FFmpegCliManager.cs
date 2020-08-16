@@ -107,7 +107,7 @@ namespace RedShot.Helpers.Ffmpeg
             {
                 int closeTryCount = 0;
 
-                while (closeTryCount <= 5)
+                while (closeTryCount <= 10)
                 {
                     if (IsProcessRunning)
                     {

@@ -246,7 +246,8 @@ namespace RedShot.App
                 IsAntialias = true
             };
 
-            var text = $"X: {(int)selectionRectangle.X} Y: {(int)selectionRectangle.Y}   W: {(int)selectionRectangle.Width} H: {(int)selectionRectangle.Height}";
+            var text = $"X: {FormatNumber(selectionRectangle.X)} Y: {FormatNumber(selectionRectangle.Y)}" +
+                $"   W: {FormatNumber(selectionRectangle.Width)} H: {FormatNumber(selectionRectangle.Height)}";
 
             var textWidth = paint.MeasureText(text);
 
@@ -289,6 +290,11 @@ namespace RedShot.App
             canvas.DrawRect(textStrokeRect, strokeRectPaint);
 
             surface.Canvas.DrawText(text, drawCoords, paint);
+        }
+
+        private string FormatNumber(float number)
+        {
+            return number.ToString("F0");
         }
 
         private void PaintClearImage(SKSurface surface)

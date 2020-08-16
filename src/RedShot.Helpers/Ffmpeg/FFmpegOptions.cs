@@ -1,6 +1,6 @@
-﻿using RedShot.Helpers.Ffmpeg.Devices;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using RedShot.Helpers.Ffmpeg.Devices;
 
 namespace RedShot.Helpers.Ffmpeg
 {
@@ -24,6 +24,7 @@ namespace RedShot.Helpers.Ffmpeg
         private int mp3Qscale;
         private string userArgs;
         private bool useGdigrab;
+        private bool useMicrophone;
 
         public FFmpegOptions()
         {
@@ -43,6 +44,21 @@ namespace RedShot.Helpers.Ffmpeg
             MP3Qscale = 4;
             UserArgs = string.Empty;
             UseGdigrab = true;
+            useMicrophone = true;
+        }
+
+        public bool UseMicrophone
+        {
+            get { return useMicrophone; }
+
+            set
+            {
+                if (useMicrophone != value)
+                {
+                    useMicrophone = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         public int Fps
@@ -321,7 +337,7 @@ namespace RedShot.Helpers.Ffmpeg
             }
         }
 
-        void OnPropertyChanged([CallerMemberName] string memberName = null)
+        private void OnPropertyChanged([CallerMemberName] string memberName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(memberName));
         }
