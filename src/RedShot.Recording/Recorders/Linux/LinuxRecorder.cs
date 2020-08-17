@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using Eto.Drawing;
 using RedShot.Helpers.Ffmpeg;
+using RedShot.Helpers.Ffmpeg.Options;
 
 namespace RedShot.Recording.Recorders.Linux
 {
@@ -26,7 +27,7 @@ namespace RedShot.Recording.Recorders.Linux
         public LinuxRecorder(FFmpegOptions options, string videoFolderPath = null)
         {
             this.options = options;
-            cliManager = new FFmpegCliManager();
+            cliManager = new FFmpegCliManager("ffmpeg");
 
             if (string.IsNullOrEmpty(videoFolderPath))
             {
@@ -41,13 +42,13 @@ namespace RedShot.Recording.Recorders.Linux
         public void Start(Rectangle area)
         {
             var deviceArgs = GetLinuxDeviceArgs(area);
-            var optionsArgs = FFmpegArgsManager.GetFFmpegArgsFromOptions(options);
+            var optionsArgs = FFmpegArgsHelper.GetFFmpegArgsFromOptions(options);
 
             var name = DateTime.Now.ToFileTime();
 
             LastVideoPath = Path.Combine(VideoFolderPath, $"{name}.{options.Extension}");
 
-            var outputArgs = FFmpegArgsManager.GetArgsForOutput(LastVideoPath);
+            var outputArgs = FFmpegArgsHelper.GetArgsForOutput(LastVideoPath);
 
             cliManager.Run($"-thread_queue_size 512 {deviceArgs} {optionsArgs} {outputArgs}");
         }
@@ -74,12 +75,19 @@ namespace RedShot.Recording.Recorders.Linux
             if (options.UseGdigrab || options.VideoDevice == null)
             {
                 args.Append($"-video_size {captureArea.Size.Width}x{captureArea.Size.Height} -framerate {options.Fps} -f x11grab -i :0.0+{captureArea.Location.X},{captureArea.Location.Y}");
-                args.Append($"-draw_mouse {(options.DrawCursor ? '1' : '0')}");
+                args.Append($" -draw_mouse {(options.DrawCursor ? '1' : '0')} ");
             }
 
             if (options.UseMicrophone && options.AudioDevice != null)
             {
-                args.Append($"-f alsa -ac 2 -i {options.AudioDevice.CompatibleFfmpegName}");
+                if (options.AudioDevice != null)
+                {
+                    args.Append($"-f alsa -ac 2 -i {options.AudioDevice.CompatibleFfmpegName}");
+                }
+                else
+                {
+                    args.Append($"-f alsa -ac 2 -i hw:0 ");
+                }
             }
 
             return args.ToString();

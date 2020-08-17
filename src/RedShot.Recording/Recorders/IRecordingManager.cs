@@ -1,5 +1,5 @@
-﻿using RedShot.Helpers.Ffmpeg;
-using RedShot.Helpers.Ffmpeg.Devices;
+﻿using RedShot.Helpers.Ffmpeg.Devices;
+using RedShot.Helpers.Ffmpeg.Options;
 
 namespace RedShot.Recording.Recorders
 {
@@ -7,7 +7,7 @@ namespace RedShot.Recording.Recorders
     {
         IRecorder GetRecorder(FFmpegOptions options);
 
-        void InstallFFmpeg();
+        bool InstallFFmpeg();
 
         bool CheckFFmpeg();
 

@@ -2,6 +2,7 @@
 using Eto.Drawing;
 using Eto.Forms;
 using RedShot.App.Painting;
+using RedShot.App.Screenshooting;
 using RedShot.Recording;
 using RedShot.Upload.Forms;
 
@@ -16,7 +17,7 @@ namespace RedShot.App
         private static TrayIcon trayIcon;
         private static UploadBar uploadBar;
         private static PaintingView paintingView;
-        private static EditorViewDrawingSkiaSharp editorView;
+        private static ScreenShotSelectionView editorView;
 
         /// <summary>
         /// Gives tray icon form.
@@ -47,7 +48,7 @@ namespace RedShot.App
 
                 CloseViews();
 
-                editorView = new EditorViewDrawingSkiaSharp();
+                editorView = new ScreenShotSelectionView();
                 editorView.Closed += View_Closed;
                 editorView.Show();
             }
@@ -74,7 +75,7 @@ namespace RedShot.App
 
         public static void RunRecodringView()
         {
-            Recorder.InitiateRecording();
+            FFmpegRecorder.InitiateRecording();
         }
 
         private static void CloseViews()

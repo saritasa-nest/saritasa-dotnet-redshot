@@ -1,7 +1,6 @@
 ﻿using System;
 using Eto.Forms;
 using Eto.Drawing;
-using RedShot.Recording.Forms;
 
 namespace RedShot.App
 {

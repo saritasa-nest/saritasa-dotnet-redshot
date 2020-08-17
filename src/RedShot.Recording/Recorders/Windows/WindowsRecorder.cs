@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using Eto.Drawing;
 using RedShot.Helpers.Ffmpeg;
+using RedShot.Helpers.Ffmpeg.Options;
 
 namespace RedShot.Recording.Recorders.Windows
 {
@@ -41,13 +42,13 @@ namespace RedShot.Recording.Recorders.Windows
         public void Start(Rectangle area)
         {
             var deviceArgs = GetWindowsDeviceArgs(area);
-            var optionsArgs = FFmpegArgsManager.GetFFmpegArgsFromOptions(options);
+            var optionsArgs = FFmpegArgsHelper.GetFFmpegArgsFromOptions(options);
 
             var name = DateTime.Now.ToFileTime();
 
             LastVideoPath = Path.Combine(VideoFolderPath, $"{name}.{options.Extension}");
 
-            var outputArgs = FFmpegArgsManager.GetArgsForOutput(LastVideoPath);
+            var outputArgs = FFmpegArgsHelper.GetArgsForOutput(LastVideoPath);
 
             cliManager.Run($"-thread_queue_size 512 {deviceArgs} {optionsArgs} {outputArgs}");
         }

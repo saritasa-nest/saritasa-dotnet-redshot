@@ -2,8 +2,9 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using RedShot.Helpers.Ffmpeg.Devices;
+using RedShot.Helpers.Ffmpeg.Encoding;
 
-namespace RedShot.Helpers.Ffmpeg
+namespace RedShot.Helpers.Ffmpeg.Options
 {
     public class FFmpegOptions : INotifyPropertyChanged, ICloneable
     {

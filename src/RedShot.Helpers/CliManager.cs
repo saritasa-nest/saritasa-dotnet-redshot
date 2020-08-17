@@ -1,24 +1,27 @@
 ﻿using System.Diagnostics;
 using System.Text;
 
-namespace RedShot.Helpers.CLI
+namespace RedShot.Helpers
 {
     public class CliManager
     {
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("CLIdebug");
+        private readonly NLog.Logger logger = NLog.LogManager.GetLogger("CLIdebug");
 
-        public bool IsProcessRunning { get; private set; }
+        protected readonly string filePath;
 
-        public StringBuilder Output { get; private set; }
+        public bool IsProcessRunning { get; protected set; }
 
-        private Process process;
+        public StringBuilder Output { get; protected set; }
 
-        public CliManager()
+        protected Process process;
+
+        public CliManager(string filePath)
         {
+            this.filePath = filePath;
             Output = new StringBuilder();
         }
 
-        public void Run(string args)
+        public virtual void Run(string args)
         {
             Output.Clear();
 
@@ -31,8 +34,9 @@ namespace RedShot.Helpers.CLI
             {
                 var processInfo = new ProcessStartInfo()
                 {
+                    FileName = filePath,
                     Arguments = args,
-                    UseShellExecute = true,
+                    UseShellExecute = false,
                     CreateNoWindow = true,
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,
@@ -63,11 +67,11 @@ namespace RedShot.Helpers.CLI
             }
         }
 
-        private void DataReceived(object sender, DataReceivedEventArgs e)
+        protected virtual void DataReceived(object sender, DataReceivedEventArgs e)
         {
             var data = e.Data;
 
-            Logger.Trace(data);
+            logger.Trace(data);
 
             if (!string.IsNullOrEmpty(data))
             {
@@ -75,7 +79,7 @@ namespace RedShot.Helpers.CLI
             }
         }
 
-        public void WriteInput(string input)
+        public virtual void WriteInput(string input)
         {
             if (IsProcessRunning)
             {
@@ -83,7 +87,7 @@ namespace RedShot.Helpers.CLI
             }
         }
 
-        public void Stop()
+        public virtual void Stop()
         {
             if (IsProcessRunning)
             {

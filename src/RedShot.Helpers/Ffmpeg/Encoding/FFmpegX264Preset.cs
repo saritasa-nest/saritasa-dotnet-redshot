@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace RedShot.Helpers.Ffmpeg
+namespace RedShot.Helpers.Ffmpeg.Encoding
 {
     public enum FFmpegX264Preset
     {

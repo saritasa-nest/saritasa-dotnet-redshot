@@ -1,39 +1,26 @@
 ﻿using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RedShot.Helpers.Ffmpeg
 {
-    public class FFmpegCliManager
+    public sealed class FFmpegCliManager : CliManager
     {
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("Ffmpeg");
-        private bool isLinuxOs = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+        private readonly NLog.Logger logger = NLog.LogManager.GetLogger("Ffmpeg");
 
         public event DataReceivedEventHandler OutputDataReceived;
 
         public event DataReceivedEventHandler ErrorDataReceived;
 
-        public bool IsProcessRunning { get; private set; }
-
-        public string FFmpegPath { get; private set; }
-
-        public StringBuilder Output { get; private set; }
-
         public bool IsProcessFinished { get; private set; }
 
-        private Process process;
-
-        public FFmpegCliManager(string ffmpegPath = null)
+        public FFmpegCliManager(string ffmpegPath) : base(ffmpegPath)
         {
-            FFmpegPath = ffmpegPath;
-            Output = new StringBuilder();
             OutputDataReceived += FFmpeg_DataReceived;
             ErrorDataReceived += FFmpeg_DataReceived;
         }
 
-        public void Run(string args)
+        public override void Run(string args)
         {
             Output.Clear();
 
@@ -42,64 +29,53 @@ namespace RedShot.Helpers.Ffmpeg
                 Stop();
             }
 
-            Open(args, FFmpegPath);
+            Open(filePath, args);
         }
 
-        public void Open(string args, string path = null)
+        public void Open(string path, string args)
         {
-            if (File.Exists(path))
+            IsProcessFinished = false;
+
+            Task.Run(() =>
             {
-                IsProcessFinished = false;
-
-                Task.Run(() =>
+                using (process = new Process())
                 {
-                    using (process = new Process())
+                    var processInfo = new ProcessStartInfo()
                     {
-                        var processInfo = new ProcessStartInfo()
-                        {
-                            Arguments = args,
-                            UseShellExecute = false,
-                            CreateNoWindow = true,
-                            RedirectStandardInput = true,
-                            RedirectStandardOutput = true,
-                            RedirectStandardError = true,
-                            StandardOutputEncoding = Encoding.UTF8,
-                            StandardErrorEncoding = Encoding.UTF8
-                        };
+                        FileName = path,
+                        WorkingDirectory = Path.GetDirectoryName(path),
+                        Arguments = args,
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                        RedirectStandardInput = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        StandardOutputEncoding = System.Text.Encoding.UTF8,
+                        StandardErrorEncoding = System.Text.Encoding.UTF8
+                    };
 
-                        if (isLinuxOs)
-                        {
-                            processInfo.UseShellExecute = true;
-                        }
-                        else
-                        {
-                            processInfo.FileName = path;
-                            processInfo.WorkingDirectory = Path.GetDirectoryName(path);
-                        }
+                    process.EnableRaisingEvents = true;
 
-                        process.EnableRaisingEvents = true;
+                    process.OutputDataReceived += CliOutputDataReceived;
+                    process.ErrorDataReceived += CliErrorDataReceived;
 
-                        process.OutputDataReceived += CliOutputDataReceived;
-                        process.ErrorDataReceived += CliErrorDataReceived;
+                    process.StartInfo = processInfo;
 
-                        process.StartInfo = processInfo;
-
-                        IsProcessRunning = true;
-                        try
-                        {
-                            process.Start();
-                            process.BeginOutputReadLine();
-                            process.BeginErrorReadLine();
-                            process.WaitForExit();
-                        }
-                        finally
-                        {
-                            IsProcessRunning = false;
-                            IsProcessFinished = true;
-                        }
+                    IsProcessRunning = true;
+                    try
+                    {
+                        process.Start();
+                        process.BeginOutputReadLine();
+                        process.BeginErrorReadLine();
+                        process.WaitForExit();
                     }
-                });
-            }
+                    finally
+                    {
+                        IsProcessRunning = false;
+                        IsProcessFinished = true;
+                    }
+                }
+            });
         }
 
         public void WaitForExit()
@@ -109,7 +85,7 @@ namespace RedShot.Helpers.Ffmpeg
             }
         }
 
-        public void Stop()
+        public override void Stop()
         {
             if (IsProcessRunning && process != null)
             {
@@ -140,13 +116,13 @@ namespace RedShot.Helpers.Ffmpeg
 
         private void CliOutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Logger.Trace(e.Data);
+            logger.Trace(e.Data);
             OutputDataReceived?.Invoke(sender, e);
         }
 
         private void CliErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Logger.Trace(e.Data);
+            logger.Trace(e.Data);
             ErrorDataReceived?.Invoke(sender, e);
         }
 
@@ -157,14 +133,6 @@ namespace RedShot.Helpers.Ffmpeg
             if (!string.IsNullOrEmpty(data))
             {
                 Output.AppendLine(data);
-            }
-        }
-
-        public void WriteInput(string input)
-        {
-            if (IsProcessRunning)
-            {
-                process?.StandardInput.WriteLine(input);
             }
         }
 

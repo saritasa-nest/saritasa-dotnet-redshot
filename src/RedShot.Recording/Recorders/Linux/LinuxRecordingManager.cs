@@ -1,13 +1,8 @@
 ﻿using System;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Text.RegularExpressions;
 using Eto.Forms;
 using RedShot.Helpers;
-using RedShot.Helpers.CLI;
-using RedShot.Helpers.Ffmpeg;
 using RedShot.Helpers.Ffmpeg.Devices;
+using RedShot.Helpers.Ffmpeg.Options;
 
 namespace RedShot.Recording.Recorders.Linux
 {
@@ -19,8 +14,8 @@ namespace RedShot.Recording.Recorders.Linux
 
         public LinuxRecordingManager()
         {
-            simpleCliManager = new CliManager();
             ffmpegName = "ffmpeg";
+            simpleCliManager = new CliManager(ffmpegName);
         }
 
         public IRecorder GetRecorder(FFmpegOptions options)
@@ -32,7 +27,7 @@ namespace RedShot.Recording.Recorders.Linux
 
         public bool CheckFFmpeg()
         {
-            simpleCliManager.Run(ffmpegName);
+            simpleCliManager.Run(" -h");
             return simpleCliManager.Output.ToString().Contains("ffmpeg version");
         }
 
@@ -40,54 +35,12 @@ namespace RedShot.Recording.Recorders.Linux
         {
             ThrowIfNotFoundFfmpegBinary();
 
-            //var cli = new FFmpegCliManager(GetFullFfmpegPath());
-
             var devices = new RecordingDevices();
-
-            //cli.Run("-list_devices true -f dshow -i dummy");
-
-            //cli.WaitForExit();
-
-            //string output = cli.Output.ToString();
-            //string[] lines = GetLines(output);
-            //bool isVideo = true;
-            //Regex regex = new Regex(@"\[dshow @ \w+\]  ""(.+)""", RegexOptions.Compiled | RegexOptions.CultureInvariant);
-
-            //foreach (string line in lines)
-            //{
-            //    if (line.Contains("] DirectShow video devices", StringComparison.InvariantCulture))
-            //    {
-            //        isVideo = true;
-            //        continue;
-            //    }
-
-            //    if (line.Contains("] DirectShow audio devices", StringComparison.InvariantCulture))
-            //    {
-            //        isVideo = false;
-            //        continue;
-            //    }
-
-            //    Match match = regex.Match(line);
-
-            //    if (match.Success)
-            //    {
-            //        string value = match.Groups[1].Value;
-
-            //        if (isVideo)
-            //        {
-            //            devices.VideoDevices.Add(new Device(value, value));
-            //        }
-            //        else
-            //        {
-            //            devices.AudioDevices.Add(new Device(value, value));
-            //        }
-            //    }
-            //}
 
             return devices;
         }
 
-        public void InstallFFmpeg()
+        public bool InstallFFmpeg()
         {
             if (CheckFFmpeg())
             {
@@ -95,6 +48,7 @@ namespace RedShot.Recording.Recorders.Linux
             }
 
             MessageBox.Show("Download ffmpeg package to your system before recording video", MessageBoxButtons.OK, MessageBoxType.Information);
+            return false;
         }
 
         private void ThrowIfNotFoundFfmpegBinary()
@@ -103,11 +57,6 @@ namespace RedShot.Recording.Recorders.Linux
             {
                 throw new DllNotFoundException($"ffmpeg binary is not found!");
             }
-        }
-
-        private string[] GetLines(string text)
-        {
-            return text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
         }
     }
 }

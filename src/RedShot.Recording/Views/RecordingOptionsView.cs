@@ -5,18 +5,17 @@ using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Configuration;
 using RedShot.Helpers;
-using RedShot.Helpers.Ffmpeg;
 using RedShot.Helpers.Ffmpeg.Devices;
+using RedShot.Helpers.Ffmpeg.Encoding;
+using RedShot.Helpers.Ffmpeg.Options;
 using RedShot.Helpers.Forms;
 using RedShot.Recording.Recorders;
 
-namespace RedShot.Recording.Forms
+namespace RedShot.Recording.Views
 {
     public class RecordingOptionsView : Dialog
     {
         private FFmpegOptions ffmpegOptions = ConfigurationManager.YamlConfig.FFmpegOptions.Clone();
-
-        private IRecordingManager recordingManager;
 
         private RecordingDevices recordingDevices;
 
@@ -32,8 +31,6 @@ namespace RedShot.Recording.Forms
         public RecordingOptionsView(IRecordingManager recordingManager)
         {
             recordingDevices = recordingManager.GetRecordingDevices();
-
-            this.recordingManager = recordingManager;
 
             InitializeComponents();
 

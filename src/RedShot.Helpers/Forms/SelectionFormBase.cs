@@ -1,21 +1,132 @@
-using System;
+﻿using System;
+using System.Diagnostics;
 using Eto.Drawing;
 using Eto.Forms;
+using Eto.Forms.Controls.SkiaSharp;
 using SkiaSharp;
 using RedShot.Helpers.EditorView;
-using RedShot.Helpers;
 
-namespace RedShot.App
+namespace RedShot.Helpers.Forms
 {
-    internal partial class EditorViewDrawingSkiaSharp : Form
+    public abstract class SelectionFormBase<T> : Form where T : Form, new()
     {
+        protected bool disposed;
+
+        protected T selectionManageForm;
+
+        protected Point selectionManageFormLocation;
+
+        /// <summary>
+        /// Timer for rendering.
+        /// </summary>
+        protected UITimer timer;
+
+        /// <summary>
+        /// Control for rendering image of the editor.
+        /// </summary>
+        protected SKControl skcontrol;
+
+        /// <summary>
+        /// User's screen snapshot in SkiaSharp format.
+        /// </summary>
+        protected SKBitmap skScreenImage;
+
+        /// <summary>
+        /// User's screen snapshot in Eto format.
+        /// </summary>
+        protected Bitmap etoScreenImage;
+
+        /// <summary>
+        /// Start location of selecting.
+        /// </summary>
+        protected PointF startLocation;
+
+        /// <summary>
+        /// End location of selecting.
+        /// </summary>
+        protected PointF endLocation;
+
+        /// <summary>
+        /// State when user selects region.
+        /// </summary>
+        protected bool capturing;
+
+        /// <summary>
+        /// State when user has selected region.
+        /// </summary>
+        protected bool captured;
+
+        /// <summary>
+        /// Selection region size and location.
+        /// </summary>
+        protected RectangleF selectionRectangle;
+
+        /// <summary>
+        /// Size of editor screen.
+        /// </summary>
+        protected Rectangle screenRectangle;
+
+        /// <summary>
+        /// For beauty.
+        /// </summary>
+        #region Styles
+        private Stopwatch penTimer;
+        private float[] dash = new float[] { 5, 5 };
+        #endregion Styles
+
+        #region Movingfields
+        private bool moving;
+        private float relativeX;
+        private float relativeY;
+        #endregion Movingfields
+
+        /// <summary>
+        /// Fileds for resizing selected area.
+        /// </summary>
+        #region ResizingFields
+        private bool resizing;
+        private ResizePart resizePart;
+        private LineF oppositeBorder;
+        private PointF oppositeAngle;
+        #endregion Resizingfields
+
+        /// <summary>
+        /// Initializes whole view.
+        /// </summary>
+        void InitializeComponent()
+        {
+            screenRectangle = new Rectangle(ScreenHelper.GetMainWindowSize());
+            var size = new Size(screenRectangle.Width, screenRectangle.Height);
+            Size = size;
+
+            WindowState = WindowState.Maximized;
+            WindowStyle = WindowStyle.None;
+
+            etoScreenImage = ScreenHelper.TakeScreenshot();
+            skScreenImage = SkiaSharpHelper.ConvertFromEtoBitmap(etoScreenImage);
+
+            penTimer = Stopwatch.StartNew();
+
+            timer = new UITimer();
+            timer.Elapsed += RenderFrame;
+            timer.Interval = renderFrameTime / 1000;
+
+            skcontrol = new SKControl();
+            Content = skcontrol;
+
+            Shown += EditorView_Shown;
+            UnLoad += EditorViewDrawingSkiaSharp_UnLoad;
+
+            InitializeSelectionManageForm();
+        }
+
         /// <summary>
         /// Render frametime in milliseconds.
         /// Should be more than 10 in Linux OS.
         /// </summary>
         private readonly double renderFrameTime = 10;
 
-        public EditorViewDrawingSkiaSharp()
+        public SelectionFormBase()
         {
             InitializeComponent();
         }
@@ -30,15 +141,15 @@ namespace RedShot.App
                 if (capturing)
                 {
                     selectionRectangle = EtoDrawingHelper.CreateRectangle(startLocation, endLocation);
-                    skcontrol.Execute((surface) => PaintRegion(surface));
+                    skcontrol.Execute((surface) => PaintRegion(surface.Canvas));
                 }
                 else if (captured)
                 {
-                    skcontrol.Execute((surface) => PaintRegion(surface));
+                    skcontrol.Execute((surface) => PaintRegion(surface.Canvas));
                 }
                 else
                 {
-                    skcontrol.Execute((surface) => PaintClearImage(surface));
+                    skcontrol.Execute((surface) => PaintClearImage(surface.Canvas));
                 }
             }
         }
@@ -96,7 +207,7 @@ namespace RedShot.App
             MouseMove += EditorView_MouseMove;
             KeyDown += EditorView_KeyDown;
 
-            skcontrol.Execute((surface) => PaintClearImage(surface));
+            skcontrol.Execute((surface) => PaintClearImage(surface.Canvas));
         }
 
         private void EditorView_MouseMove(object sender, MouseEventArgs e)
@@ -132,7 +243,7 @@ namespace RedShot.App
                     capturing = false;
 
                     captured = true;
-                    ShowPointPaintingView();
+                    ShowSelectionManageForm();
                     return;
                 }
 
@@ -154,7 +265,7 @@ namespace RedShot.App
                     capturing = true;
                 }
 
-                HidePointPaintingView();
+                HideSelectionManageForm();
             }
             else if (e.Buttons == MouseButtons.Alternate)
             {
@@ -167,7 +278,7 @@ namespace RedShot.App
                     captured = false;
                     moving = false;
                     resizing = false;
-                    HidePointPaintingView();
+                    HideSelectionManageForm();
                     SetDefaultPointer();
                 }
                 else
@@ -187,7 +298,7 @@ namespace RedShot.App
 
                 if (captured)
                 {
-                    ShowPointPaintingView();
+                    ShowSelectionManageForm();
                 }
             }
         }
@@ -206,7 +317,7 @@ namespace RedShot.App
                     break;
 
                 case Keys.Enter:
-                    SaveScreenShot();
+                    FinishSelection();
                     break;
             }
         }
@@ -217,7 +328,7 @@ namespace RedShot.App
         /// </summary>
         #region SkiaSharpCommands
 
-        private void PaintTopMessage(SKSurface surface)
+        protected virtual void PaintTopMessage(SKCanvas canvas)
         {
             string message = "Please select a region to capture";
 
@@ -232,13 +343,11 @@ namespace RedShot.App
 
             var xText = Width / 2 - textBounds.MidX;
 
-            surface.Canvas.DrawText(message, xText, 60, textPaint);
+            canvas.DrawText(message, xText, 60, textPaint);
         }
 
-        private void PaintCoordinatePanel(SKSurface surface)
+        protected virtual void PaintCoordinatePanel(SKCanvas canvas)
         {
-            var canvas = surface.Canvas;
-
             var paint = new SKPaint()
             {
                 Color = SKColors.Black,
@@ -289,41 +398,37 @@ namespace RedShot.App
             canvas.DrawRect(textfillRect, fillRectPaint);
             canvas.DrawRect(textStrokeRect, strokeRectPaint);
 
-            surface.Canvas.DrawText(text, drawCoords, paint);
+            canvas.DrawText(text, drawCoords, paint);
         }
 
-        private string FormatNumber(float number)
+        protected string FormatNumber(float number)
         {
             return number.ToString("F0");
         }
 
-        private void PaintClearImage(SKSurface surface)
+        protected void PaintBaseImage(SKCanvas canvas)
         {
-            var canvas = surface.Canvas;
-
             canvas.DrawBitmap(skScreenImage, new SKPoint(0, 0));
-
-            var editorRect = SKRect.Create(new SKPoint(0, 0), new SKSize(Width - 1, Height - 1));
-
-            PaintDarkregion(surface, editorRect);
-
-            //PaintEditorBorder(surface);
-
-            PaintTopMessage(surface);
         }
 
-        private void PaintEditorBorder(SKSurface surface)
+        protected virtual void PaintClearImage(SKCanvas canvas)
         {
             var editorRect = SKRect.Create(new SKPoint(0, 0), new SKSize(Width - 1, Height - 1));
-            PaintDashAround(surface, editorRect, SKColors.Black, SKColors.Red);
+
+            PaintBaseImage(canvas);
+            PaintDarkregion(canvas, editorRect);
+            PaintEditorBorder(canvas);
+            PaintTopMessage(canvas);
         }
 
-        private void PaintRegion(SKSurface surface)
+        protected virtual void PaintEditorBorder(SKCanvas canvas)
         {
-            var canvas = surface.Canvas;
+            var editorRect = SKRect.Create(new SKPoint(0, 0), new SKSize(Width - 1, Height - 1));
+            PaintDashAround(canvas, editorRect, SKColors.Black, SKColors.Red);
+        }
 
-            canvas.DrawBitmap(skScreenImage, new SKPoint(0, 0));
-
+        protected virtual void PaintRegion(SKCanvas canvas)
+        {
             var size = new SKSize(selectionRectangle.Width, selectionRectangle.Height);
             var point = new SKPoint(selectionRectangle.X, selectionRectangle.Y);
 
@@ -331,16 +436,14 @@ namespace RedShot.App
 
             var editorRect = SKRect.Create(new SKPoint(0, 0), new SKSize(Width, Height));
 
-            PaintDarkregion(surface, editorRect, regionRect);
-
-            PaintDashAround(surface, regionRect, SKColors.White, SKColors.Black);
-
-            //PaintEditorBorder(surface);
-
-            PaintCoordinatePanel(surface);
+            PaintBaseImage(canvas);
+            PaintDarkregion(canvas, editorRect, regionRect);
+            PaintDashAround(canvas, regionRect, SKColors.White, SKColors.Black);
+            PaintEditorBorder(canvas);
+            PaintCoordinatePanel(canvas);
         }
 
-        private void PaintDarkregion(SKSurface surface, SKRect editorRect, SKRect selectionRect = default)
+        protected virtual void PaintDarkregion(SKCanvas canvas, SKRect editorRect, SKRect selectionRect = default)
         {
             // the path to use as a mask
             var maskPath = new SKPath();
@@ -357,13 +460,11 @@ namespace RedShot.App
             maskPaint.Style = SKPaintStyle.Fill;
 
             // draw
-            surface.Canvas.DrawPath(maskPath, maskPaint);
+            canvas.DrawPath(maskPath, maskPaint);
         }
 
-        private void PaintDashAround(SKSurface surface, SKRect rect, SKColor backColor, SKColor dashColor)
+        protected virtual void PaintDashAround(SKCanvas canvas, SKRect rect, SKColor backColor, SKColor dashColor)
         {
-            var canvas = surface.Canvas;
-
             var rectPaint = new SKPaint
             {
                 IsAntialias = false,
@@ -385,78 +486,8 @@ namespace RedShot.App
             canvas.DrawRect(rect, rectPaintDash);
 
         }
+
         #endregion SkiaSharpCommands
-
-        #region ScreenShotPanel
-
-        private void InitializeScreenShotPanel()
-        {
-            screenShotPanel = new ScreenShotPanel();
-
-            screenShotPanel.EnablePaintingModeButton.Clicked += PointPaintingPanel_PaintingModeEnabled;
-            screenShotPanel.SaveScreenShotButton.Clicked += SaveScreenShotButton_Clicked;
-
-
-            screenShotPanelLocation = new Point(
-                (int)(Size.Width - screenShotPanel.Width - Size.Width * 0.05),
-                (int)(Size.Height * 0.05));
-
-            screenShotPanel.Location = screenShotPanelLocation;
-
-            screenShotPanel.KeyDown += EditorView_KeyDown;
-
-            screenShotPanel.Show();
-            screenShotPanel.Visible = false;
-        }
-
-        private void SaveScreenShotButton_Clicked(object sender, EventArgs e)
-        {
-            SaveScreenShot();
-        }
-
-        private void ShowPointPaintingView()
-        {
-            screenShotPanel.Visible = true;
-            screenShotPanel.Location = screenShotPanelLocation;
-        }
-
-        private void HidePointPaintingView()
-        {
-            screenShotPanel.Visible = false;
-        }
-
-        private void PointPaintingPanel_PaintingModeEnabled(object sender, EventArgs e)
-        {
-            var screenshot = GetScreenShot();
-            ApplicationManager.RunPaintingView(screenshot);
-        }
-
-        #endregion ScreenShotPanel
-
-        /// <summary>
-        /// Runs uploader functions.
-        /// </summary>
-        #region Uploading
-        private Bitmap GetScreenShot()
-        {
-            if (selectionRectangle != default)
-            {
-                if (selectionRectangle.X + selectionRectangle.Width > Width)
-                {
-                    selectionRectangle.Width = Width - selectionRectangle.X;
-                }
-                if (selectionRectangle.Y + selectionRectangle.Height > Height)
-                {
-                    selectionRectangle.Height = Height - selectionRectangle.Y;
-                }
-
-                return etoScreenImage.Clone((Rectangle)selectionRectangle);
-            }
-
-            return null;
-        }
-
-        #endregion Uploading
 
         #region MovingResizing
 
@@ -629,12 +660,66 @@ namespace RedShot.App
 
         #endregion MovingResizing
 
-        private void SaveScreenShot()
+        #region SlectionManageForm
+
+        protected virtual void InitializeSelectionManageForm()
         {
-            if (captured)
+            selectionManageForm = new T();
+
+            selectionManageFormLocation = new Point(
+                (int)(Size.Width - selectionManageForm.Width - Size.Width * 0.05),
+                (int)(Size.Height * 0.05));
+
+            selectionManageForm.Location = selectionManageFormLocation;
+
+            selectionManageForm.KeyDown += EditorView_KeyDown;
+
+            selectionManageForm.Show();
+            selectionManageForm.Visible = false;
+        }
+
+        private void ShowSelectionManageForm()
+        {
+            selectionManageForm.Visible = true;
+            selectionManageForm.Location = selectionManageFormLocation;
+        }
+
+        private void HideSelectionManageForm()
+        {
+            selectionManageForm.Visible = false;
+        }
+
+        #endregion SlectionManageForm
+
+        protected Rectangle GetSelectionRegion()
+        {
+            if (selectionRectangle.X + selectionRectangle.Width > Width)
             {
-                ApplicationManager.RunUploadView(GetScreenShot());
-                Close();
+                selectionRectangle.Width = Width - selectionRectangle.X;
+            }
+            if (selectionRectangle.Y + selectionRectangle.Height > Height)
+            {
+                selectionRectangle.Height = Height - selectionRectangle.Y;
+            }
+
+            return (Rectangle)selectionRectangle;
+        }
+
+        protected abstract void FinishSelection();
+
+        /// <summary>
+        /// Disposes UI elements.
+        /// </summary>
+        public new void Dispose()
+        {
+            if (disposed == false)
+            {
+                disposed = true;
+                timer?.Dispose();
+                etoScreenImage?.Dispose();
+                skScreenImage?.Dispose();
+                skcontrol?.Dispose();
+                selectionManageForm?.Dispose();
             }
         }
     }

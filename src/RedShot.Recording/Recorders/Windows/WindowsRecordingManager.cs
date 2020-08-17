@@ -3,14 +3,17 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Eto.Forms;
 using RedShot.Helpers;
 using RedShot.Helpers.Ffmpeg;
 using RedShot.Helpers.Ffmpeg.Devices;
+using RedShot.Helpers.Ffmpeg.Options;
 
 namespace RedShot.Recording.Recorders.Windows
 {
     public class WindowsRecordingManager : IRecordingManager
     {
+        private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly string ffmpegPath;
 
         private readonly string ffmpegBinaryName;
@@ -84,7 +87,7 @@ namespace RedShot.Recording.Recorders.Windows
             return devices;
         }
 
-        public void InstallFFmpeg()
+        public bool InstallFFmpeg()
         {
             if (CheckFFmpeg())
             {
@@ -104,10 +107,22 @@ namespace RedShot.Recording.Recorders.Windows
 
             var ffmpegZipName = "ffmpeg.zip";
 
-            using var downloader = new Downloader();
-            var path = downloader.Download(url, ffmpegZipName);
+            try
+            {
+                using var downloader = new Downloader();
+                var path = downloader.Download(url, ffmpegZipName);
 
-            ZipFile.ExtractToDirectory(path, ffmpegPath);
+                ZipFile.ExtractToDirectory(path, ffmpegPath);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Error("An error occurred while FFmpeg was installing.", e);
+                MessageBox.Show($"An error occurred while FFmpeg was installing: {e.Message}", MessageBoxButtons.OK, MessageBoxType.Error);
+
+                return false;
+            }
         }
 
         private void ThrowIfNotFoundFfmpegBinary()

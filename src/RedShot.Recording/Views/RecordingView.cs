@@ -6,7 +6,7 @@ using RedShot.Helpers;
 using RedShot.Helpers.Forms;
 using RedShot.Recording.Recorders;
 
-namespace RedShot.Recording.Forms
+namespace RedShot.Recording.Views
 {
     public class RecordingView : Form
     {

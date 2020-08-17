@@ -4,6 +4,9 @@ using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
 using RedShot.App;
 using RedShot.Configuration;
+#if _UNIX
+using System.Runtime.InteropServices;
+#endif
 
 namespace RedShot.EtoForms.Wpf
 {

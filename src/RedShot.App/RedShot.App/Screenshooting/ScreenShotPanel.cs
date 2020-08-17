@@ -3,7 +3,7 @@ using Eto.Drawing;
 using RedShot.Helpers.Forms;
 using RedShot.App.Properties;
 
-namespace RedShot.App
+namespace RedShot.App.Screenshooting
 {
     /// <summary>
     /// Painting panel for editor view.

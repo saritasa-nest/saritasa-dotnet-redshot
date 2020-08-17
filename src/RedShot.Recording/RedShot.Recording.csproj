@@ -27,10 +27,4 @@
     <ProjectReference Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp\Eto.Forms.Controls.SkiaSharp.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Forms\AreaSelectingView.eto.cs">
-      <DependentUpon>AreaSelectingView.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
 </Project>

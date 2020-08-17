@@ -1,4 +1,6 @@
-﻿namespace RedShot.Helpers.Ffmpeg
+﻿using RedShot.Helpers.Ffmpeg.Encoding;
+
+namespace RedShot.Helpers.Ffmpeg.Options
 {
     public static class FFmpegOptionsValidator
     {

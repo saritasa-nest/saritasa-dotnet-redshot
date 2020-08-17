@@ -1,8 +1,9 @@
 ﻿using System.Text;
+using RedShot.Helpers.Ffmpeg.Encoding;
 
-namespace RedShot.Helpers.Ffmpeg
+namespace RedShot.Helpers.Ffmpeg.Options
 {
-    public static class FFmpegArgsManager
+    public static class FFmpegArgsHelper
     {
         public static string GetFFmpegArgsFromOptions(FFmpegOptions options)
         {

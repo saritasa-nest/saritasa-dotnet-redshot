@@ -1,4 +1,4 @@
-﻿using RedShot.Helpers.Ffmpeg;
+﻿using RedShot.Helpers.Ffmpeg.Options;
 using RedShot.Helpers.FtpModels;
 using System;
 using System.Collections.Generic;

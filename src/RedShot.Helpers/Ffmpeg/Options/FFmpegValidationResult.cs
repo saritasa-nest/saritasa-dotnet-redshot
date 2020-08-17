@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace RedShot.Helpers.Ffmpeg
+namespace RedShot.Helpers.Ffmpeg.Options
 {
     public class FFmpegValidationResult
     {
