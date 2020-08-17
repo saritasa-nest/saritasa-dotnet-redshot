@@ -2,7 +2,10 @@
 using RedShot.Configuration;
 using RedShot.Helpers;
 using RedShot.Recording.Forms;
+using RedShot.Recording.Recorders;
+using RedShot.Recording.Recorders.Linux;
 using RedShot.Recording.Recorders.Windows;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace RedShot.Recording
@@ -11,7 +14,16 @@ namespace RedShot.Recording
     {
         public static void InitiateRecording()
         {
-            var manager = new WindowsRecordingManager();
+            IRecordingManager manager;
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                manager = new LinuxRecordingManager();
+            }
+            else
+            {
+                manager = new WindowsRecordingManager();
+            }
 
             if (!manager.CheckFFmpeg())
             {

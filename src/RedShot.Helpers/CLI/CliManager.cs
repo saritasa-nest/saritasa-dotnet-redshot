@@ -1,127 +1,94 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Diagnostics;
 using System.Text;
 
 namespace RedShot.Helpers.CLI
 {
-    public class CliManager : IDisposable
+    public class CliManager
     {
-        public event DataReceivedEventHandler OutputDataReceived;
-
-        public event DataReceivedEventHandler ErrorDataReceived;
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("CLIdebug");
 
         public bool IsProcessRunning { get; private set; }
 
+        public StringBuilder Output { get; private set; }
+
         private Process process;
 
-        public int Open(string path, string args = null)
+        public CliManager()
         {
-            if (File.Exists(path))
+            Output = new StringBuilder();
+        }
+
+        public void Run(string args)
+        {
+            Output.Clear();
+
+            if (IsProcessRunning)
             {
-                using (process = new Process())
+                Stop();
+            }
+
+            using (process = new Process())
+            {
+                var processInfo = new ProcessStartInfo()
                 {
-                    ProcessStartInfo psi = new ProcessStartInfo()
-                    {
-                        FileName = path,
-                        WorkingDirectory = Path.GetDirectoryName(path),
-                        Arguments = args,
-                        UseShellExecute = false,
-                        CreateNoWindow = true,
-                        RedirectStandardInput = true,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        StandardOutputEncoding = Encoding.UTF8,
-                        StandardErrorEncoding = Encoding.UTF8
-                    };
+                    Arguments = args,
+                    UseShellExecute = true,
+                    CreateNoWindow = true,
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    StandardOutputEncoding = Encoding.UTF8,
+                    StandardErrorEncoding = Encoding.UTF8
+                };
 
-                    process.EnableRaisingEvents = true;
-                    if (psi.RedirectStandardOutput)
-                    {
-                        process.OutputDataReceived += CliOutputDataReceived;
-                    }
+                process.EnableRaisingEvents = true;
 
-                    if (psi.RedirectStandardError)
-                    {
-                        process.ErrorDataReceived += CliErrorDataReceived;
-                    }
+                process.OutputDataReceived += DataReceived;
+                process.ErrorDataReceived += DataReceived;
 
-                    process.StartInfo = psi;
+                process.StartInfo = processInfo;
 
+                IsProcessRunning = true;
+                try
+                {
                     process.Start();
-
-                    if (psi.RedirectStandardOutput)
-                    {
-                        process.BeginOutputReadLine();
-                    }
-
-                    if (psi.RedirectStandardError)
-                    {
-                        process.BeginErrorReadLine();
-                    }
-
-                    try
-                    {
-                        IsProcessRunning = true;
-                        process.WaitForExit();
-                    }
-                    finally
-                    {
-                        IsProcessRunning = false;
-                    }
-
-                    return process.ExitCode;
+                    process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
+                    process.WaitForExit();
                 }
-            }
-
-            return -1;
-        }
-
-        private void CliOutputDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            if (e.Data != null)
-            {
-                if (OutputDataReceived != null)
+                finally
                 {
-                    OutputDataReceived(sender, e);
+                    IsProcessRunning = false;
                 }
             }
         }
 
-        private void CliErrorDataReceived(object sender, DataReceivedEventArgs e)
+        private void DataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (e.Data != null)
+            var data = e.Data;
+
+            Logger.Trace(data);
+
+            if (!string.IsNullOrEmpty(data))
             {
-                if (ErrorDataReceived != null)
-                {
-                    ErrorDataReceived(sender, e);
-                }
+                Output.AppendLine(data);
             }
         }
 
         public void WriteInput(string input)
         {
-            if (IsProcessRunning && process != null && process.StartInfo != null && process.StartInfo.RedirectStandardInput)
+            if (IsProcessRunning)
             {
-                process.StandardInput.WriteLine(input);
+                process?.StandardInput.WriteLine(input);
             }
         }
 
-        public void Close()
+        public void Stop()
         {
-            if (IsProcessRunning && process != null)
+            if (IsProcessRunning)
             {
-                WriteInput("q");
-                process.CloseMainWindow();
-                process.Kill();
-            }
-        }
-
-        public void Dispose()
-        {
-            if (process != null)
-            {
-                process.Dispose();
+                process?.Close();
+                process?.Kill();
             }
         }
     }

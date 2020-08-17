@@ -16,7 +16,7 @@ namespace RedShot.Configuration
         /// </summary>
         public List<FtpAccount> FtpAccounts { get; internal set; } = new List<FtpAccount>();
 
-        public FFmpegOptions FFmpegOptions { get; internal set; } = new FFmpegOptions();
+        public FFmpegOptions FFmpegOptions { get; set; } = new FFmpegOptions();
 
         /// <summary>
         /// Some extensions if need.

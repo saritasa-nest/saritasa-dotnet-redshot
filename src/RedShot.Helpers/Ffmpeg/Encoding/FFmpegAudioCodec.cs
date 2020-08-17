@@ -4,8 +4,6 @@ namespace RedShot.Helpers.Ffmpeg
 {
     public enum FFmpegAudioCodec
     {
-        [Description("None")]
-        none,
         [Description("AAC")]
         libvoaacenc,
         [Description("Opus")]

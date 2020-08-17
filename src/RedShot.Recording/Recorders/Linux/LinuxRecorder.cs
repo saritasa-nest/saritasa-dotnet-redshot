@@ -4,9 +4,9 @@ using System.Text;
 using Eto.Drawing;
 using RedShot.Helpers.Ffmpeg;
 
-namespace RedShot.Recording.Recorders.Windows
+namespace RedShot.Recording.Recorders.Linux
 {
-    public class WindowsRecorder : IRecorder
+    public class LinuxRecorder : IRecorder
     {
         public string VideoFolderPath { get; }
 
@@ -23,10 +23,10 @@ namespace RedShot.Recording.Recorders.Windows
         private readonly FFmpegOptions options;
         private readonly FFmpegCliManager cliManager;
 
-        public WindowsRecorder(FFmpegOptions options, string ffmpegPath, string videoFolderPath = null)
+        public LinuxRecorder(FFmpegOptions options, string videoFolderPath = null)
         {
             this.options = options;
-            cliManager = new FFmpegCliManager(ffmpegPath);
+            cliManager = new FFmpegCliManager();
 
             if (string.IsNullOrEmpty(videoFolderPath))
             {
@@ -40,7 +40,7 @@ namespace RedShot.Recording.Recorders.Windows
 
         public void Start(Rectangle area)
         {
-            var deviceArgs = GetWindowsDeviceArgs(area);
+            var deviceArgs = GetLinuxDeviceArgs(area);
             var optionsArgs = FFmpegArgsManager.GetFFmpegArgsFromOptions(options);
 
             var name = DateTime.Now.ToFileTime();
@@ -57,7 +57,7 @@ namespace RedShot.Recording.Recorders.Windows
             cliManager.Stop();
         }
 
-        private string GetWindowsDeviceArgs(Rectangle captureArea)
+        private string GetLinuxDeviceArgs(Rectangle captureArea)
         {
             if (captureArea.Width % 2 != 0)
             {
@@ -73,17 +73,13 @@ namespace RedShot.Recording.Recorders.Windows
 
             if (options.UseGdigrab || options.VideoDevice == null)
             {
-                args.Append($"-f gdigrab -framerate {options.Fps} -offset_x {captureArea.Location.X} -offset_y {captureArea.Location.Y} ");
-                args.Append($"-video_size {captureArea.Size.Width}x{captureArea.Size.Height} -draw_mouse {(options.DrawCursor ? '1' : '0')} -i desktop ");
-            }
-            else
-            {
-                args.AppendFormat($"-f dshow -framerate {options.Fps} -i video=\"{options.VideoDevice.CompatibleFfmpegName}\" ");
+                args.Append($"-video_size {captureArea.Size.Width}x{captureArea.Size.Height} -framerate {options.Fps} -f x11grab -i :0.0+{captureArea.Location.X},{captureArea.Location.Y}");
+                args.Append($"-draw_mouse {(options.DrawCursor ? '1' : '0')}");
             }
 
             if (options.UseMicrophone && options.AudioDevice != null)
             {
-                args.AppendFormat("-f dshow -i audio=\"{0}\" ", options.AudioDevice.CompatibleFfmpegName);
+                args.Append($"-f alsa -ac 2 -i {options.AudioDevice.CompatibleFfmpegName}");
             }
 
             return args.ToString();

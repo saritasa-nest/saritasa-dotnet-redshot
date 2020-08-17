@@ -1,10 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using RedShot.Helpers.Ffmpeg.Devices;
 
 namespace RedShot.Helpers.Ffmpeg
 {
-    public class FFmpegOptions : INotifyPropertyChanged
+    public class FFmpegOptions : INotifyPropertyChanged, ICloneable
     {
         private int fps;
         private bool drawCursor;
@@ -16,8 +17,6 @@ namespace RedShot.Helpers.Ffmpeg
         private int x264Crf;
         private int xviDQscale;
         private int bitrate;
-        private FFmpegNVENCPreset nvencPreset;
-        private FFmpegQSVPreset qsvPreset;
         private int aacBitrate;
         private int opusBitrate;
         private int vorbisQscale;
@@ -36,8 +35,6 @@ namespace RedShot.Helpers.Ffmpeg
             X264Crf = 28;
             XviDQscale = 10;
             Bitrate = 3000;
-            NVENCPreset = FFmpegNVENCPreset.llhp;
-            QSVPreset = FFmpegQSVPreset.fast;
             AACBitrate = 128;
             OpusBitrate = 128;
             VorbisQscale = 3;
@@ -217,7 +214,6 @@ namespace RedShot.Helpers.Ffmpeg
             }
         }
 
-
         public int Bitrate
         {
             get { return bitrate; }
@@ -227,34 +223,6 @@ namespace RedShot.Helpers.Ffmpeg
                 if (bitrate != value)
                 {
                     bitrate = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        public FFmpegNVENCPreset NVENCPreset
-        {
-            get { return nvencPreset; }
-
-            set
-            {
-                if (nvencPreset != value)
-                {
-                    nvencPreset = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        public FFmpegQSVPreset QSVPreset
-        {
-            get { return qsvPreset; }
-
-            set
-            {
-                if (qsvPreset != value)
-                {
-                    qsvPreset = value;
                     OnPropertyChanged();
                 }
             }
@@ -324,8 +292,6 @@ namespace RedShot.Helpers.Ffmpeg
                 switch (VideoCodec)
                 {
                     case FFmpegVideoCodec.libx264:
-                    case FFmpegVideoCodec.h264_qsv:
-                    case FFmpegVideoCodec.h264_nvenc:
                         return "mp4";
                     case FFmpegVideoCodec.libvpx_vp9:
                         return "webm";
@@ -337,11 +303,21 @@ namespace RedShot.Helpers.Ffmpeg
             }
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private void OnPropertyChanged([CallerMemberName] string memberName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(memberName));
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public FFmpegOptions Clone()
+        {
+            return MemberwiseClone() as FFmpegOptions;
+        }
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
     }
 }

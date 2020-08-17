@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
-namespace RedShot.Helpers.Forms
+namespace RedShot.Helpers
 {
     public class EnumDescription<TEnum>
     {
@@ -33,6 +31,23 @@ namespace RedShot.Helpers.Forms
             return list;
         }
 
+        public static string GetDescriptionName(object enumValue)
+        {
+            var fi = enumValue.GetType().GetField(enumValue.ToString());
+
+            if (fi != null)
+            {
+                var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+                if (attributes.Length > 0)
+                {
+                    return attributes[0].Description;
+                }
+            }
+
+            return enumValue.ToString();
+        }
+
         public override string ToString()
         {
             return Description;
@@ -40,11 +55,11 @@ namespace RedShot.Helpers.Forms
 
         private static EnumDescription<TEnum> CreateEnumDescription(TEnum value)
         {
-            FieldInfo fi = value.GetType().GetField(value.ToString());
+            var field = value.GetType().GetField(value.ToString());
 
-            if (fi != null)
+            if (field != null)
             {
-                DescriptionAttribute[] attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+                var attributes = (DescriptionAttribute[])field.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
                 if (attributes.Length > 0)
                 {

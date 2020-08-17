@@ -1,20 +1,20 @@
-﻿using Eto.Drawing;
+﻿using System;
+using System.Linq;
+using System.Text;
+using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Configuration;
+using RedShot.Helpers;
 using RedShot.Helpers.Ffmpeg;
 using RedShot.Helpers.Ffmpeg.Devices;
 using RedShot.Helpers.Forms;
 using RedShot.Recording.Recorders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RedShot.Recording.Forms
 {
     public class RecordingOptionsView : Dialog
     {
-        private FFmpegOptions ffmpegOptions => ConfigurationManager.YamlConfig.FFmpegOptions;
+        private FFmpegOptions ffmpegOptions = ConfigurationManager.YamlConfig.FFmpegOptions.Clone();
 
         private IRecordingManager recordingManager;
 
@@ -22,6 +22,7 @@ namespace RedShot.Recording.Forms
 
         private ComboBox videoDevices;
         private ComboBox audioDevices;
+        private CheckBox useMicrophone;
 
         private ComboBox videoCodec;
         private ComboBox audioCodec;
@@ -52,6 +53,8 @@ namespace RedShot.Recording.Forms
 
         private void InitializeComponents()
         {
+            useMicrophone = new CheckBox();
+
             videoDevices = new ComboBox()
             {
                 Size = new Size(250, 21),
@@ -84,9 +87,9 @@ namespace RedShot.Recording.Forms
             {
                 Size = new Size(250, 21),
             };
-            audioCodec.DataStore = EnumDescription<FFmpegAudioCodec>.GetEnumDescriptions(typeof(FFmpegVideoCodec));
+            audioCodec.DataStore = EnumDescription<FFmpegAudioCodec>.GetEnumDescriptions(typeof(FFmpegAudioCodec));
 
-            okButton = new DefaultButton("Ok", 70, 30);
+            okButton = new DefaultButton("OK", 70, 30);
             okButton.Clicked += OkButton_Clicked;
 
             Content = new StackLayout()
@@ -107,6 +110,26 @@ namespace RedShot.Recording.Forms
             BindOptions();
         }
 
+        private Control GetMicrophoneControl()
+        {
+            return new StackLayout()
+            {
+                Orientation = Orientation.Horizontal,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                HorizontalContentAlignment = HorizontalAlignment.Left,
+                Padding = 10,
+                Items =
+                {
+                    useMicrophone,
+                    FormsHelper.VoidBox(10),
+                    new Label()
+                    {
+                        Text = "Use Microphone"
+                    }
+                }
+            };
+        }
+
         private Control GetDeviceSelectionControl()
         {
             var videoLabel = new Label()
@@ -118,6 +141,7 @@ namespace RedShot.Recording.Forms
             {
                 Text = "Audio device"
             };
+
             return new GroupBox()
             {
                 Text = "Devices",
@@ -135,7 +159,9 @@ namespace RedShot.Recording.Forms
                         audioLabel,
                         FormsHelper.VoidBox(10),
                         audioDevices,
-                        FormsHelper.VoidBox(25),
+                        FormsHelper.VoidBox(15),
+                        GetMicrophoneControl(),
+                        FormsHelper.VoidBox(10),
                     }
                 }
             };
@@ -178,25 +204,38 @@ namespace RedShot.Recording.Forms
 
         private void OkButton_Clicked(object sender, EventArgs e)
         {
-            ConfigurationManager.Save();
-            Close();
+            var result = ffmpegOptions.Validate();
+
+            if (!result.IsSuccess)
+            {
+                MessageBox.Show(new StringBuilder().AppendJoin("\n", result.Errors).ToString(), "Validation error", MessageBoxButtons.OK, MessageBoxType.Warning);
+            }
+            else
+            {
+                ConfigurationManager.YamlConfig.FFmpegOptions = ffmpegOptions;
+                ConfigurationManager.Save();
+                Close();
+            }
         }
 
         private void BindOptions()
         {
-            videoDevices.DataContext = ffmpegOptions;
+            Content.DataContext = ffmpegOptions;
+
+            useMicrophone.CheckedBinding.BindDataContext((FFmpegOptions o) => o.UseMicrophone);
+
             videoDevices.SelectedValueBinding.BindDataContext((FFmpegOptions o) => o.VideoDevice);
 
-            audioDevices.DataContext = ffmpegOptions;
             audioDevices.SelectedValueBinding.BindDataContext((FFmpegOptions o) => o.AudioDevice);
 
-            audioCodec.DataContext = ffmpegOptions;
+            audioDevices.Bind(d => d.Enabled, ffmpegOptions, o => o.UseMicrophone);
+
             audioCodec.SelectedValueBinding.Convert(
                 l =>
                 {
                     if (l == null)
                     {
-                        return FFmpegAudioCodec.none;
+                        return FFmpegAudioCodec.libvoaacenc;
                     }
                     else
                     {
@@ -209,7 +248,6 @@ namespace RedShot.Recording.Forms
                     return audioCodec.DataStore.FirstOrDefault(o => ((EnumDescription<FFmpegAudioCodec>)o).EnumValue == v);
                 }).BindDataContext((FFmpegOptions o) => o.AudioCodec);
 
-            videoCodec.DataContext = ffmpegOptions;
             videoCodec.SelectedValueBinding.Convert(
                 l =>
                 {

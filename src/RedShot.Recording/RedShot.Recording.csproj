@@ -13,10 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Recorders\Linux\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Eto.Forms" Version="2.5.3" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>

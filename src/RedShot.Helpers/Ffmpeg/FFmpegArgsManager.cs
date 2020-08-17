@@ -6,8 +6,9 @@ namespace RedShot.Helpers.Ffmpeg
     {
         public static string GetFFmpegArgsFromOptions(FFmpegOptions options)
         {
-            StringBuilder args = new StringBuilder();
-            args.Append("-rtbufsize 150M "); // default real time buffer size was 3041280 (3M)
+            var args = new StringBuilder();
+
+            args.Append("-rtbufsize 150M ");
 
             if (!string.IsNullOrEmpty(options.UserArgs))
             {
@@ -19,32 +20,22 @@ namespace RedShot.Helpers.Ffmpeg
                 case FFmpegVideoCodec.libx264: // https://trac.ffmpeg.org/wiki/Encode/H.264
                     args.AppendFormat("-preset {0} ", options.X264Preset);
                     args.AppendFormat("-crf {0} ", options.X264Crf);
-                    args.AppendFormat("-pix_fmt {0} ", "yuv420p"); // -pix_fmt yuv420p required otherwise can't stream in Chrome
-                    args.AppendFormat("-movflags {0} ", "+faststart"); // This will move some information to the beginning of your file and allow the video to begin playing before it is completely downloaded by the viewer
+                    args.AppendFormat("-pix_fmt {0} ", "yuv420p");
+                    args.AppendFormat("-movflags {0} ", "+faststart");
                     break;
                 case FFmpegVideoCodec.libvpx_vp9: // https://trac.ffmpeg.org/wiki/Encode/VP9
                     args.AppendFormat("-b:v {0}k ", options.Bitrate);
-                    args.AppendFormat("-pix_fmt {0} ", "yuv420p"); // -pix_fmt yuv420p required otherwise causing issues in Chrome related to WebM transparency support
+                    args.AppendFormat("-pix_fmt {0} ", "yuv420p");
                     break;
                 case FFmpegVideoCodec.libxvid: // https://trac.ffmpeg.org/wiki/Encode/MPEG-4
                     args.AppendFormat("-qscale:v {0} ", options.XviDQscale);
-                    break;
-                case FFmpegVideoCodec.h264_nvenc: // https://trac.ffmpeg.org/wiki/HWAccelIntro#NVENC
-                    args.AppendFormat("-preset {0} ", options.NVENCPreset);
-                    args.AppendFormat("-b:v {0}k ", options.Bitrate);
-                    args.AppendFormat("-pix_fmt {0} ", "yuv420p");
-                    break;
-
-                case FFmpegVideoCodec.h264_qsv: // https://trac.ffmpeg.org/wiki/Hardware/QuickSync
-                    args.AppendFormat("-preset {0} ", options.QSVPreset);
-                    args.AppendFormat("-b:v {0}k ", options.Bitrate);
                     break;
             }
 
             switch (options.AudioCodec)
             {
                 case FFmpegAudioCodec.libvoaacenc: // http://trac.ffmpeg.org/wiki/Encode/AAC
-                    args.AppendFormat("-c:a aac -ac 2 -b:a {0}k ", options.AACBitrate); // -ac 2 required otherwise failing with 7.1
+                    args.AppendFormat("-c:a aac -ac 2 -b:a {0}k ", options.AACBitrate);
                     break;
                 case FFmpegAudioCodec.libopus: // https://www.ffmpeg.org/ffmpeg-codecs.html#libopus-1
                     args.AppendFormat("-c:a libopus -b:a {0}k ", options.OpusBitrate);
@@ -64,7 +55,7 @@ namespace RedShot.Helpers.Ffmpeg
         {
             var args = new StringBuilder();
 
-            args.Append("-y "); // overwrite file
+            args.Append("-y ");
             args.AppendFormat("\"{0}\"", filepath);
 
             return args.ToString();

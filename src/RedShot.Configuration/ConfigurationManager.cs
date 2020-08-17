@@ -53,18 +53,26 @@ namespace RedShot.Configuration
                         .IgnoreUnmatchedProperties()
                         .Build();
 
-                    var config = deserializer.Deserialize<YamlConfig>(reader);
+                    try
+                    {
+                        var config = deserializer.Deserialize<YamlConfig>(reader);
+                        var decrypted = DecryptFtpAccountPasswords(config);
 
-                    var decrypted = DecryptFtpAccountPasswords(config);
-
-                    return decrypted;
+                        return decrypted;
+                    }
+                    // If the configuration file was broken.
+                    catch
+                    {
+                        Logger.Warn("The configuration file was broken!");
+                    }
                 }
             }
             else
             {
-                Logger.Info("There is not a config file in the system");
-                return new YamlConfig();
+                Logger.Info("There is not a configuration file in the system");
             }
+
+            return new YamlConfig();
         }
 
         private static bool TryGetYamlString(out string conf)
@@ -79,7 +87,7 @@ namespace RedShot.Configuration
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error(ex, "Error occured in reading config file");
+                    Logger.Error(ex, "Error occurred in reading configuration file");
                     throw;
                 }
                 return true;
@@ -112,7 +120,7 @@ namespace RedShot.Configuration
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "Error occured in creating RedShot config folder");
+                Logger.Error(ex, "Error occurred in creating RedShot configuration folder");
                 throw;
             }
         }
@@ -149,7 +157,7 @@ namespace RedShot.Configuration
                 catch (Exception ex)
                 {
                     Logger.Warn(ex);
-                    // Occures when passwords are null.
+                    // Occurs when passwords are null.
                 }
             }
 

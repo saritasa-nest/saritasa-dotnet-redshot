@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,6 +9,7 @@ namespace RedShot.Helpers.Ffmpeg
     public class FFmpegCliManager
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("Ffmpeg");
+        private bool isLinuxOs = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 
         public event DataReceivedEventHandler OutputDataReceived;
 
@@ -19,13 +21,11 @@ namespace RedShot.Helpers.Ffmpeg
 
         public StringBuilder Output { get; private set; }
 
-        public bool StopRequested { get; set; }
-
         public bool IsProcessFinished { get; private set; }
 
         private Process process;
 
-        public FFmpegCliManager(string ffmpegPath)
+        public FFmpegCliManager(string ffmpegPath = null)
         {
             FFmpegPath = ffmpegPath;
             Output = new StringBuilder();
@@ -42,10 +42,10 @@ namespace RedShot.Helpers.Ffmpeg
                 Stop();
             }
 
-            Open(FFmpegPath, args);
+            Open(args, FFmpegPath);
         }
 
-        public void Open(string path, string args = null)
+        public void Open(string args, string path = null)
         {
             if (File.Exists(path))
             {
@@ -57,8 +57,6 @@ namespace RedShot.Helpers.Ffmpeg
                     {
                         var processInfo = new ProcessStartInfo()
                         {
-                            FileName = path,
-                            WorkingDirectory = Path.GetDirectoryName(path),
                             Arguments = args,
                             UseShellExecute = false,
                             CreateNoWindow = true,
@@ -68,6 +66,16 @@ namespace RedShot.Helpers.Ffmpeg
                             StandardOutputEncoding = Encoding.UTF8,
                             StandardErrorEncoding = Encoding.UTF8
                         };
+
+                        if (isLinuxOs)
+                        {
+                            processInfo.UseShellExecute = true;
+                        }
+                        else
+                        {
+                            processInfo.FileName = path;
+                            processInfo.WorkingDirectory = Path.GetDirectoryName(path);
+                        }
 
                         process.EnableRaisingEvents = true;
 
@@ -162,10 +170,7 @@ namespace RedShot.Helpers.Ffmpeg
 
         ~FFmpegCliManager()
         {
-            if (IsProcessRunning)
-            {
-                Stop();
-            }
+            Stop();
         }
     }
 }
