@@ -53,7 +53,10 @@ namespace RedShot.Recording
         {
             if (!manager.CheckFFmpeg())
             {
-                manager.InstallFFmpeg();
+                if (!manager.InstallFFmpeg())
+                {
+                    return;
+                }
             }
 
             OpenSettings();

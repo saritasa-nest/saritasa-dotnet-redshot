@@ -16,9 +16,10 @@ namespace RedShot.Helpers.Ffmpeg.Options
         private FFmpegAudioCodec audioCodec;
         private FFmpegX264Preset x264Preset;
         private int x264Crf;
+        private int vp9Crf;
         private int xviDQscale;
-        private int bitrate;
-        private int aacBitrate;
+        private int vp9Bitrate;
+        private int aacQScale;
         private int opusBitrate;
         private int vorbisQscale;
         private int mp3Qscale;
@@ -33,10 +34,11 @@ namespace RedShot.Helpers.Ffmpeg.Options
             VideoCodec = FFmpegVideoCodec.libx264;
             AudioCodec = FFmpegAudioCodec.libvoaacenc;
             X264Preset = FFmpegX264Preset.faster;
-            X264Crf = 28;
+            X264Crf = 23;
+            Vp9Crf = 35;
             XviDQscale = 10;
-            Bitrate = 3000;
-            AACBitrate = 128;
+            Vp9Bitrate = 3000;
+            AacQScale = 3;
             OpusBitrate = 128;
             VorbisQscale = 3;
             MP3Qscale = 4;
@@ -67,8 +69,11 @@ namespace RedShot.Helpers.Ffmpeg.Options
             {
                 if (fps != value)
                 {
-                    fps = value;
-                    OnPropertyChanged();
+                    if (value > 14 && value < 61)
+                    {
+                        fps = value;
+                        OnPropertyChanged();
+                    }
                 }
             }
         }
@@ -187,6 +192,23 @@ namespace RedShot.Helpers.Ffmpeg.Options
             }
         }
 
+        public int Vp9Crf
+        {
+            get { return vp9Crf; }
+
+            set
+            {
+                if (vp9Crf != value)
+                {
+                    if (value >= 0 && value <= 63)
+                    {
+                        vp9Crf = value;
+                        OnPropertyChanged();
+                    }
+                }
+            }
+        }
+
         public int X264Crf
         {
             get { return x264Crf; }
@@ -195,8 +217,11 @@ namespace RedShot.Helpers.Ffmpeg.Options
             {
                 if (x264Crf != value)
                 {
-                    x264Crf = value;
-                    OnPropertyChanged();
+                    if (value >= 0 && value <= 51)
+                    {
+                        x264Crf = value;
+                        OnPropertyChanged();
+                    }
                 }
             }
         }
@@ -209,37 +234,43 @@ namespace RedShot.Helpers.Ffmpeg.Options
             {
                 if (xviDQscale != value)
                 {
-                    xviDQscale = value;
-                    OnPropertyChanged();
+                    if (value >= 1 && value <= 31)
+                    {
+                        xviDQscale = value;
+                        OnPropertyChanged();
+                    }
                 }
             }
         }
 
-        public int Bitrate
+        public int Vp9Bitrate
         {
-            get { return bitrate; }
+            get { return vp9Bitrate; }
 
             set
             {
-                if (bitrate != value)
+                if (vp9Bitrate != value && value > 0)
                 {
-                    bitrate = value;
+                    vp9Bitrate = value;
                     OnPropertyChanged();
                 }
             }
         }
 
         // Audio
-        public int AACBitrate
+        public int AacQScale
         {
-            get { return aacBitrate; }
+            get { return aacQScale; }
 
             set
             {
-                if (aacBitrate != value)
+                if (aacQScale != value)
                 {
-                    aacBitrate = value;
-                    OnPropertyChanged();
+                    if (value >= 1 && value <= 5)
+                    {
+                        aacQScale = value;
+                        OnPropertyChanged();
+                    }
                 }
             }
         }
@@ -252,8 +283,11 @@ namespace RedShot.Helpers.Ffmpeg.Options
             {
                 if (opusBitrate != value)
                 {
-                    opusBitrate = value;
-                    OnPropertyChanged();
+                    if (value > 0)
+                    {
+                        opusBitrate = value;
+                        OnPropertyChanged();
+                    }
                 }
             }
         }
@@ -266,8 +300,11 @@ namespace RedShot.Helpers.Ffmpeg.Options
             {
                 if (vorbisQscale != value)
                 {
-                    vorbisQscale = value;
-                    OnPropertyChanged();
+                    if (value >= 0 && value <= 10)
+                    {
+                        vorbisQscale = value;
+                        OnPropertyChanged();
+                    }
                 }
             }
         }
@@ -280,8 +317,11 @@ namespace RedShot.Helpers.Ffmpeg.Options
             {
                 if (mp3Qscale != value)
                 {
-                    mp3Qscale = value;
-                    OnPropertyChanged();
+                    if (value >= 0 && value <= 9)
+                    {
+                        mp3Qscale = value;
+                        OnPropertyChanged();
+                    }
                 }
             }
         }
@@ -293,6 +333,7 @@ namespace RedShot.Helpers.Ffmpeg.Options
                 switch (VideoCodec)
                 {
                     case FFmpegVideoCodec.libx264:
+                    case FFmpegVideoCodec.libx265:
                         return "mp4";
                     case FFmpegVideoCodec.libvpx_vp9:
                         return "webm";

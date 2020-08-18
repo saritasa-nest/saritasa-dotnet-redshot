@@ -6,6 +6,8 @@ namespace RedShot.Helpers.Ffmpeg.Encoding
     {
         [Description("H.264 / x264")]
         libx264,
+        [Description("H.265 / HEVC")]
+        libx265,
         [Description("VP9 (WebM)")]
         libvpx_vp9,
         [Description("MPEG-4 / Xvid")]

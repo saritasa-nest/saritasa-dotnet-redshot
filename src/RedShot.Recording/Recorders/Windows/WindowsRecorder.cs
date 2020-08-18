@@ -50,7 +50,7 @@ namespace RedShot.Recording.Recorders.Windows
 
             var outputArgs = FFmpegArgsHelper.GetArgsForOutput(LastVideoPath);
 
-            cliManager.Run($"-thread_queue_size 512 {deviceArgs} {optionsArgs} {outputArgs}");
+            cliManager.Run($"-thread_queue_size 1024 {deviceArgs} {optionsArgs} {outputArgs}");
         }
 
         public void Stop()

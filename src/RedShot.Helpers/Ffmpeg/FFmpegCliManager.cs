@@ -98,7 +98,7 @@ namespace RedShot.Helpers.Ffmpeg
                         WriteInput("q");
                         closeTryCount++;
 
-                        Task.Delay(300).Wait();
+                        Task.Delay(500).Wait();
                     }
                     else
                     {
@@ -106,11 +106,11 @@ namespace RedShot.Helpers.Ffmpeg
                     }
                 }
 
-                // If still running.
-                if (IsProcessRunning)
-                {
-                    process.Kill();
-                }
+                //// If still running.
+                //if (IsProcessRunning)
+                //{
+                //    process.Kill();
+                //}
             }
         }
 

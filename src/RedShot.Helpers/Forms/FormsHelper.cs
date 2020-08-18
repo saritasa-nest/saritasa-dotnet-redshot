@@ -17,6 +17,16 @@ namespace RedShot.Helpers.Forms
             };
         }
 
+        public static Control VoidRectangle(int width, int height)
+        {
+            return new StackLayout
+            {
+                VerticalContentAlignment = VerticalAlignment.Center,
+                Orientation = Orientation.Horizontal,
+                Size = new Eto.Drawing.Size(width, height),
+            };
+        }
+
         public static Cursor GetPointerCursor(Color color, int radius)
         {
             var skColor = SkiaSharpHelper.GetSKColorFromEtoColor(color);
@@ -51,6 +61,42 @@ namespace RedShot.Helpers.Forms
             {
                 return center;
             }
+        }
+
+        public static StackLayout GetBaseStack(string name, Control control, int nameWidth = 200, int controlWidth = 300)
+        {
+            return new StackLayout
+            {
+                Orientation = Orientation.Horizontal,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                Padding = 5,
+                Items =
+                {
+                    new StackLayout()
+                    {
+                        HorizontalContentAlignment = HorizontalAlignment.Left,
+                        VerticalContentAlignment = VerticalAlignment.Center,
+                        Width = nameWidth,
+                        Items =
+                        {
+                            new Label()
+                            {
+                                Text = name,
+                            }
+                        }
+                    },
+                    new StackLayout()
+                    {
+                        HorizontalContentAlignment = HorizontalAlignment.Left,
+                        VerticalContentAlignment = VerticalAlignment.Center,
+                        Width = controlWidth,
+                        Items =
+                        {
+                            control
+                        }
+                    },
+                }
+            };
         }
     }
 }

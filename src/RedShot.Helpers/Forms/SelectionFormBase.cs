@@ -118,6 +118,8 @@ namespace RedShot.Helpers.Forms
             UnLoad += EditorViewDrawingSkiaSharp_UnLoad;
 
             InitializeSelectionManageForm();
+
+            BringToFront();
         }
 
         /// <summary>

@@ -257,13 +257,13 @@ namespace RedShot.Upload.Forms.Ftp
                 Orientation = Orientation.Vertical,
                 Items =
                 {
-                    GetBaseStack("Name", name),
-                    GetBaseStack("Ftp Protocol", ftpProtocol),
+                    FormsHelper.GetBaseStack("Name", name),
+                    FormsHelper.GetBaseStack("Ftp Protocol", ftpProtocol),
                     GetAdressBoxes(),
-                    GetBaseStack("Username", username),
-                    GetBaseStack("Password", password),
-                    GetBaseStack("IsActive", isActive),
-                    GetBaseStack("SubFolderPath", subFolderPath),
+                    FormsHelper.GetBaseStack("Username", username),
+                    FormsHelper.GetBaseStack("Password", password),
+                    FormsHelper.GetBaseStack("IsActive", isActive),
+                    FormsHelper.GetBaseStack("SubFolderPath", subFolderPath),
                 }
             };
         }
@@ -290,39 +290,6 @@ namespace RedShot.Upload.Forms.Ftp
                     delButton,
                     FormsHelper.VoidBox(10),
                     copyButton
-                }
-            };
-        }
-
-        private StackLayout GetBaseStack(string name, Control control)
-        {
-            return new StackLayout
-            {
-                Orientation = Orientation.Horizontal,
-                Padding = 5,
-                Items =
-                {
-                    new StackLayout()
-                    {
-                        HorizontalContentAlignment = HorizontalAlignment.Left,
-                        Width = 200,
-                        Items =
-                        {
-                            new Label()
-                            {
-                                Text = name,
-                            }
-                        }
-                    },
-                    new StackLayout()
-                    {
-                        HorizontalContentAlignment = HorizontalAlignment.Left,
-                        Width = 300,
-                        Items =
-                        {
-                            control
-                        }
-                    },
                 }
             };
         }
@@ -364,7 +331,7 @@ namespace RedShot.Upload.Forms.Ftp
                     Orientation = Orientation.Vertical,
                     Items =
                     {
-                        GetBaseStack("Encryption", ftpsEncryption),
+                        FormsHelper.GetBaseStack("Encryption", ftpsEncryption),
                         new StackLayout()
                         {
                             HorizontalContentAlignment = HorizontalAlignment.Left,
@@ -450,7 +417,7 @@ namespace RedShot.Upload.Forms.Ftp
                             Orientation = Orientation.Horizontal,
                             Items =
                             {
-                                GetBaseStack("Pass phrase", passphrase),
+                                FormsHelper.GetBaseStack("Pass phrase", passphrase),
                             }
                         }
                     }
