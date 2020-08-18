@@ -14,6 +14,8 @@ namespace RedShot.Helpers.Ffmpeg
 
         public bool IsProcessFinished { get; private set; }
 
+        public bool IsRecording { get; private set; }
+
         public FFmpegCliManager(string ffmpegPath) : base(ffmpegPath)
         {
             OutputDataReceived += FFmpeg_DataReceived;
@@ -27,6 +29,8 @@ namespace RedShot.Helpers.Ffmpeg
             if (IsProcessRunning)
             {
                 Stop();
+
+                process?.Kill();
             }
 
             Open(filePath, args);
@@ -59,6 +63,9 @@ namespace RedShot.Helpers.Ffmpeg
                     process.OutputDataReceived += CliOutputDataReceived;
                     process.ErrorDataReceived += CliErrorDataReceived;
 
+                    process.OutputDataReceived += RecordingCheck;
+                    process.ErrorDataReceived += RecordingCheck;
+
                     process.StartInfo = processInfo;
 
                     IsProcessRunning = true;
@@ -71,8 +78,10 @@ namespace RedShot.Helpers.Ffmpeg
                     }
                     finally
                     {
+                        IsRecording = false;
                         IsProcessRunning = false;
                         IsProcessFinished = true;
+                        logger.Trace("Recording finished!");
                     }
                 }
             });
@@ -124,6 +133,18 @@ namespace RedShot.Helpers.Ffmpeg
         {
             logger.Trace(e.Data);
             ErrorDataReceived?.Invoke(sender, e);
+        }
+
+        private void RecordingCheck(object sender, DataReceivedEventArgs e)
+        {
+            if (!IsRecording)
+            {
+                if (!string.IsNullOrEmpty(e.Data) && e.Data.Contains("Press [q] to stop"))
+                {
+                    IsRecording = true;
+                    logger.Trace("Recording started!");
+                }
+            }
         }
 
         private void FFmpeg_DataReceived(object sender, DataReceivedEventArgs e)

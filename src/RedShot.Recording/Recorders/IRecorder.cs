@@ -7,5 +7,7 @@ namespace RedShot.Recording.Recorders
         void Start(Rectangle area);
 
         void Stop();
+
+        bool IsRecording { get; }
     }
 }

@@ -12,6 +12,7 @@ namespace RedShot.Recording
     public static class FFmpegRecorder
     {
         private static IRecordingManager manager;
+        private static RecordingView recordingView;
 
         static FFmpegRecorder()
         {
@@ -39,8 +40,9 @@ namespace RedShot.Recording
         {
             var options = ConfigurationManager.YamlConfig.FFmpegOptions;
             var recorder = manager.GetRecorder(options);
-            var view = new RecordingView(recorder, region);
-            view.Show();
+
+            recordingView = new RecordingView(recorder, region);
+            recordingView.Show();
         }
 
         public static void OpenSelectionView()
@@ -58,6 +60,8 @@ namespace RedShot.Recording
                     return;
                 }
             }
+
+            recordingView?.Close();
 
             OpenSettings();
 

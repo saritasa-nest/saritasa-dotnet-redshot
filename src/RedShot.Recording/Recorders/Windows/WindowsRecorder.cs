@@ -17,7 +17,7 @@ namespace RedShot.Recording.Recorders.Windows
         {
             get
             {
-                return cliManager.IsProcessRunning;
+                return cliManager.IsRecording;
             }
         }
 

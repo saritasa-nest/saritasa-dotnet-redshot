@@ -51,6 +51,43 @@ namespace RedShot.Recording.Views
             labelRenderTimer.Interval = 0.01;
             labelRenderTimer.Elapsed += RecordingLabelTimer_Elapsed;
             labelRenderTimer.Start();
+
+            this.Closed += RecordingView_Closed;
+        }
+
+        private void RecordingView_Closed(object sender, EventArgs e)
+        {
+            StopRecording();
+        }
+
+        private void RecordingButton_Clicked(object sender, System.EventArgs e)
+        {
+            if (recordingButton.IsRecording)
+            {
+                StopRecording();
+            }
+            else
+            {
+                recordingTimer.Reset();
+                recorder.Start(recordingRectangle.OffsetRectangle(1));
+
+                while (!recorder.IsRecording)
+                {
+                }
+
+                recordingTimer.Start();
+            }
+        }
+
+        private void CloseButton_Clicked(object sender, System.EventArgs e)
+        {
+            Close();
+        }
+
+        private void StopRecording()
+        {
+            recordingTimer.Stop();
+            recorder.Stop();
         }
 
         private void RecordingLabelTimer_Elapsed(object sender, System.EventArgs e)
@@ -111,32 +148,6 @@ namespace RedShot.Recording.Views
             closeButton.Clicked += CloseButton_Clicked;
 
             managePanel = GetManageControl();
-        }
-
-        private void RecordingButton_Clicked(object sender, System.EventArgs e)
-        {
-            if (recordingButton.IsRecording)
-            {
-                StopRecording();
-            }
-            else
-            {
-                recordingTimer.Reset();
-                recorder.Start(recordingRectangle.OffsetRectangle(1));
-                recordingTimer.Start();
-            }
-        }
-
-        private void CloseButton_Clicked(object sender, System.EventArgs e)
-        {
-            StopRecording();
-            Close();
-        }
-
-        private void StopRecording()
-        {
-            recordingTimer.Stop();
-            recorder.Stop();
         }
 
         private Control GetManageControl()
