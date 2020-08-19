@@ -1,4 +1,4 @@
-﻿namespace RedShot.Abstractions.Uploading
+﻿namespace RedShot.Infrastructure.Abstractions.Uploading
 {
     /// <summary>
     /// Upload abstraction.

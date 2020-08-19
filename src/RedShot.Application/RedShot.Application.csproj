@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <CodeAnalysisRuleSet>../../tools/Saritasa.ruleset</CodeAnalysisRuleSet>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <AssemblyName>redshot</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+    <DefineConstants>_WINDOWS</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
+    <DefineConstants>_UNIX</DefineConstants>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Condition=" '$(OS)' != 'Windows_NT' " Include="SkiaSharp.NativeAssets.Linux" Version="2.80.1" />
+    <ProjectReference Include="..\RedShot.Infrastructure.Configuration\RedShot.Infrastructure.Configuration.csproj" />
+    <ProjectReference Condition=" '$(OS)' != 'Windows_NT' " Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.GTK\Eto.Forms.Controls.SkiaSharp.GTK.csproj" />
+    <ProjectReference Condition=" '$(OS)' != 'Windows_NT' " Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.Mac\Eto.Forms.Controls.SkiaSharp.Mac.csproj" />
+    <ProjectReference Condition=" '$(OS)' == 'Windows_NT' " Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.WinForms\Eto.Forms.Controls.SkiaSharp.WinForms.csproj" />
+    <ProjectReference Include="..\RedShot.App\RedShot.App.csproj" />
+    <ProjectReference Include="..\RedShot.Infrastructure\RedShot.Infrastructure.csproj" />
+    <ProjectReference Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp\Eto.Forms.Controls.SkiaSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Condition=" '$(OS)' != 'Windows_NT' " Include="Eto.Platform.Gtk" Version="2.5.3" />
+    <PackageReference Condition=" '$(OS)' == 'Windows_NT' " Include="Eto.Platform.Windows" Version="2.5.3" />
+    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="3.0.0" />
+    <PackageReference Include="NLog" Version="4.7.2" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="nlog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+
+  </ItemGroup>
+
+</Project>

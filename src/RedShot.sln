@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.App", "RedShot.App\RedShot.App\RedShot.App.csproj", "{F2F65109-EBFC-46A7-86F2-5EDBC3918C61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Infrastructure", "RedShot.Infrastructure\RedShot.Infrastructure.csproj", "{F2F65109-EBFC-46A7-86F2-5EDBC3918C61}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.EtoForms.Desktop", "RedShot.App\RedShot.App.Desktop\RedShot.EtoForms.Desktop.csproj", "{AAE18E45-C33E-4D68-AF9D-F64669F98ADC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Application", "RedShot.Application\RedShot.Application.csproj", "{AAE18E45-C33E-4D68-AF9D-F64669F98ADC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Upload", "RedShot.Upload\RedShot.Upload.csproj", "{63AB96CA-57CF-4513-A5FB-58A9D87B526E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Infrastructure.Uploading", "RedShot.Infrastructure.Uploading\RedShot.Infrastructure.Uploading.csproj", "{63AB96CA-57CF-4513-A5FB-58A9D87B526E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RedShot.SkiaSharpControl", "RedShot.SkiaSharpControl", "{74B70C37-AE6C-4F87-920F-0E67ED5DAF09}"
 EndProject
@@ -17,19 +17,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eto.Forms.Controls.SkiaShar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eto.Forms.Controls.SkiaSharp.WinForms", "RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.WinForms\Eto.Forms.Controls.SkiaSharp.WinForms.csproj", "{5D82503F-82ED-4C75-95E9-B6FB7767D499}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Helpers", "RedShot.Helpers\RedShot.Helpers.csproj", "{B34930DE-F4A4-413E-8246-A9AFDFB564F2}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Configuration", "RedShot.Configuration\RedShot.Configuration.csproj", "{393AC0D9-FBFE-4A30-8E27-74E51D4E78B7}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Abstractions", "RedShot.Abstractions\RedShot.Abstractions.csproj", "{FADC06AE-B99A-4B59-94FA-B4A8E80135A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Infrastructure.Configuration", "RedShot.Infrastructure.Configuration\RedShot.Infrastructure.Configuration.csproj", "{393AC0D9-FBFE-4A30-8E27-74E51D4E78B7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eto.Forms.Controls.SkiaSharp.Mac", "RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.Mac\Eto.Forms.Controls.SkiaSharp.Mac.csproj", "{FA18038D-FC49-440B-8AE8-5CAB3013827B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Recording", "RedShot.Recording\RedShot.Recording.csproj", "{54800911-FE86-4F47-979F-B693ACA22637}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Infrastructure.Recording", "RedShot.Infrastructure.Recording\RedShot.Infrastructure.Recording.csproj", "{54800911-FE86-4F47-979F-B693ACA22637}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RedShot.Platforms", "RedShot.Platforms", "{D9CC7E96-A037-4614-A072-D0D0E7A078F0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Platforms.Windows", "RedShot.Platforms.Windows\RedShot.Platforms.Windows.csproj", "{60B9AC05-2789-4B16-8F38-DD40BDAC447D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Infrastructure.Abstractions", "RedShot.Infrastructure.Abstractions\RedShot.Infrastructure.Abstractions.csproj", "{74F6B51F-020F-476C-A2CF-0029A130A107}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Infrastructure.Common", "RedShot.Infrastructure.Common\RedShot.Infrastructure.Common.csproj", "{82EA540F-6E7A-4445-9D7D-BF33EF8C5B9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedShot.Infrastructure.DataTransfer", "RedShot.Infrastructure.DataTransfer\RedShot.Infrastructure.DataTransfer.csproj", "{341AF1E3-7424-4ACA-A4EC-90220080F02A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,18 +63,10 @@ Global
 		{5D82503F-82ED-4C75-95E9-B6FB7767D499}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D82503F-82ED-4C75-95E9-B6FB7767D499}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D82503F-82ED-4C75-95E9-B6FB7767D499}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B34930DE-F4A4-413E-8246-A9AFDFB564F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B34930DE-F4A4-413E-8246-A9AFDFB564F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B34930DE-F4A4-413E-8246-A9AFDFB564F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B34930DE-F4A4-413E-8246-A9AFDFB564F2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{393AC0D9-FBFE-4A30-8E27-74E51D4E78B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{393AC0D9-FBFE-4A30-8E27-74E51D4E78B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{393AC0D9-FBFE-4A30-8E27-74E51D4E78B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{393AC0D9-FBFE-4A30-8E27-74E51D4E78B7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FADC06AE-B99A-4B59-94FA-B4A8E80135A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FADC06AE-B99A-4B59-94FA-B4A8E80135A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FADC06AE-B99A-4B59-94FA-B4A8E80135A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FADC06AE-B99A-4B59-94FA-B4A8E80135A4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FA18038D-FC49-440B-8AE8-5CAB3013827B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FA18038D-FC49-440B-8AE8-5CAB3013827B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA18038D-FC49-440B-8AE8-5CAB3013827B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -85,6 +79,18 @@ Global
 		{60B9AC05-2789-4B16-8F38-DD40BDAC447D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60B9AC05-2789-4B16-8F38-DD40BDAC447D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60B9AC05-2789-4B16-8F38-DD40BDAC447D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74F6B51F-020F-476C-A2CF-0029A130A107}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74F6B51F-020F-476C-A2CF-0029A130A107}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74F6B51F-020F-476C-A2CF-0029A130A107}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74F6B51F-020F-476C-A2CF-0029A130A107}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82EA540F-6E7A-4445-9D7D-BF33EF8C5B9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82EA540F-6E7A-4445-9D7D-BF33EF8C5B9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82EA540F-6E7A-4445-9D7D-BF33EF8C5B9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82EA540F-6E7A-4445-9D7D-BF33EF8C5B9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{341AF1E3-7424-4ACA-A4EC-90220080F02A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{341AF1E3-7424-4ACA-A4EC-90220080F02A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{341AF1E3-7424-4ACA-A4EC-90220080F02A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{341AF1E3-7424-4ACA-A4EC-90220080F02A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
