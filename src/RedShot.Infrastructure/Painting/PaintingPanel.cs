@@ -1,13 +1,13 @@
 ﻿using System;
 using Eto.Drawing;
 using Eto.Forms;
-using RedShot.App.Properties;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Painting.States;
+using RedShot.Infrastructure.Properties;
 
 namespace RedShot.Infrastructure.Painting
 {
-    internal class PaintingPanel : Panel
+    public class PaintingPanel : Panel
     {
         private NumericStepper drawSizeStepper;
         private ColorPicker colorPicker;

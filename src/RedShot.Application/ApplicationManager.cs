@@ -1,12 +1,12 @@
 ﻿using System;
 using Eto.Drawing;
 using Eto.Forms;
-using RedShot.Infrastructure.Abstractions;
+using RedShot.Infrastructure;
 using RedShot.Infrastructure.Forms;
 using RedShot.Infrastructure.Painting;
 using RedShot.Infrastructure.Screenshooting;
 
-namespace RedShot.Infrastructure
+namespace RedShot.Application
 {
     /// <summary>
     /// Manages application views.
@@ -27,7 +27,7 @@ namespace RedShot.Infrastructure
         {
             try
             {
-                trayIcon = new TrayIcon("RedShot", new Bitmap(Resources.Properties.Resources.Redcircle));
+                trayIcon = new TrayIcon("RedShot", new Bitmap(Properties.Resources.red_circle));
             }
             catch (Exception ex)
             {
@@ -42,11 +42,21 @@ namespace RedShot.Infrastructure
         /// </summary>
         public static void RunScreenShotEditorDrawing()
         {
-            trayIcon.Tray.Visible = false;
+            try
+            {
+                trayIcon.Tray.Visible = false;
 
-            ScreenshotManager.Ta();
+                CloseViews();
 
-            trayIcon.Tray.Visible = true;
+                editorView = new ScreenShotSelectionView();
+                editorView.Closed += View_Closed;
+                editorView.Show();
+            }
+            catch (Exception ex)
+            {
+                Logger.Fatal(ex, "Error occurred in creating tray screen editor form");
+                throw;
+            }
         }
 
         public static void RunPaintingView(Bitmap bitmap)
@@ -56,14 +66,16 @@ namespace RedShot.Infrastructure
             paintingView.Show();
         }
 
-        public static void RunUploadView(IFile file)
+        public static void RunUploadView(Bitmap bitmap)
         {
-            UploadManager.RunUploading(file);
+            CloseViews();
+            uploadBar = new UploadBar(bitmap);
+            uploadBar.Show();
         }
 
         public static void RunRecodringView()
         {
-            //RecordingManager.InitiateRecording();
+            RecordingManager.InitiateRecording();
         }
 
         private static void CloseViews()

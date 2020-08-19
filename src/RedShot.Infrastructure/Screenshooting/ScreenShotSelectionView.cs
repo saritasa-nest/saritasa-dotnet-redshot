@@ -4,7 +4,7 @@ using System;
 
 namespace RedShot.Infrastructure.Screenshooting
 {
-    internal sealed class ScreenShotSelectionView : SelectionFormBase<ScreenShotPanel>
+    public sealed class ScreenShotSelectionView : SelectionFormBase<ScreenShotPanel>
     {
         protected override void InitializeSelectionManageForm()
         {
@@ -34,7 +34,7 @@ namespace RedShot.Infrastructure.Screenshooting
         {
             if (captured)
             {
-                ApplicationManager.RunUploadView(GetScreenShot());
+                ScreenshotManager.UploadScreenShot(GetScreenShot());
                 Close();
             }
         }

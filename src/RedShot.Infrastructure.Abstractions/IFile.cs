@@ -9,7 +9,7 @@ namespace RedShot.Infrastructure.Abstractions
     {
         Stream GetStream();
 
-        string GetFilePath();
+        string FilePath { get; }
 
         string FileName { get; }
 

@@ -14,7 +14,7 @@ using RedShot.Infrastructure.Painting.PaintingActions;
 
 namespace RedShot.Infrastructure.Painting
 {
-    internal class ImagePanel : Panel
+    public class ImagePanel : Panel
     {
         private readonly SKBitmap image;
         private SKControl skControl;

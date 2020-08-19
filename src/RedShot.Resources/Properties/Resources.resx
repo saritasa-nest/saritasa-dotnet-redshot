@@ -118,22 +118,43 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="back" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\back.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="Back" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Back.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="paint" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\paint.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="Close" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Close.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="paint_brush" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\paint-brush.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="Download" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Download.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="rectangle" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\rectangle.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="Form" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Form.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="red_circle" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\red-circle.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="Ftp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Ftp.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="upload" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\upload.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="Paint" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Paint.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Paintbrush" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Paintbrush.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Play" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Play.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Rectangle" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Rectangle.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Redcircle" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Redcircle.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Stop" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Stop.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Upload" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Upload.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Video" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Video.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

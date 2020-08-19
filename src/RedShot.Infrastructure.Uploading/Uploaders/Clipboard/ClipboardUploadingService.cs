@@ -1,11 +1,7 @@
 ﻿using Eto.Drawing;
-using RedShot.Abstractions;
-using RedShot.Abstractions.Uploading;
-using RedShot.Upload.Properties;
+using RedShot.Infrastructure.Abstractions.Uploading;
+using RedShot.Infrastructure.Uploading.Properties;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace RedShot.Infrastructure.Uploaders.Clipboard
 {

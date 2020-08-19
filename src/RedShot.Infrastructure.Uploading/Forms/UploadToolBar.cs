@@ -2,9 +2,8 @@ using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
-using RedShot.Infrastructure.Uploading.Properties;
 
-namespace RedShot.Upload.Forms
+namespace RedShot.Infrastructure.Forms
 {
     internal class UploadToolBar : Panel
     {
@@ -41,27 +40,27 @@ namespace RedShot.Upload.Forms
 
             var buttonSize = new Size(boardSize, boardSize);
 
-            var clipBImage = new Bitmap(Resources.form);
-            var closeImage = new Bitmap(Resources.close);
-            var ftpImage = new Bitmap(Resources.ftp);
-            var fileImage = new Bitmap(Resources.download);
+            //var clipBImage = new Bitmap(Resources.form);
+            //var closeImage = new Bitmap(Resources.close);
+            //var ftpImage = new Bitmap(Resources.ftp);
+            //var fileImage = new Bitmap(Resources.download);
 
-            ClipBoardButton = new ImageButton(buttonSize, clipBImage);
-            SaveToFileButton = new ImageButton(buttonSize, fileImage);
-            SaveToFtpButton = new ImageButton(buttonSize, ftpImage);
-            CloseButton = new ImageButton(buttonSize, closeImage);
+            //ClipBoardButton = new ImageButton(buttonSize, clipBImage);
+            //SaveToFileButton = new ImageButton(buttonSize, fileImage);
+            //SaveToFtpButton = new ImageButton(buttonSize, ftpImage);
+            //CloseButton = new ImageButton(buttonSize, closeImage);
 
-            Content = new StackLayout
-            {
-                Orientation = Orientation.Vertical,
-                Items =
-                {
-                    SaveToFtpButton,
-                    ClipBoardButton,
-                    SaveToFileButton,
-                    CloseButton,
-                }
-            };
+            //Content = new StackLayout
+            //{
+            //    Orientation = Orientation.Vertical,
+            //    Items =
+            //    {
+            //        SaveToFtpButton,
+            //        ClipBoardButton,
+            //        SaveToFileButton,
+            //        CloseButton,
+            //    }
+            //};
         }
     }
 }

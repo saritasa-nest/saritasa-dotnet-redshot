@@ -31,7 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Infrastructure.Abst
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Infrastructure.Common", "RedShot.Infrastructure.Common\RedShot.Infrastructure.Common.csproj", "{82EA540F-6E7A-4445-9D7D-BF33EF8C5B9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedShot.Infrastructure.DataTransfer", "RedShot.Infrastructure.DataTransfer\RedShot.Infrastructure.DataTransfer.csproj", "{341AF1E3-7424-4ACA-A4EC-90220080F02A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Infrastructure.DataTransfer", "RedShot.Infrastructure.DataTransfer\RedShot.Infrastructure.DataTransfer.csproj", "{341AF1E3-7424-4ACA-A4EC-90220080F02A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedShot.Resources", "RedShot.Resources\RedShot.Resources.csproj", "{6B8A533C-D0C2-4427-8C5D-90CCB8463E5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,6 +93,10 @@ Global
 		{341AF1E3-7424-4ACA-A4EC-90220080F02A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{341AF1E3-7424-4ACA-A4EC-90220080F02A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{341AF1E3-7424-4ACA-A4EC-90220080F02A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B8A533C-D0C2-4427-8C5D-90CCB8463E5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B8A533C-D0C2-4427-8C5D-90CCB8463E5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B8A533C-D0C2-4427-8C5D-90CCB8463E5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B8A533C-D0C2-4427-8C5D-90CCB8463E5E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

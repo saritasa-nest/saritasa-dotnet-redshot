@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace RedShot.App.Properties {
+namespace RedShot.Resources.Properties {
     using System;
     
     
@@ -22,7 +22,7 @@ namespace RedShot.App.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,10 +36,10 @@ namespace RedShot.App.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RedShot.App.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RedShot.Resources.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,7 +51,7 @@ namespace RedShot.App.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,9 +63,9 @@ namespace RedShot.App.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] back {
+        public static byte[] Back {
             get {
-                object obj = ResourceManager.GetObject("back", resourceCulture);
+                object obj = ResourceManager.GetObject("Back", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace RedShot.App.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] paint {
+        public static byte[] Close {
             get {
-                object obj = ResourceManager.GetObject("paint", resourceCulture);
+                object obj = ResourceManager.GetObject("Close", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -83,9 +83,9 @@ namespace RedShot.App.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] paint_brush {
+        public static byte[] Download {
             get {
-                object obj = ResourceManager.GetObject("paint_brush", resourceCulture);
+                object obj = ResourceManager.GetObject("Download", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -93,9 +93,9 @@ namespace RedShot.App.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] rectangle {
+        public static byte[] Form {
             get {
-                object obj = ResourceManager.GetObject("rectangle", resourceCulture);
+                object obj = ResourceManager.GetObject("Form", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -103,9 +103,9 @@ namespace RedShot.App.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] red_circle {
+        public static byte[] Ftp {
             get {
-                object obj = ResourceManager.GetObject("red_circle", resourceCulture);
+                object obj = ResourceManager.GetObject("Ftp", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -113,9 +113,79 @@ namespace RedShot.App.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] upload {
+        public static byte[] Paint {
             get {
-                object obj = ResourceManager.GetObject("upload", resourceCulture);
+                object obj = ResourceManager.GetObject("Paint", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] Paintbrush {
+            get {
+                object obj = ResourceManager.GetObject("Paintbrush", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] Play {
+            get {
+                object obj = ResourceManager.GetObject("Play", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] Rectangle {
+            get {
+                object obj = ResourceManager.GetObject("Rectangle", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] Redcircle {
+            get {
+                object obj = ResourceManager.GetObject("Redcircle", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] Stop {
+            get {
+                object obj = ResourceManager.GetObject("Stop", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] Upload {
+            get {
+                object obj = ResourceManager.GetObject("Upload", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] Video {
+            get {
+                object obj = ResourceManager.GetObject("Video", resourceCulture);
                 return ((byte[])(obj));
             }
         }

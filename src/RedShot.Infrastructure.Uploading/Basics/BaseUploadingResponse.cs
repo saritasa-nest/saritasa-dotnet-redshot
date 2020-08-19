@@ -1,7 +1,7 @@
 ﻿using RedShot.Infrastructure.Abstractions.Uploading;
 using System.Collections.Generic;
 
-namespace RedShot.Upload.Basics
+namespace RedShot.Infrastructure.Basics
 {
     /// <summary>
     /// Simple response object.

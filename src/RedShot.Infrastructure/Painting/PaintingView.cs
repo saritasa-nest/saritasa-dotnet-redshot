@@ -7,7 +7,7 @@ using System;
 
 namespace RedShot.Infrastructure.Painting
 {
-    internal class PaintingView : Form
+    public class PaintingView : Form
     {
         private int paintingPanelWidth = 60;
 

@@ -1,7 +1,6 @@
-﻿using RedShot.Abstractions;
-using RedShot.Abstractions.Uploading;
+﻿using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
-using RedShot.Upload.Basics;
+using RedShot.Infrastructure.Basics;
 
 namespace RedShot.Infrastructure.Uploaders.Clipboard
 {

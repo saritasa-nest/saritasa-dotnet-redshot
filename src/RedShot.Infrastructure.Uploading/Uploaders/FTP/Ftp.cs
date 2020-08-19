@@ -8,9 +8,9 @@ using System.Security.Cryptography.X509Certificates;
 using FluentFTP;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
+using RedShot.Infrastructure.Basics;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.DataTransfer.Ftp;
-using RedShot.Upload.Basics;
 
 namespace RedShot.Infrastructure.Uploaders.Ftp
 {

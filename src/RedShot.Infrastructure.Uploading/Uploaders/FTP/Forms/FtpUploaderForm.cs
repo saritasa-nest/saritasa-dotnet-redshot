@@ -4,14 +4,16 @@ using Eto.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 using RedShot.Infrastructure.DataTransfer.Ftp;
+using RedShot.Infrastructure.Common.Forms;
+using RedShot.Infrastructure.Configuration;
 
 namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
 {
-    public partial class FtpUploaderForm : Dialog
+    public partial class FtpUploaderForm : Dialog<DialogResult>
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private List<FtpAccount> ftpAccounts;
+        private List<FtpAccount> ftpAccounts => ConfigurationManager.GetSection<FtpConfiguration>().FtpAccounts;
 
         private ComboBox accounts;
 
@@ -21,10 +23,8 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
 
         public FtpAccount SelectedAccount { get; private set; }
 
-        public FtpUploaderForm(FtpConfiguration configuration)
+        public FtpUploaderForm()
         {
-            ftpAccounts = configuration.FtpAccounts;
-
             Title = "FTP Upload";
             Size = new Size(350, 280);
 
@@ -144,49 +144,58 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
         {
             if (accounts.DataStore.Count() > 0 && accounts.SelectedValue != null)
             {
-                var acc = (FtpAccount)accounts.SelectedValue;
-                var service = new FtpUploadingService(acc);
+                SelectedAccount = (FtpAccount)accounts.SelectedValue;
 
-                string imageName;
-
-                if (string.IsNullOrEmpty(imageNameBox.Text))
-                {
-                    imageName = $"{Guid.NewGuid()}.png";
-                }
-                else
-                {
-                    imageName = $"{imageNameBox.Text}.png";
-                }
-
-                try
-                {
-                    var uploader = service.CreateUploader();
-
-                    var response = uploader.UploadImage(image, imageName, ImageFormat.Png);
-
-                    if (response.IsSuccess)
-                    {
-                        Logger.Trace("Image uploaded to FTP server", response);
-                        MessageBox.Show("Image uploaded", "Success", MessageBoxButtons.OK, MessageBoxType.Information);
-                    }
-                    else
-                    {
-                        Logger.Trace("Image uploaded to FTP server failed", response);
-                        MessageBox.Show("Image uploading failed", MessageBoxButtons.OK, MessageBoxType.Information);
-                    }
-
-                    if (uploader is IDisposable disposable)
-                    {
-                        disposable.Dispose();
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(ex, "Ftp uploading error");
-                    MessageBox.Show(ex.Message, "Ftp upload error!", MessageBoxButtons.OK, MessageBoxType.Error);
-                }
+                Result = DialogResult.Ok;
             }
+            else
+            {
+                Result = DialogResult.Cancel;
+            }
+
+            Close();
+
+                //var service = new FtpUploadingService(acc);
+
+                //string imageName;
+
+                //if (string.IsNullOrEmpty(imageNameBox.Text))
+                //{
+                //    imageName = $"{Guid.NewGuid()}.png";
+                //}
+                //else
+                //{
+                //    imageName = $"{imageNameBox.Text}.png";
+                //}
+
+                //try
+                //{
+                //    var uploader = service.CreateUploader();
+
+                //    var response = uploader.UploadImage(image, imageName, ImageFormat.Png);
+
+                //    if (response.IsSuccess)
+                //    {
+                //        Logger.Trace("Image uploaded to FTP server", response);
+                //        MessageBox.Show("Image uploaded", "Success", MessageBoxButtons.OK, MessageBoxType.Information);
+                //    }
+                //    else
+                //    {
+                //        Logger.Trace("Image uploaded to FTP server failed", response);
+                //        MessageBox.Show("Image uploading failed", MessageBoxButtons.OK, MessageBoxType.Information);
+                //    }
+
+                //    if (uploader is IDisposable disposable)
+                //    {
+                //        disposable.Dispose();
+                //    }
+
+                //}
+                //catch (Exception ex)
+                //{
+                //    Logger.Error(ex, "Ftp uploading error");
+                //    MessageBox.Show(ex.Message, "Ftp upload error!", MessageBoxButtons.OK, MessageBoxType.Error);
+                //}        
         }
     }
 }

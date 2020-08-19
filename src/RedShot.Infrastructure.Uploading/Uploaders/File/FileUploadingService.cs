@@ -1,7 +1,5 @@
 ﻿using Eto.Drawing;
-using RedShot.Abstractions;
-using RedShot.Abstractions.Uploading;
-using RedShot.Upload.Properties;
+using RedShot.Infrastructure.Abstractions.Uploading;
 
 namespace RedShot.Infrastructure.Uploaders.File
 {
@@ -13,7 +11,7 @@ namespace RedShot.Infrastructure.Uploaders.File
         {
             get
             {
-                return new Bitmap(Resources.download);
+                return new Bitmap(Resources.Download);
             }
         }
 

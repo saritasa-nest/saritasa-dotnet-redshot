@@ -1,6 +1,6 @@
 ﻿namespace RedShot.Infrastructure.Painting.States
 {
-    internal enum PaintingState
+    public enum PaintingState
     {
         None,
         Points,

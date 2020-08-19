@@ -2,7 +2,7 @@
 using RedShot.Infrastructure.Abstractions.Uploading;
 using System;
 
-namespace RedShot.Upload.Basics
+namespace RedShot.Infrastructure.Basics
 {
     /// <summary>
     /// Base upload functions.

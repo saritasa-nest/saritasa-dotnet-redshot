@@ -15,5 +15,9 @@
     <PackageReference Include="YamlDotNet" Version="8.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RedShot.Infrastructure.DataTransfer\RedShot.Infrastructure.DataTransfer.csproj" />
+  </ItemGroup>
+
 
 </Project>

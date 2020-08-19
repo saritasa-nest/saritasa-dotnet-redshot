@@ -4,7 +4,7 @@ using System;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Abstractions;
 
-namespace RedShot.Upload.Forms
+namespace RedShot.Infrastructure.Forms
 {
     /// <summary>
     /// Upload bar form.
@@ -67,9 +67,7 @@ namespace RedShot.Upload.Forms
             };
             Topmost = true;
             this.MouseMove += UploadBar_MouseMove;
-            toolBar.ClipBoardButton.Clicked += ClipBoardButton_Clicked;
-            toolBar.SaveToFileButton.Clicked += SaveToFileButton_Clicked;
-            toolBar.SaveToFtpButton.Clicked += SaveToFtpButton_Clicked;
+
             toolBar.CloseButton.Clicked += CloseButton_Clicked;
         }
 
@@ -78,30 +76,10 @@ namespace RedShot.Upload.Forms
             Close();
         }
 
-        private void SaveToFtpButton_Clicked(object sender, EventArgs e)
-        {
-            blocked = true;
-            UploadManager.RunFtpUploaderView(imageOnUpload);
-            blocked = false;
-        }
-
-
         private void Imageview_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            UploadManager.OpenLastImage();
+            UploadManager.OpenLastFile(file);
             RefreshTimer();
-        }
-
-        private void SaveToFileButton_Clicked(object sender, EventArgs e)
-        {
-            blocked = true;
-            var res = UploadManager.UploadToFile(imageOnUpload, this);
-            blocked = false;
-        }
-
-        private void ClipBoardButton_Clicked(object sender, EventArgs e)
-        {
-            UploadManager.UploadToClipboard(imageOnUpload);
         }
 
         private void UploadBar_MouseMove(object sender, MouseEventArgs e)

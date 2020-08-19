@@ -2,9 +2,9 @@
 using System.IO;
 using Eto.Drawing;
 using Eto.Forms;
-using RedShot.Abstractions;
-using RedShot.Abstractions.Uploading;
-using RedShot.Upload.Basics;
+using RedShot.Infrastructure.Abstractions;
+using RedShot.Infrastructure.Abstractions.Uploading;
+using RedShot.Infrastructure.Basics;
 
 namespace RedShot.Infrastructure.Uploaders.File
 {
@@ -42,14 +42,14 @@ namespace RedShot.Infrastructure.Uploaders.File
                 }
                 else
                 {
-                    var extension = Path.GetExtension(file.GetFilePath());
+                    var extension = Path.GetExtension(file.FilePath);
 
                     dialog.FileName = $"{file.FileName}.{extension}";
                     dialog.Filters.Add(new FileFilter("Video format", $".{extension}"));
 
                     if (dialog.ShowDialog(new Form()) == DialogResult.Ok)
                     {
-                        System.IO.File.Copy(file.GetFilePath(), dialog.FileName);
+                        System.IO.File.Copy(file.FilePath, dialog.FileName);
                     }
                 }
             }
