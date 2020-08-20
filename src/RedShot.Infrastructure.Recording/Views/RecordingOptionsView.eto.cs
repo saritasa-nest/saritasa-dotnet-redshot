@@ -8,7 +8,7 @@ using RedShot.Infrastructure.DataTransfer.Ffmpeg.Encoding;
 
 namespace RedShot.Infrastructure.RecordingRedShot.Views
 {
-    internal partial class RecordingOptionsView : Dialog
+    internal partial class RecordingOptionsView : Dialog<DialogResult>
     {
         private void InitializeComponents()
         {
@@ -31,6 +31,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 useGdigrab.Enabled = false;
+                ffmpegOptions.UseGdigrab = false;
             }
 
             videoCodecOptionsButton = new DefaultButton("Options", 60, 25);
@@ -142,6 +143,12 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
                 }
             };
             BindOptions();
+            this.Shown += RecordingOptionsView_Shown;
+        }
+
+        private void RecordingOptionsView_Shown(object sender, System.EventArgs e)
+        {
+            Location = FormsHelper.GetCenterLocation(Size);
         }
 
         private Control GetMicrophoneControl()
@@ -268,11 +275,11 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
                 Items =
                     {
                         FormsHelper.VoidBox(10),
-                        FormsHelper.GetBaseStack("FPS:", fps, 100, 100),
+                        FormsHelper.GetBaseStack("FPS:", fps, 100, 150),
                         FormsHelper.VoidBox(15),
-                        FormsHelper.GetBaseStack("Show cursor:", showCursor, 100, 100),
+                        FormsHelper.GetBaseStack("Show cursor:", showCursor, 100, 150),
                         FormsHelper.VoidBox(15),
-                        FormsHelper.GetBaseStack("Use Gdigrab:", useGdigrab, 100, 100),
+                        FormsHelper.GetBaseStack("Use Gdigrab:", useGdigrab, 100, 150),
                         FormsHelper.VoidBox(15),
                     }
             };

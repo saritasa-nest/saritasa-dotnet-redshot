@@ -12,14 +12,12 @@ namespace RedShot.Infrastructure.Common.Forms
 
         private Bitmap playIcon;
         private Bitmap stopIcon;
-        private int width;
-        private int height;
         private Button button;
 
         public RecordingButton(int width, int height)
         {
-            this.width = width;
-            this.height = height;
+            Width = width;
+            Height = height;
 
             playIcon = new Bitmap(Resources.Properties.Resources.Play);
             stopIcon = new Bitmap(Resources.Properties.Resources.Stop);
@@ -30,8 +28,8 @@ namespace RedShot.Infrastructure.Common.Forms
         private void InitializeComponents()
         {
             button = new Button();
-            button.Width = width;
-            button.Height = height;
+            button.Width = Width;
+            button.Height = Height;
 
             SetImage(playIcon);
 
@@ -64,7 +62,7 @@ namespace RedShot.Infrastructure.Common.Forms
 
         private void SetImage(Bitmap image)
         {
-            var scaleImageSize = new Size(Convert.ToInt32(width * 0.7), Convert.ToInt32(width * 0.7));
+            var scaleImageSize = new Size(Convert.ToInt32(Width * 0.7), Convert.ToInt32(Width * 0.7));
 
             button.Image = new Bitmap(image, scaleImageSize.Width, scaleImageSize.Height, ImageInterpolation.High);
         }

@@ -16,12 +16,23 @@ namespace RedShot.Infrastructure
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private static UploadBar uploadBar;
+        private static IFile lastFile;
+
+        public static void UploadLastFile()
+        {
+            if (lastFile != null)
+            {
+                RunUploading(lastFile);
+            }
+        }
 
         /// <summary>
         /// Run uploading panel.
         /// </summary>
         public static Form RunUploading(IFile file)
         {
+            lastFile = file;
+
             uploadBar?.Close();
 
             uploadBar = new UploadBar(file);

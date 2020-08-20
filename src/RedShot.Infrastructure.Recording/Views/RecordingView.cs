@@ -101,10 +101,10 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
 
         private void SetupLocations()
         {
-#if _WINDOWS
             if ((recordingRectangle.Location.Y - managePanel.Height) > 0)
             {
                 Location = new Point(recordingRectangle.X, recordingRectangle.Y - managePanel.Height - 1);
+#if _WINDOWS
                 Size = new Size(recordingRectangle.Width, recordingRectangle.Height + managePanel.Height + 1);
 
                 var excludeRect = new Rectangle(new Point(0, managePanel.Height), new Size(recordingRectangle.Width, recordingRectangle.Height + 1)).OffsetRectangle(1);
@@ -112,6 +112,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
                 var excludeRect2 = new Rectangle(new Point(managePanel.Width, 0), new Size(recordingRectangle.Width - managePanel.Width, managePanel.Height));
 
                 RedShot.Platforms.Windows.WindowsRegionHelper.Exclude(this.ControlObject, excludeRect, excludeRect2);
+#endif
             }
             else
             {
@@ -120,8 +121,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
                 if ((recordingRectangle.Location.Y + managePanel.Height) < screenBounds.Height)
                 {
                     Location = recordingRectangle.Location;
-
-
+#if _WINDOWS
                     Size = new Size(recordingRectangle.Width, recordingRectangle.Height + 1);
 
                     var excludeRect = new Rectangle(new Point(0, managePanel.Height - 1), new Size(recordingRectangle.Width, recordingRectangle.Height - managePanel.Height + 2)).OffsetRectangle(1);
@@ -129,13 +129,13 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
                     var excludeRect2 = new Rectangle(new Point(managePanel.Width, 1), new Size(recordingRectangle.Width - managePanel.Width - 1, managePanel.Height));
 
                     RedShot.Platforms.Windows.WindowsRegionHelper.Exclude(this.ControlObject, excludeRect, excludeRect2);
+#endif
                 }
             }
-#elif _UNIX
-            Location = recordingRectangle.Location;
+#if _UNIX
             Size = new Size(managePanel.Width, managePanel.Height);
 #endif
-        }
+            }
 
         private void InitializeComponents()
         {
@@ -144,10 +144,10 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
                 Text = TimeSpan.Zero.ToString()
             };
 
-            recordingButton = new RecordingButton(50, 35);
+            recordingButton = new RecordingButton(60, 50);
             recordingButton.Clicked += RecordingButton_Clicked;
 
-            closeButton = new DefaultButton("Close", 50, 35);
+            closeButton = new DefaultButton("Close", 60, 50);
             closeButton.Clicked += CloseButton_Clicked;
 
             managePanel = GetManageControl();
@@ -161,7 +161,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
                 VerticalContentAlignment = VerticalAlignment.Center,
                 Padding = 3,
                 BackgroundColor = Colors.White,
-                Size = new Size(220, 40),
+                Size = new Size(240, 54),
                 Items =
                 {
                     recordingButton,

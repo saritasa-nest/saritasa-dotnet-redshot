@@ -6,7 +6,7 @@ using System.IO;
 
 namespace RedShot.Infrastructure
 {
-    internal static class ScreenshotManager
+    public static class ScreenshotManager
     {
         private static PaintingView paintingView;
         private static ScreenShotSelectionView selectionView;

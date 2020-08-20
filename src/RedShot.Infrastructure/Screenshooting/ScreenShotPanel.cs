@@ -24,7 +24,7 @@ namespace RedShot.Infrastructure.Screenshooting
             ShowInTaskbar = false;
             WindowStyle = WindowStyle.None;
             Topmost = true;
-            Size = new Size(160, 50);
+            Size = new Size(166, 56);
 
             var buttonSize = new Size(80, 50);
             var imageSize = new Size(40, 40);
@@ -38,6 +38,7 @@ namespace RedShot.Infrastructure.Screenshooting
 
             Content = new StackLayout
             {
+                Padding = 3,
                 Orientation = Orientation.Horizontal,
                 Items =
                 {

@@ -15,7 +15,7 @@ using RedShot.Recording.Views.CodecsOptions.VideoOptions;
 
 namespace RedShot.Infrastructure.RecordingRedShot.Views
 {
-    internal partial class RecordingOptionsView : Dialog
+    internal partial class RecordingOptionsView : Dialog<DialogResult>
     {
         private readonly FFmpegConfiguration ffmpegConfiguration;
         private readonly IRecordingDevices recordingDevices;
@@ -73,6 +73,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
                 ffmpegConfiguration.Options = ffmpegOptions;
                 ConfigurationManager.SetSettingsValue(ffmpegConfiguration);
                 ConfigurationManager.Save();
+                Result = DialogResult.Ok;
                 Close();
             }
         }

@@ -8,12 +8,12 @@ using RedShot.Infrastructure.Configuration;
 using System.Runtime.InteropServices;
 #endif
 
-namespace RedShot.EtoForms.Wpf
+namespace RedShot.Application
 {
     /// <summary>
     /// Main class.
     /// </summary>
-    internal class MainClass
+    internal class Program
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 

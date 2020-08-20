@@ -57,7 +57,7 @@ namespace RedShot.Recording.Views.CodecsOptions.VideoOptions
                 {
                     FormsHelper.GetBaseStack("Preset:", x264Preset, 50, 200),
                     FormsHelper.VoidBox(10),
-                    FormsHelper.GetBaseStack("Quality:", GetQualityField(), 50, 200),
+                    FormsHelper.GetBaseStack("Quality:", GetQualityField(), 50, 250),
                     FormsHelper.VoidBox(20),
                     okButton,
                     FormsHelper.VoidBox(10)

@@ -90,6 +90,17 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         #endregion Resizingfields
 
         /// <summary>
+        /// Render frametime in milliseconds.
+        /// Should be more than 10 in Linux OS.
+        /// </summary>
+        private readonly double renderFrameTime = 10;
+
+        public SelectionFormBase()
+        {
+            InitializeComponent();
+        }
+
+        /// <summary>
         /// Initializes whole view.
         /// </summary>
         void InitializeComponent()
@@ -117,19 +128,6 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             UnLoad += EditorViewDrawingSkiaSharp_UnLoad;
 
             InitializeSelectionManageForm();
-
-            BringToFront();
-        }
-
-        /// <summary>
-        /// Render frametime in milliseconds.
-        /// Should be more than 10 in Linux OS.
-        /// </summary>
-        private readonly double renderFrameTime = 10;
-
-        public SelectionFormBase()
-        {
-            InitializeComponent();
         }
 
         /// <summary>

@@ -2,10 +2,7 @@
 using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Abstractions;
-using RedShot.Infrastructure.Forms;
-using RedShot.Infrastructure.Painting;
 using RedShot.Infrastructure.Recording;
-using RedShot.Infrastructure.Screenshooting;
 
 namespace RedShot.Infrastructure
 {
@@ -16,9 +13,6 @@ namespace RedShot.Infrastructure
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private static TrayIcon trayIcon;
-        private static UploadBar uploadBar;
-        private static PaintingView paintingView;
-        private static ScreenShotSelectionView editorView;
 
         /// <summary>
         /// Gives tray icon form.
@@ -52,35 +46,14 @@ namespace RedShot.Infrastructure
 
         public static void RunUploadView(IFile file)
         {
+            trayIcon.UploadLastFile.Visible = true;
             UploadManager.RunUploading(file);
         }
 
         public static void RunRecording()
         {
+            trayIcon.UploadLastFile.Visible = true;
             RecordingManager.InitiateRecording();
-        }
-
-        private static void CloseViews()
-        {
-            if (editorView != null && !editorView.IsDisposed)
-            {
-                editorView.Close();
-            }
-
-            if (uploadBar != null && !uploadBar.IsDisposed)
-            {
-                uploadBar.Close();
-            }
-
-            if (paintingView != null && !paintingView.IsDisposed)
-            {
-                paintingView.Close();
-            }
-        }
-
-        private static void View_Closed(object sender, System.EventArgs e)
-        {
-            trayIcon.Tray.Visible = true;
         }
     }
 }

@@ -23,6 +23,7 @@ namespace RedShot.Infrastructure.Screenshooting
         {
             var screenshot = GetScreenShot();
             ScreenshotManager.RunPaintingView(screenshot);
+            Close();
         }
 
         private void SaveScreenShotButton_Clicked(object sender, EventArgs e)

@@ -9,7 +9,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
     /// </summary>
     public partial class RecordManagePanel : Form
     {
-        public DefaultButton StartRecordingButton { get; }
+        public ImageButton StartRecordingButton { get; }
 
         /// <summary>
         /// Initializes painting panel view.
@@ -19,12 +19,13 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
             ShowInTaskbar = false;
             WindowStyle = WindowStyle.None;
             Topmost = true;
-            Size = new Size(80, 50);
+            Size = new Size(84, 54);
 
-            StartRecordingButton = new DefaultButton("Start", 80, 50);
+            StartRecordingButton = new ImageButton(new Size(80, 50), new Bitmap(Resources.Properties.Resources.Record), scaleImageSize: new Size(40, 40));
 
             Content = new StackLayout
             {
+                Padding = 2,
                 Orientation = Orientation.Horizontal,
                 Items =
                 {

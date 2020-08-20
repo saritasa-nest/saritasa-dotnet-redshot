@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Eto.Forms;
+using RedShot.Infrastructure.Common.Forms;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Net;
@@ -26,13 +28,20 @@ namespace RedShot.Infrastructure.Common
             downloadDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory, Guid.NewGuid().ToString())).FullName;
         }
 
-        public async Task<string> DownloadAsync(string url, string fileName)
+        private void RunForm(string fileName)
         {
+            var form = new DownloadForm(this, fileName);
+            form.Show();
+        }
+
+        public void DownloadAsync(string url, string fileName, Action<string> callback)
+        {
+            RunForm(fileName);
+
             var path = Path.Combine(downloadDirectory, fileName);
 
-            await webClient.DownloadFileTaskAsync(url, path);
-
-            return path;
+            webClient.DownloadFileTaskAsync(url, path);
+            webClient.DownloadFileCompleted += (o, e) => callback.Invoke(path);
         }
 
         public string Download(string url, string fileName)

@@ -27,7 +27,7 @@ namespace RedShot.Recording.Views.CodecsOptions.AudioOptions
                 HorizontalContentAlignment = HorizontalAlignment.Center,
                 Items =
                 {
-                    FormsHelper.GetBaseStack("Quality:", GetQualityField(), 50, 200),
+                    FormsHelper.GetBaseStack("Quality:", GetQualityField(), 50, 250),
                     FormsHelper.VoidBox(20),
                     okButton,
                     FormsHelper.VoidBox(10)

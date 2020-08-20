@@ -12,7 +12,9 @@ namespace RedShot.Infrastructure
         /// <summary>
         /// Tray view.
         /// </summary>
-        public readonly TrayIndicator Tray;
+        public TrayIndicator Tray { get; }
+
+        public ButtonMenuItem UploadLastFile { get; }
 
         /// <summary>
         /// Inits tray icon.
@@ -31,6 +33,15 @@ namespace RedShot.Infrastructure
                 Text = "Capture",
                 Command = new Command((e, o) => ApplicationManager.RunScreenShooting())
             });
+
+            UploadLastFile = new ButtonMenuItem()
+            {
+                Text = "Upload last file",
+                Visible = false,
+                Command = new Command((e, o) => UploadManager.UploadLastFile())
+            };
+
+            menu.Items.Add(UploadLastFile);
             menu.Items.Add(new ButtonMenuItem()
             {
                 Text = "Exit",

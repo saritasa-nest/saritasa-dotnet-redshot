@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using Eto.Forms;
 using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Configuration.Options;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg;
@@ -117,11 +118,16 @@ namespace RedShot.Recording.Recorders.Windows
             try
             {
                 using var downloader = new Downloader();
-                var path = downloader.Download(url, ffmpegZipName);
 
-                ZipFile.ExtractToDirectory(path, ffmpegPath);
+                downloader.DownloadAsync(url, ffmpegZipName, (path) => 
+                {
+                    ZipFile.ExtractToDirectory(path, ffmpegPath);
+                    RecordingManager.InitiateRecording();
+                });
 
-                return true;
+                //ZipFile.ExtractToDirectory(path, ffmpegPath);
+
+                return false;
             }
             catch (Exception e)
             {
@@ -136,7 +142,7 @@ namespace RedShot.Recording.Recorders.Windows
         {
             if (!CheckFFmpeg())
             {
-                throw new FileNotFoundException($"ffmpeg binary is not found!", ffmpegBinaryName);
+                throw new FileNotFoundException($"FFmpeg binary is not found!", ffmpegBinaryName);
             }
         }
 

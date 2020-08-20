@@ -5,6 +5,7 @@ using RedShot.Recording.Recorders.Linux;
 using RedShot.Recording.Recorders.Windows;
 using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.RecordingRedShot.Views;
+using Eto.Forms;
 
 namespace RedShot.Infrastructure.Recording
 {
@@ -61,9 +62,14 @@ namespace RedShot.Infrastructure.Recording
 
             recordingView?.Close();
 
-            OpenSettings();
+            var optionsView = new RecordingOptionsView(manager);
 
-            OpenSelectionView();
+            if (optionsView.ShowModal(new Form()) == DialogResult.Ok)
+            {
+                Task.Delay(500).Wait();
+
+                OpenSelectionView();
+            }
         }
     }
 }

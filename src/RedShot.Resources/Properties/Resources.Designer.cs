@@ -153,6 +153,16 @@ namespace RedShot.Resources.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
+        public static byte[] Record {
+            get {
+                object obj = ResourceManager.GetObject("Record", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
         public static byte[] Rectangle {
             get {
                 object obj = ResourceManager.GetObject("Rectangle", resourceCulture);
