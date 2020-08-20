@@ -1,68 +1,17 @@
-﻿using System;
-using System.IO;
-using System.Text;
+﻿using System.Text;
 using Eto.Drawing;
-using RedShot.Infrastructure.Abstractions;
-using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg;
-using RedShot.Infrastructure.Recording;
+using RedShot.Infrastructure.Recording.Recorders;
 
 namespace RedShot.Recording.Recorders.Windows
 {
-    public class WindowsRecorder : IRecorder
+    internal class WindowsRecorder : BaseRecorder
     {
-        public string VideoFolderPath { get; }
-
-        public VideoFile LastVideo { get; private set; }
-
-        public bool IsRecording
+        public WindowsRecorder(FFmpegOptions options, string ffmpegPath, string videoFolderPath = null) : base(options, ffmpegPath, videoFolderPath)
         {
-            get
-            {
-                return cliManager.IsRecording;
-            }
         }
 
-        private readonly FFmpegOptions options;
-        private readonly FFmpegCliManager cliManager;
-
-        public WindowsRecorder(FFmpegOptions options, string ffmpegPath, string videoFolderPath = null)
-        {
-            this.options = options;
-            cliManager = new FFmpegCliManager(ffmpegPath);
-
-            if (string.IsNullOrEmpty(videoFolderPath))
-            {
-                VideoFolderPath = Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyVideos), "RedShot")).FullName;
-            }
-            else
-            {
-                VideoFolderPath = videoFolderPath;
-            }
-        }
-
-        public void Start(Rectangle area)
-        {
-            var deviceArgs = GetWindowsDeviceArgs(area);
-            var optionsArgs = FFmpegArgsHelper.GetFFmpegArgsFromOptions(options);
-
-            var name = DateTime.Now.ToFileTime();
-
-            var path = Path.Combine(VideoFolderPath, $"{name}.{options.Extension}");
-
-            LastVideo = new VideoFile(name.ToString(), path);
-
-            var outputArgs = FFmpegArgsHelper.GetArgsForOutput(path);
-
-            cliManager.Run($"-thread_queue_size 1024 {deviceArgs} {optionsArgs} {outputArgs}");
-        }
-
-        public void Stop()
-        {
-            cliManager.Stop();
-        }
-
-        private string GetWindowsDeviceArgs(Rectangle captureArea)
+        protected override string GetDeviceArgs(Rectangle captureArea)
         {
             if (captureArea.Width % 2 != 0)
             {
@@ -92,12 +41,6 @@ namespace RedShot.Recording.Recorders.Windows
             }
 
             return args.ToString();
-        }
-
-        public IFile GetVideo()
-        {
-            Stop();
-            return LastVideo;
         }
     }
 }

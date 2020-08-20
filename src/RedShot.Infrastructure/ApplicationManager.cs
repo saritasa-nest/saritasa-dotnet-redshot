@@ -4,6 +4,7 @@ using Eto.Forms;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Forms;
 using RedShot.Infrastructure.Painting;
+using RedShot.Infrastructure.Recording;
 using RedShot.Infrastructure.Screenshooting;
 
 namespace RedShot.Infrastructure
@@ -40,20 +41,13 @@ namespace RedShot.Infrastructure
         /// <summary>
         /// Runs screenshot editor.
         /// </summary>
-        public static void RunScreenShotEditorDrawing()
+        public static void RunScreenShooting()
         {
             trayIcon.Tray.Visible = false;
 
-            ScreenshotManager.Ta();
+            ScreenshotManager.TakeScreenShot();
 
             trayIcon.Tray.Visible = true;
-        }
-
-        public static void RunPaintingView(Bitmap bitmap)
-        {
-            CloseViews();
-            paintingView = new PaintingView(bitmap);
-            paintingView.Show();
         }
 
         public static void RunUploadView(IFile file)
@@ -61,9 +55,9 @@ namespace RedShot.Infrastructure
             UploadManager.RunUploading(file);
         }
 
-        public static void RunRecodringView()
+        public static void RunRecording()
         {
-            //RecordingManager.InitiateRecording();
+            RecordingManager.InitiateRecording();
         }
 
         private static void CloseViews()

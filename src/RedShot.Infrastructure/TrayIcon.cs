@@ -24,12 +24,12 @@ namespace RedShot.Infrastructure
             menu.Items.Add(new ButtonMenuItem()
             {
                 Text = "Record",
-                Command = new Command((e, o) => ApplicationManager.RunRecodringView())
+                Command = new Command((e, o) => ApplicationManager.RunRecording())
             });
             menu.Items.Add(new ButtonMenuItem()
             {
                 Text = "Capture",
-                Command = new Command((e, o) => ApplicationManager.RunScreenShotEditorDrawing())
+                Command = new Command((e, o) => ApplicationManager.RunScreenShooting())
             });
             menu.Items.Add(new ButtonMenuItem()
             {

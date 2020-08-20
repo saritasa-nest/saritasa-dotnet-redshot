@@ -21,6 +21,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly FtpAccount account;
+        private readonly string fileName;
         private FtpClient client;
         private bool disposed;
 
@@ -47,8 +48,9 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         /// <summary>
         /// Initializes FTP/FTPS uploader.
         /// </summary>
-        public Ftp(FtpAccount account)
+        public Ftp(FtpAccount account, string fileName)
         {
+            this.fileName = fileName;
             this.account = account;
 
             client = new FtpClient()
@@ -101,11 +103,20 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
             }
         }
 
-        /// <inheritdoc cref="BaseUploader"/>.
+        /// <inheritdoc cref="BaseUploader"/>
         public override IUploadingResponse Upload(IFile file)
         {
-            string subFolderPath = account.SubFolderPath;
-            string path = UrlHelper.CombineURL(subFolderPath, file.FileName);
+            var subFolderPath = account.SubFolderPath;
+
+            string path;
+            if (string.IsNullOrEmpty(fileName))
+            {
+                path = UrlHelper.CombineURL(subFolderPath, Path.GetFileName(file.FilePath));
+            }
+            else
+            {
+                path = UrlHelper.CombineURL(subFolderPath, $"{fileName}{Path.GetExtension(file.FilePath)}");
+            }
 
             IsUploading = true;
 

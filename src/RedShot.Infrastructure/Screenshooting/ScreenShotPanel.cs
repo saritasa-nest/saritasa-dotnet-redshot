@@ -1,6 +1,5 @@
 using Eto.Forms;
 using Eto.Drawing;
-using RedShot.App.Properties;
 using RedShot.Infrastructure.Common.Forms;
 
 namespace RedShot.Infrastructure.Screenshooting
@@ -30,8 +29,8 @@ namespace RedShot.Infrastructure.Screenshooting
             var buttonSize = new Size(80, 50);
             var imageSize = new Size(40, 40);
 
-            var paintImage = new Bitmap(Resources.paint);
-            var saveImage = new Bitmap(Resources.upload);
+            var paintImage = new Bitmap(Resources.Properties.Resources.Paint);
+            var saveImage = new Bitmap(Resources.Properties.Resources.Upload);
 
             EnablePaintingModeButton = new ImageButton(buttonSize, paintImage, scaleImageSize: imageSize);
 

@@ -3,7 +3,7 @@ using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
 using System.IO;
 
-namespace RedShot.Infrastructure.Screenshooting
+namespace RedShot.Infrastructure
 {
     public class ImageFile : IFile
     {

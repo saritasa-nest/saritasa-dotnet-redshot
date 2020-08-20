@@ -7,6 +7,8 @@ using System.Text.RegularExpressions;
 using Eto.Forms;
 using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Configuration;
+using RedShot.Infrastructure.Configuration.Options;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg.Devices;
 using RedShot.Infrastructure.Recording;
@@ -26,9 +28,11 @@ namespace RedShot.Recording.Recorders.Windows
             ffmpegBinaryName = "ffmpeg.exe";
         }
 
-        public IRecorder GetRecorder(FFmpegOptions options)
+        public IRecorder GetRecorder()
         {
             ThrowIfNotFoundFfmpegBinary();
+
+            var options = ConfigurationManager.GetSection<FFmpegConfiguration>().Options;
 
             return new WindowsRecorder(options, GetFullFfmpegPath());
         }
@@ -149,11 +153,6 @@ namespace RedShot.Recording.Recorders.Windows
         private string[] GetLines(string text)
         {
             return text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-        }
-
-        public IRecorder GetRecorder()
-        {
-            throw new NotImplementedException();
         }
     }
 }

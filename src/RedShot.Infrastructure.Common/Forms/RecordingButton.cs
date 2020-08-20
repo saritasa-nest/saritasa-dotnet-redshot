@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Dynamic;
 using Eto.Drawing;
 using Eto.Forms;
-using RedShot.Helpers.Properties;
 
 namespace RedShot.Infrastructure.Common.Forms
 {
@@ -23,8 +21,8 @@ namespace RedShot.Infrastructure.Common.Forms
             this.width = width;
             this.height = height;
 
-            playIcon = new Bitmap(Resources.play);
-            stopIcon = new Bitmap(Resources.stop);
+            playIcon = new Bitmap(Resources.Properties.Resources.Play);
+            stopIcon = new Bitmap(Resources.Properties.Resources.Stop);
 
             InitializeComponents();
         }

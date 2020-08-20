@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using Eto.Drawing;
 using Eto.Forms;
-using RedShot.Helpers;
-using RedShot.Helpers.Forms;
-using RedShot.Recording.Recorders;
+using RedShot.Infrastructure.Abstractions.Recording;
+using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Common.Forms;
 
 namespace RedShot.Infrastructure.RecordingRedShot.Views
 {
@@ -57,7 +57,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
 
         private void RecordingView_Closed(object sender, EventArgs e)
         {
-            StopRecording();
+            recorder?.Stop();
         }
 
         private void RecordingButton_Clicked(object sender, System.EventArgs e)
@@ -81,6 +81,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
 
         private void CloseButton_Clicked(object sender, System.EventArgs e)
         {
+            recorder.Stop();
             Close();
         }
 
@@ -88,6 +89,8 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
         {
             recordingTimer.Stop();
             recorder.Stop();
+
+            UploadManager.RunUploading(recorder.GetVideo());
         }
 
         private void RecordingLabelTimer_Elapsed(object sender, System.EventArgs e)

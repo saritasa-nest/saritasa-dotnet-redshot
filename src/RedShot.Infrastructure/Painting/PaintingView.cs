@@ -69,7 +69,7 @@ namespace RedShot.Infrastructure.Painting
         private void SaveImageButton_Clicked(object sender, EventArgs e)
         {
             var bitmap = imagePanel.ScreenShot();
-            ApplicationManager.RunUploadView(bitmap);
+            ScreenshotManager.UploadScreenShot(bitmap);
         }
 
         private void PaintingPanel_StateChanged(object sender, PaintingState state)

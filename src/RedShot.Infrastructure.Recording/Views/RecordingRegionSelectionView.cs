@@ -1,4 +1,5 @@
-﻿using RedShot.Helpers.Forms;
+﻿using RedShot.Infrastructure.Common.Forms.SelectionForm;
+using RedShot.Infrastructure.Recording;
 
 namespace RedShot.Infrastructure.RecordingRedShot.Views
 {

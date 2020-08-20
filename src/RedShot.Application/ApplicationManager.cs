@@ -4,6 +4,7 @@ using Eto.Forms;
 using RedShot.Infrastructure;
 using RedShot.Infrastructure.Forms;
 using RedShot.Infrastructure.Painting;
+using RedShot.Infrastructure.Recording;
 using RedShot.Infrastructure.Screenshooting;
 
 namespace RedShot.Application
@@ -27,7 +28,7 @@ namespace RedShot.Application
         {
             try
             {
-                trayIcon = new TrayIcon("RedShot", new Bitmap(Properties.Resources.red_circle));
+                trayIcon = new TrayIcon("RedShot", new Bitmap(Resources.Properties.Resources.Redcircle));
             }
             catch (Exception ex)
             {
@@ -64,13 +65,6 @@ namespace RedShot.Application
             CloseViews();
             paintingView = new PaintingView(bitmap);
             paintingView.Show();
-        }
-
-        public static void RunUploadView(Bitmap bitmap)
-        {
-            CloseViews();
-            uploadBar = new UploadBar(bitmap);
-            uploadBar.Show();
         }
 
         public static void RunRecodringView()

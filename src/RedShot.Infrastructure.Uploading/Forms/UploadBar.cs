@@ -3,6 +3,10 @@ using Eto.Drawing;
 using System;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Abstractions;
+using System.Threading.Tasks;
+using System.Diagnostics;
+using RedShot.Infrastructure.Uploading.Forms;
+using System.Linq;
 
 namespace RedShot.Infrastructure.Forms
 {
@@ -12,6 +16,7 @@ namespace RedShot.Infrastructure.Forms
     public class UploadBar : Form
     {
         private IFile file;
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public UploadBar(IFile file)
         {
@@ -69,6 +74,15 @@ namespace RedShot.Infrastructure.Forms
             this.MouseMove += UploadBar_MouseMove;
 
             toolBar.CloseButton.Clicked += CloseButton_Clicked;
+            toolBar.UploadersButton.Clicked += UploadersButton_Clicked;
+        }
+
+        private void UploadersButton_Clicked(object sender, EventArgs e)
+        {
+            RefreshTimer();
+
+            var form = new UploaderChosingForm(file, UploadManager.GetUploadingServices());
+            form.Show();
         }
 
         private void CloseButton_Clicked(object sender, EventArgs e)
@@ -78,8 +92,31 @@ namespace RedShot.Infrastructure.Forms
 
         private void Imageview_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            UploadManager.OpenLastFile(file);
+            OpenFile(file);
             RefreshTimer();
+        }
+
+        private void OpenFile(IFile file)
+        {
+            if (!string.IsNullOrEmpty(file.FilePath))
+            {
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        Process.Start(
+                            new ProcessStartInfo
+                            {
+                                FileName = file.FilePath,
+                                UseShellExecute = true
+                            });
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Error(e, "An error occurred in opening image");
+                    }
+                });
+            }
         }
 
         private void UploadBar_MouseMove(object sender, MouseEventArgs e)

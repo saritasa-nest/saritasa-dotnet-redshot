@@ -1,9 +1,9 @@
 ﻿using Eto.Drawing;
 using Eto.Forms;
-using RedShot.Helpers;
-using RedShot.Helpers.Ffmpeg.Encoding;
-using RedShot.Helpers.Ffmpeg.Options;
-using RedShot.Helpers.Forms;
+using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Common.Forms;
+using RedShot.Infrastructure.DataTransfer.Ffmpeg;
+using RedShot.Infrastructure.DataTransfer.Ffmpeg.Encoding;
 using System;
 using System.Linq;
 

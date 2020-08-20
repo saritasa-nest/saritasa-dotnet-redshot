@@ -38,23 +38,26 @@ namespace RedShot.Infrastructure.Uploaders.File
                                 image.Save(Path.Combine(dialog.Directory.ToString(), $"{DateTime.Now.ToFileTime()}.bmp"), ImageFormat.Bitmap);
                                 break;
                         }
+
+                        return new BaseUploadingResponse(true);
                     }
                 }
                 else
                 {
                     var extension = Path.GetExtension(file.FilePath);
 
-                    dialog.FileName = $"{file.FileName}.{extension}";
-                    dialog.Filters.Add(new FileFilter("Video format", $".{extension}"));
+                    dialog.FileName = $"{file.FileName}{extension}";
+                    dialog.Filters.Add(new FileFilter("Video format", $"{extension}"));
 
                     if (dialog.ShowDialog(new Form()) == DialogResult.Ok)
                     {
                         System.IO.File.Copy(file.FilePath, dialog.FileName);
+                        return new BaseUploadingResponse(true);
                     }
                 }
             }
 
-            return new BaseUploadingResponse(true);
+            return new BaseUploadingResponse(false);
         }
     }
 }

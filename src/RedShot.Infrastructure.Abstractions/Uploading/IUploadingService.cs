@@ -16,7 +16,7 @@ namespace RedShot.Infrastructure.Abstractions.Uploading
         /// <summary>
         /// Service Eto Image.
         /// </summary>
-        Image ServiceImage { get; }
+        Bitmap ServiceImage { get; }
 
         /// <summary>
         /// Creates IUploader instance.

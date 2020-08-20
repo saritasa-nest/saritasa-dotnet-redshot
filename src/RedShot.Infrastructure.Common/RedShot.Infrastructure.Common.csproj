@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RedShot.Infrastructure.Abstractions\RedShot.Infrastructure.Abstractions.csproj" />
+    <ProjectReference Include="..\RedShot.Resources\RedShot.Resources.csproj" />
     <ProjectReference Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp\Eto.Forms.Controls.SkiaSharp.csproj" />
   </ItemGroup>
 

@@ -2,7 +2,6 @@
 using RedShot.Infrastructure.Abstractions.Uploading;
 using System.IO;
 
-
 namespace RedShot.Infrastructure.Abstractions
 {
     public interface IFile

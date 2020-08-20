@@ -22,7 +22,7 @@ namespace RedShot.Infrastructure.Screenshooting
         private void EnablePaintingModeButton_Clicked(object sender, EventArgs e)
         {
             var screenshot = GetScreenShot();
-            ApplicationManager.RunPaintingView(screenshot);
+            ScreenshotManager.RunPaintingView(screenshot);
         }
 
         private void SaveScreenShotButton_Clicked(object sender, EventArgs e)

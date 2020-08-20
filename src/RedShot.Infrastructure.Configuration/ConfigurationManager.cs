@@ -17,25 +17,25 @@ namespace RedShot.Infrastructure.Configuration
         private const string DefaultFolderName = "RedShot";
         private const string ConfigName = "config.json";
         private static readonly NLog.Logger logger;
-        private static readonly Dictionary<Type, IConfigurationSection> settingsMap;
+        private static readonly Dictionary<Type, IConfigurationOption> settingsMap;
         private static readonly IEncryptionService encryptionService;
 
         static ConfigurationManager()
         {
             encryptionService = new Base64Encrypter();
             logger = NLog.LogManager.GetCurrentClassLogger();
-            settingsMap = new Dictionary<Type, IConfigurationSection>();
+            settingsMap = new Dictionary<Type, IConfigurationOption>();
 
             Load();
         }
 
-        public static T GetSection<T>() where T : class, IConfigurationSection, new()
+        public static T GetSection<T>() where T : class, IConfigurationOption, new()
         {
             var type = typeof(T);
 
             if (settingsMap.TryGetValue(type, out var section))
             {
-                return (T)section;
+                return (T)section.Clone();
             }
             else
             {
@@ -43,7 +43,7 @@ namespace RedShot.Infrastructure.Configuration
             }
         }
 
-        public static void SetSettingsValue(IConfigurationSection section)
+        public static void SetSettingsValue(IConfigurationOption section)
         {
             var sectionType = section.GetType();
 
@@ -71,11 +71,10 @@ namespace RedShot.Infrastructure.Configuration
 
         private static void Load()
         {
-            IEnumerable<Type> types = Assembly
-                .GetAssembly(typeof(MapObject))
+            var types = Assembly
+                .GetAssembly(typeof(ConfigurationManager))
                 ?.GetTypes()
-                .Where(type => typeof(IConfigurationSection).IsAssignableFrom(type) && !type.IsInterface)
-                .ToList();
+                .Where(type => typeof(IConfigurationOption).IsAssignableFrom(type) && !type.IsInterface);
 
             var settingsFile = new JObject();
 
@@ -88,11 +87,11 @@ namespace RedShot.Infrastructure.Configuration
             {
                 if (settingsFile.ContainsKey(type.Name) && settingsFile[type.Name] is JObject section)
                 {
-                    settingsMap.Add(type, (section.ToObject(type) as IConfigurationSection).DecodeSection(encryptionService));
+                    settingsMap.Add(type, (section.ToObject(type) as IConfigurationOption).DecodeSection(encryptionService));
                 }
                 else
                 {
-                    settingsMap.Add(type, (IConfigurationSection)Activator.CreateInstance(type));
+                    settingsMap.Add(type, (IConfigurationOption)Activator.CreateInstance(type));
                 }
             }
         }

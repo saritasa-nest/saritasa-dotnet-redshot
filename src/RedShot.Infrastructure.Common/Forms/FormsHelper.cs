@@ -12,7 +12,7 @@ namespace RedShot.Infrastructure.Common.Forms
             {
                 VerticalContentAlignment = VerticalAlignment.Center,
                 Orientation = Orientation.Horizontal,
-                Size = new Eto.Drawing.Size(size, size),
+                Size = new Size(size, size),
                 Padding = size
             };
         }

@@ -22,7 +22,7 @@ namespace RedShot.EtoForms.Wpf
         {
             Logger.Debug("The app was started!");
 
-            var app = new Application(Eto.Platform.Detect);
+            var app = new Eto.Forms.Application(Eto.Platform.Detect);
             app.UnhandledException += InstanceOnUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += DomainUnhandledException;
 
@@ -86,7 +86,7 @@ namespace RedShot.EtoForms.Wpf
 
             Logger.Fatal(ex);
 
-            Application.Instance.Quit();
+            Eto.Forms.Application.Instance.Quit();
         }
     }
 }

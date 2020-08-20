@@ -1,7 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Eto.Drawing;
-using RedShot.Recording.Views;
 using RedShot.Recording.Recorders.Linux;
 using RedShot.Recording.Recorders.Windows;
 using RedShot.Infrastructure.Abstractions.Recording;
@@ -38,8 +37,7 @@ namespace RedShot.Infrastructure.Recording
 
         public static void RecordRegion(Rectangle region)
         {
-            var options = YamlConfigurationManager.YamlConfig.FFmpegOptions;
-            var recorder = manager.GetRecorder(options);
+            var recorder = manager.GetRecorder();
 
             recordingView = new RecordingView(recorder, region);
             recordingView.Show();

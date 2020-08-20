@@ -1,5 +1,5 @@
 ﻿using Eto.Forms;
-using RedShot.Helpers.Ffmpeg.Options;
+using RedShot.Infrastructure.DataTransfer.Ffmpeg;
 
 namespace RedShot.Recording.Views.CodecsOptions.AudioOptions
 {

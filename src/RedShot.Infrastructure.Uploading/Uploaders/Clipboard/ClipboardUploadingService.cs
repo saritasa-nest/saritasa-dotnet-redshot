@@ -1,6 +1,6 @@
 ﻿using Eto.Drawing;
 using RedShot.Infrastructure.Abstractions.Uploading;
-using RedShot.Infrastructure.Uploading.Properties;
+using RedShot.Infrastructure.Uploaders.File;
 using System;
 
 namespace RedShot.Infrastructure.Uploaders.Clipboard
@@ -9,11 +9,11 @@ namespace RedShot.Infrastructure.Uploaders.Clipboard
     {
         public string ServiceName => "Clipboard";
 
-        public Image ServiceImage
+        public Bitmap ServiceImage
         {
             get
             {
-                return new Bitmap(Resources.form);
+                return new Bitmap(Resources.Properties.Resources.Form);
             }
         }
 
@@ -30,7 +30,7 @@ namespace RedShot.Infrastructure.Uploaders.Clipboard
 
         public IUploader GetUploader()
         {
-            throw new NotImplementedException();
+            return new ClipboardUploader();
         }
     }
 }

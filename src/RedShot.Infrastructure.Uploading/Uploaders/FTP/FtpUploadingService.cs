@@ -1,7 +1,6 @@
 ﻿using Eto.Drawing;
 using RedShot.Infrastructure.Abstractions.Uploading;
 using RedShot.Infrastructure.DataTransfer.Ftp;
-using RedShot.Infrastructure.Uploading.Properties;
 using RedShot.Infrastructure.Uploaders.Ftp.Forms;
 
 namespace RedShot.Infrastructure.Uploaders.Ftp
@@ -20,11 +19,11 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         public FtpAccount Account { get; }
 
         /// <inheritdoc cref="IUploadingService"/>
-        public Image ServiceImage
+        public Bitmap ServiceImage
         {
             get
             {
-                return new Bitmap(Resources.ftp);
+                return new Bitmap(Resources.Properties.Resources.Ftp);
             }
         }
 
@@ -38,16 +37,17 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
                 if (form.ShowModal() == Eto.Forms.DialogResult.Ok)
                 {
                     var account = form.SelectedAccount;
+                    var name = form.FileName;
 
                     if (account != null)
                     {
                         if (account.Protocol == FtpProtocol.FTP || account.Protocol == FtpProtocol.FTPS)
                         {
-                            return new Ftp(account);
+                            return new Ftp(account, name);
                         }
                         else if (account.Protocol == FtpProtocol.SFTP)
                         {
-                            return new Sftp(account);
+                            return new Sftp(account, name);
                         }
                     }
                 }

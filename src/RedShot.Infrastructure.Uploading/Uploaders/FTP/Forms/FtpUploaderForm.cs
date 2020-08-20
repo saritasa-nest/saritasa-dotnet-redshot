@@ -6,6 +6,7 @@ using System.Linq;
 using RedShot.Infrastructure.DataTransfer.Ftp;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Configuration;
+using RedShot.Infrastructure.Configuration.Options;
 
 namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
 {
@@ -13,18 +14,21 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private List<FtpAccount> ftpAccounts => ConfigurationManager.GetSection<FtpConfiguration>().FtpAccounts;
+        private FtpConfiguration ftpConfiguration;
 
         private ComboBox accounts;
 
         private Button uploadButton;
         private Button ftpSettingsButton;
-        private TextBox imageNameBox;
+        public TextBox fileNameBox;
+
+        public string FileName { get; private set; }
 
         public FtpAccount SelectedAccount { get; private set; }
 
         public FtpUploaderForm()
         {
+            ftpConfiguration = ConfigurationManager.GetSection<FtpConfiguration>();
             Title = "FTP Upload";
             Size = new Size(350, 280);
 
@@ -42,11 +46,11 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
         {
             accounts = new ComboBox()
             {
-                DataStore = ftpAccounts,
+                DataStore = ftpConfiguration.FtpAccounts,
                 Size = new Eto.Drawing.Size(250, 21),
             };
 
-            imageNameBox = new TextBox()
+            fileNameBox = new TextBox()
             {
                 Size = new Eto.Drawing.Size(250, 21),
             };
@@ -103,11 +107,11 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
                 {
                     new Label()
                     {
-                        Text = "Image name",
+                        Text = "File name",
                         Width = 100,
                     },
                     FormsHelper.VoidBox(10),
-                    imageNameBox
+                    fileNameBox
                 }
             };
         }
@@ -136,8 +140,11 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
         {
             var form = new FtpConfig();
             form.ShowModal();
+
+            ftpConfiguration = ConfigurationManager.GetSection<FtpConfiguration>();
+
             accounts.SelectedIndex = -1;
-            accounts.DataStore = ftpAccounts;
+            accounts.DataStore = ftpConfiguration.FtpAccounts;
         }
 
         private void UploadButton_Click(object sender, EventArgs e)
@@ -145,7 +152,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
             if (accounts.DataStore.Count() > 0 && accounts.SelectedValue != null)
             {
                 SelectedAccount = (FtpAccount)accounts.SelectedValue;
-
+                FileName = fileNameBox.Text;
                 Result = DialogResult.Ok;
             }
             else
@@ -154,48 +161,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
             }
 
             Close();
-
-                //var service = new FtpUploadingService(acc);
-
-                //string imageName;
-
-                //if (string.IsNullOrEmpty(imageNameBox.Text))
-                //{
-                //    imageName = $"{Guid.NewGuid()}.png";
-                //}
-                //else
-                //{
-                //    imageName = $"{imageNameBox.Text}.png";
-                //}
-
-                //try
-                //{
-                //    var uploader = service.CreateUploader();
-
-                //    var response = uploader.UploadImage(image, imageName, ImageFormat.Png);
-
-                //    if (response.IsSuccess)
-                //    {
-                //        Logger.Trace("Image uploaded to FTP server", response);
-                //        MessageBox.Show("Image uploaded", "Success", MessageBoxButtons.OK, MessageBoxType.Information);
-                //    }
-                //    else
-                //    {
-                //        Logger.Trace("Image uploaded to FTP server failed", response);
-                //        MessageBox.Show("Image uploading failed", MessageBoxButtons.OK, MessageBoxType.Information);
-                //    }
-
-                //    if (uploader is IDisposable disposable)
-                //    {
-                //        disposable.Dispose();
-                //    }
-
-                //}
-                //catch (Exception ex)
-                //{
-                //    Logger.Error(ex, "Ftp uploading error");
-                //    MessageBox.Show(ex.Message, "Ftp upload error!", MessageBoxButtons.OK, MessageBoxType.Error);
-                //}        
         }
     }
 }

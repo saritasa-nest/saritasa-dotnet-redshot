@@ -21,8 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RedShot.Configuration\RedShot.Infrastructure.Configuration.csproj" />
+    <ProjectReference Include="..\RedShot.Infrastructure.Configuration\RedShot.Infrastructure.Configuration.csproj" />
     <ProjectReference Include="..\RedShot.Infrastructure.DataTransfer\RedShot.Infrastructure.DataTransfer.csproj" />
+    <ProjectReference Include="..\RedShot.Infrastructure.Uploading\RedShot.Infrastructure.Uploading.csproj" />
     <ProjectReference Condition=" '$(OS)' == 'Windows_NT' " Include="..\RedShot.Platforms.Windows\RedShot.Platforms.Windows.csproj" />
     <ProjectReference Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp\Eto.Forms.Controls.SkiaSharp.csproj" />
   </ItemGroup>

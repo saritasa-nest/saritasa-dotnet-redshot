@@ -1,6 +1,6 @@
 using Eto.Forms;
 using Eto.Drawing;
-using RedShot.Helpers.Forms;
+using RedShot.Infrastructure.Common.Forms;
 
 namespace RedShot.Infrastructure.RecordingRedShot.Views
 {

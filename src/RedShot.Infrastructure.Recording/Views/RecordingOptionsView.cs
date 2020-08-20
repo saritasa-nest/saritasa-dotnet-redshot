@@ -2,13 +2,14 @@
 using System.Linq;
 using System.Text;
 using Eto.Forms;
-using RedShot.Configuration;
-using RedShot.Helpers;
-using RedShot.Helpers.Ffmpeg.Devices;
-using RedShot.Helpers.Ffmpeg.Encoding;
-using RedShot.Helpers.Ffmpeg.Options;
-using RedShot.Helpers.Forms;
-using RedShot.Recording.Recorders;
+using RedShot.Infrastructure.Abstractions.Recording;
+using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Common.Forms;
+using RedShot.Infrastructure.Configuration;
+using RedShot.Infrastructure.Configuration.Options;
+using RedShot.Infrastructure.DataTransfer.Ffmpeg;
+using RedShot.Infrastructure.DataTransfer.Ffmpeg.Devices;
+using RedShot.Infrastructure.DataTransfer.Ffmpeg.Encoding;
 using RedShot.Recording.Views.CodecsOptions.AudioOptions;
 using RedShot.Recording.Views.CodecsOptions.VideoOptions;
 
@@ -16,8 +17,9 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
 {
     internal partial class RecordingOptionsView : Dialog
     {
+        private readonly FFmpegConfiguration ffmpegConfiguration;
+        private readonly IRecordingDevices recordingDevices;
         private FFmpegOptions ffmpegOptions;
-        private RecordingDevices recordingDevices;
         private ComboBox videoDevices;
         private ComboBox audioDevices;
         private CheckBox useMicrophone;
@@ -35,7 +37,8 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
         public RecordingOptionsView(IRecordingService recordingManager)
         {
             Title = "FFmpeg recording options";
-            ffmpegOptions = YamlConfigurationManager.YamlConfig.FFmpegOptions.Clone();
+            ffmpegConfiguration = ConfigurationManager.GetSection<FFmpegConfiguration>();
+            ffmpegOptions = ffmpegConfiguration.Options.Clone();
             recordingDevices = recordingManager.GetRecordingDevices();
 
             InitializeComponents();
@@ -67,8 +70,9 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
             }
             else
             {
-                YamlConfigurationManager.YamlConfig.FFmpegOptions = ffmpegOptions;
-                YamlConfigurationManager.Save();
+                ffmpegConfiguration.Options = ffmpegOptions;
+                ConfigurationManager.SetSettingsValue(ffmpegConfiguration);
+                ConfigurationManager.Save();
                 Close();
             }
         }

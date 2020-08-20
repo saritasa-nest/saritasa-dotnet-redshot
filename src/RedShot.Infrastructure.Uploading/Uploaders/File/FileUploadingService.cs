@@ -7,11 +7,11 @@ namespace RedShot.Infrastructure.Uploaders.File
     {
         public string ServiceName => "File";
 
-        public Image ServiceImage
+        public Bitmap ServiceImage
         {
             get
             {
-                return new Bitmap(Resources.Download);
+                return new Bitmap(Resources.Properties.Resources.Folder);
             }
         }
 

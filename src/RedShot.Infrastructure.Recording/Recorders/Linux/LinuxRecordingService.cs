@@ -2,7 +2,8 @@
 using Eto.Forms;
 using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.Common;
-using RedShot.Infrastructure.DataTransfer.Ffmpeg;
+using RedShot.Infrastructure.Configuration;
+using RedShot.Infrastructure.Configuration.Options;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg.Devices;
 
 namespace RedShot.Recording.Recorders.Linux
@@ -19,9 +20,11 @@ namespace RedShot.Recording.Recorders.Linux
             simpleCliManager = new CliManager(ffmpegName);
         }
 
-        public IRecorder GetRecorder(FFmpegOptions options)
+        public IRecorder GetRecorder()
         {
             ThrowIfNotFoundFfmpegBinary();
+
+            var options = ConfigurationManager.GetSection<FFmpegConfiguration>().Options;
 
             return new LinuxRecorder(options);
         }
@@ -32,7 +35,7 @@ namespace RedShot.Recording.Recorders.Linux
             return simpleCliManager.Output.ToString().Contains("ffmpeg version");
         }
 
-        public RecordingDevices GetRecordingDevices()
+        public IRecordingDevices GetRecordingDevices()
         {
             ThrowIfNotFoundFfmpegBinary();
 

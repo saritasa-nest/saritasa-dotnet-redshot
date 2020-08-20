@@ -127,6 +127,9 @@
   <data name="Download" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\Download.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="Folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Folder.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="Form" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\Form.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>

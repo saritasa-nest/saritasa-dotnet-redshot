@@ -12,20 +12,7 @@ namespace RedShot.Infrastructure.Forms
             InitializeComponent();
         }
 
-        /// <summary>
-        /// Clipbaord upload button.
-        /// </summary>
-        public ImageButton ClipBoardButton { get; private set; }
-
-        /// <summary>
-        /// Save to file button.
-        /// </summary>
-        public ImageButton SaveToFileButton { get; private set; }
-
-        /// <summary>
-        /// Save to ftp button.
-        /// </summary>
-        public ImageButton SaveToFtpButton { get; private set; }
+        public ImageButton UploadersButton { get; private set; }
 
         /// <summary>
         /// Close button.
@@ -40,27 +27,23 @@ namespace RedShot.Infrastructure.Forms
 
             var buttonSize = new Size(boardSize, boardSize);
 
-            //var clipBImage = new Bitmap(Resources.form);
-            //var closeImage = new Bitmap(Resources.close);
-            //var ftpImage = new Bitmap(Resources.ftp);
-            //var fileImage = new Bitmap(Resources.download);
+            var uploadImage = new Bitmap(RedShot.Resources.Properties.Resources.Upload);
 
-            //ClipBoardButton = new ImageButton(buttonSize, clipBImage);
-            //SaveToFileButton = new ImageButton(buttonSize, fileImage);
-            //SaveToFtpButton = new ImageButton(buttonSize, ftpImage);
-            //CloseButton = new ImageButton(buttonSize, closeImage);
+            var closeImage = new Bitmap(RedShot.Resources.Properties.Resources.Close);
 
-            //Content = new StackLayout
-            //{
-            //    Orientation = Orientation.Vertical,
-            //    Items =
-            //    {
-            //        SaveToFtpButton,
-            //        ClipBoardButton,
-            //        SaveToFileButton,
-            //        CloseButton,
-            //    }
-            //};
+            UploadersButton = new ImageButton(buttonSize, uploadImage);
+            CloseButton = new ImageButton(buttonSize, closeImage);
+
+            Content = new StackLayout
+            {
+                Orientation = Orientation.Vertical,
+                VerticalContentAlignment = VerticalAlignment.Bottom,
+                Items =
+                {
+                    UploadersButton,
+                    CloseButton,
+                }
+            };
         }
     }
 }

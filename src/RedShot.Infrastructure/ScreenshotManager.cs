@@ -1,14 +1,14 @@
 ﻿using Eto.Drawing;
-using RedShot.Infrastructure.Abstractions;
+using RedShot.Infrastructure.Painting;
+using RedShot.Infrastructure.Screenshooting;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
-namespace RedShot.Infrastructure.Screenshooting
+namespace RedShot.Infrastructure
 {
     internal static class ScreenshotManager
     {
+        private static PaintingView paintingView;
         private static ScreenShotSelectionView selectionView;
 
         private static readonly string imagesFolder;
@@ -26,10 +26,16 @@ namespace RedShot.Infrastructure.Screenshooting
             selectionView.Show();
         }
 
+        public static void RunPaintingView(Bitmap bitmap)
+        {
+            paintingView = new PaintingView(bitmap);
+            paintingView.Show();
+        }
+
         public static void UploadScreenShot(Bitmap image)
         {
             var imageName = Guid.NewGuid().ToString();
-            var path = Path.Combine(imagesFolder, imageName, "png");
+            var path = Path.Combine(imagesFolder, $"imageName.png");
 
             image.Save(path, ImageFormat.Png);
 

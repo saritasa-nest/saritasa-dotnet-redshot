@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Eto.Forms;
 using RedShot.Infrastructure.Configuration;
+using RedShot.Infrastructure.Configuration.Options;
 using RedShot.Infrastructure.DataTransfer.Ftp;
 
 namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
@@ -35,10 +36,14 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
         private Control accountFields;
         private ObservableCollection<FtpAccount> bindingList;
 
-        private List<FtpAccount> ftpAccounts => ConfigurationManager.GetSection<FtpConfiguration>().FtpAccounts;
+        private readonly List<FtpAccount> ftpAccounts;
+        private readonly FtpConfiguration ftpConfiguration;
 
         public FtpConfig()
         {
+            ftpConfiguration = ConfigurationManager.GetSection<FtpConfiguration>();
+            ftpAccounts = ftpConfiguration.FtpAccounts;
+
             InitializeComponents();
 
             Title = "FTP/FTPS/SFTP Configuration";
@@ -125,6 +130,8 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
         {
             ftpAccounts.Clear();
             ftpAccounts.AddRange(bindingList);
+
+            ConfigurationManager.SetSettingsValue(ftpConfiguration);
             ConfigurationManager.Save();
             Close();
         }

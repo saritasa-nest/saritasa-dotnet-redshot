@@ -3,7 +3,6 @@ using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Painting.States;
-using RedShot.Infrastructure.Properties;
 
 namespace RedShot.Infrastructure.Painting
 {
@@ -59,10 +58,10 @@ namespace RedShot.Infrastructure.Painting
             var buttonSize = new Size(60, 30);
             var imageSize = new Size(20, 20);
 
-            var paintImage = new Bitmap(Resources.paint_brush);
-            var saveImage = new Bitmap(Resources.upload);
-            var backImage = new Bitmap(Resources.back);
-            var rectangleImage = new Bitmap(Resources.rectangle);
+            var paintImage = new Bitmap(Resources.Properties.Resources.Paintbrush);
+            var saveImage = new Bitmap(Resources.Properties.Resources.Upload);
+            var backImage = new Bitmap(Resources.Properties.Resources.Back);
+            var rectangleImage = new Bitmap(Resources.Properties.Resources.Rectangle);
 
             PointsEnableButton = new ImageButton(buttonSize, paintImage, scaleImageSize: imageSize);
             RectangleEnableButton = new ImageButton(buttonSize, rectangleImage, scaleImageSize: imageSize);
