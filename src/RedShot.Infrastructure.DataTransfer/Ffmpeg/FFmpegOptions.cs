@@ -1,8 +1,8 @@
-﻿using RedShot.Infrastructure.DataTransfer.Ffmpeg.Devices;
-using RedShot.Infrastructure.DataTransfer.Ffmpeg.Encoding;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using RedShot.Infrastructure.DataTransfer.Ffmpeg.Devices;
+using RedShot.Infrastructure.DataTransfer.Ffmpeg.Encoding;
 
 namespace RedShot.Infrastructure.DataTransfer.Ffmpeg
 {

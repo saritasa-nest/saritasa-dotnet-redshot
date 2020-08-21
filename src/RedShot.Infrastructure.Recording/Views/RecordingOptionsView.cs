@@ -8,7 +8,6 @@ using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Configuration.Options;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg;
-using RedShot.Infrastructure.DataTransfer.Ffmpeg.Devices;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg.Encoding;
 using RedShot.Recording.Views.CodecsOptions.AudioOptions;
 using RedShot.Recording.Views.CodecsOptions.VideoOptions;
