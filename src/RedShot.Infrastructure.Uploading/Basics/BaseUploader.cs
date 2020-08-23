@@ -32,17 +32,17 @@ namespace RedShot.Infrastructure.Basics
         /// <summary>
         /// Occures when uploading has stoped.
         /// </summary>
-        public virtual event EventHandler UploadStoped;
+        public virtual event EventHandler OnUploadStopped;
 
         /// <summary>
         /// Occures when uploading has started.
         /// </summary>
-        public virtual event EventHandler UploadStarted;
+        public virtual event EventHandler OnUploadStarted;
 
         /// <summary>
-        /// Occures by uplod stopping.
+        /// Occures by upload stopping.
         /// </summary>
-        public virtual event EventHandler UploadError;
+        public virtual event EventHandler OnUploadError;
 
         /// <summary>
         /// Stops upload.

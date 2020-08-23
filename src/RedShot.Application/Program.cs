@@ -15,12 +15,12 @@ namespace RedShot.Application
     /// </summary>
     internal class Program
     {
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         [STAThread]
         public static void Main(string[] args)
         {
-            Logger.Debug("The app was started!");
+            logger.Debug("The app was started!");
 
             var app = new Eto.Forms.Application(Eto.Platform.Detect);
             app.UnhandledException += InstanceOnUnhandledException;
@@ -84,7 +84,7 @@ namespace RedShot.Application
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxType.Error);
             }
 
-            Logger.Fatal(ex);
+            logger.Fatal(ex);
 
             Eto.Forms.Application.Instance.Quit();
         }

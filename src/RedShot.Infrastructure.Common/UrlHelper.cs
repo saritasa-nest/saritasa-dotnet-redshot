@@ -10,7 +10,7 @@ namespace RedShot.Infrastructure.Common
         /// <summary>
         /// Combine two urls.
         /// </summary>
-        public static string CombineURL(string url1, string url2)
+        public static string CombineUrl(string url1, string url2)
         {
             var url1Empty = string.IsNullOrEmpty(url1);
             var url2Empty = string.IsNullOrEmpty(url2);
