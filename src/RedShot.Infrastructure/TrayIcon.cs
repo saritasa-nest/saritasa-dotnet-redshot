@@ -42,9 +42,11 @@ namespace RedShot.Infrastructure
             };
 
             menu.Items.Add(UploadLastFile);
+            menu.Items.Add(new SeparatorMenuItem());
             menu.Items.Add(new ButtonMenuItem()
             {
                 Text = "Exit",
+                Shortcut = Application.Instance.AlternateModifier | Keys.F4,
                 Command = new Command((e, o) => Exit())
             });
 

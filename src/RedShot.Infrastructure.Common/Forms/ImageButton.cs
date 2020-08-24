@@ -10,31 +10,31 @@ namespace RedShot.Infrastructure.Common.Forms
 
         public ImageButton(Size size, Bitmap image, string text = null, Size scaleImageSize = default)
         {
-            var btn = new Button();
-            btn.Width = size.Width;
-            btn.Height = size.Height;
+            var button = new Button();
+            button.Width = size.Width;
+            button.Height = size.Height;
 
             if (scaleImageSize == default)
             {
                 scaleImageSize = new Size(Convert.ToInt32(size.Width * 0.6), Convert.ToInt32(size.Height * 0.6));
             }
 
-            btn.Image = new Bitmap(image, scaleImageSize.Width, scaleImageSize.Height, ImageInterpolation.High);
+            button.Image = new Bitmap(image, scaleImageSize.Width, scaleImageSize.Height, ImageInterpolation.High);
 
-            btn.ImagePosition = ButtonImagePosition.Above;
+            button.ImagePosition = ButtonImagePosition.Above;
 
             if (!string.IsNullOrEmpty(text))
             {
-                btn.Text = text;
+                button.Text = text;
             }
 
-            btn.Click += Btn_Click;
+            button.Click += Btn_Click;
 
             Content = new StackLayout
             {
                 Items =
                 {
-                    btn
+                    button
                 }
             };
         }

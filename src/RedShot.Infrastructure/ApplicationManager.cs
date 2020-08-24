@@ -11,13 +11,13 @@ namespace RedShot.Infrastructure
     /// </summary>
     public static class ApplicationManager
     {
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private static TrayIcon trayIcon;
 
         /// <summary>
         /// Gives tray icon form.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Form.</returns>
         public static Form GetTrayApp()
         {
             try
@@ -26,7 +26,7 @@ namespace RedShot.Infrastructure
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex, "Error occurred in creating tray icon form");
+                logger.Fatal(ex, "Error occurred in creating tray icon form.");
                 throw;
             }
             return trayIcon;

@@ -29,10 +29,10 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         public override event EventHandler Uploaded;
 
         /// <inheritdoc cref="BaseUploader"/>
-        public override event EventHandler UploadStoped;
+        public override event EventHandler OnUploadStopped;
 
         /// <inheritdoc cref="BaseUploader"/>.
-        public override event EventHandler UploadStarted;
+        public override event EventHandler OnUploadStarted;
 
         /// <summary>
         /// Connection flag.
@@ -111,16 +111,16 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
             string path;
             if (string.IsNullOrEmpty(fileName))
             {
-                path = UrlHelper.CombineURL(subFolderPath, Path.GetFileName(file.FilePath));
+                path = UrlHelper.CombineUrl(subFolderPath, Path.GetFileName(file.FilePath));
             }
             else
             {
-                path = UrlHelper.CombineURL(subFolderPath, $"{fileName}{Path.GetExtension(file.FilePath)}");
+                path = UrlHelper.CombineUrl(subFolderPath, $"{fileName}{Path.GetExtension(file.FilePath)}");
             }
 
             IsUploading = true;
 
-            UploadStarted?.Invoke(this, EventArgs.Empty);
+            OnUploadStarted?.Invoke(this, EventArgs.Empty);
 
             try
             {
