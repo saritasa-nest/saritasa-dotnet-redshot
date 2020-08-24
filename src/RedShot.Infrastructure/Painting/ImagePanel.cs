@@ -26,6 +26,7 @@ namespace RedShot.Infrastructure.Painting
         private PaintingState paintingState;
         private bool painting;
         private SKPaint skPaint;
+        private Cursor eraseCursor;
 
         public ImagePanel(Bitmap image)
         {
@@ -83,6 +84,9 @@ namespace RedShot.Infrastructure.Painting
                     break;
                 case PaintingState.Rectangle:
                     Cursor = Cursors.Crosshair;
+                    break;
+                case PaintingState.Erase:
+                    Cursor = eraseCursor;
                     break;
                 case PaintingState.None:
                     Cursor = Cursors.Arrow;
@@ -213,6 +217,9 @@ namespace RedShot.Infrastructure.Painting
 
         private void InitializeComponents()
         {
+            var eraseImage = new Bitmap(Resources.Properties.Resources.EraserPointer);
+            eraseCursor = FormsHelper.GetCursor(eraseImage, new Size(20, 20), new Point(5, 5));
+
             renderTimer = new UITimer()
             {
                 Interval = 0.01

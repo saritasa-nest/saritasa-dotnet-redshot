@@ -21,6 +21,8 @@ namespace RedShot.Infrastructure.Painting
 
         public ImageButton RectangleEnableButton { get; private set; }
 
+        public ImageButton EraseEnableButton { get; private set; }
+
         public ImageButton SaveImageButton { get; private set; }
 
         public ImageButton PaintBackButton { get; private set; }
@@ -41,7 +43,8 @@ namespace RedShot.Infrastructure.Painting
                 MaxValue = 30,
                 Increment = 1,
                 Width = 60,
-                Height = 30
+                Height = 30,
+                ToolTip = "Size of drawing line"
             };
 
             drawSizeStepper.ValueChanged += DrawSizeStepper_ValueChanged;
@@ -51,6 +54,7 @@ namespace RedShot.Infrastructure.Painting
                 Width = 60,
                 Height = 30,
                 Value = Colors.Red,
+                ToolTip = "Pick a color for drawing"
             };
 
             colorPicker.ValueChanged += ColorPicker_ValueChanged;
@@ -62,14 +66,36 @@ namespace RedShot.Infrastructure.Painting
             var saveImage = new Bitmap(Resources.Properties.Resources.Upload);
             var backImage = new Bitmap(Resources.Properties.Resources.Back);
             var rectangleImage = new Bitmap(Resources.Properties.Resources.Rectangle);
+            var eraseImage = new Bitmap(Resources.Properties.Resources.EraseIcon);
 
-            PointsEnableButton = new ImageButton(buttonSize, paintImage, scaleImageSize: imageSize);
-            RectangleEnableButton = new ImageButton(buttonSize, rectangleImage, scaleImageSize: imageSize);
-            SaveImageButton = new ImageButton(buttonSize, saveImage, scaleImageSize: imageSize);
-            PaintBackButton = new ImageButton(buttonSize, backImage, scaleImageSize: imageSize);
+            PointsEnableButton = new ImageButton(buttonSize, paintImage, scaleImageSize: imageSize)
+            {
+                ToolTip = "Draw a line of any shape"
+            };
+
+            RectangleEnableButton = new ImageButton(buttonSize, rectangleImage, scaleImageSize: imageSize)
+            {
+                ToolTip = "Draw a rectangle"
+            };
+
+            SaveImageButton = new ImageButton(buttonSize, saveImage, scaleImageSize: imageSize)
+            {
+                ToolTip = "Upload the image"
+            };
+
+            PaintBackButton = new ImageButton(buttonSize, backImage, scaleImageSize: imageSize)
+            {
+                ToolTip = "Take a step back"
+            };
+
+            EraseEnableButton = new ImageButton(buttonSize, eraseImage, scaleImageSize: imageSize)
+            {
+                ToolTip = "Erase lines from image"
+            };
 
             PointsEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, PaintingState.Points);
             RectangleEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, PaintingState.Rectangle);
+            EraseEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, PaintingState.Erase);
         }
 
         private StackLayout GetContent()
@@ -89,6 +115,8 @@ namespace RedShot.Infrastructure.Painting
                     PointsEnableButton,
                     FormsHelper.VoidBox(10),
                     RectangleEnableButton,
+                    FormsHelper.VoidBox(10),
+                    EraseEnableButton,
                     FormsHelper.VoidBox(20),
                     PaintBackButton,
                     FormsHelper.VoidBox(10),

@@ -8,7 +8,6 @@ namespace RedShot.Infrastructure.Painting.PaintingActions
     /// <summary>
     /// Erase painting action.
     /// Erases points.
-    /// Not uses, allocate to much processor time.
     /// </summary>
     internal class ErasePaintingAction : IPaintingAction
     {
@@ -19,7 +18,7 @@ namespace RedShot.Infrastructure.Painting.PaintingActions
         /// <summary>
         /// Inits values for this action.
         /// </summary>
-        private ErasePaintingAction(SKPaint paint, SKBitmap bitmap)
+        public ErasePaintingAction(SKPaint paint, SKBitmap bitmap)
         {
             erasingPoints = new HashSet<Point>();
             this.bitmap = bitmap.Copy();
@@ -34,7 +33,7 @@ namespace RedShot.Infrastructure.Painting.PaintingActions
                 SKRect rect = default;
                 rect.Location = new SKPoint(point.X - paint.StrokeWidth, point.Y - paint.StrokeWidth);
 
-                var rectSize = 1 + paint.StrokeWidth * 2;
+                var rectSize = 1 + paint.StrokeWidth;
                 rect.Size = new SKSize(rectSize, rectSize);
 
                 surface.Canvas.DrawBitmap(bitmap, rect.Standardized, rect.Standardized);

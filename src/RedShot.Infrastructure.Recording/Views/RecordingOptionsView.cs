@@ -49,7 +49,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
 
         private void RecordingOptionsView_LoadComplete(object sender, EventArgs e)
         {
-            Location = FormsHelper.GetCenterLocation(ClientSize);
+            Location = ScreenHelper.GetCenterLocation(ClientSize);
         }
 
         private void SetDefaultButton_Clicked(object sender, EventArgs e)

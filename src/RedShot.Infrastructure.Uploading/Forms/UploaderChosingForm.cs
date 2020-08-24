@@ -2,6 +2,7 @@
 using Eto.Forms;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
+using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using System.Collections.Generic;
 
@@ -23,7 +24,7 @@ namespace RedShot.Infrastructure.Uploading.Forms
 
         private void UploaderChosingForm_Shown(object sender, System.EventArgs e)
         {
-            Location = FormsHelper.GetCenterLocation(Size);
+            Location = ScreenHelper.GetCenterLocation(Size);
         }
 
         private void InitializeComponents()

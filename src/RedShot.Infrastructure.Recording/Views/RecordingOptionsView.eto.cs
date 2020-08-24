@@ -148,7 +148,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
 
         private void RecordingOptionsView_Shown(object sender, System.EventArgs e)
         {
-            Location = FormsHelper.GetCenterLocation(Size);
+            Location = ScreenHelper.GetCenterLocation(Size);
         }
 
         private Control GetMicrophoneControl()

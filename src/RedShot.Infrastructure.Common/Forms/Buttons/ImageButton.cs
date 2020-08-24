@@ -6,35 +6,50 @@ namespace RedShot.Infrastructure.Common.Forms
 {
     public class ImageButton : Panel
     {
+        private Button baseButton;
+
         public event EventHandler<EventArgs> Clicked;
+
+        public override string ToolTip
+        {
+            get
+            {
+                return baseButton?.ToolTip;
+            }
+
+            set
+            {
+                baseButton.ToolTip = value;
+            }
+        }
 
         public ImageButton(Size size, Bitmap image, string text = null, Size scaleImageSize = default)
         {
-            var button = new Button();
-            button.Width = size.Width;
-            button.Height = size.Height;
+            baseButton = new Button();
+            baseButton.Width = size.Width;
+            baseButton.Height = size.Height;
 
             if (scaleImageSize == default)
             {
                 scaleImageSize = new Size(Convert.ToInt32(size.Width * 0.6), Convert.ToInt32(size.Height * 0.6));
             }
 
-            button.Image = new Bitmap(image, scaleImageSize.Width, scaleImageSize.Height, ImageInterpolation.High);
+            baseButton.Image = new Bitmap(image, scaleImageSize.Width, scaleImageSize.Height, ImageInterpolation.High);
 
-            button.ImagePosition = ButtonImagePosition.Above;
+            baseButton.ImagePosition = ButtonImagePosition.Above;
 
             if (!string.IsNullOrEmpty(text))
             {
-                button.Text = text;
+                baseButton.Text = text;
             }
 
-            button.Click += Btn_Click;
+            baseButton.Click += Btn_Click;
 
             Content = new StackLayout
             {
                 Items =
                 {
-                    button
+                    baseButton
                 }
             };
         }

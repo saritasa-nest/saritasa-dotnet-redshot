@@ -115,12 +115,6 @@ namespace RedShot.Infrastructure.Recording
                         return;
                     }
                 }
-
-                //// If still running.
-                //if (IsProcessRunning)
-                //{
-                //    process.Kill();
-                //}
             }
         }
 

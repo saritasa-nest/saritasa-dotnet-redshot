@@ -23,14 +23,24 @@ namespace RedShot.Infrastructure
         {
             var menu = new ContextMenu();
 
+#if DEBUG
+            menu.Items.Add(new ButtonMenuItem()
+            {
+                Text = "Test",
+                Command = new Command((e, o) => RedShot.DebugLib.TestClass.RunTest())
+            });
+#endif
+
             menu.Items.Add(new ButtonMenuItem()
             {
                 Text = "Record",
+                ToolTip = "Opens view for video recording",
                 Command = new Command((e, o) => ApplicationManager.RunRecording())
             });
             menu.Items.Add(new ButtonMenuItem()
             {
                 Text = "Capture",
+                ToolTip = "Opens view for screen shooting",
                 Command = new Command((e, o) => ApplicationManager.RunScreenShooting())
             });
 
@@ -74,6 +84,7 @@ namespace RedShot.Infrastructure
         private void Exit()
         {
             this.Close();
+            Application.Instance.Quit();
         }
     }
 }

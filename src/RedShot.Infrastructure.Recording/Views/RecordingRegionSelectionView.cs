@@ -1,14 +1,11 @@
-﻿using Eto.Forms;
-using RedShot.Infrastructure.Common.Forms.SelectionForm;
+﻿using RedShot.Infrastructure.Common.Forms.SelectionForm;
 using RedShot.Infrastructure.Recording;
 
 namespace RedShot.Infrastructure.RecordingRedShot.Views
 {
     internal sealed class RecordingRegionSelectionView : SelectionFormBase<RecordManagePanel>
     {
-        public RecordingRegionSelectionView(Screen screen = null) : base(screen)
-        {
-        }
+        protected override string TopMessage { get; set; } = "Please select a region to record";
 
         protected override void InitializeSelectionManageForm()
         {

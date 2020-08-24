@@ -4,13 +4,13 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Configuration.Options;
-using RedShot.Infrastructure.DataTransfer.Ffmpeg;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg.Devices;
 using RedShot.Infrastructure.Recording;
 
@@ -18,7 +18,7 @@ namespace RedShot.Recording.Recorders.Windows
 {
     public class WindowsRecordingService : IRecordingService
     {
-        private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly string ffmpegPath;
 
         private readonly string ffmpegBinaryName;
@@ -102,9 +102,21 @@ namespace RedShot.Recording.Recorders.Windows
                 throw new Exception("FFmpeg is installed already!");
             }
 
+            using (var yesNoDialog = new YesNoDialog())
+            {
+                yesNoDialog.Size = new Size(400, 200);
+                yesNoDialog.Message = "FFmpeg is not installed. Do you want to automatically install it?";
+                yesNoDialog.Title = "FFmpeg installing";
+
+                if (yesNoDialog.ShowModal() != DialogResult.Yes)
+                {
+                    return false;
+                }
+            }
+
             string url;
 
-            if (IntPtr.Size == 8)
+            if (Environment.Is64BitOperatingSystem)
             {
                 url = "https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-latest-win64-static.zip";
             }
@@ -131,7 +143,7 @@ namespace RedShot.Recording.Recorders.Windows
             }
             catch (Exception e)
             {
-                Logger.Error("An error occurred while FFmpeg was installing.", e);
+                logger.Error("An error occurred while FFmpeg was installing.", e);
                 MessageBox.Show($"An error occurred while FFmpeg was installing: {e.Message}", MessageBoxButtons.OK, MessageBoxType.Error);
 
                 return false;

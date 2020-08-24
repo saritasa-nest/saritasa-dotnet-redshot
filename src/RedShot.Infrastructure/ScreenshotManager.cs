@@ -1,8 +1,8 @@
-﻿using Eto.Drawing;
+﻿using System;
+using System.IO;
+using Eto.Drawing;
 using RedShot.Infrastructure.Painting;
 using RedShot.Infrastructure.Screenshooting;
-using System;
-using System.IO;
 
 namespace RedShot.Infrastructure
 {

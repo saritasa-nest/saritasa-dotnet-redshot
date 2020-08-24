@@ -21,7 +21,10 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
             Topmost = true;
             Size = new Size(84, 54);
 
-            StartRecordingButton = new ImageButton(new Size(80, 50), new Bitmap(Resources.Properties.Resources.Record), scaleImageSize: new Size(40, 40));
+            StartRecordingButton = new ImageButton(new Size(80, 50), new Bitmap(Resources.Properties.Resources.Record), scaleImageSize: new Size(40, 40))
+            {
+                ToolTip = "Open recording view"
+            };
 
             Content = new StackLayout
             {
@@ -32,7 +35,6 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
                     StartRecordingButton
                 }
             };
-
         }
     }
 }

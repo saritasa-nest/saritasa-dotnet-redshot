@@ -93,6 +93,26 @@ namespace RedShot.Resources.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
+        public static byte[] EraseIcon {
+            get {
+                object obj = ResourceManager.GetObject("EraseIcon", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        public static byte[] EraserPointer {
+            get {
+                object obj = ResourceManager.GetObject("EraserPointer", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
         public static byte[] Folder {
             get {
                 object obj = ResourceManager.GetObject("Folder", resourceCulture);
@@ -146,6 +166,16 @@ namespace RedShot.Resources.Properties {
         public static byte[] Play {
             get {
                 object obj = ResourceManager.GetObject("Play", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        public static byte[] Pointer {
+            get {
+                object obj = ResourceManager.GetObject("Pointer", resourceCulture);
                 return ((byte[])(obj));
             }
         }

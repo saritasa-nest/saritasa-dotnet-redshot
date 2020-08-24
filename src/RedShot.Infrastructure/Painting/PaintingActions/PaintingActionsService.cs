@@ -12,6 +12,7 @@ namespace RedShot.Infrastructure.Painting.PaintingActions
             {
                 PaintingState.Points => new PointPaintingAction(paint),
                 PaintingState.Rectangle => new RectanglePaintingAction(paint),
+                PaintingState.Erase => new ErasePaintingAction(paint, bitmap),
                 _ => null
             };
         }

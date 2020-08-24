@@ -10,7 +10,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
     /// </summary>
     public class FtpUploadingService : IUploadingService
     {
-        /// <inheritdoc cref="IUploadingService"/>.
+        /// <inheritdoc cref="IUploadingService"/>
         public string ServiceName => "FTP / SFTP / FTPS";
 
         /// <summary>

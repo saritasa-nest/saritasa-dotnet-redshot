@@ -7,6 +7,7 @@ using RedShot.Infrastructure.DataTransfer.Ftp;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Configuration.Options;
+using RedShot.Infrastructure.Common;
 
 namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
 {
@@ -20,7 +21,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
 
         private Button uploadButton;
         private Button ftpSettingsButton;
-        public TextBox fileNameBox;
+        private TextBox fileNameBox;
 
         public string FileName { get; private set; }
 
@@ -39,7 +40,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
             ftpSettingsButton.Click += FtpSettingsButton_Click;
             uploadButton.Click += UploadButton_Click;
 
-            Location = FormsHelper.GetCenterLocation(Size);
+            Location = ScreenHelper.GetCenterLocation(Size);
         }
 
         private void InitializeComponents()

@@ -47,20 +47,16 @@ namespace RedShot.Infrastructure.Common.Forms
             return new Cursor(bitmap, new PointF(radius, radius));
         }
 
-        public static Point GetCenterLocation(Size size)
+        public static Cursor GetCursor(Bitmap icon, Size size, Point hotSpot = default)
         {
-            var center = ScreenHelper.GetCentralCoordsOfScreen();
+            var scaled = new Bitmap(icon, size.Width, size.Height, ImageInterpolation.High);
 
-            var location = new Point(center.X - size.Width / 2, center.Y - size.Height / 2);
+            if (hotSpot == default)
+            {
+                hotSpot = new Point(size.Width / 2, size.Height / 2);
+            }
 
-            if (location.X >= 0 && location.Y >= 0)
-            {
-                return location;
-            }
-            else
-            {
-                return center;
-            }
+            return new Cursor(scaled, hotSpot);
         }
 
         public static StackLayout GetBaseStack(string name, Control control, int nameWidth = 200, int controlWidth = 300)

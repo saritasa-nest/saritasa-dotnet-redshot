@@ -1,15 +1,12 @@
-﻿using Eto.Drawing;
-using Eto.Forms;
+﻿using System;
+using Eto.Drawing;
 using RedShot.Infrastructure.Common.Forms.SelectionForm;
-using System;
 
 namespace RedShot.Infrastructure.Screenshooting
 {
     public sealed class ScreenShotSelectionView : SelectionFormBase<ScreenShotPanel>
     {
-        public ScreenShotSelectionView(Screen screen = null) : base(screen)
-        {
-        }
+        protected override string TopMessage { get; set; } = "Please select a region to capture";
 
         protected override void InitializeSelectionManageForm()
         {

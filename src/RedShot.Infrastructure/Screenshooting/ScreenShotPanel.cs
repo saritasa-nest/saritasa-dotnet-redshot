@@ -30,11 +30,18 @@ namespace RedShot.Infrastructure.Screenshooting
             var imageSize = new Size(40, 40);
 
             var paintImage = new Bitmap(Resources.Properties.Resources.Paint);
+
             var saveImage = new Bitmap(Resources.Properties.Resources.Upload);
 
-            EnablePaintingModeButton = new ImageButton(buttonSize, paintImage, scaleImageSize: imageSize);
+            EnablePaintingModeButton = new ImageButton(buttonSize, paintImage, scaleImageSize: imageSize)
+            {
+                ToolTip = "Open image editor"
+            };
 
-            SaveScreenShotButton = new ImageButton(buttonSize, saveImage, scaleImageSize: imageSize);
+            SaveScreenShotButton = new ImageButton(buttonSize, saveImage, scaleImageSize: imageSize)
+            {
+                ToolTip = "Upload image"
+            };
 
             Content = new StackLayout
             {
@@ -46,7 +53,6 @@ namespace RedShot.Infrastructure.Screenshooting
                     SaveScreenShotButton
                 }
             };
-
         }
     }
 }

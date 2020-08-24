@@ -9,6 +9,8 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 {
     public abstract class SelectionFormBase<T> : Form where T : Form, new()
     {
+        protected virtual string TopMessage { get; set; } = "Please select a region";
+
         protected bool disposed;
 
         protected T selectionManageForm;
@@ -57,7 +59,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 
         protected bool screenSelecting;
 
-        public Screen SelectionScreen { get; private set; }
+        public static Screen SelectionScreen { get; private set; }
 
         /// <summary>
         /// Selection region size and location.
@@ -73,6 +75,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         /// For beauty.
         /// </summary>
         #region Styles
+        private Cursor capturedCursor;
         private Stopwatch penTimer;
         private float[] dash = new float[] { 5, 5 };
         #endregion Styles
@@ -99,9 +102,8 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         /// </summary>
         private readonly double renderFrameTime = 10;
 
-        protected SelectionFormBase(Screen screen = null)
+        protected SelectionFormBase()
         {
-            SelectionScreen = screen;
             InitializeComponent();
         }
 
@@ -112,10 +114,10 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         /// </summary>
         private void InitializeComponent()
         {
+            SetScreenImage();
+
             WindowState = WindowState.Maximized;
             WindowStyle = WindowStyle.None;
-
-            SetScreenImage();
 
             penTimer = Stopwatch.StartNew();
 
@@ -134,6 +136,9 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             screenTimer = new UITimer();
             screenTimer.Interval = 0.1;
             screenTimer.Elapsed += ScreenTimer_Elapsed;
+
+            var capturedIcon = new Bitmap(Resources.Properties.Resources.Pointer);
+            capturedCursor = FormsHelper.GetCursor(capturedIcon, new Size(20, 20));
         }
 
         private void ScreenTimer_Elapsed(object sender, EventArgs e)
@@ -150,10 +155,9 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             }
         }
 
-        private static void Rerun(SelectionFormBase<T> form, Screen screen)
+        private static void Rerun(SelectionFormBase<T> form)
         {
-            var newForm = (SelectionFormBase<T>)Activator.CreateInstance(form.GetType(), screen);
-
+            var newForm = (SelectionFormBase<T>)Activator.CreateInstance(form.GetType());
             newForm.Show();
         }
 
@@ -173,7 +177,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             {
                 screenSelecting = false;
                 Close();
-                Rerun(this, SelectionScreen);
+                Rerun(this);
             }
         }
 
@@ -227,6 +231,10 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             else if (CheckOnMoving(location))
             {
                 Cursor = Cursors.Move;
+            }
+            else if (captured)
+            {
+                Cursor = capturedCursor;
             }
             else
             {
@@ -340,7 +348,6 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
                 }
                 else
                 {
-                    //screenSelecting = false;
                     Close();
                 }
             }
@@ -389,8 +396,6 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 
         protected virtual void PaintTopMessage(SKCanvas canvas)
         {
-            string message = "Please select a region to capture";
-
             SKPaint textPaint = new SKPaint
             {
                 Color = SKColors.White,
@@ -398,11 +403,11 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             };
 
             SKRect textBounds = default;
-            textPaint.MeasureText(message, ref textBounds);
+            textPaint.MeasureText(TopMessage, ref textBounds);
 
             var xText = Width / 2 - textBounds.MidX;
 
-            canvas.DrawText(message, xText, 60, textPaint);
+            canvas.DrawText(TopMessage, xText, 60, textPaint);
         }
 
         protected virtual void PaintCoordinatePanel(SKCanvas canvas)
@@ -543,7 +548,6 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 
             canvas.DrawRect(rect, rectPaint);
             canvas.DrawRect(rect, rectPaintDash);
-
         }
 
         #endregion SkiaSharpCommands
@@ -719,7 +723,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 
         #endregion MovingResizing
 
-        #region SlectionManageForm
+        #region SelectionManageForm
 
         protected virtual void InitializeSelectionManageForm()
         {
@@ -748,8 +752,11 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             selectionManageForm.Visible = false;
         }
 
-        #endregion SlectionManageForm
+        #endregion SelectionManageForm
 
+        /// <summary>
+        /// Returns rectangle with location regarding screenshot image coordinates.
+        /// </summary>
         protected Rectangle GetSelectionRegion()
         {
             if (selectionRectangle.X + selectionRectangle.Width > Width)
@@ -764,6 +771,9 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             return (Rectangle)selectionRectangle;
         }
 
+        /// <summary>
+        /// Returns rectangle with location regarding selection screen position.
+        /// </summary>
         protected Rectangle GetRealSelectionRegion()
         {
             var rect = GetSelectionRegion();

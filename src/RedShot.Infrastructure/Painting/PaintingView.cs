@@ -1,9 +1,10 @@
-﻿using Eto.Drawing;
+﻿using System;
+using SkiaSharp;
+using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Painting.States;
-using SkiaSharp;
-using System;
+using RedShot.Infrastructure.Screenshooting;
 
 namespace RedShot.Infrastructure.Painting
 {
@@ -21,6 +22,8 @@ namespace RedShot.Infrastructure.Painting
 
         public PaintingView(Bitmap image)
         {
+            Title = "Image editor";
+
             MinimumSize = new Size(500, paintingPanelWidth);
 
             Resizable = false;
@@ -29,6 +32,13 @@ namespace RedShot.Infrastructure.Painting
 
             InitializeComponents();
             Content = GetContent();
+
+            this.Shown += PaintingView_Shown;
+        }
+
+        private void PaintingView_Shown(object sender, EventArgs e)
+        {
+            Location = ScreenHelper.GetCenterLocation(Size, ScreenShotSelectionView.SelectionScreen);
         }
 
         private void PaintingView_SizeChanged(object sender, EventArgs e)
@@ -96,6 +106,7 @@ namespace RedShot.Infrastructure.Painting
             return new StackLayout()
             {
                 Orientation = Orientation.Vertical,
+                Padding = 1,
                 Items =
                 {
                     paintingPanel,

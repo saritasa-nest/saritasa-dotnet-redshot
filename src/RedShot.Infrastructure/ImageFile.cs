@@ -1,7 +1,7 @@
-﻿using Eto.Drawing;
+﻿using System.IO;
+using Eto.Drawing;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
-using System.IO;
 
 namespace RedShot.Infrastructure
 {
