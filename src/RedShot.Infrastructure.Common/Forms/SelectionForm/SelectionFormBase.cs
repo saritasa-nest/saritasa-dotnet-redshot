@@ -55,6 +55,10 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         /// </summary>
         protected bool captured;
 
+        protected bool screenSelecting;
+
+        public Screen SelectionScreen { get; private set; }
+
         /// <summary>
         /// Selection region size and location.
         /// </summary>
@@ -95,25 +99,23 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         /// </summary>
         private readonly double renderFrameTime = 10;
 
-        public SelectionFormBase()
+        protected SelectionFormBase(Screen screen = null)
         {
+            SelectionScreen = screen;
             InitializeComponent();
         }
+
+        UITimer screenTimer;
 
         /// <summary>
         /// Initializes whole view.
         /// </summary>
-        void InitializeComponent()
+        private void InitializeComponent()
         {
-            screenRectangle = new Rectangle(ScreenHelper.GetMainWindowSize());
-            var size = new Size(screenRectangle.Width, screenRectangle.Height);
-            Size = size;
-
             WindowState = WindowState.Maximized;
             WindowStyle = WindowStyle.None;
 
-            etoScreenImage = ScreenHelper.TakeScreenshot();
-            skScreenImage = SkiaSharpHelper.ConvertFromEtoBitmap(etoScreenImage);
+            SetScreenImage();
 
             penTimer = Stopwatch.StartNew();
 
@@ -128,6 +130,51 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             UnLoad += EditorViewDrawingSkiaSharp_UnLoad;
 
             InitializeSelectionManageForm();
+
+            screenTimer = new UITimer();
+            screenTimer.Interval = 0.1;
+            screenTimer.Elapsed += ScreenTimer_Elapsed;
+        }
+
+        private void ScreenTimer_Elapsed(object sender, EventArgs e)
+        {
+            if (screenSelecting)
+            {
+                var screen = Screen.FromPoint(Mouse.Position);
+
+                if (SelectionScreen == null || screen != SelectionScreen)
+                {
+                    SelectionScreen = screen;
+                    SetScreenImage();
+                }
+            }
+        }
+
+        private static void Rerun(SelectionFormBase<T> form, Screen screen)
+        {
+            var newForm = (SelectionFormBase<T>)Activator.CreateInstance(form.GetType(), screen);
+
+            newForm.Show();
+        }
+
+        private void SetScreenImage()
+        {
+            var rect = new Rectangle(ScreenHelper.GetScreenSize(SelectionScreen));
+
+            if (screenRectangle == default)
+            {
+                screenRectangle = rect;
+                etoScreenImage = ScreenHelper.TakeScreenshot(SelectionScreen);
+                skScreenImage = SkiaSharpHelper.ConvertFromEtoBitmap(etoScreenImage);
+                Size = new Size(screenRectangle.Width, screenRectangle.Height);
+                Location = rect.TopLeft;
+            }
+            else if (rect != screenRectangle)
+            {
+                screenSelecting = false;
+                Close();
+                Rerun(this, SelectionScreen);
+            }
         }
 
         /// <summary>
@@ -207,11 +254,17 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             KeyDown += EditorView_KeyDown;
 
             skcontrol.Execute((surface) => PaintClearImage(surface.Canvas));
+            screenSelecting = true;
+            screenTimer.Start();
         }
 
         private void EditorView_MouseMove(object sender, MouseEventArgs e)
         {
-            if (capturing)
+            if (screenSelecting)
+            {
+                return;
+            }
+            else if (capturing)
             {
                 endLocation = e.Location;
             }
@@ -236,6 +289,11 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         {
             if (e.Buttons == MouseButtons.Primary)
             {
+                if (screenSelecting)
+                {
+                    screenSelecting = false;
+                }
+
                 if (capturing)
                 {
                     endLocation = e.Location;
@@ -282,6 +340,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
                 }
                 else
                 {
+                    //screenSelecting = false;
                     Close();
                 }
             }
@@ -304,6 +363,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 
         private void EditorViewDrawingSkiaSharp_UnLoad(object sender, EventArgs e)
         {
+            screenSelecting = false;
             Dispose();
         }
 
@@ -666,8 +726,8 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             selectionManageForm = new T();
 
             selectionManageFormLocation = new Point(
-                (int)(Size.Width - selectionManageForm.Width - Size.Width * 0.05),
-                (int)(Size.Height * 0.05));
+                (int)(Size.Width - selectionManageForm.Width - Size.Width * 0.05) + Location.X,
+                (int)(Size.Height * 0.05) + Location.Y);
 
             selectionManageForm.Location = selectionManageFormLocation;
 
@@ -702,6 +762,16 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             }
 
             return (Rectangle)selectionRectangle;
+        }
+
+        protected Rectangle GetRealSelectionRegion()
+        {
+            var rect = GetSelectionRegion();
+
+            var realLocation = new Point(Location.X + rect.X, Location.Y + rect.Y);
+            rect.Location = realLocation;
+
+            return rect;
         }
 
         protected abstract void FinishSelection();

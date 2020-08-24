@@ -11,17 +11,29 @@ namespace RedShot.Infrastructure.Common
         /// <summary>
         /// Gives image of user's screen.
         /// </summary>
-        public static Bitmap TakeScreenshot()
+        public static Bitmap TakeScreenshot(Screen screen = null)
         {
-            return (Bitmap)Screen.PrimaryScreen.GetImage(GetMainWindowSize());
+            if (screen == null)
+            {
+                return (Bitmap)Screen.PrimaryScreen.GetImage(GetScreenSize());
+            }
+            else
+            {
+                return (Bitmap)screen.GetImage(GetScreenSize(screen));
+            }
         }
 
-        /// <summary>
-        /// Gives rectangle of user's screen.
-        /// </summary>
-        public static RectangleF GetMainWindowSize()
+        ///// <summary>
+        ///// Gives rectangle of user's screen.
+        ///// </summary>
+        //public static RectangleF GetMainWindowSize()
+        //{
+        //    return Screen.PrimaryScreen.Bounds;
+        //}
+
+        public static RectangleF GetScreenSize(Screen screen = null)
         {
-            return Screen.PrimaryScreen.Bounds;
+            return screen == null ? Screen.PrimaryScreen.Bounds : screen.Bounds;
         }
 
         /// <summary>
@@ -37,7 +49,7 @@ namespace RedShot.Infrastructure.Common
         /// </summary>
         public static Size GetMiniSizeDisplay()
         {
-            var size = GetMainWindowSize();
+            var size = GetScreenSize();
             return new Size((int)size.Width / 4, (int)size.Height / 4);
         }
 
@@ -46,7 +58,7 @@ namespace RedShot.Infrastructure.Common
         /// </summary>
         public static Point GetStartPointForUploadView()
         {
-            var size = GetMainWindowSize();
+            var size = GetScreenSize();
             var minisize = GetMiniSizeDisplay();
             var sixteenSize = GetSixteenthPartOfDisplay();
             return new Point((int)(size.Width - minisize.Width - sixteenSize), (int)(size.Height - minisize.Height) - 50);
@@ -57,7 +69,7 @@ namespace RedShot.Infrastructure.Common
         /// </summary>
         public static Point GetCentralCoordsOfScreen()
         {
-            var size = GetMainWindowSize();
+            var size = GetScreenSize();
             return new Point((int)(size.Width / 2), (int)(size.Height / 2));
         }
 

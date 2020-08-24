@@ -1,4 +1,5 @@
 ﻿using Eto.Drawing;
+using Eto.Forms;
 using RedShot.Infrastructure.Common.Forms.SelectionForm;
 using System;
 
@@ -6,6 +7,10 @@ namespace RedShot.Infrastructure.Screenshooting
 {
     public sealed class ScreenShotSelectionView : SelectionFormBase<ScreenShotPanel>
     {
+        public ScreenShotSelectionView(Screen screen = null) : base(screen)
+        {
+        }
+
         protected override void InitializeSelectionManageForm()
         {
             base.InitializeSelectionManageForm();

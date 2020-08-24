@@ -1,10 +1,15 @@
-﻿using RedShot.Infrastructure.Common.Forms.SelectionForm;
+﻿using Eto.Forms;
+using RedShot.Infrastructure.Common.Forms.SelectionForm;
 using RedShot.Infrastructure.Recording;
 
 namespace RedShot.Infrastructure.RecordingRedShot.Views
 {
     internal sealed class RecordingRegionSelectionView : SelectionFormBase<RecordManagePanel>
     {
+        public RecordingRegionSelectionView(Screen screen = null) : base(screen)
+        {
+        }
+
         protected override void InitializeSelectionManageForm()
         {
             base.InitializeSelectionManageForm();
@@ -19,7 +24,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
 
         protected override void FinishSelection()
         {
-            RecordingManager.RecordRegion(GetSelectionRegion());
+            RecordingManager.RecordRegion(GetRealSelectionRegion());
             Close();
         }
     }
