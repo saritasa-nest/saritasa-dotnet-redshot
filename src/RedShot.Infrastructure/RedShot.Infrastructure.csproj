@@ -21,6 +21,7 @@
     <ProjectReference Condition="'$(Configuration)'=='Debug'" Include="..\RedShot.DebugLib\RedShot.DebugLib.csproj" />
     <ProjectReference Include="..\RedShot.Infrastructure.Common\RedShot.Infrastructure.Common.csproj" />
     <ProjectReference Include="..\RedShot.Infrastructure.Recording\RedShot.Infrastructure.Recording.csproj" />
+    <ProjectReference Include="..\RedShot.Infrastructure.Settings\RedShot.Infrastructure.Settings.csproj" />
     <ProjectReference Include="..\RedShot.Infrastructure.Uploading\RedShot.Infrastructure.Uploading.csproj" />
     <ProjectReference Include="..\RedShot.Resources\RedShot.Resources.csproj" />
   </ItemGroup>

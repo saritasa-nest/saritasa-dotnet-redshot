@@ -13,7 +13,6 @@ namespace RedShot.DebugLib
             {
                 yesNoDialog.Message = "FFmpeg is not installed. Do you want to automatically install it?";
                 yesNoDialog.Title = "FFmpeg installing";
-
                 yesNoDialog.ShowModal();
             }
         }

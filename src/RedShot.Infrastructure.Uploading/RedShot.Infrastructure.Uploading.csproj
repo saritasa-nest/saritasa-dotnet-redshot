@@ -25,4 +25,10 @@
 	  <ProjectReference Include="..\RedShot.Resources\RedShot.Resources.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Update="Uploaders\Ftp\Settings\FtpSettingControl.eto.cs">
+	    <DependentUpon>FtpSettingControl.cs</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
 </Project>

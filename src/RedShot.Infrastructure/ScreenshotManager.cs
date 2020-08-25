@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using Eto.Drawing;
+using Eto.Forms;
+using RedShot.Infrastructure.Common.Forms.SelectionForm;
 using RedShot.Infrastructure.Painting;
 using RedShot.Infrastructure.Screenshooting;
 
@@ -22,6 +24,7 @@ namespace RedShot.Infrastructure
         {
             selectionView?.Close();
 
+            ScreenShotSelectionView.SelectionScreen = Screen.PrimaryScreen;
             selectionView = new ScreenShotSelectionView();
             selectionView.Show();
         }

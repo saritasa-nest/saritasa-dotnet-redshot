@@ -1,8 +1,8 @@
-﻿using RedShot.Infrastructure.Abstractions;
+﻿using System;
+using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg;
-using System;
 
-namespace RedShot.Infrastructure.Configuration.Options
+namespace RedShot.Infrastructure.Recording
 {
     public class FFmpegConfiguration : IConfigurationOption
     {
@@ -27,16 +27,6 @@ namespace RedShot.Infrastructure.Configuration.Options
         object ICloneable.Clone()
         {
             return Clone();
-        }
-
-        public IConfigurationOption DecodeSection(IEncryptionService encryptionService)
-        {
-            return this;
-        }
-
-        public IConfigurationOption EncodeSection(IEncryptionService encryptionService)
-        {
-            return this;
         }
     }
 }

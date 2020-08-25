@@ -1,6 +1,7 @@
 ﻿using System;
 using Eto.Forms;
 using Eto.Drawing;
+using RedShot.Infrastructure.Settings;
 
 namespace RedShot.Infrastructure
 {
@@ -48,10 +49,18 @@ namespace RedShot.Infrastructure
             {
                 Text = "Upload last file",
                 Visible = false,
-                Command = new Command((e, o) => UploadManager.UploadLastFile())
+                Command = new Command((e, o) => UploadingManager.UploadLastFile())
             };
 
             menu.Items.Add(UploadLastFile);
+
+            menu.Items.Add(new SeparatorMenuItem());
+            menu.Items.Add(new ButtonMenuItem()
+            {
+                Text = "Settings",
+                Command = new Command((e, o) => SettingsManager.OpenSettings())
+            });
+
             menu.Items.Add(new SeparatorMenuItem());
             menu.Items.Add(new ButtonMenuItem()
             {

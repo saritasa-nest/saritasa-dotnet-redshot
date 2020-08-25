@@ -47,7 +47,7 @@ namespace RedShot.Infrastructure
         public static void RunUploadView(IFile file)
         {
             trayIcon.UploadLastFile.Visible = true;
-            UploadManager.RunUploading(file);
+            UploadingManager.RunUploading(file);
         }
 
         public static void RunRecording()

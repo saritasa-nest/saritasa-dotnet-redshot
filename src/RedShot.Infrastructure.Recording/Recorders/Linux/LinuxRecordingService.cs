@@ -3,8 +3,8 @@ using Eto.Forms;
 using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Configuration;
-using RedShot.Infrastructure.Configuration.Options;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg.Devices;
+using RedShot.Infrastructure.Recording;
 
 namespace RedShot.Recording.Recorders.Linux
 {

@@ -90,7 +90,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
             recordingTimer.Stop();
             recorder.Stop();
 
-            UploadManager.RunUploading(recorder.GetVideo());
+            UploadingManager.RunUploading(recorder.GetVideo());
         }
 
         private void RecordingLabelTimer_Elapsed(object sender, System.EventArgs e)

@@ -4,7 +4,6 @@ using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Configuration;
-using RedShot.Infrastructure.Configuration.Options;
 using RedShot.Recording.Recorders.Linux;
 using RedShot.Recording.Recorders.Windows;
 using RedShot.Infrastructure.Abstractions.Recording;
@@ -49,6 +48,7 @@ namespace RedShot.Infrastructure.Recording
 
         public static void OpenSelectionView()
         {
+            RecordingRegionSelectionView.SelectionScreen = Screen.PrimaryScreen;
             var view = new RecordingRegionSelectionView();
             view.Show();
         }

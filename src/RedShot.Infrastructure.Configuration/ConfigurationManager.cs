@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Common.Encryption;
-using RedShot.Infrastructure.DataTransfer;
 
 namespace RedShot.Infrastructure.Configuration
 {
     public static class ConfigurationManager
     {
+        public static List<Type> ConfigurationOptions { get; }
+
         private const string DefaultFolderName = "RedShot";
         private const string ConfigName = "config.json";
         private static readonly NLog.Logger logger;
@@ -22,11 +22,10 @@ namespace RedShot.Infrastructure.Configuration
 
         static ConfigurationManager()
         {
+            ConfigurationOptions = new List<Type>();
             encryptionService = new Base64Encrypter();
             logger = NLog.LogManager.GetCurrentClassLogger();
             settingsMap = new Dictionary<Type, IConfigurationOption>();
-
-            Load();
         }
 
         public static T GetSection<T>() where T : class, IConfigurationOption, new()
@@ -61,20 +60,24 @@ namespace RedShot.Infrastructure.Configuration
 
             foreach (var mapPair in settingsMap)
             {
-                rootObject.Add(mapPair.Key.Name, JObject.FromObject(mapPair.Value.EncodeSection(encryptionService)));
+                var configurationObject = mapPair.Value;
+
+                if (configurationObject is IEncryptable encryptable)
+                {
+                    configurationObject = (IConfigurationOption)encryptable.Encrypt(encryptionService);
+                }
+
+                rootObject.Add(mapPair.Key.Name, JObject.FromObject(configurationObject));
             }
 
             var settingsFilePath = GetFullPath();
-
             File.WriteAllText(settingsFilePath, rootObject.ToString(Formatting.Indented));
+            logger.Debug("The app's configuration was saved");
         }
 
-        private static void Load()
+        public static void Load()
         {
-            var types = Assembly
-                .GetAssembly(typeof(ConfigurationManager))
-                ?.GetTypes()
-                .Where(type => typeof(IConfigurationOption).IsAssignableFrom(type) && !type.IsInterface);
+            var types = ConfigurationOptions.Where(type => typeof(IConfigurationOption).IsAssignableFrom(type) && !type.IsInterface);
 
             var settingsFile = new JObject();
 
@@ -87,13 +90,21 @@ namespace RedShot.Infrastructure.Configuration
             {
                 if (settingsFile.ContainsKey(type.Name) && settingsFile[type.Name] is JObject section)
                 {
-                    settingsMap.Add(type, (section.ToObject(type) as IConfigurationOption).DecodeSection(encryptionService));
+                    var configurationObject = section.ToObject(type);
+
+                    if (configurationObject is IEncryptable encryptable)
+                    {
+                        configurationObject = encryptable.Decrypt(encryptionService);
+                    }
+
+                    settingsMap.Add(type, configurationObject as IConfigurationOption);
                 }
                 else
                 {
                     settingsMap.Add(type, (IConfigurationOption)Activator.CreateInstance(type));
                 }
             }
+            logger.Debug("The app's configuration was loaded");
         }
 
         private static bool TryGetConfigString(out string conf)

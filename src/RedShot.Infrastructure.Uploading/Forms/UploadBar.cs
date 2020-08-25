@@ -81,7 +81,7 @@ namespace RedShot.Infrastructure.Forms
         {
             RefreshTimer();
 
-            var form = new UploaderChosingForm(file, UploadManager.GetUploadingServices());
+            var form = new UploaderChosingForm(file, UploadingManager.GetUploadingServices());
             form.Show();
         }
 

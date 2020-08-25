@@ -4,9 +4,9 @@ using Eto.Forms;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.DataTransfer.Ftp;
 
-namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
+namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
 {
-    internal partial class FtpConfig : Dialog
+    internal partial class FtpSettingControl : Panel
     {
         private void InitializeComponents()
         {
@@ -21,8 +21,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
                 {
                     GetAccountsPanel(),
                     accountFields,
-                    FormsHelper.VoidBox(10),
-                    GetFinishButtons()
                 }
             };
         }
@@ -119,23 +117,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
                 Size = new Eto.Drawing.Size(100, 30),
             };
 
-            copyButton.Click += CopyButton_Click;
-
-            okButton = new Button()
-            {
-                Text = "Ok",
-                Size = new Eto.Drawing.Size(100, 30),
-            };
-
-            okButton.Click += OkButton_Click;
-
-            cancelButton = new Button()
-            {
-                Text = "Cancel",
-                Size = new Eto.Drawing.Size(100, 30),
-            };
-
-            cancelButton.Click += CancelButton_Click;
+            copyButton.Click += CopyButton_Click;        
 
             ftpsCertificateLocationButton = new Button()
             {
@@ -166,20 +148,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
 
             accountFields = GetAccountFieldsControl();
             accountFields.Enabled = false;
-        }
-
-        private Control GetFinishButtons()
-        {
-            return new StackLayout()
-            {
-                Orientation = Orientation.Horizontal,
-                Items =
-                {
-                    okButton,
-                    FormsHelper.VoidBox(10),
-                    cancelButton
-                }
-            };
         }
 
         private Control GetAccountFieldsControl()

@@ -113,6 +113,16 @@ namespace RedShot.Resources.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
+        public static byte[] Failed {
+            get {
+                object obj = ResourceManager.GetObject("Failed", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
         public static byte[] Folder {
             get {
                 object obj = ResourceManager.GetObject("Folder", resourceCulture);
@@ -216,6 +226,16 @@ namespace RedShot.Resources.Properties {
         public static byte[] Stop {
             get {
                 object obj = ResourceManager.GetObject("Stop", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        public static byte[] Success {
+            get {
+                object obj = ResourceManager.GetObject("Success", resourceCulture);
                 return ((byte[])(obj));
             }
         }

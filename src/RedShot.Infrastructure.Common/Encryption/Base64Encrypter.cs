@@ -20,7 +20,7 @@ namespace RedShot.Infrastructure.Common.Encryption
         /// <inheritdoc />
         public string Encrypt(string value)
         {
-            var plainTextBytes = Encoding.UTF8.GetBytes(value);
+            var plainTextBytes = Encoding.UTF8.GetBytes(value ?? string.Empty);
             return Convert.ToBase64String(plainTextBytes);
         }
     }

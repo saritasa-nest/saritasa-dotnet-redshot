@@ -59,7 +59,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 
         protected bool screenSelecting;
 
-        public static Screen SelectionScreen { get; private set; }
+        public static Screen SelectionScreen { get; set; }
 
         /// <summary>
         /// Selection region size and location.
@@ -137,8 +137,10 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             screenTimer.Interval = 0.1;
             screenTimer.Elapsed += ScreenTimer_Elapsed;
 
+            ShowInTaskbar = false;
+
             var capturedIcon = new Bitmap(Resources.Properties.Resources.Pointer);
-            capturedCursor = FormsHelper.GetCursor(capturedIcon, new Size(20, 20));
+            capturedCursor = FormsHelper.GetCursor(capturedIcon, new Size(20, 20), new Point(3, 3));
         }
 
         private void ScreenTimer_Elapsed(object sender, EventArgs e)

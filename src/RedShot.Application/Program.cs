@@ -4,7 +4,9 @@ using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
 using RedShot.Infrastructure;
 using RedShot.Infrastructure.Configuration;
-#if _UNIX
+#if _WINDOWS
+using Eto.WinForms.Forms;
+#elif _UNIX
 using System.Runtime.InteropServices;
 #endif
 
@@ -22,11 +24,14 @@ namespace RedShot.Application
         {
             logger.Debug("The app was started!");
 
+            AppInitializer.Initialize();
+
             var app = new Eto.Forms.Application(Eto.Platform.Detect);
             app.UnhandledException += InstanceOnUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += DomainUnhandledException;
 
             AddControl();
+            AddStyles();
             app.Run(ApplicationManager.GetTrayApp());
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
         }
@@ -51,6 +56,14 @@ namespace RedShot.Application
             }
 #else
             throw new NotImplementedException();
+#endif
+        }
+
+        private static void AddStyles()
+        {
+#if _WINDOWS
+            Eto.Style.Add<NotificationHandler>("FailedNotification", h => h.NotificationIcon = NotificationIcon.Error);
+            Eto.Style.Add<NotificationHandler>("SucceedNotification", h => h.NotificationIcon = NotificationIcon.Info);
 #endif
         }
 

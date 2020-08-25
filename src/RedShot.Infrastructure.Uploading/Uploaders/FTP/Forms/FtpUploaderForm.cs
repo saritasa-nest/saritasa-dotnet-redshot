@@ -1,26 +1,19 @@
 using System;
+using System.Linq;
 using Eto.Forms;
 using Eto.Drawing;
-using System.Collections.Generic;
-using System.Linq;
 using RedShot.Infrastructure.DataTransfer.Ftp;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Configuration;
-using RedShot.Infrastructure.Configuration.Options;
 using RedShot.Infrastructure.Common;
 
 namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
 {
     public partial class FtpUploaderForm : Dialog<DialogResult>
     {
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-
         private FtpConfiguration ftpConfiguration;
-
         private ComboBox accounts;
-
         private Button uploadButton;
-        private Button ftpSettingsButton;
         private TextBox fileNameBox;
 
         public string FileName { get; private set; }
@@ -36,8 +29,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
             ShowInTaskbar = true;
 
             InitializeComponents();
-
-            ftpSettingsButton.Click += FtpSettingsButton_Click;
             uploadButton.Click += UploadButton_Click;
 
             Location = ScreenHelper.GetCenterLocation(Size);
@@ -59,11 +50,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
             uploadButton = new Button()
             {
                 Text = "Upload",
-            };
-
-            ftpSettingsButton = new Button()
-            {
-                Text = "Settings",
             };
 
             Content = new StackLayout
@@ -90,9 +76,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
                 VerticalContentAlignment = VerticalAlignment.Center,
                 Items =
                 {
-                    uploadButton,
-                    FormsHelper.VoidBox(20),
-                    ftpSettingsButton
+                    uploadButton
                 }
             };
         }
@@ -135,17 +119,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
                     accounts,
                 }
             };
-        }
-
-        private void FtpSettingsButton_Click(object sender, EventArgs e)
-        {
-            var form = new FtpConfig();
-            form.ShowModal();
-
-            ftpConfiguration = ConfigurationManager.GetSection<FtpConfiguration>();
-
-            accounts.SelectedIndex = -1;
-            accounts.DataStore = ftpConfiguration.FtpAccounts;
         }
 
         private void UploadButton_Click(object sender, EventArgs e)

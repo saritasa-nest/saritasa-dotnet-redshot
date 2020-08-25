@@ -3,19 +3,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Eto.Forms;
-using RedShot.Infrastructure.Configuration;
-using RedShot.Infrastructure.Configuration.Options;
 using RedShot.Infrastructure.DataTransfer.Ftp;
 
-namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
+namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
 {
-    internal partial class FtpConfig : Dialog
+    internal partial class FtpSettingControl : Panel
     {
         private Button addButton;
         private Button delButton;
         private Button copyButton;
-        private Button okButton;
-        private Button cancelButton;
         private ComboBox accounts;
         private TextBox name;
         private ComboBox ftpProtocol;
@@ -37,16 +33,12 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
         private ObservableCollection<FtpAccount> bindingList;
 
         private readonly List<FtpAccount> ftpAccounts;
-        private readonly FtpConfiguration ftpConfiguration;
 
-        public FtpConfig()
+        public FtpSettingControl(FtpConfiguration ftpConfiguration)
         {
-            ftpConfiguration = ConfigurationManager.GetSection<FtpConfiguration>();
             ftpAccounts = ftpConfiguration.FtpAccounts;
 
             InitializeComponents();
-
-            Title = "FTP/FTPS/SFTP Configuration";
 
             this.accounts.SelectedValueChanged += Accounts_SelectedValueChanged;
             this.accounts.DropDownClosed += Accounts_SelectedValueChanged;
@@ -126,21 +118,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
             }
         }
 
-        private void OkButton_Click(object sender, EventArgs e)
-        {
-            ftpAccounts.Clear();
-            ftpAccounts.AddRange(bindingList);
-
-            ConfigurationManager.SetSettingsValue(ftpConfiguration);
-            ConfigurationManager.Save();
-            Close();
-        }
-
-        private void CancelButton_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
         private void CopyButton_Click(object sender, EventArgs e)
         {
             if (accounts.SelectedValue != null)
@@ -166,6 +143,8 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
         private void AddButton_Click(object sender, EventArgs e)
         {
             CreateNewAccount();
+            ftpAccounts.Clear();
+            ftpAccounts.AddRange(bindingList);
         }
 
         private void CreateNewAccount(FtpAccount account = null)

@@ -20,6 +20,7 @@ namespace RedShot.Infrastructure.Uploading.Forms
             this.uploadingServices = uploadingServices;
             InitializeComponents();
             this.Shown += UploaderChosingForm_Shown;
+            Resizable = false;
         }
 
         private void UploaderChosingForm_Shown(object sender, System.EventArgs e)
@@ -51,7 +52,7 @@ namespace RedShot.Infrastructure.Uploading.Forms
             button.Clicked += (o, e) =>
             {
                 var uploader = service.GetUploader();
-                UploadManager.Upload(uploader, file);
+                UploadingManager.Upload(uploader, file);
             };
 
             button.Enabled = service.CheckOnSupporting(file.FileType);

@@ -17,6 +17,7 @@
   <ItemGroup>
     <PackageReference Condition=" '$(OS)' != 'Windows_NT' " Include="SkiaSharp.NativeAssets.Linux" Version="2.80.1" />
     <ProjectReference Include="..\RedShot.Infrastructure.Configuration\RedShot.Infrastructure.Configuration.csproj" />
+    <ProjectReference Include="..\RedShot.Infrastructure.Settings\RedShot.Infrastructure.Settings.csproj" />
     <ProjectReference Condition=" '$(OS)' != 'Windows_NT' " Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.GTK\Eto.Forms.Controls.SkiaSharp.GTK.csproj" />
     <ProjectReference Condition=" '$(OS)' != 'Windows_NT' " Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.Mac\Eto.Forms.Controls.SkiaSharp.Mac.csproj" />
     <ProjectReference Condition=" '$(OS)' == 'Windows_NT' " Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.WinForms\Eto.Forms.Controls.SkiaSharp.WinForms.csproj" />
@@ -25,7 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Condition=" '$(OS)' != 'Windows_NT' " Include="Eto.Platform.Gtk" Version="2.5.3" />
+    <PackageReference Condition=" '$(OS)' != 'Windows_NT' " Include="Eto.Platform.Gtk" Version="2.5.5" />
+    <PackageReference Condition=" '$(OS)' != 'Windows_NT' " Include="Eto.Platform.Mac64" Version="2.5.5" />
     <PackageReference Condition=" '$(OS)' == 'Windows_NT' " Include="Eto.Platform.Windows" Version="2.5.5" />
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="3.0.0" />
     <PackageReference Include="NLog" Version="4.7.4" />

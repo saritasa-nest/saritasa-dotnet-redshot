@@ -15,6 +15,13 @@ namespace RedShot.Infrastructure.Common.Forms
             downloader.DownloadProgressChanged += Downloader_DownloadProgressChanged;
 
             IntitializeComponents();
+
+            this.Shown += DownloadForm_Shown;
+        }
+
+        private void DownloadForm_Shown(object sender, System.EventArgs e)
+        {
+            Location = ScreenHelper.GetCenterLocation(Size);
         }
 
         private void Downloader_DownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
