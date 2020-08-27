@@ -4,12 +4,21 @@ using Eto.Forms;
 
 namespace RedShot.Infrastructure.Common.Forms
 {
+    /// <summary>
+    /// Image button.
+    /// </summary>
     public class ImageButton : Panel
     {
         private Button baseButton;
 
+        /// <summary>
+        /// Event to handle when the user clicks the button.
+        /// </summary>
         public event EventHandler<EventArgs> Clicked;
 
+        /// <summary>
+        /// Tool tip of the button.
+        /// </summary>
         public override string ToolTip
         {
             get
@@ -23,6 +32,9 @@ namespace RedShot.Infrastructure.Common.Forms
             }
         }
 
+        /// <summary>
+        /// Initializes image button.
+        /// </summary>
         public ImageButton(Size size, Bitmap image, string text = null, Size scaleImageSize = default)
         {
             baseButton = new Button();

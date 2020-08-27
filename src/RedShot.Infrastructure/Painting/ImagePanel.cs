@@ -14,7 +14,10 @@ using RedShot.Infrastructure.Painting.PaintingActions;
 
 namespace RedShot.Infrastructure.Painting
 {
-    public class ImagePanel : Panel
+    /// <summary>
+    /// Image panel.
+    /// </summary>
+    internal class ImagePanel : Panel
     {
         private readonly SKBitmap image;
         private SKControl skControl;
@@ -28,6 +31,9 @@ namespace RedShot.Infrastructure.Painting
         private SKPaint skPaint;
         private Cursor eraseCursor;
 
+        /// <summary>
+        /// Initializes image panel via Bitmap image.
+        /// </summary>
         public ImagePanel(Bitmap image)
         {
             Size = image.Size;
@@ -42,6 +48,10 @@ namespace RedShot.Infrastructure.Painting
             Shown += ImagePanel_Shown;
         }
 
+        /// <summary>
+        /// Changes painting action (Drawing line, rectangle, erasing).
+        /// </summary>
+        /// <param name="paintingState"></param>
         public void ChangePaintingState(PaintingState paintingState)
         {
             if (this.paintingState != paintingState)
@@ -51,6 +61,9 @@ namespace RedShot.Infrastructure.Painting
             }
         }
 
+        /// <summary>
+        /// Gives painting image.
+        /// </summary>
         public Bitmap ScreenShot()
         {
             using var surface = SKSurface.Create(image.Width, image.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
@@ -59,10 +72,29 @@ namespace RedShot.Infrastructure.Painting
             return EtoDrawingHelper.GetEtoBitmapFromSkiaSurface(surface);
         }
 
+        /// <summary>
+        /// Changes SkiaSharp paint (Pen).
+        /// </summary>
         public void ChangePaint(SKPaint paint)
         {
             skPaint = paint;
             ChangeMouseCursor();
+        }
+
+        /// <summary>
+        /// Moves back.
+        /// Removes last painting action.
+        /// </summary>
+        public void PaintBack()
+        {
+            if (painting)
+            {
+                painting = false;
+            }
+            else
+            {
+                paintingActions.Remove(paintingActions.LastOrDefault());
+            }
         }
 
         private void ImagePanel_Shown(object sender, EventArgs e)
@@ -135,18 +167,6 @@ namespace RedShot.Infrastructure.Painting
             else if (e.Buttons == MouseButtons.Alternate)
             {
                 PaintBack();
-            }
-        }
-
-        public void PaintBack()
-        {
-            if (painting)
-            {
-                painting = false;
-            }
-            else
-            {
-                paintingActions.Remove(paintingActions.LastOrDefault());
             }
         }
 

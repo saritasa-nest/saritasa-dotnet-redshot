@@ -1,21 +1,25 @@
-﻿using Eto.Drawing;
+﻿using System;
+using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg;
-using System;
 
-namespace RedShot.Recording.Views.CodecsOptions.VideoOptions
+namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
 {
+    /// <summary>
+    /// VP9 options view.
+    /// </summary>
     internal class Vp9CodecOptions : Dialog
     {
         private FFmpegOptions options;
-
         private NumericStepper vp9Quality;
         private DefaultButton qualityAbout;
         private TextBox vp9Bitrate;
-
         private DefaultButton okButton;
 
+        /// <summary>
+        /// Initializes VP9 options view.
+        /// </summary>
         public Vp9CodecOptions(FFmpegOptions options)
         {
             Title = "VP9 options";

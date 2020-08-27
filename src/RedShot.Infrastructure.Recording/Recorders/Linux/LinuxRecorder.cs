@@ -5,12 +5,19 @@ using RedShot.Infrastructure.Recording.Recorders;
 
 namespace RedShot.Recording.Recorders.Linux
 {
+    /// <summary>
+    /// Recorder for Linux OS.
+    /// </summary>
     internal class LinuxRecorder : BaseRecorder
     {
+        /// <summary>
+        /// Initializes Linux recorder.
+        /// </summary>
         public LinuxRecorder(FFmpegOptions options, string videoFolderPath = null) : base(options, "ffmpeg", videoFolderPath)
         {
         }
 
+        /// <inheritdoc/>
         protected override string GetDeviceArgs(Rectangle captureArea)
         {
             if (captureArea.Width % 2 != 0)

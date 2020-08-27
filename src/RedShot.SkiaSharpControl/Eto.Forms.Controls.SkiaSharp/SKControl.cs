@@ -11,14 +11,15 @@ namespace Eto.Forms.Controls.SkiaSharp
     {
         private new ISKControl Handler => (ISKControl)base.Handler;
 
-        /// <inheritdoc cref="ISKControl"/>.
+        private bool disposed;
+
+        /// <inheritdoc cref="ISKControl"/>
         public void Execute(Action<SKSurface> surface)
         {
             Handler.Execute(surface);
         }
 
-        private bool disposed;
-
+        /// <inheritdoc />
         public new void Dispose()
         {
             if (disposed == false)

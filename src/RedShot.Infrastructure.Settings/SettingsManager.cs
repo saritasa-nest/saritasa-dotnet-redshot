@@ -1,35 +1,38 @@
-﻿using RedShot.Infrastructure.Abstractions;
+﻿using System.Collections.Generic;
+using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Settings.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RedShot.Infrastructure.Settings
 {
+    /// <summary>
+    /// Settings manager.
+    /// </summary>
     public static class SettingsManager
     {
         private static SettingsView settingsView;
 
         static SettingsManager()
         {
-            SettingOptions = new List<Type>();
+            SettingsOptions = new List<ISettingsOption>();
         }
 
-        public static List<Type> SettingOptions { get; }
+        /// <summary>
+        /// Settings options.
+        /// Must implement ISettingsOption interface.
+        /// </summary>
+        public static List<ISettingsOption> SettingsOptions { get; }
 
+        /// <summary>
+        /// Open settings of the app.
+        /// </summary>
         public static void OpenSettings()
         {
             settingsView?.Close();
 
-            var options = SettingOptions
-                .Where(type => typeof(ISettingsOption).IsAssignableFrom(type) && !type.IsInterface)
-                .Select(t => (ISettingsOption)Activator.CreateInstance(t));
-
-            settingsView = new SettingsView(options);
+            settingsView = new SettingsView(SettingsOptions);
             settingsView.Closed += (o, e) =>
             {
-                foreach (var option in options)
+                foreach (var option in SettingsOptions)
                 {
                     option.Save();
                 }

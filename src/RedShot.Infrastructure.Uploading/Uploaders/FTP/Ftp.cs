@@ -17,7 +17,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
     /// <summary>
     /// FTP/FTPS uploader.
     /// </summary>
-    public sealed class Ftp : BaseUploader, IDisposable
+    internal sealed class Ftp : BaseUploader, IDisposable
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly FtpAccount account;

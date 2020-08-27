@@ -35,9 +35,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Infrastructure.Data
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Resources", "RedShot.Resources\RedShot.Resources.csproj", "{6B8A533C-D0C2-4427-8C5D-90CCB8463E5E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.DebugLib", "RedShot.DebugLib\RedShot.DebugLib.csproj", "{D76747B8-E51C-47A9-80E9-BA20C4BFF0D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Infrastructure.Settings", "RedShot.Infrastructure.Settings\RedShot.Infrastructure.Settings.csproj", "{730165C0-62EC-4AFE-A94B-5A5C545DA6B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedShot.Infrastructure.Settings", "RedShot.Infrastructure.Settings\RedShot.Infrastructure.Settings.csproj", "{730165C0-62EC-4AFE-A94B-5A5C545DA6B3}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EC824082-E0B5-42C1-9EF5-E3B50A9B610C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -101,10 +104,6 @@ Global
 		{6B8A533C-D0C2-4427-8C5D-90CCB8463E5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B8A533C-D0C2-4427-8C5D-90CCB8463E5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B8A533C-D0C2-4427-8C5D-90CCB8463E5E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D76747B8-E51C-47A9-80E9-BA20C4BFF0D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D76747B8-E51C-47A9-80E9-BA20C4BFF0D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D76747B8-E51C-47A9-80E9-BA20C4BFF0D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D76747B8-E51C-47A9-80E9-BA20C4BFF0D9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{730165C0-62EC-4AFE-A94B-5A5C545DA6B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{730165C0-62EC-4AFE-A94B-5A5C545DA6B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{730165C0-62EC-4AFE-A94B-5A5C545DA6B3}.Release|Any CPU.ActiveCfg = Release|Any CPU

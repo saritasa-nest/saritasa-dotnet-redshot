@@ -3,24 +3,45 @@ using System.Text;
 
 namespace RedShot.Infrastructure.Common
 {
+    /// <summary>
+    /// CLI manager.
+    /// </summary>
     public class CliManager
     {
         private readonly NLog.Logger logger = NLog.LogManager.GetLogger("CLIdebug");
 
+        /// <summary>
+        /// File path of the process's binary.
+        /// </summary>
         protected readonly string filePath;
 
+        /// <summary>
+        /// Process state.
+        /// </summary>
         public bool IsProcessRunning { get; protected set; }
 
+        /// <summary>
+        /// Output from CLI execution.
+        /// </summary>
         public StringBuilder Output { get; protected set; }
 
+        /// <summary>
+        /// Process field.
+        /// </summary>
         protected Process process;
 
+        /// <summary>
+        /// Initializes CLI manager.
+        /// </summary>
         public CliManager(string filePath)
         {
             this.filePath = filePath;
             Output = new StringBuilder();
         }
 
+        /// <summary>
+        /// Runs process.
+        /// </summary>
         public virtual void Run(string args)
         {
             Output.Clear();
@@ -67,6 +88,9 @@ namespace RedShot.Infrastructure.Common
             }
         }
 
+        /// <summary>
+        /// Data received handler.
+        /// </summary>
         protected virtual void DataReceived(object sender, DataReceivedEventArgs e)
         {
             var data = e.Data;
@@ -79,6 +103,9 @@ namespace RedShot.Infrastructure.Common
             }
         }
 
+        /// <summary>
+        /// Inputs message to CLI.
+        /// </summary>
         public virtual void WriteInput(string input)
         {
             if (IsProcessRunning)
@@ -87,6 +114,9 @@ namespace RedShot.Infrastructure.Common
             }
         }
 
+        /// <summary>
+        /// Stops process.
+        /// </summary>
         public virtual void Stop()
         {
             if (IsProcessRunning)

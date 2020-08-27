@@ -4,6 +4,9 @@ using SkiaSharp;
 
 namespace Eto.Forms.Controls.SkiaSharp.WinForms
 {
+    /// <summary>
+    /// SK control handler for Windows.
+    /// </summary>
     public class SKControlHandler : WindowsControl<System.Windows.Forms.Control, SKControl, Control.ICallback>, ISKControl
     {
         private SKControlWinForms nativecontrol;
@@ -18,13 +21,13 @@ namespace Eto.Forms.Controls.SkiaSharp.WinForms
             Control = nativecontrol;
         }
 
-        /// <inheritdoc cref="ISKControl"/>.
+        /// <inheritdoc cref="ISKControl"/>
         public void Execute(Action<SKSurface> surface)
         {
             nativecontrol.Execute(surface);
         }
 
-        /// <inheritdoc cref="ISKControl"/>.
+        /// <inheritdoc cref="ISKControl"/>
         void ISKControl.DisposeControl()
         {
             if (disposed == false)

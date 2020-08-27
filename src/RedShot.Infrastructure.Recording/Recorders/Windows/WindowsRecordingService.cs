@@ -15,19 +15,23 @@ using RedShot.Infrastructure.Recording;
 
 namespace RedShot.Recording.Recorders.Windows
 {
-    public class WindowsRecordingService : IRecordingService
+    /// <summary>
+    /// Windows recorder service.
+    /// </summary>
+    internal class WindowsRecordingService : IRecordingService
     {
         private readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        private readonly string ffmpegPath;
-
         private readonly string ffmpegBinaryName;
 
+        /// <summary>
+        /// Initializes Windows recording service.
+        /// </summary>
         public WindowsRecordingService()
         {
-            ffmpegPath = Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FFmpeg")).FullName;
             ffmpegBinaryName = "ffmpeg.exe";
         }
 
+        /// <inheritdoc />
         public IRecorder GetRecorder()
         {
             ThrowIfNotFoundFfmpegBinary();
@@ -37,11 +41,13 @@ namespace RedShot.Recording.Recorders.Windows
             return new WindowsRecorder(options, GetFullFfmpegPath());
         }
 
+        /// <inheritdoc />
         public bool CheckFFmpeg()
         {
             return GetFfmpegFiles().Any();
         }
 
+        /// <inheritdoc />
         public IRecordingDevices GetRecordingDevices()
         {
             ThrowIfNotFoundFfmpegBinary();
@@ -94,6 +100,7 @@ namespace RedShot.Recording.Recorders.Windows
             return new RecordingDevices(videoDevices, audioDevices);
         }
 
+        /// <inheritdoc />
         public bool InstallFFmpeg()
         {
             if (CheckFFmpeg())
@@ -132,7 +139,7 @@ namespace RedShot.Recording.Recorders.Windows
 
                 downloader.DownloadAsync(url, ffmpegZipName, (path) => 
                 {
-                    ZipFile.ExtractToDirectory(path, ffmpegPath);
+                    ZipFile.ExtractToDirectory(path, GetFfmpegPath());
                     RecordingManager.InitiateRecording();
                 });
 
@@ -164,12 +171,17 @@ namespace RedShot.Recording.Recorders.Windows
 
         private string[] GetFfmpegFiles()
         {
-            return Directory.GetFiles(ffmpegPath, ffmpegBinaryName, SearchOption.AllDirectories);
+            return Directory.GetFiles(GetFfmpegPath(), ffmpegBinaryName, SearchOption.AllDirectories);
         }
 
         private string[] GetLines(string text)
         {
             return text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+        }
+
+        private string GetFfmpegPath()
+        {
+            return Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FFmpeg")).FullName;
         }
     }
 }

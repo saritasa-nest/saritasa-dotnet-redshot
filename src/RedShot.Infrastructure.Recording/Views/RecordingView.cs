@@ -8,18 +8,23 @@ using RedShot.Infrastructure.Common.Forms;
 
 namespace RedShot.Infrastructure.RecordingRedShot.Views
 {
-    public class RecordingView : Form
+    /// <summary>
+    /// Recording view.
+    /// </summary>
+    internal class RecordingView : Form
     {
         private Control managePanel;
         private IRecorder recorder;
         private Rectangle recordingRectangle;
         private UITimer labelRenderTimer;
         private Stopwatch recordingTimer;
-
         private RecordingButton recordingButton;
-        private DefaultButton closeButton;
+        private ImageButton closeButton;
         private Label timerLabel;
 
+        /// <summary>
+        /// Initializes recording view.
+        /// </summary>
         public RecordingView(IRecorder recorder, Rectangle recordingRectangle)
         {
             this.recorder = recorder;
@@ -99,6 +104,9 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
             timerLabel.Invalidate();
         }
 
+        /// <summary>
+        /// Makes the view leaky.
+        /// </summary>
         private void SetupLocations()
         {
             if ((recordingRectangle.Location.Y - managePanel.Height) > 0)
@@ -116,7 +124,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
             }
             else
             {
-                var screenBounds = ScreenHelper.GetScreenSizeByLocation(recordingRectangle.Location);
+                var screenBounds = ScreenHelper.GetScreenBounds();
 
                 if ((recordingRectangle.Location.Y + managePanel.Height) < screenBounds.Height)
                 {
@@ -144,10 +152,11 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
                 Text = TimeSpan.Zero.ToString()
             };
 
-            recordingButton = new RecordingButton(60, 50);
+            recordingButton = new RecordingButton(40, 35);
             recordingButton.Clicked += RecordingButton_Clicked;
 
-            closeButton = new DefaultButton("Close", 60, 50);
+            var closeImage = new Bitmap(Resources.Properties.Resources.Close);
+            closeButton = new ImageButton(new Size(40, 35), closeImage, scaleImageSize: new Size(20, 18));
             closeButton.Clicked += CloseButton_Clicked;
 
             managePanel = GetManageControl();
@@ -160,15 +169,15 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
                 Orientation = Orientation.Horizontal,
                 VerticalContentAlignment = VerticalAlignment.Center,
                 Padding = 3,
-                BackgroundColor = Colors.White,
-                Size = new Size(240, 54),
+                Size = new Size(240, 40),
+                BackgroundColor = Colors.WhiteSmoke,
                 Items =
-                {
-                    recordingButton,
-                    closeButton,
-                    FormsHelper.VoidBox(20),
-                    timerLabel
-                }
+                    {
+                        recordingButton,
+                        closeButton,
+                        FormsHelper.VoidBox(20),
+                        timerLabel
+                    }
             };
         }
     }

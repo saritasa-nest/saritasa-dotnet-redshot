@@ -42,6 +42,7 @@ namespace Eto.Forms.Controls.SkiaSharp.WinForms
             Refresh();
         }
 
+        /// <inheritdoc />
         protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
         {
             if (bitmap != null)
@@ -69,6 +70,7 @@ namespace Eto.Forms.Controls.SkiaSharp.WinForms
             }
         }
 
+        /// <inheritdoc />
         public new void Dispose()
         {
             if (IsDisposed == false)

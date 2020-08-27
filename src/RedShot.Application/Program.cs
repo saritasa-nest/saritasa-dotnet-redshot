@@ -19,6 +19,9 @@ namespace RedShot.Application
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        /// <summary>
+        /// Runs the app.
+        /// </summary>
         [STAThread]
         public static void Main(string[] args)
         {

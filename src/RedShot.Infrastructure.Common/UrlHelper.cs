@@ -3,12 +3,12 @@
 namespace RedShot.Infrastructure.Common
 {
     /// <summary>
-    /// Helper for working with Urls and paths.
+    /// Helper for working with URL's and paths.
     /// </summary>
     public static class UrlHelper
     {
         /// <summary>
-        /// Combine two urls.
+        /// Combine two URLs.
         /// </summary>
         public static string CombineUrl(string url1, string url2)
         {

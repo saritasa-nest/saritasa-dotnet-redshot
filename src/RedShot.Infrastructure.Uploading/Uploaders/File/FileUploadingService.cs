@@ -3,10 +3,15 @@ using RedShot.Infrastructure.Abstractions.Uploading;
 
 namespace RedShot.Infrastructure.Uploaders.File
 {
-    public class FileUploadingService : IUploadingService
+    /// <summary>
+    /// File uploading service.
+    /// </summary>
+    internal class FileUploadingService : IUploadingService
     {
-        public string ServiceName => "File";
+        /// <inheritdoc />
+        public string Name => "File";
 
+        /// <inheritdoc />
         public Bitmap ServiceImage
         {
             get
@@ -15,11 +20,16 @@ namespace RedShot.Infrastructure.Uploaders.File
             }
         }
 
+        /// <inheritdoc />
+        public string About => "Uploads the file to specified folder";
+
+        /// <inheritdoc />
         public bool CheckOnSupporting(FileType fileType)
         {
             return true;
         }
 
+        /// <inheritdoc />
         public IUploader GetUploader()
         {
             return new FileUploader();

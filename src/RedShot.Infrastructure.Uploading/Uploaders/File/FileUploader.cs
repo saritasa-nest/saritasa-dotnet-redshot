@@ -8,8 +8,12 @@ using RedShot.Infrastructure.Basics;
 
 namespace RedShot.Infrastructure.Uploaders.File
 {
-    public class FileUploader : IUploader
+    /// <summary>
+    /// File uploader.
+    /// </summary>
+    internal sealed class FileUploader : IUploader
     {
+        /// <inheritdoc />
         public IUploadingResponse Upload(IFile file)
         {
             using (var dialog = new SaveFileDialog())

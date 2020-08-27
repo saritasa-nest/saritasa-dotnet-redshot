@@ -4,8 +4,12 @@ using RedShot.Infrastructure.Basics;
 
 namespace RedShot.Infrastructure.Uploaders.Clipboard
 {
-    public class ClipboardUploader : IUploader
+    /// <summary>
+    /// Clipboard uploader.
+    /// </summary>
+    internal class ClipboardUploader : IUploader
     {
+        /// <inheritdoc/>
         public IUploadingResponse Upload(IFile file)
         {
             Eto.Forms.Clipboard.Instance.Clear();

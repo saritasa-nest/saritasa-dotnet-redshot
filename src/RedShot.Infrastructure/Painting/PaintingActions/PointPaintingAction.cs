@@ -24,13 +24,13 @@ namespace RedShot.Infrastructure.Painting.PaintingActions
             this.paint = paint;
         }
 
-        /// <inheritdoc cref="IPaintingAction"/>.
+        /// <inheritdoc />
         public void AddPoint(Point point)
         {
             points.Add(point);
         }
 
-        /// <inheritdoc cref="IPaintingAction"/>.
+        /// <inheritdoc />
         public void Paint(SKSurface surface)
         {
             surface.Canvas.DrawPoints(SKPointMode.Polygon, points.Select(p => new SKPoint(p.X, p.Y)).ToArray(), paint);

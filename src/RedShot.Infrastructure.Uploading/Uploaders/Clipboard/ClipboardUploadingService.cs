@@ -1,14 +1,17 @@
 ﻿using Eto.Drawing;
 using RedShot.Infrastructure.Abstractions.Uploading;
-using RedShot.Infrastructure.Uploaders.File;
-using System;
 
 namespace RedShot.Infrastructure.Uploaders.Clipboard
 {
-    class FileUploadingService : IUploadingService
+    /// <summary>
+    /// Clipboard uploading service.
+    /// </summary>
+    internal class ClipboardUploadingService : IUploadingService
     {
-        public string ServiceName => "Clipboard";
+        /// <inheritdoc/>
+        public string Name => "Clipboard";
 
+        /// <inheritdoc/>
         public Bitmap ServiceImage
         {
             get
@@ -17,6 +20,10 @@ namespace RedShot.Infrastructure.Uploaders.Clipboard
             }
         }
 
+        /// <inheritdoc/>
+        public string About => "Uploads the file to clipboard";
+
+        /// <inheritdoc/>
         public bool CheckOnSupporting(FileType fileType)
         {
             switch (fileType)
@@ -28,6 +35,7 @@ namespace RedShot.Infrastructure.Uploaders.Clipboard
             return false;
         }
 
+        /// <inheritdoc/>
         public IUploader GetUploader()
         {
             return new ClipboardUploader();

@@ -1,10 +1,18 @@
 ﻿using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.DataTransfer.Ffmpeg;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg.Encoding;
 
-namespace RedShot.Infrastructure.DataTransfer.Ffmpeg
+namespace RedShot.Infrastructure.Recording.Validation
 {
+    /// <summary>
+    /// Validates FFmpeg options.
+    /// </summary>
     public static class FFmpegOptionsValidator
     {
+        /// <summary>
+        /// Returns result of the validation.
+        /// Extension for FFmpeg options.
+        /// </summary>
         public static FFmpegValidationResult Validate(this FFmpegOptions options)
         {
             var result = new FFmpegValidationResult();

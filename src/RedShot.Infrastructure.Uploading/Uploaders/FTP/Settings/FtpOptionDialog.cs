@@ -7,11 +7,16 @@ using RedShot.Infrastructure.DataTransfer.Ftp;
 
 namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
 {
-    internal partial class FtpSettingControl : Panel
+    /// <summary>
+    /// FTP option dialog.
+    /// </summary>
+    internal partial class FtpOptionDialog : Dialog<DialogResult>
     {
         private Button addButton;
         private Button delButton;
         private Button copyButton;
+        private Button okButton;
+        private Button cancelButton;
         private ComboBox accounts;
         private TextBox name;
         private ComboBox ftpProtocol;
@@ -34,11 +39,16 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
 
         private readonly List<FtpAccount> ftpAccounts;
 
-        public FtpSettingControl(FtpConfiguration ftpConfiguration)
+        /// <summary>
+        /// Initializes FTP option dialog.
+        /// </summary>
+        public FtpOptionDialog(FtpConfiguration ftpConfiguration)
         {
             ftpAccounts = ftpConfiguration.FtpAccounts;
 
             InitializeComponents();
+
+            Title = "FTP/FTPS/SFTP Configuration";
 
             this.accounts.SelectedValueChanged += Accounts_SelectedValueChanged;
             this.accounts.DropDownClosed += Accounts_SelectedValueChanged;
@@ -118,6 +128,21 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
             }
         }
 
+        private void OkButton_Click(object sender, EventArgs e)
+        {
+            ftpAccounts.Clear();
+            ftpAccounts.AddRange(bindingList);
+
+            Result = DialogResult.Ok;
+            Close();
+        }
+
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
+            Result = DialogResult.Cancel;
+            Close();
+        }
+
         private void CopyButton_Click(object sender, EventArgs e)
         {
             if (accounts.SelectedValue != null)
@@ -143,8 +168,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
         private void AddButton_Click(object sender, EventArgs e)
         {
             CreateNewAccount();
-            ftpAccounts.Clear();
-            ftpAccounts.AddRange(bindingList);
         }
 
         private void CreateNewAccount(FtpAccount account = null)

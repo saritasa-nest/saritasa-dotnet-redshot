@@ -10,8 +10,15 @@ using RedShot.Infrastructure.Common.Encryption;
 
 namespace RedShot.Infrastructure.Configuration
 {
+    /// <summary>
+    /// Configuration manager.
+    /// </summary>
     public static class ConfigurationManager
     {
+        /// <summary>
+        /// Configuration options.
+        /// Must implement IConfigurationOption interface.
+        /// </summary>
         public static List<Type> ConfigurationOptions { get; }
 
         private const string DefaultFolderName = "RedShot";
@@ -28,6 +35,9 @@ namespace RedShot.Infrastructure.Configuration
             settingsMap = new Dictionary<Type, IConfigurationOption>();
         }
 
+        /// <summary>
+        /// Returns section by the type.
+        /// </summary>
         public static T GetSection<T>() where T : class, IConfigurationOption, new()
         {
             var type = typeof(T);
@@ -42,18 +52,24 @@ namespace RedShot.Infrastructure.Configuration
             }
         }
 
-        public static void SetSettingsValue(IConfigurationOption section)
+        /// <summary>
+        /// Sets option's object.
+        /// </summary>
+        public static void SetSettingsValue(IConfigurationOption option)
         {
-            var sectionType = section.GetType();
+            var optionType = option.GetType();
 
-            if (settingsMap.ContainsKey(sectionType))
+            if (settingsMap.ContainsKey(optionType))
             {
-                settingsMap.Remove(sectionType);
+                settingsMap.Remove(optionType);
             }
 
-            settingsMap.Add(sectionType, section);
+            settingsMap.Add(optionType, option);
         }
 
+        /// <summary>
+        /// Saves configuration to the file.
+        /// </summary>
         public static void Save()
         {
             var rootObject = new JObject();
@@ -75,6 +91,9 @@ namespace RedShot.Infrastructure.Configuration
             logger.Debug("The app's configuration was saved");
         }
 
+        /// <summary>
+        /// Loads data from the file.
+        /// </summary>
         public static void Load()
         {
             var types = ConfigurationOptions.Where(type => typeof(IConfigurationOption).IsAssignableFrom(type) && !type.IsInterface);

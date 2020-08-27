@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Eto.Drawing;
 using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
@@ -7,14 +8,29 @@ using SkiaSharp;
 
 namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 {
+    /// <summary>
+    /// Base form for selection region.
+    /// </summary>
     public abstract class SelectionFormBase<T> : Form where T : Form, new()
     {
+        /// <summary>
+        /// Top message.
+        /// </summary>
         protected virtual string TopMessage { get; set; } = "Please select a region";
 
+        /// <summary>
+        /// Disposed flag.
+        /// </summary>
         protected bool disposed;
 
+        /// <summary>
+        /// Selection manage form.
+        /// </summary>
         protected T selectionManageForm;
 
+        /// <summary>
+        /// Selection manage form location.
+        /// </summary>
         protected Point selectionManageFormLocation;
 
         /// <summary>
@@ -57,9 +73,15 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         /// </summary>
         protected bool captured;
 
+        /// <summary>
+        /// State when user is selecting region.
+        /// </summary>
         protected bool screenSelecting;
 
-        public static Screen SelectionScreen { get; set; }
+        /// <summary>
+        /// Return screen which user works with.
+        /// </summary>
+        public static Screen selectionScreen;
 
         /// <summary>
         /// Selection region size and location.
@@ -104,6 +126,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 
         protected SelectionFormBase()
         {
+            selectionScreen = Screen.FromPoint(Mouse.Position);
             InitializeComponent();
         }
 
@@ -115,9 +138,13 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         private void InitializeComponent()
         {
             SetScreenImage();
-
             WindowState = WindowState.Maximized;
             WindowStyle = WindowStyle.None;
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Topmost = true;
+            }
 
             penTimer = Stopwatch.StartNew();
 
@@ -137,8 +164,6 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             screenTimer.Interval = 0.1;
             screenTimer.Elapsed += ScreenTimer_Elapsed;
 
-            ShowInTaskbar = false;
-
             var capturedIcon = new Bitmap(Resources.Properties.Resources.Pointer);
             capturedCursor = FormsHelper.GetCursor(capturedIcon, new Size(20, 20), new Point(3, 3));
         }
@@ -149,15 +174,20 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             {
                 var screen = Screen.FromPoint(Mouse.Position);
 
-                if (SelectionScreen == null || screen != SelectionScreen)
+                if (screen.Bounds != selectionScreen.Bounds)
                 {
-                    SelectionScreen = screen;
-                    SetScreenImage();
+                    selectionScreen = screen;
+                    screenSelecting = false;
+                    Close();
+                    RunNew(this);
                 }
             }
         }
 
-        private static void Rerun(SelectionFormBase<T> form)
+        /// <summary>
+        /// Runs new selection form.
+        /// </summary>
+        private static void RunNew(SelectionFormBase<T> form)
         {
             var newForm = (SelectionFormBase<T>)Activator.CreateInstance(form.GetType());
             newForm.Show();
@@ -165,22 +195,12 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 
         private void SetScreenImage()
         {
-            var rect = new Rectangle(ScreenHelper.GetScreenSize(SelectionScreen));
-
-            if (screenRectangle == default)
-            {
-                screenRectangle = rect;
-                etoScreenImage = ScreenHelper.TakeScreenshot(SelectionScreen);
-                skScreenImage = SkiaSharpHelper.ConvertFromEtoBitmap(etoScreenImage);
-                Size = new Size(screenRectangle.Width, screenRectangle.Height);
-                Location = rect.TopLeft;
-            }
-            else if (rect != screenRectangle)
-            {
-                screenSelecting = false;
-                Close();
-                Rerun(this);
-            }
+            var rect = new Rectangle(ScreenHelper.GetScreenSize(selectionScreen));
+            screenRectangle = rect;
+            etoScreenImage = ScreenHelper.TakeScreenshot(selectionScreen);
+            skScreenImage = SkiaSharpHelper.ConvertFromEtoBitmap(etoScreenImage);
+            Size = new Size(screenRectangle.Width, screenRectangle.Height);
+            Location = rect.TopLeft;
         }
 
         /// <summary>
@@ -339,6 +359,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
                 if (capturing)
                 {
                     capturing = false;
+                    screenSelecting = true;
                 }
                 else if (captured)
                 {
@@ -347,6 +368,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
                     resizing = false;
                     HideSelectionManageForm();
                     SetDefaultPointer();
+                    screenSelecting = true;
                 }
                 else
                 {

@@ -9,6 +9,9 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
     /// </summary>
     public partial class RecordManagePanel : Form
     {
+        /// <summary>
+        /// Start recording button.
+        /// </summary>
         public ImageButton StartRecordingButton { get; }
 
         /// <summary>

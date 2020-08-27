@@ -145,6 +145,9 @@
   <data name="Ftp" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\Ftp.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="Open" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Open.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="Paint" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\Paint.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>

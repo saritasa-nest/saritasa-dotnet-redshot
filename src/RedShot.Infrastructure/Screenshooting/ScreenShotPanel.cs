@@ -14,6 +14,9 @@ namespace RedShot.Infrastructure.Screenshooting
         /// </summary>
         public ImageButton EnablePaintingModeButton { get; }
 
+        /// <summary>
+        /// Button for sending image to upload.
+        /// </summary>
         public ImageButton SaveScreenShotButton { get; }
 
         /// <summary>

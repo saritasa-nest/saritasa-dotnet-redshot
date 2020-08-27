@@ -6,27 +6,61 @@ using RedShot.Infrastructure.Painting.States;
 
 namespace RedShot.Infrastructure.Painting
 {
-    public class PaintingPanel : Panel
+    /// <summary>
+    /// Painting panel.
+    /// Provides managing buttons for painting view.
+    /// </summary>
+    internal class PaintingPanel : Panel
     {
         private NumericStepper drawSizeStepper;
         private ColorPicker colorPicker;
 
+        /// <summary>
+        /// State changed event.
+        /// Invokes when painting state changes.
+        /// </summary>
         public event EventHandler<PaintingState> StateChanged;
 
+        /// <summary>
+        /// Draw size changed event.
+        /// Invokes when draw size was changed.
+        /// </summary>
         public event EventHandler<double> DrawSizeChanged;
 
+        /// <summary>
+        /// Draw size changed event.
+        /// Invokes when draw size was changed.
+        /// </summary>
         public event EventHandler<Color> ColorChanged;
 
+        /// <summary>
+        /// Button for enabling painting line action.
+        /// </summary>
         public ImageButton PointsEnableButton { get; private set; }
 
+        /// <summary>
+        /// Button for enabling painting rectangle action.
+        /// </summary>
         public ImageButton RectangleEnableButton { get; private set; }
 
+        /// <summary>
+        /// Button for enabling erasing action.
+        /// </summary>
         public ImageButton EraseEnableButton { get; private set; }
 
+        /// <summary>
+        /// Button for save drawing image.
+        /// </summary>
         public ImageButton SaveImageButton { get; private set; }
 
+        /// <summary>
+        /// Button for moving back.
+        /// </summary>
         public ImageButton PaintBackButton { get; private set; }
 
+        /// <summary>
+        /// Initializes painting panel.
+        /// </summary>
         public PaintingPanel()
         {
             InitializeComponents();

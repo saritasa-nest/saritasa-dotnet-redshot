@@ -8,18 +8,25 @@ using RedShot.Infrastructure.Recording;
 
 namespace RedShot.Recording.Recorders.Linux
 {
-    public class LinuxRecordingService : IRecordingService
+    /// <summary>
+    /// Linux recorder service.
+    /// </summary>
+    internal class LinuxRecordingService : IRecordingService
     {
         private readonly string ffmpegName;
 
         private readonly CliManager simpleCliManager;
 
+        /// <summary>
+        /// Initializes Linux recording service.
+        /// </summary>
         public LinuxRecordingService()
         {
             ffmpegName = "ffmpeg";
             simpleCliManager = new CliManager(ffmpegName);
         }
 
+        /// <inheritdoc />
         public IRecorder GetRecorder()
         {
             ThrowIfNotFoundFfmpegBinary();
@@ -29,12 +36,14 @@ namespace RedShot.Recording.Recorders.Linux
             return new LinuxRecorder(options);
         }
 
+        /// <inheritdoc />
         public bool CheckFFmpeg()
         {
             simpleCliManager.Run(" -h");
             return simpleCliManager.Output.ToString().Contains("ffmpeg version");
         }
 
+        /// <inheritdoc />
         public IRecordingDevices GetRecordingDevices()
         {
             ThrowIfNotFoundFfmpegBinary();
@@ -44,6 +53,7 @@ namespace RedShot.Recording.Recorders.Linux
             return devices;
         }
 
+        /// <inheritdoc />
         public bool InstallFFmpeg()
         {
             if (CheckFFmpeg())

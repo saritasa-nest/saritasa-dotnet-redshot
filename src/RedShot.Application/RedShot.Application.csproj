@@ -5,6 +5,7 @@
     <CodeAnalysisRuleSet>../../tools/Saritasa.ruleset</CodeAnalysisRuleSet>
     <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <AssemblyName>redshot</AssemblyName>
+    <ApplicationIcon>Redcircle.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">

@@ -5,27 +5,35 @@ using SkiaSharp;
 
 namespace Eto.Forms.Controls.SkiaSharp.Mac
 {
+    /// <summary>
+    /// Represents helper to work with MAC control.
+    /// </summary>
     internal class SKDrawable : IDisposable
     {
         private const int BitsPerByte = 8;
         private const CGBitmapFlags BitmapFlags = CGBitmapFlags.ByteOrder32Big | CGBitmapFlags.PremultipliedLast;
-
         private IntPtr bitmapData;
         private int lastLength;
 
+        /// <summary>
+        /// SKImage info property.
+        /// </summary>
         public SKImageInfo Info { get; private set; }
 
+        /// <summary>
+        /// Creates surface via content bounds and scale.
+        /// </summary>
         public SKSurface CreateSurface(CGRect contentsBounds, float scale, out SKImageInfo info)
         {
-            // apply a scale
+            // Apply a scale.
             contentsBounds.Width *= scale;
             contentsBounds.Height *= scale;
 
-            // get context details
+            // Get context details.
             info = new SKImageInfo((int)contentsBounds.Width, (int)contentsBounds.Height, SKColorType.Rgba8888, SKAlphaType.Premul);
             Info = info;
 
-            // allocate a memory block for the drawing process
+            // Allocate a memory block for the drawing process.
             var newLength = info.BytesSize;
             if (lastLength != newLength)
             {
@@ -43,6 +51,9 @@ namespace Eto.Forms.Controls.SkiaSharp.Mac
             return SKSurface.Create(info, bitmapData, info.RowBytes);
         }
 
+        /// <summary>
+        /// Draws surface on CG context.
+        /// </summary>
         public void DrawSurface(CGContext ctx, CGRect viewBounds, SKImageInfo info, SKSurface surface)
         {
             surface.Canvas.Flush();
@@ -52,14 +63,17 @@ namespace Eto.Forms.Controls.SkiaSharp.Mac
             using (var colorSpace = CGColorSpace.CreateDeviceRGB())
             using (var image = new CGImage(info.Width, info.Height, BitsPerByte, info.BytesPerPixel * BitsPerByte, info.RowBytes, colorSpace, BitmapFlags, dataProvider, null, false, CGColorRenderingIntent.Default))
             {
-                // draw the image
+                // Draw the image.
                 ctx.DrawImage(viewBounds, image);
             }
         }
 
+        /// <summary>
+        /// Disposes bitmap data.
+        /// </summary>
         public void Dispose()
         {
-            // make sure we free the image data
+            // Make sure we free the image data.
             if (bitmapData != IntPtr.Zero)
             {
                 Marshal.FreeCoTaskMem(bitmapData);

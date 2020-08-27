@@ -3,11 +3,18 @@ using System.Threading.Tasks;
 
 namespace RedShot.Infrastructure.Common.Forms
 {
+    /// <summary>
+    /// Download form.
+    /// Shows downloading progress.
+    /// </summary>
     public class DownloadForm : Form
     {
         private ProgressBar progressBar;
         private Label stateInfo;
 
+        /// <summary>
+        /// Initializes download form.
+        /// </summary>
         public DownloadForm(Downloader downloader, string title)
         {
             Title = title;

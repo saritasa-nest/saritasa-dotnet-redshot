@@ -1,22 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Reflection;
 
 namespace RedShot.Infrastructure.Common
 {
+    /// <summary>
+    /// Enum description.
+    /// Works with Description attribute.
+    /// </summary>
     public class EnumDescription<TEnum>
     {
+        /// <summary>
+        /// Initializes EnumDescription object. 
+        /// </summary>
         public EnumDescription(TEnum enumValue, string enumDescription)
         {
             EnumValue = enumValue;
             Description = enumDescription;
         }
 
-        public TEnum EnumValue { get; private set; }
+        /// <summary>
+        /// Enum value.
+        /// </summary>
+        public TEnum EnumValue { get; }
 
-        public string Description { get; private set; }
+        /// <summary>
+        /// Description of the enum value.
+        /// </summary>
+        public string Description { get; }
 
+        /// <summary>
+        /// Get enum descriptions via enum type.
+        /// </summary>
         public static IEnumerable<EnumDescription<TEnum>> GetEnumDescriptions(Type enumType)
         {
             var array = Enum.GetValues(enumType);
@@ -31,6 +46,9 @@ namespace RedShot.Infrastructure.Common
             return list;
         }
 
+        /// <summary>
+        /// Gives description name via enum value.
+        /// </summary>
         public static string GetDescriptionName(object enumValue)
         {
             var fi = enumValue.GetType().GetField(enumValue.ToString());
@@ -48,6 +66,9 @@ namespace RedShot.Infrastructure.Common
             return enumValue.ToString();
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public override string ToString()
         {
             return Description;

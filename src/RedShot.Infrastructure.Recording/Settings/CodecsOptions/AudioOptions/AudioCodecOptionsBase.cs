@@ -3,16 +3,41 @@ using Eto.Forms;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg;
 
-namespace RedShot.Recording.Views.CodecsOptions.AudioOptions
+namespace RedShot.Recording.Settings.CodecsOptions.AudioOptions
 {
+    /// <summary>
+    /// Provides options for audio codec.
+    /// </summary>
     internal abstract class AudioCodecOptionsBase<T> : Dialog where T : Control
     {
+        /// <summary>
+        /// FFmpeg options.
+        /// </summary>
         protected FFmpegOptions options;
+
+        /// <summary>
+        /// About message.
+        /// </summary>
         protected readonly string aboutMessage;
+
+        /// <summary>
+        /// Code quality control.
+        /// </summary>
         protected T codecQuality;
+
+        /// <summary>
+        /// Quality about.
+        /// </summary>
         protected DefaultButton qualityAbout;
+
+        /// <summary>
+        /// OK button.
+        /// </summary>
         protected DefaultButton okButton;
 
+        /// <summary>
+        /// Initializes the audio codec's options.
+        /// </summary>
         public AudioCodecOptionsBase(FFmpegOptions options, string title, string about)
         {
             Title = title;
@@ -37,6 +62,9 @@ namespace RedShot.Recording.Views.CodecsOptions.AudioOptions
             Bind();
         }
 
+        /// <summary>
+        /// Initializes components.
+        /// </summary>
         protected virtual void InitializeComponents()
         {
             okButton = new DefaultButton("OK", 70, 30);
@@ -46,13 +74,22 @@ namespace RedShot.Recording.Views.CodecsOptions.AudioOptions
             qualityAbout.Clicked += QualityAbout_Clicked;
         }
 
+        /// <summary>
+        /// Handles quality about click event.
+        /// </summary>
         protected virtual void QualityAbout_Clicked(object sender, EventArgs e)
         {
             MessageBox.Show(aboutMessage);
         }
 
+        /// <summary>
+        /// Binds controls with data context.
+        /// </summary>
         protected abstract void Bind();
 
+        /// <summary>
+        /// Returns field with quality options.
+        /// </summary>
         protected Control GetQualityField()
         {
             return new StackLayout()

@@ -5,16 +5,19 @@ using Eto.Forms;
 using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
-using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg.Encoding;
 using RedShot.Infrastructure.Recording;
-using RedShot.Recording.Views.CodecsOptions.AudioOptions;
-using RedShot.Recording.Views.CodecsOptions.VideoOptions;
+using RedShot.Infrastructure.Recording.Validation;
+using RedShot.Recording.Settings.CodecsOptions.AudioOptions;
+using RedShot.Recording.Settings.CodecsOptions.VideoOptions;
 
-namespace RedShot.Infrastructure.RecordingRedShot.Views
+namespace RedShot.Infrastructure.RecordingRedShot.Settings
 {
-    internal partial class RecordingOptionsView : Dialog<DialogResult>
+    /// <summary>
+    /// Recording option dialog.
+    /// </summary>
+    internal partial class RecordingOptionDialog : Dialog<DialogResult>
     {
         private readonly FFmpegConfiguration ffmpegConfiguration;
         private readonly IRecordingDevices recordingDevices;
@@ -33,12 +36,15 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
         private CheckBox showCursor;
         private CheckBox useGdigrab;
 
-        public RecordingOptionsView(IRecordingService recordingManager)
+        /// <summary>
+        /// Initializes recording option dialog.
+        /// </summary>
+        public RecordingOptionDialog(IRecordingDevices recordingDevices, FFmpegConfiguration ffmpegConfiguration)
         {
             Title = "FFmpeg recording options";
-            ffmpegConfiguration = ConfigurationManager.GetSection<FFmpegConfiguration>();
+            this.ffmpegConfiguration = ffmpegConfiguration;
             ffmpegOptions = ffmpegConfiguration.Options.Clone();
-            recordingDevices = recordingManager.GetRecordingDevices();
+            this.recordingDevices = recordingDevices;
 
             InitializeComponents();
 
@@ -70,8 +76,6 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
             else
             {
                 ffmpegConfiguration.Options = ffmpegOptions;
-                ConfigurationManager.SetSettingsValue(ffmpegConfiguration);
-                ConfigurationManager.Save();
                 Result = DialogResult.Ok;
                 Close();
             }

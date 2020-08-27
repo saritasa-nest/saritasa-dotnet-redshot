@@ -4,19 +4,26 @@ using SkiaSharp;
 
 namespace RedShot.Infrastructure.Common.Forms
 {
+    /// <summary>
+    /// Forms helper.
+    /// </summary>
     public static class FormsHelper
     {
+        /// <summary>
+        /// Returns control which contains void box.
+        /// </summary>
         public static Control VoidBox(int size)
         {
-            return new StackLayout
+            return new Panel
             {
-                VerticalContentAlignment = VerticalAlignment.Center,
-                Orientation = Orientation.Horizontal,
                 Size = new Size(size, size),
                 Padding = size
             };
         }
 
+        /// <summary>
+        /// Returns control which contains void rectangle.
+        /// </summary>
         public static Control VoidRectangle(int width, int height)
         {
             return new StackLayout
@@ -27,17 +34,9 @@ namespace RedShot.Infrastructure.Common.Forms
             };
         }
 
-        public static Cursor GetPointerCursor(Color color, int radius)
-        {
-            var skColor = SkiaSharpHelper.GetSKColorFromEtoColor(color);
-
-            var skImage = SkiaSharpHelper.GetPointerForPainting(skColor, radius);
-
-            var bitmap = EtoDrawingHelper.GetEtoBitmapFromSkiaImage(skImage);
-
-            return new Cursor(bitmap, new PointF(radius, radius));
-        }
-
+        /// <summary>
+        /// Return pointer cursor (circle pointer).
+        /// </summary>
         public static Cursor GetPointerCursor(SKColor color, int radius)
         {
             var skImage = SkiaSharpHelper.GetPointerForPainting(color, radius);
@@ -47,6 +46,9 @@ namespace RedShot.Infrastructure.Common.Forms
             return new Cursor(bitmap, new PointF(radius, radius));
         }
 
+        /// <summary>
+        /// Return cursor via specified icon and size.
+        /// </summary>
         public static Cursor GetCursor(Bitmap icon, Size size, Point hotSpot = default)
         {
             var scaled = new Bitmap(icon, size.Width, size.Height, ImageInterpolation.High);
@@ -59,6 +61,9 @@ namespace RedShot.Infrastructure.Common.Forms
             return new Cursor(scaled, hotSpot);
         }
 
+        /// <summary>
+        /// Gives base stack (Label + control) in horizontal orientation.
+        /// </summary>
         public static StackLayout GetBaseStack(string name, Control control, int nameWidth = 200, int controlWidth = 300)
         {
             return new StackLayout

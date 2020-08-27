@@ -2,8 +2,14 @@
 
 namespace RedShot.Infrastructure.Common.Forms
 {
+    /// <summary>
+    /// Yes/No Dialog.
+    /// </summary>
     public class YesNoDialog : Dialog<DialogResult>
     {
+        /// <summary>
+        /// Message (question).
+        /// </summary>
         public string Message
         {
             get
@@ -21,6 +27,9 @@ namespace RedShot.Infrastructure.Common.Forms
         private DefaultButton noButton;
         private Label questionLabel;
 
+        /// <summary>
+        /// Initializes yes/no dialog.
+        /// </summary>
         public YesNoDialog()
         {
             InitializeComponents();

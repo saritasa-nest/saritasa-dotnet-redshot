@@ -25,7 +25,7 @@ namespace RedShot.Infrastructure.Painting.PaintingActions
             this.paint = paint;
         }
 
-        /// <inheritdoc cref="IPaintingAction"/>.
+        /// <inheritdoc />
         public void Paint(SKSurface surface)
         {
             foreach (var point in erasingPoints)
@@ -40,7 +40,7 @@ namespace RedShot.Infrastructure.Painting.PaintingActions
             }
         }
 
-        /// <inheritdoc cref="IPaintingAction"/>.
+        /// <inheritdoc />
         public void AddPoint(Point point)
         {
             erasingPoints.Add(point);

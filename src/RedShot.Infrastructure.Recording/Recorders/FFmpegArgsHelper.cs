@@ -4,9 +4,15 @@ using System.Text;
 
 namespace RedShot.Infrastructure.Recording
 {
+    /// <summary>
+    /// FFmpeg args helper.
+    /// </summary>
     public static class FFmpegArgsHelper
     {
-        public static string GetFFmpegArgsFromOptions(FFmpegOptions options)
+        /// <summary>
+        /// Returns parsed string from FFmpeg options.
+        /// </summary>
+        public static string GetFFmpegArgs(this FFmpegOptions options)
         {
             var args = new StringBuilder();
 

@@ -8,6 +8,9 @@ using RedShot.Infrastructure.Screenshooting;
 
 namespace RedShot.Infrastructure
 {
+    /// <summary>
+    /// Manages screen shotting.
+    /// </summary>
     public static class ScreenshotManager
     {
         private static PaintingView paintingView;
@@ -20,25 +23,33 @@ namespace RedShot.Infrastructure
             imagesFolder = Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "RedShot")).FullName;
         }
 
-        public static void TakeScreenShot()
+        /// <summary>
+        /// Runs screenshot selection view.
+        /// </summary>
+        public static void RunScreenShotting()
         {
             selectionView?.Close();
 
-            ScreenShotSelectionView.SelectionScreen = Screen.PrimaryScreen;
             selectionView = new ScreenShotSelectionView();
             selectionView.Show();
         }
 
+        /// <summary>
+        /// Runs image editor.
+        /// </summary>
         public static void RunPaintingView(Bitmap bitmap)
         {
             paintingView = new PaintingView(bitmap);
             paintingView.Show();
         }
 
+        /// <summary>
+        /// Send image to uploaders.
+        /// </summary>
         public static void UploadScreenShot(Bitmap image)
         {
-            var imageName = Guid.NewGuid().ToString();
-            var path = Path.Combine(imagesFolder, $"imageName.png");
+            var imageName = $"RedShot-image-{DateTime.Now:yyyy-MM-ddTHH-mm-ss}";
+            var path = Path.Combine(imagesFolder, $"{imageName}.png");
 
             image.Save(path, ImageFormat.Png);
 

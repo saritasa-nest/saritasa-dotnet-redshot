@@ -6,11 +6,21 @@ using SkiaSharp;
 
 namespace Eto.Forms.Controls.SkiaSharp.Mac
 {
+    /// <summary>
+    /// SkiaSharp drawing control for Mac.
+    /// </summary>
     public class SKControlMac : NSView, IMacControl
     {
+        private NSTrackingArea trackarea;
+        private SKDrawable drawable;
         private SKSurface surface;
         private SKImageInfo skInfo;
         private bool disposed;
+
+        /// <summary>
+        /// Weak handler.
+        /// </summary>
+        public WeakReference WeakHandler { get; set; }
 
         /// <summary>
         /// Executes SkiaSharp commands.
@@ -28,16 +38,18 @@ namespace Eto.Forms.Controls.SkiaSharp.Mac
             this.ViewWillDraw();
         }
 
-        private NSTrackingArea trackarea;
-
-        private SKDrawable drawable;
-
+        /// <summary>
+        /// Initializes SK control for Mac.
+        /// </summary>
         public SKControlMac()
         {
             drawable = new SKDrawable();
             BecomeFirstResponder();
         }
 
+        /// <summary>
+        /// CG bounds.
+        /// </summary>
         public override CGRect Bounds
         {
             get => base.Bounds;
@@ -48,6 +60,9 @@ namespace Eto.Forms.Controls.SkiaSharp.Mac
             }
         }
 
+        /// <summary>
+        /// CG frame.
+        /// </summary>
         public override CGRect Frame
         {
             get => base.Frame;
@@ -58,6 +73,9 @@ namespace Eto.Forms.Controls.SkiaSharp.Mac
             }
         }
 
+        /// <summary>
+        /// Updates tracking area.
+        /// </summary>
         public override void UpdateTrackingAreas()
         {
             if (trackarea != null) { RemoveTrackingArea(trackarea); }
@@ -65,6 +83,9 @@ namespace Eto.Forms.Controls.SkiaSharp.Mac
             AddTrackingArea(trackarea);
         }
 
+        /// <summary>
+        /// Draws surface.
+        /// </summary>
         public override void DrawRect(CGRect dirtyRect)
         {
             base.DrawRect(dirtyRect);
@@ -77,6 +98,7 @@ namespace Eto.Forms.Controls.SkiaSharp.Mac
             }
         }
 
+        /// <inheritdoc />
         public new void Dispose()
         {
             if (disposed == false)
@@ -86,7 +108,5 @@ namespace Eto.Forms.Controls.SkiaSharp.Mac
                 base.Dispose();
             }
         }
-
-        public WeakReference WeakHandler { get; set; }
     }
 }

@@ -24,7 +24,7 @@ namespace RedShot.Infrastructure.Painting.PaintingActions
             this.paint = paint;
         }
 
-        /// <inheritdoc cref="IPaintingAction"/>.
+        /// <inheritdoc cref="IPaintingAction"/>
         public void AddPoint(Point point)
         {
             if (selectionStarted)
@@ -39,7 +39,7 @@ namespace RedShot.Infrastructure.Painting.PaintingActions
             }
         }
 
-        /// <inheritdoc cref="IPaintingAction"/>.
+        /// <inheritdoc cref="IPaintingAction"/>
         public void Paint(SKSurface surface)
         {
             if (selectionStarted)

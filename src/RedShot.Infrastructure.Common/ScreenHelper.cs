@@ -23,24 +23,37 @@ namespace RedShot.Infrastructure.Common
             }
         }
 
+        /// <summary>
+        /// Gives screen bounds.
+        /// </summary>
         public static RectangleF GetScreenSize(Screen screen = null)
         {
             return screen == null ? Screen.PrimaryScreen.Bounds : screen.Bounds;
         }
 
+        /// <summary>
+        /// Gives location to center a view via it's size.
+        /// </summary>
         public static Point GetCenterLocation(Size size, Screen screen = null)
         {
+            if (screen == null)
+            {
+                screen = Screen.FromPoint(Mouse.Position);
+            }
+
             var center = GetCentralCoordsOfScreen(screen);
 
             var location = new Point(center.X - size.Width / 2, center.Y - size.Height / 2);
 
+            var startPoint = (Point)GetScreenBounds().TopLeft;
+
             if (location.X >= 0 && location.Y >= 0)
             {
-                return location;
+                return new Point(startPoint.X + location.X, startPoint.Y + location.Y);
             }
             else
             {
-                return center;
+                return new Point(startPoint.X + center.X, startPoint.Y + center.Y);
             }
         }
 
@@ -62,17 +75,6 @@ namespace RedShot.Infrastructure.Common
         }
 
         /// <summary>
-        /// Gives start point for upload view.
-        /// </summary>
-        public static Point GetStartPointForUploadView(Screen screen = null)
-        {
-            var size = GetScreenSize(screen);
-            var minisize = GetMiniSizeDisplay(screen);
-            var sixteenSize = GetSixteenthPartOfDisplay();
-            return new Point((int)(size.Width - minisize.Width - sixteenSize), (int)(size.Height - minisize.Height) - 50);
-        }
-
-        /// <summary>
         /// Gives central coords of user's screen.
         /// </summary>
         public static Point GetCentralCoordsOfScreen(Screen screen = null)
@@ -81,9 +83,12 @@ namespace RedShot.Infrastructure.Common
             return new Point((int)(size.Width / 2), (int)(size.Height / 2));
         }
 
-        public static RectangleF GetScreenSizeByLocation(PointF mouseLocation)
+        /// <summary>
+        /// Gives screen bounds by mouse location.
+        /// </summary>
+        public static RectangleF GetScreenBounds()
         {
-            var screen = Screen.FromPoint(mouseLocation);
+            var screen = Screen.FromPoint(Mouse.Position);
             return screen.Bounds;
         }
     }

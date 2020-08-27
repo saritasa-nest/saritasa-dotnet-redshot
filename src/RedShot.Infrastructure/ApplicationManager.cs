@@ -39,17 +39,23 @@ namespace RedShot.Infrastructure
         {
             trayIcon.Tray.Visible = false;
 
-            ScreenshotManager.TakeScreenShot();
+            ScreenshotManager.RunScreenShotting();
 
             trayIcon.Tray.Visible = true;
         }
 
+        /// <summary>
+        /// Runs upload view.
+        /// </summary>
         public static void RunUploadView(IFile file)
         {
             trayIcon.UploadLastFile.Visible = true;
             UploadingManager.RunUploading(file);
         }
 
+        /// <summary>
+        /// Runs recording.
+        /// </summary>
         public static void RunRecording()
         {
             trayIcon.UploadLastFile.Visible = true;

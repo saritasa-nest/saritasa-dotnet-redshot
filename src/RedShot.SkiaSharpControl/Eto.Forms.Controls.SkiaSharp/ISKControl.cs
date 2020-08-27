@@ -6,7 +6,7 @@ namespace Eto.Forms.Controls.SkiaSharp
     /// <summary>
     /// Skia sharp control abstraction.
     /// </summary>
-    public interface ISKControl : Eto.Forms.Control.IHandler
+    public interface ISKControl : Control.IHandler
     {
         /// <summary>
         /// Executes SkiaSharp commands in control.

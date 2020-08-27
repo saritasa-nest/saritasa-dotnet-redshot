@@ -1,16 +1,21 @@
 ﻿using Eto.Forms;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg;
 
-namespace RedShot.Recording.Views.CodecsOptions.AudioOptions
+namespace RedShot.Recording.Settings.CodecsOptions.AudioOptions
 {
+    /// <summary>
+    /// MP3 options view.
+    /// </summary>
     internal class Mp3Options : AudioCodecOptionsBase<NumericStepper>
     {
         private static readonly string about = "The range of the quality is 1-5 where 1 is lowest quality and 5 is highest quality.";
 
+        /// <inheritdoc/>
         public Mp3Options(FFmpegOptions options) : base(options, "Mp3 options", about)
         {
         }
 
+        /// <inheritdoc/>
         protected override void InitializeComponents()
         {
             codecQuality = new NumericStepper()
@@ -23,6 +28,7 @@ namespace RedShot.Recording.Views.CodecsOptions.AudioOptions
             base.InitializeComponents();
         }
 
+        /// <inheritdoc/>
         protected override void Bind()
         {
             Content.DataContext = options;

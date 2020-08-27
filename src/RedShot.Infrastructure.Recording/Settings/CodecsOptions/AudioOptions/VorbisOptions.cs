@@ -1,16 +1,21 @@
 ﻿using Eto.Forms;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg;
 
-namespace RedShot.Recording.Views.CodecsOptions.AudioOptions
+namespace RedShot.Recording.Settings.CodecsOptions.AudioOptions
 {
+    /// <summary>
+    /// Vorbis options view.
+    /// </summary>
     internal class VorbisOptions : AudioCodecOptionsBase<NumericStepper>
     {
         private static readonly string about = "Range is 0–10, where 10 is highest quality. 5–7 is a good range to try.";
 
+        /// <inheritdoc/>
         public VorbisOptions(FFmpegOptions options) : base(options, "Vorbis options", about)
         {
         }
 
+        /// <inheritdoc/>
         protected override void InitializeComponents()
         {
             codecQuality = new NumericStepper()
@@ -23,6 +28,7 @@ namespace RedShot.Recording.Views.CodecsOptions.AudioOptions
             base.InitializeComponents();
         }
 
+        /// <inheritdoc/>
         protected override void Bind()
         {
             Content.DataContext = options;

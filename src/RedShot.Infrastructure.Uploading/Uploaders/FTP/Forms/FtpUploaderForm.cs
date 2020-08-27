@@ -9,28 +9,37 @@ using RedShot.Infrastructure.Common;
 
 namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
 {
-    public partial class FtpUploaderForm : Dialog<DialogResult>
+    /// <summary>
+    /// FTP uploader form.
+    /// </summary>
+    internal class FtpUploaderForm : Dialog<DialogResult>
     {
         private FtpConfiguration ftpConfiguration;
         private ComboBox accounts;
-        private Button uploadButton;
+        private DefaultButton uploadButton;
         private TextBox fileNameBox;
 
+        /// <summary>
+        /// Name of the file.
+        /// </summary>
         public string FileName { get; private set; }
 
+        /// <summary>
+        /// Selected FTP account.
+        /// </summary>
         public FtpAccount SelectedAccount { get; private set; }
 
+        /// <summary>
+        /// Initializes FTP uploader form.
+        /// </summary>
         public FtpUploaderForm()
         {
+            FileName = $"RedShot-{DateTime.Now:yyyy-MM-ddTHH-mm-ss}";
             ftpConfiguration = ConfigurationManager.GetSection<FtpConfiguration>();
             Title = "FTP Upload";
             Size = new Size(350, 280);
-
             ShowInTaskbar = true;
-
             InitializeComponents();
-            uploadButton.Click += UploadButton_Click;
-
             Location = ScreenHelper.GetCenterLocation(Size);
         }
 
@@ -39,18 +48,22 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
             accounts = new ComboBox()
             {
                 DataStore = ftpConfiguration.FtpAccounts,
-                Size = new Eto.Drawing.Size(250, 21),
+                Size = new Size(250, 21),
             };
+
+            if (ftpConfiguration.FtpAccounts.Count > 0)
+            {
+                accounts.SelectedValue = ftpConfiguration.FtpAccounts.First();
+            }
 
             fileNameBox = new TextBox()
             {
-                Size = new Eto.Drawing.Size(250, 21),
+                Size = new Size(250, 21),
+                Text = FileName
             };
 
-            uploadButton = new Button()
-            {
-                Text = "Upload",
-            };
+            uploadButton = new DefaultButton("Upload", 100, 30);
+            uploadButton.Clicked += UploadButton_Click;
 
             Content = new StackLayout
             {
@@ -63,19 +76,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
                     GetAccountLayout(),
                     GetImageNameLayout(),
                     FormsHelper.VoidBox(20),
-                    GetButtonsLayout()
-                }
-            };
-        }
-
-        private StackLayout GetButtonsLayout()
-        {
-            return new StackLayout()
-            {
-                Orientation = Orientation.Horizontal,
-                VerticalContentAlignment = VerticalAlignment.Center,
-                Items =
-                {
                     uploadButton
                 }
             };
@@ -87,12 +87,12 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
             {
                 Padding = 10,
                 Orientation = Orientation.Vertical,
-                HorizontalContentAlignment = HorizontalAlignment.Center,
+                HorizontalContentAlignment = HorizontalAlignment.Left,
                 Items =
                 {
                     new Label()
                     {
-                        Text = "File name",
+                        Text = "Filename:",
                         Width = 100,
                     },
                     FormsHelper.VoidBox(10),
@@ -106,13 +106,13 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
             return new StackLayout()
             {
                 Padding = 10,
-                HorizontalContentAlignment = HorizontalAlignment.Center,
+                HorizontalContentAlignment = HorizontalAlignment.Left,
                 Orientation = Orientation.Vertical,
                 Items =
                 {
                     new Label()
                     {
-                        Text = "Select account",
+                        Text = "Account:",
                         Width = 100,
                     },
                     FormsHelper.VoidBox(10),

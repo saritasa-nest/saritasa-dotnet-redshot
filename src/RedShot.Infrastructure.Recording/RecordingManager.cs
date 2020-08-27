@@ -1,80 +1,99 @@
 ﻿using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Linq;
 using Eto.Drawing;
-using Eto.Forms;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Recording.Recorders.Linux;
 using RedShot.Recording.Recorders.Windows;
 using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.RecordingRedShot.Views;
+using System;
 
 namespace RedShot.Infrastructure.Recording
 {
+    /// <summary>
+    /// Recording manager.
+    /// </summary>
     public static class RecordingManager
     {
-        private static IRecordingService manager;
+        /// <summary>
+        /// Recording service for the OS.
+        /// </summary>
+        public static IRecordingService RecordingService { get; }
+
+        /// <summary>
+        /// Recording view.
+        /// </summary>
         private static RecordingView recordingView;
 
+        /// <summary>
+        /// Initializes recording service depending on the OS.
+        /// </summary>
         static RecordingManager()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                manager = new LinuxRecordingService();
+                RecordingService = new LinuxRecordingService();
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                RecordingService = new WindowsRecordingService();
             }
             else
             {
-                manager = new WindowsRecordingService();
+                throw new NotSupportedException("Recording on this OS is not supported!");
             }
         }
 
-        public static void OpenSettings()
-        {
-            using (var optionsView = new RecordingOptionsView(manager))
-            {
-                optionsView.ShowModal();
-            }
-
-            Task.Delay(500).Wait();
-        }
-
+        /// <summary>
+        /// Records video by specified region.
+        /// </summary>
         public static void RecordRegion(Rectangle region)
         {
-            var recorder = manager.GetRecorder();
+            var recorder = RecordingService.GetRecorder();
 
             recordingView = new RecordingView(recorder, region);
             recordingView.Show();
         }
 
+        /// <summary>
+        /// Opens recording selection view.
+        /// </summary>
         public static void OpenSelectionView()
         {
-            RecordingRegionSelectionView.SelectionScreen = Screen.PrimaryScreen;
             var view = new RecordingRegionSelectionView();
             view.Show();
         }
 
+        /// <summary>
+        /// Checks FFmpeg binaries in the OS.
+        /// If they don't exist, it tries to install them.
+        /// </summary>
+        /// <returns>True, if the binaries are installed and ready to work.</returns>
+        public static bool CheckInstallFfmpeg()
+        {
+            if (!RecordingService.CheckFFmpeg())
+            {
+                return RecordingService.InstallFFmpeg();
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Tries to start recording; checks FFmpeg binaries before starting recorder.
+        /// </summary>
         public static void InitiateRecording()
         {
-            if (!manager.CheckFFmpeg())
+            if (!CheckInstallFfmpeg())
             {
-                if (!manager.InstallFFmpeg())
-                {
-                    return;
-                }
+                return;
             }
 
             ConfigureDevices();
-
             recordingView?.Close();
-
-            var optionsView = new RecordingOptionsView(manager);
-
-            if (optionsView.ShowModal(new Form()) == DialogResult.Ok)
-            {
-                Task.Delay(500).Wait();
-
-                OpenSelectionView();
-            }
+            OpenSelectionView();
         }
 
         /// <summary>
@@ -85,7 +104,7 @@ namespace RedShot.Infrastructure.Recording
             var configuration = ConfigurationManager.GetSection<FFmpegConfiguration>();
             var options = configuration.Options;
 
-            var recordingDevices = manager.GetRecordingDevices();
+            var recordingDevices = RecordingService.GetRecordingDevices();
 
             if (options.AudioDevice != null)
             {

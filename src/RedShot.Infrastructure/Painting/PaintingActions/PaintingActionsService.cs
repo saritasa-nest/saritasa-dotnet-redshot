@@ -4,8 +4,14 @@ using RedShot.Infrastructure.Painting.States;
 
 namespace RedShot.Infrastructure.Painting.PaintingActions
 {
+    /// <summary>
+    /// Painting action services.
+    /// </summary>
     internal static class PaintingActionsService
     {
+        /// <summary>
+        /// Maps PaintingState and IPaintingAction.
+        /// </summary>
         public static IPaintingAction MapFromState(PaintingState state, SKPaint paint, SKBitmap bitmap)
         {
             return state switch

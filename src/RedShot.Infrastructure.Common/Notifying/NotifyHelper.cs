@@ -4,8 +4,14 @@ using Eto.Forms;
 
 namespace RedShot.Infrastructure.Common.Notifying
 {
+    /// <summary>
+    /// Notify helper.
+    /// </summary>
     public static class NotifyHelper
     {
+        /// <summary>
+        /// Runs notifier with specified data.
+        /// </summary>
         public static void Notify(string message, string title, NotifyStatus status = NotifyStatus.Success)
         {
             var notifyer = new Notification()

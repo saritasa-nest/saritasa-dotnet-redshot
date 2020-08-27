@@ -41,11 +41,17 @@ namespace RedShot.Infrastructure.Common
             return surface.Snapshot();
         }
 
+        /// <summary>
+        /// Converts ETto drawing color to SkiaSharp color.
+        /// </summary>
         public static SKColor GetSKColorFromEtoColor(Color color)
         {
             return new SKColor((byte)color.Rb, (byte)color.Gb, (byte)color.Bb, (byte)color.Ab);
         }
 
+        /// <summary>
+        /// Scale Eto image and convert it to SKImage object.
+        /// </summary>
         public static SKImage GetScaledImage(Bitmap bitmap, Size size)
         {
             using var surface = SKSurface.Create(size.Width, size.Height, SKColorType.Bgra8888, SKAlphaType.Premul);

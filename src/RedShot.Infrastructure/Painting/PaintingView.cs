@@ -8,18 +8,21 @@ using RedShot.Infrastructure.Screenshooting;
 
 namespace RedShot.Infrastructure.Painting
 {
-    public class PaintingView : Form
+    /// <summary>
+    /// Painting view.
+    /// </summary>
+    internal class PaintingView : Form
     {
         private int paintingPanelWidth = 60;
-
         private readonly Bitmap image;
-
         private PaintingPanel paintingPanel;
-
         private ImagePanel imagePanel;
-
         private SKPaint paint;
 
+        /// <summary>
+        /// Initializes painting view via image. 
+        /// </summary>
+        /// <param name="image"></param>
         public PaintingView(Bitmap image)
         {
             Title = "Image editor";
@@ -38,7 +41,7 @@ namespace RedShot.Infrastructure.Painting
 
         private void PaintingView_Shown(object sender, EventArgs e)
         {
-            Location = ScreenHelper.GetCenterLocation(Size, ScreenShotSelectionView.SelectionScreen);
+            Location = ScreenHelper.GetCenterLocation(Size);
         }
 
         private void PaintingView_SizeChanged(object sender, EventArgs e)

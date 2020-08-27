@@ -8,16 +8,28 @@ using System.Threading.Tasks;
 
 namespace RedShot.Infrastructure.Common
 {
+    /// <summary>
+    /// Provides downloading data.
+    /// </summary>
     public class Downloader : IDisposable
     {
-        public event EventHandler<DownloadProgressChangedEventArgs> DownloadProgressChanged;
-
-        public event EventHandler<AsyncCompletedEventArgs> DownloadFileCompleted;
-
         private readonly string downloadDirectory;
         private WebClient webClient;
         private bool disposed;
 
+        /// <summary>
+        /// Download progress changed event.
+        /// </summary>
+        public event EventHandler<DownloadProgressChangedEventArgs> DownloadProgressChanged;
+
+        /// <summary>
+        /// Download file completed event.
+        /// </summary>
+        public event EventHandler<AsyncCompletedEventArgs> DownloadFileCompleted;
+
+        /// <summary>
+        /// Initializes downloader.
+        /// </summary>
         public Downloader()
         {
             webClient = new WebClient();
@@ -34,6 +46,10 @@ namespace RedShot.Infrastructure.Common
             form.Show();
         }
 
+        /// <summary>
+        /// Download data asynchronously.
+        /// </summary>
+        /// <param name="callback">A delegate that will be invoked after data is downloaded.</param>
         public void DownloadAsync(string url, string fileName, Action<string> callback)
         {
             RunForm(fileName);
@@ -44,6 +60,10 @@ namespace RedShot.Infrastructure.Common
             webClient.DownloadFileCompleted += (o, e) => callback.Invoke(path);
         }
 
+        /// <summary>
+        /// Download data.
+        /// Blocking operation.
+        /// </summary>
         public string Download(string url, string fileName)
         {
             var path = Path.Combine(downloadDirectory, fileName);
@@ -63,6 +83,9 @@ namespace RedShot.Infrastructure.Common
             DownloadProgressChanged?.Invoke(sender, e);
         }
 
+        /// <summary>
+        /// Disposes web client.
+        /// </summary>
         public void Dispose()
         {
             if (!disposed)

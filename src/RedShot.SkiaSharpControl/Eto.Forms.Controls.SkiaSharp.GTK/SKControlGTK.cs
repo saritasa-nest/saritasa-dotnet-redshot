@@ -41,11 +41,15 @@ namespace Eto.Forms.Controls.SkiaSharp.GTK
             QueueDraw();
         }
 
+        /// <summary>
+        /// Initializes SK control for GTK.
+        /// </summary>
         public SKControlGtk()
         {
             AddEvents((int)EventMask.PointerMotionMask);
         }
 
+        /// <inheritdoc />
         protected override bool OnDrawn(Context cr)
         {
             if (surface != null)
@@ -57,6 +61,7 @@ namespace Eto.Forms.Controls.SkiaSharp.GTK
             return true;
         }
 
+        /// <inheritdoc />
         public new void Dispose()
         {
             if (disposed == false)

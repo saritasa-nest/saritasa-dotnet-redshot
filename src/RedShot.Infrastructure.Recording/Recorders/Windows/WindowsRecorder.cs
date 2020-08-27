@@ -5,12 +5,19 @@ using RedShot.Infrastructure.Recording.Recorders;
 
 namespace RedShot.Recording.Recorders.Windows
 {
+    /// <summary>
+    /// Recorder for Windows OS.
+    /// </summary>
     internal class WindowsRecorder : BaseRecorder
     {
+        /// <summary>
+        /// Initializes Windows recorder.
+        /// </summary>
         public WindowsRecorder(FFmpegOptions options, string ffmpegPath, string videoFolderPath = null) : base(options, ffmpegPath, videoFolderPath)
         {
         }
 
+        /// <inheritdoc/>
         protected override string GetDeviceArgs(Rectangle captureArea)
         {
             if (captureArea.Width % 2 != 0)

@@ -4,16 +4,28 @@ using Eto.Forms;
 
 namespace RedShot.Infrastructure.Common.Forms
 {
+    /// <summary>
+    /// Provides button for recording.
+    /// </summary>
     public class RecordingButton : Panel
     {
+        /// <summary>
+        /// Event to handle when the user clicks the button.
+        /// </summary>
         public event EventHandler<EventArgs> Clicked;
 
+        /// <summary>
+        /// State of the button.
+        /// </summary>
         public bool IsRecording { get; private set; }
 
         private Bitmap playIcon;
         private Bitmap stopIcon;
         private Button button;
 
+        /// <summary>
+        /// Initializes recording button.
+        /// </summary>
         public RecordingButton(int width, int height)
         {
             Width = width;
@@ -44,6 +56,9 @@ namespace RedShot.Infrastructure.Common.Forms
             };
         }
 
+        /// <summary>
+        /// Reverts state of the button.
+        /// </summary>
         public void RevertState()
         {
             if (IsRecording)
@@ -62,9 +77,7 @@ namespace RedShot.Infrastructure.Common.Forms
 
         private void SetImage(Bitmap image)
         {
-            var scaleImageSize = new Size(Convert.ToInt32(Width * 0.7), Convert.ToInt32(Width * 0.7));
-
-            button.Image = new Bitmap(image, scaleImageSize.Width, scaleImageSize.Height, ImageInterpolation.High);
+            button.Image = new Bitmap(image, Convert.ToInt32(Width * 0.7), Convert.ToInt32(Height * 0.7), ImageInterpolation.High);
         }
 
         private void Btn_Click(object sender, EventArgs e)

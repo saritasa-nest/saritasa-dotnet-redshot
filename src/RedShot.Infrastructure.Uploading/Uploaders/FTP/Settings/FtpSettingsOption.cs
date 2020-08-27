@@ -6,28 +6,40 @@ using RedShot.Infrastructure.Uploaders.Ftp.Settings;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 {
-    public class FtpSettingOption : ISettingsOption
+    /// <summary>
+    /// FTP setting's option.
+    /// </summary>
+    public class FtpSettingsOption : ISettingsOption
     {
         private readonly FtpConfiguration ftpConfiguration;
 
-        public FtpSettingOption()
+        /// <summary>
+        /// Initializes FTP settings option.
+        /// </summary>
+        public FtpSettingsOption()
         {
             ftpConfiguration = ConfigurationManager.GetSection<FtpConfiguration>();
         }
 
+        /// <inheritdoc />
         public string Name => "FTP / FTPS / SFTP";
 
-        public Control GetControl()
+        /// <inheritdoc />
+        public Dialog<DialogResult> GetOptionDialog()
         {
-            return new FtpSettingControl(ftpConfiguration);
+            return new FtpOptionDialog(ftpConfiguration);
         }
 
+        /// <inheritdoc />
         public void Save()
         {
             ConfigurationManager.SetSettingsValue(ftpConfiguration);
             ConfigurationManager.Save();
         }
 
+        /// <summary>
+        /// Returns name of the option.
+        /// </summary>
         public override string ToString()
         {
             return Name;

@@ -6,9 +6,9 @@ using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg.Encoding;
 
-namespace RedShot.Infrastructure.RecordingRedShot.Views
+namespace RedShot.Infrastructure.RecordingRedShot.Settings
 {
-    internal partial class RecordingOptionsView : Dialog<DialogResult>
+    internal partial class RecordingOptionDialog : Dialog<DialogResult>
     {
         private void InitializeComponents()
         {

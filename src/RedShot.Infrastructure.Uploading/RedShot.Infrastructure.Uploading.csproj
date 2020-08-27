@@ -26,8 +26,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Uploaders\Ftp\Settings\FtpSettingControl.eto.cs">
-	    <DependentUpon>FtpSettingControl.cs</DependentUpon>
+	  <Compile Update="Uploaders\Ftp\Settings\FtpOptionDialog.eto.cs">
+	    <DependentUpon>FtpOptionDialog.cs</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 

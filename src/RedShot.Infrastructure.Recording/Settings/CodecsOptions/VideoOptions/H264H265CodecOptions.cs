@@ -1,24 +1,28 @@
-﻿using Eto.Drawing;
+﻿using System;
+using System.Linq;
+using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg.Encoding;
-using System;
-using System.Linq;
 
-namespace RedShot.Recording.Views.CodecsOptions.VideoOptions
+namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
 {
+    /// <summary>
+    /// H264 and H265 options view.
+    /// </summary>
     internal class H264H265CodecOptions : Dialog
     {
         private FFmpegOptions options;
-
         private ComboBox x264Preset;
         private NumericStepper x264Quality;
         private DefaultButton qualityAbout;
-
         private DefaultButton okButton;
 
+        /// <summary>
+        /// Initializes H264/H265 options view.
+        /// </summary>
         public H264H265CodecOptions(FFmpegOptions options)
         {
             Title = "H264 / H265 options";

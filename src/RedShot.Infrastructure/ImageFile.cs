@@ -5,10 +5,16 @@ using RedShot.Infrastructure.Abstractions.Uploading;
 
 namespace RedShot.Infrastructure
 {
+    /// <summary>
+    /// Image file implementation.
+    /// </summary>
     public class ImageFile : IFile
     {
         private readonly Bitmap image;
 
+        /// <summary>
+        /// Initializes image file.
+        /// </summary>
         public ImageFile(Bitmap image, string filePath, string fileName)
         {
             this.image = image;

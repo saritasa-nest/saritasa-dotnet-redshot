@@ -11,10 +11,15 @@ namespace RedShot.Infrastructure.Abstractions.Uploading
         /// <summary>
         /// Service name.
         /// </summary>
-        string ServiceName { get; }
+        string Name { get; }
 
         /// <summary>
-        /// Service Eto Image.
+        /// Service about.
+        /// </summary>
+        string About { get; }
+
+        /// <summary>
+        /// Service image.
         /// </summary>
         Bitmap ServiceImage { get; }
 
@@ -23,6 +28,9 @@ namespace RedShot.Infrastructure.Abstractions.Uploading
         /// </summary>
         IUploader GetUploader();
 
+        /// <summary>
+        /// Checks on supporting file type.
+        /// </summary>
         bool CheckOnSupporting(FileType fileType);
     }
 }

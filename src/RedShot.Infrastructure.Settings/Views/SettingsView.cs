@@ -1,80 +1,68 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Eto.Drawing;
+﻿using System.Collections.Generic;
 using Eto.Forms;
 using RedShot.Infrastructure.Abstractions;
+using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 
 namespace RedShot.Infrastructure.Settings.Views
 {
-    public class SettingsView : Form
+    /// <summary>
+    /// Settings view.
+    /// </summary>
+    internal class SettingsView : Form
     {
         private readonly IEnumerable<ISettingsOption> settingsOptions;
-        private ListBox leftBar;
-        private Control rightBar;
-        private ISettingsOption selectedOption;
 
+        /// <summary>
+        /// Initializes settings view.
+        /// </summary>
         public SettingsView(IEnumerable<ISettingsOption> settingsOptions)
         {
+            Title = "RedShot settings";
             this.settingsOptions = settingsOptions;
-            InitializeComponents();
+            Content = GetContentLayout();
+            Resizable = false;
+            Shown += SettingsView_Shown;
         }
 
-        private void InitializeComponents()
+        private void SettingsView_Shown(object sender, System.EventArgs e)
         {
-            leftBar = GetLeftBar();
-            rightBar = settingsOptions.First().GetControl();
-            leftBar.SelectedValue = settingsOptions.First();
-
-            UpdateContent();
+            Location = ScreenHelper.GetCenterLocation(Size);
         }
 
-        private ListBox GetLeftBar()
+        private Control GetContentLayout()
         {
-            var listBox = new ListBox()
+            var layout = new StackLayout()
             {
-                Width = 200,
-                Height = 580
+                Orientation = Orientation.Vertical,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                Padding = 20
             };
-            listBox.DataStore = settingsOptions;
-            listBox.SelectedValueChanged += ListBox_SelectedValueChanged;
 
-            return listBox;
-        }
+            layout.Items.Add(FormsHelper.VoidBox(30));
 
-        private void ListBox_SelectedValueChanged(object sender, EventArgs e)
-        {
-            if (selectedOption == null || !selectedOption.Equals(leftBar.SelectedValue))
+            foreach (var option in settingsOptions)
             {
-                selectedOption = (ISettingsOption)leftBar.SelectedValue;
-                OpenOption(selectedOption);
+                layout.Items.Add(GetOptionButton(option));
+                layout.Items.Add(FormsHelper.VoidBox(30));
             }
+
+            return layout;
         }
 
-        private void OpenOption(ISettingsOption option)
+        private Control GetOptionButton(ISettingsOption option)
         {
-            rightBar = option.GetControl();
-            UpdateContent();
-        }
-
-        private void UpdateContent()
-        {
-            Content = new StackLayout()
+            var button = new DefaultButton(option.Name, 250, 40);
+            button.Clicked += (o, e) =>
             {
-                Orientation = Orientation.Horizontal,
-                VerticalContentAlignment = VerticalAlignment.Top,
-                Padding = 10,
-                Size = new Size(900, 600),
-                Items =
+                var dialog = option.GetOptionDialog();
+                if (dialog != null && dialog.ShowModal(this) == DialogResult.Ok)
                 {
-                    leftBar,
-                    FormsHelper.VoidBox(10),
-                    rightBar
+                    option.Save();
                 }
             };
 
-            Invalidate(true);
+            return button;
         }
     }
 }

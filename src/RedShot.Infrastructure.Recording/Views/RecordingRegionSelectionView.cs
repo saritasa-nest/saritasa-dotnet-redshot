@@ -3,10 +3,15 @@ using RedShot.Infrastructure.Recording;
 
 namespace RedShot.Infrastructure.RecordingRedShot.Views
 {
+    /// <summary>
+    /// Recording region selection view.
+    /// </summary>
     internal sealed class RecordingRegionSelectionView : SelectionFormBase<RecordManagePanel>
     {
+        /// <inheritdoc/>
         protected override string TopMessage { get; set; } = "Please select a region to record";
 
+        /// <inheritdoc/>
         protected override void InitializeSelectionManageForm()
         {
             base.InitializeSelectionManageForm();
@@ -19,6 +24,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
             FinishSelection();
         }
 
+        /// <inheritdoc/>
         protected override void FinishSelection()
         {
             RecordingManager.RecordRegion(GetRealSelectionRegion());

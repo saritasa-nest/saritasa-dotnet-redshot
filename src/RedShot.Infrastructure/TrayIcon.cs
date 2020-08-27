@@ -15,22 +15,17 @@ namespace RedShot.Infrastructure
         /// </summary>
         public TrayIndicator Tray { get; }
 
+        /// <summary>
+        /// Button for uploading last file.
+        /// </summary>
         public ButtonMenuItem UploadLastFile { get; }
 
         /// <summary>
-        /// Inits tray icon.
+        /// Initializes tray icon.
         /// </summary>
         public TrayIcon(string title, Bitmap image)
         {
             var menu = new ContextMenu();
-
-#if DEBUG
-            menu.Items.Add(new ButtonMenuItem()
-            {
-                Text = "Test",
-                Command = new Command((e, o) => RedShot.DebugLib.TestClass.RunTest())
-            });
-#endif
 
             menu.Items.Add(new ButtonMenuItem()
             {
@@ -77,6 +72,9 @@ namespace RedShot.Infrastructure
             };
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         protected override void OnShown(EventArgs e)
         {
             Visible = false;
@@ -84,6 +82,9 @@ namespace RedShot.Infrastructure
             Tray.Visible = true;
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         protected override void OnUnLoad(EventArgs e)
         {
             base.OnUnLoad(e);

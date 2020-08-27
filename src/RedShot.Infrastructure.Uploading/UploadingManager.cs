@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Eto.Forms;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
 using RedShot.Infrastructure.Common.Notifying;
-using RedShot.Infrastructure.Forms;
 using RedShot.Infrastructure.Uploading.Forms;
 
 namespace RedShot.Infrastructure
@@ -16,10 +14,13 @@ namespace RedShot.Infrastructure
     /// </summary>
     public static class UploadingManager
     {
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-        private static UploadBar uploadBar;
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private static UploaderChosingForm uploaderChosingForm;
         private static IFile lastFile;
 
+        /// <summary>
+        /// Runs uploading the latest file, if it exists.
+        /// </summary>
         public static void UploadLastFile()
         {
             if (lastFile != null)
@@ -35,10 +36,15 @@ namespace RedShot.Infrastructure
         {
             lastFile = file;
 
-            var form = new UploaderChosingForm(file, GetUploadingServices());
-            form.Show();
+            uploaderChosingForm?.Close();
+
+            uploaderChosingForm = new UploaderChosingForm(file, GetUploadingServices());
+            uploaderChosingForm.Show();
         }
 
+        /// <summary>
+        /// Returns uploading services.
+        /// </summary>
         public static IEnumerable<IUploadingService> GetUploadingServices()
         {
             var types = Assembly
@@ -52,10 +58,15 @@ namespace RedShot.Infrastructure
             }
         }
 
+        /// <summary>
+        /// Uploads file with specified uploader.
+        /// </summary>
         internal static void Upload(IUploader uploader, IFile file)
         {
             if (uploader == null || file == null)
             {
+                logger.Warn($"Upload failed");
+                NotifyHelper.Notify($"Upload failed", "RedShot uploading", NotifyStatus.Failed);
                 return;
             }
 
@@ -65,13 +76,13 @@ namespace RedShot.Infrastructure
 
                 if (response.IsSuccess)
                 {
-                    Logger.Trace($"{file.FileType} has been uploaded", response);
+                    logger.Trace($"{file.FileType} has been uploaded", response);
 
                     NotifyHelper.Notify($"{file.FileType} has been uploaded", "RedShot uploading", NotifyStatus.Success);
                 }
                 else
                 {
-                    Logger.Warn($"{file.FileType} uploading was failed", response);
+                    logger.Warn($"{file.FileType} uploading was failed", response);
 
                     NotifyHelper.Notify($"{file.FileType} uploading failed", "RedShot uploading", NotifyStatus.Failed);
                 }
@@ -85,7 +96,7 @@ namespace RedShot.Infrastructure
             {
                 var message = $"An error was occurred while {file.FileType} was uploading. Message: {ex.Message}";
 
-                Logger.Error(ex, message);
+                logger.Error(ex, message);
                 NotifyHelper.Notify(message, "RedShot uploading", NotifyStatus.Failed);
             }
         }

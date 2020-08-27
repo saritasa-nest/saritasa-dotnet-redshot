@@ -1,28 +1,48 @@
-﻿using RedShot.Infrastructure.Common;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using RedShot.Infrastructure.Common;
 
 namespace RedShot.Infrastructure.Recording
 {
+    /// <summary>
+    /// Provides functions to work with FFmpeg CLI.
+    /// </summary>
     public sealed class FFmpegCliManager : CliManager
     {
         private readonly NLog.Logger logger = NLog.LogManager.GetLogger("Ffmpeg");
 
+        /// <summary>
+        /// Output data received event.
+        /// </summary>
         public event DataReceivedEventHandler OutputDataReceived;
 
+        /// <summary>
+        /// Error data received event.
+        /// </summary>
         public event DataReceivedEventHandler ErrorDataReceived;
 
+        /// <summary>
+        /// Process status.
+        /// </summary>
         public bool IsProcessFinished { get; private set; }
 
+        /// <summary>
+        /// Recording status.
+        /// </summary>
         public bool IsRecording { get; private set; }
 
+        /// <summary>
+        /// Initializes 
+        /// </summary>
+        /// <param name="ffmpegPath"></param>
         public FFmpegCliManager(string ffmpegPath) : base(ffmpegPath)
         {
             OutputDataReceived += FFmpeg_DataReceived;
             ErrorDataReceived += FFmpeg_DataReceived;
         }
 
+        /// <inheritdoc/>
         public override void Run(string args)
         {
             Output.Clear();
@@ -37,7 +57,7 @@ namespace RedShot.Infrastructure.Recording
             Open(filePath, args);
         }
 
-        public void Open(string path, string args)
+        private void Open(string path, string args)
         {
             IsProcessFinished = false;
 
@@ -88,6 +108,9 @@ namespace RedShot.Infrastructure.Recording
             });
         }
 
+        /// <summary>
+        /// Waits for the process finished.
+        /// </summary>
         public void WaitForExit()
         {
             while (!IsProcessFinished)
@@ -95,6 +118,7 @@ namespace RedShot.Infrastructure.Recording
             }
         }
 
+        /// <inheritdoc/>
         public override void Stop()
         {
             if (IsProcessRunning && process != null)

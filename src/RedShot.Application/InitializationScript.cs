@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using RedShot.DebugLib;
 using RedShot.Infrastructure.Recording;
+using RedShot.Infrastructure.Recording.Settings;
 using RedShot.Infrastructure.Uploaders.Ftp;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings;
 
@@ -20,10 +20,10 @@ namespace RedShot.Application
                 typeof(FFmpegConfiguration)
             };
 
-            SettingOptions = new List<Type>()
+            SettingsOptions = new List<Type>()
             {
-                typeof(FtpSettingOption),
-                typeof(TestSetting),
+                typeof(FtpSettingsOption),
+                typeof(RecordingSettingsOption),
             };
         }
 
@@ -37,6 +37,6 @@ namespace RedShot.Application
         /// List of setting options of the app.
         /// They should implement ISettingOption interface.
         /// </summary>
-        public static IEnumerable<Type> SettingOptions { get; private set; }
+        public static IEnumerable<Type> SettingsOptions { get; private set; }
     }
 }

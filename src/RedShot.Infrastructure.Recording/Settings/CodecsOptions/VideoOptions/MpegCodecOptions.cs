@@ -1,19 +1,23 @@
-﻿using Eto.Forms;
+﻿using System;
+using Eto.Forms;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg;
-using System;
 
-namespace RedShot.Recording.Views.CodecsOptions.VideoOptions
+namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
 {
+    /// <summary>
+    /// MPEG-4 options view.
+    /// </summary>
     internal class MpegCodecOptions : Dialog
     {
         private FFmpegOptions options;
-
         private NumericStepper mpeg4Quality;
         private DefaultButton qualityAbout;
-
         private DefaultButton okButton;
 
+        /// <summary>
+        /// Initializes MPEG-4 options view.
+        /// </summary>
         public MpegCodecOptions(FFmpegOptions options)
         {
             Title = "MPEG-4 options";

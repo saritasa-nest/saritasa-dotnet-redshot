@@ -8,17 +8,17 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
     /// <summary>
     /// Manages FTP uploading.
     /// </summary>
-    public class FtpUploadingService : IUploadingService
+    internal class FtpUploadingService : IUploadingService
     {
-        /// <inheritdoc cref="IUploadingService"/>
-        public string ServiceName => "FTP / SFTP / FTPS";
+        /// <inheritdoc />
+        public string Name => "FTP/SFTP/FTPS uploading service";
 
         /// <summary>
         /// Selected FTP account.
         /// </summary>
         public FtpAccount Account { get; }
 
-        /// <inheritdoc cref="IUploadingService"/>
+        /// <inheritdoc />
         public Bitmap ServiceImage
         {
             get
@@ -26,6 +26,9 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
                 return new Bitmap(Resources.Properties.Resources.Ftp);
             }
         }
+
+        /// <inheritdoc />
+        public string About => "Uploads the file to FTP server";
 
         /// <summary>
         /// Creates either FTP or STPS uploader.
@@ -56,6 +59,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
             return null;
         }
 
+        /// <inheritdoc />
         public bool CheckOnSupporting(FileType fileType)
         {
             return true;
