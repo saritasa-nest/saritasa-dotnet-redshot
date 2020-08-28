@@ -49,14 +49,7 @@ namespace RedShot.Application
 #if _WINDOWS
             Eto.Platform.Detect.Add<ISKControl>(() => new Eto.Forms.Controls.SkiaSharp.WinForms.SKControlHandler());
 #elif _UNIX
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                Eto.Platform.Detect.Add<ISKControl>(() => new Eto.Forms.Controls.SkiaSharp.Mac.SKControlHandler());
-            }
-            else
-            {
-                Eto.Platform.Detect.Add<ISKControl>(() => new Eto.Forms.Controls.SkiaSharp.GTK.SKControlHandler());
-            }
+            Eto.Platform.Detect.Add<ISKControl>(() => new Eto.Forms.Controls.SkiaSharp.GTK.SKControlHandler());
 #else
             throw new NotImplementedException();
 #endif

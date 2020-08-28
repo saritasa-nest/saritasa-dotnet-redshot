@@ -81,7 +81,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         /// <summary>
         /// Return screen which user works with.
         /// </summary>
-        public static Screen selectionScreen;
+        private Screen selectionScreen;
 
         /// <summary>
         /// Selection region size and location.
@@ -141,8 +141,6 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             WindowState = WindowState.Maximized;
             WindowStyle = WindowStyle.None;
 
-            SetPlatformOptions();
-
             penTimer = Stopwatch.StartNew();
 
             timer = new UITimer();
@@ -163,6 +161,8 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 
             var capturedIcon = new Bitmap(Resources.Properties.Resources.Pointer);
             capturedCursor = FormsHelper.GetCursor(capturedIcon, new Size(20, 20), new Point(3, 3));
+
+            SetPlatformOptions();
         }
 
         private void SetPlatformOptions()
@@ -764,9 +764,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
                 (int)(Size.Height * 0.05) + Location.Y);
 
             selectionManageForm.Location = selectionManageFormLocation;
-
             selectionManageForm.KeyDown += EditorView_KeyDown;
-
             selectionManageForm.Show();
             selectionManageForm.Visible = false;
         }

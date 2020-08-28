@@ -6,10 +6,10 @@ namespace RedShot.Platforms.Linux
     {
         public static void SetFullScreen(object control, Size size)
         {
-            if (control is Gtk.Widget widget)
+            if (control is Gtk.Window window)
             {
-                widget.SetSizeRequest(size.Width, size.Height);
-                widget.Window.Fullscreen();
+                window.SetSizeRequest(size.Width, size.Height);
+                window.Fullscreen();
             }
         }
     }

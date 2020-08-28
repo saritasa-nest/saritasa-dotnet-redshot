@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <CodeAnalysisRuleSet>../../../tools/Saritasa.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>NU1701;$(NoWarn)</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
