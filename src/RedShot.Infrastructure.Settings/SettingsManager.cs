@@ -30,13 +30,6 @@ namespace RedShot.Infrastructure.Settings
             settingsView?.Close();
 
             settingsView = new SettingsView(SettingsOptions);
-            settingsView.Closed += (o, e) =>
-            {
-                foreach (var option in SettingsOptions)
-                {
-                    option.Save();
-                }
-            };
             settingsView.Show();
         }
     }

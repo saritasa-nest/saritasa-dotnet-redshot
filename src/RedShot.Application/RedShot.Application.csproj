@@ -20,7 +20,6 @@
     <ProjectReference Include="..\RedShot.Infrastructure.Configuration\RedShot.Infrastructure.Configuration.csproj" />
     <ProjectReference Include="..\RedShot.Infrastructure.Settings\RedShot.Infrastructure.Settings.csproj" />
     <ProjectReference Condition=" '$(OS)' != 'Windows_NT' " Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.GTK\Eto.Forms.Controls.SkiaSharp.GTK.csproj" />
-    <ProjectReference Condition=" '$(OS)' != 'Windows_NT' " Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.Mac\Eto.Forms.Controls.SkiaSharp.Mac.csproj" />
     <ProjectReference Condition=" '$(OS)' == 'Windows_NT' " Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.WinForms\Eto.Forms.Controls.SkiaSharp.WinForms.csproj" />
     <ProjectReference Include="..\RedShot.Infrastructure\RedShot.Infrastructure.csproj" />
     <ProjectReference Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp\Eto.Forms.Controls.SkiaSharp.csproj" />

@@ -141,10 +141,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             WindowState = WindowState.Maximized;
             WindowStyle = WindowStyle.None;
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                Topmost = true;
-            }
+            SetPlatformOptions();
 
             penTimer = Stopwatch.StartNew();
 
@@ -166,6 +163,15 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 
             var capturedIcon = new Bitmap(Resources.Properties.Resources.Pointer);
             capturedCursor = FormsHelper.GetCursor(capturedIcon, new Size(20, 20), new Point(3, 3));
+        }
+
+        private void SetPlatformOptions()
+        {
+#if _WINDOWS
+            Topmost = true;
+#elif _UNIX
+            RedShot.Platforms.Linux.GtkHelper.SetFullScreen(this.ControlObject, Size);
+#endif
         }
 
         private void ScreenTimer_Elapsed(object sender, EventArgs e)
@@ -229,7 +235,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         /// <summary>
         /// For changing mouse pointer.
         /// </summary>
-        #region PointerFunctions
+#region PointerFunctions
 
         private void SetMousePointer(PointF location)
         {
@@ -269,12 +275,12 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             Cursor = Cursors.Arrow;
         }
 
-        #endregion PointerFunctions
+#endregion PointerFunctions
 
         /// <summary>
         /// Handlers for window events.
         /// </summary>
-        #region WindowEvents
+#region WindowEvents
         private void EditorView_Shown(object sender, EventArgs e)
         {
             timer.Start();
@@ -411,12 +417,12 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
                     break;
             }
         }
-        #endregion WindowEvents
+#endregion WindowEvents
 
         /// <summary>
         /// Skia sharp drawing functions.
         /// </summary>
-        #region SkiaSharpCommands
+#region SkiaSharpCommands
 
         protected virtual void PaintTopMessage(SKCanvas canvas)
         {
@@ -574,11 +580,11 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             canvas.DrawRect(rect, rectPaintDash);
         }
 
-        #endregion SkiaSharpCommands
+#endregion SkiaSharpCommands
 
-        #region MovingResizing
+#region MovingResizing
 
-        #region Checking
+#region Checking
 
         /// <summary>
         /// Checks whether user can move selected area.
@@ -692,7 +698,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             return true;
         }
 
-        #endregion Checking
+#endregion Checking
 
         /// <summary>
         /// Moves selection area.
@@ -745,9 +751,9 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             }
         }
 
-        #endregion MovingResizing
+#endregion MovingResizing
 
-        #region SelectionManageForm
+#region SelectionManageForm
 
         protected virtual void InitializeSelectionManageForm()
         {
@@ -776,7 +782,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             selectionManageForm.Visible = false;
         }
 
-        #endregion SelectionManageForm
+#endregion SelectionManageForm
 
         /// <summary>
         /// Returns rectangle with location regarding screenshot image coordinates.

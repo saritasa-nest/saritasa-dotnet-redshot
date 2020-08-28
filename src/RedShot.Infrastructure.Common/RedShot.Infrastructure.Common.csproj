@@ -5,6 +5,13 @@
     <CodeAnalysisRuleSet>../../tools/Saritasa.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+    <DefineConstants>_WINDOWS</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
+    <DefineConstants>_UNIX</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Eto.Forms" Version="2.5.5" />
     <PackageReference Include="SkiaSharp" Version="2.80.1" />
@@ -16,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RedShot.Infrastructure.Abstractions\RedShot.Infrastructure.Abstractions.csproj" />
+    <ProjectReference Condition=" '$(OS)' != 'Windows_NT'" Include="..\RedShot.Platforms.Linux\RedShot.Platforms.Linux.csproj" />
     <ProjectReference Include="..\RedShot.Resources\RedShot.Resources.csproj" />
     <ProjectReference Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp\Eto.Forms.Controls.SkiaSharp.csproj" />
   </ItemGroup>

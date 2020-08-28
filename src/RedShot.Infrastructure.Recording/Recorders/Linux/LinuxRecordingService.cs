@@ -14,7 +14,6 @@ namespace RedShot.Recording.Recorders.Linux
     internal class LinuxRecordingService : IRecordingService
     {
         private readonly string ffmpegName;
-
         private readonly CliManager simpleCliManager;
 
         /// <summary>
@@ -39,8 +38,16 @@ namespace RedShot.Recording.Recorders.Linux
         /// <inheritdoc />
         public bool CheckFFmpeg()
         {
-            simpleCliManager.Run(" -h");
-            return simpleCliManager.Output.ToString().Contains("ffmpeg version");
+            try
+            {
+                simpleCliManager.Run(" -h");
+                return simpleCliManager.Output.ToString().Contains("ffmpeg version");
+            }
+            // Can throw an exception when can not find FFmpeg in the OS.
+            catch
+            {
+                return false;
+            }
         }
 
         /// <inheritdoc />
@@ -58,10 +65,10 @@ namespace RedShot.Recording.Recorders.Linux
         {
             if (CheckFFmpeg())
             {
-                throw new Exception("FFmpeg is installed already!");
+                return true;
             }
 
-            MessageBox.Show("Download ffmpeg package to your system before recording video", MessageBoxButtons.OK, MessageBoxType.Information);
+            MessageBox.Show("Download FFmpeg package to your system before recording video", MessageBoxButtons.OK, MessageBoxType.Information);
             return false;
         }
 
@@ -69,7 +76,7 @@ namespace RedShot.Recording.Recorders.Linux
         {
             if (!CheckFFmpeg())
             {
-                throw new DllNotFoundException($"ffmpeg binary is not found!");
+                throw new DllNotFoundException($"FFmpeg binary is not found!");
             }
         }
     }
