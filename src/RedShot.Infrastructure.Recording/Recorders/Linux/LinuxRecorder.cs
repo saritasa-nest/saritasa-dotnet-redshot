@@ -38,16 +38,9 @@ namespace RedShot.Recording.Recorders.Linux
                 args.Append($" -draw_mouse {(options.DrawCursor ? '1' : '0')} ");
             }
 
-            if (options.UseMicrophone && options.AudioDevice != null)
+            if (options.UseAudio)
             {
-                if (options.AudioDevice != null)
-                {
-                    args.Append($"-f alsa -ac 2 -i {options.AudioDevice.CompatibleFfmpegName}");
-                }
-                else
-                {
-                    args.Append($"-f alsa -ac 2 -i hw:0 ");
-                }
+                args.Append($"-f alsa -ac 2 -i hw:0 ");
             }
 
             return args.ToString();

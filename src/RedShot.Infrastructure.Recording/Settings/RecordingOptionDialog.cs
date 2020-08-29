@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using Eto.Forms;
 using RedShot.Infrastructure.Abstractions.Recording;
@@ -23,8 +24,9 @@ namespace RedShot.Infrastructure.RecordingRedShot.Settings
         private readonly IRecordingDevices recordingDevices;
         private FFmpegOptions ffmpegOptions;
         private ComboBox videoDevices;
-        private ComboBox audioDevices;
-        private CheckBox useMicrophone;
+        private ComboBox primaryAudioDevices;
+        private ComboBox optionalAudioDevices;
+        private CheckBox useAudio;
         private ComboBox videoCodec;
         private DefaultButton videoCodecOptionsButton;
         private ComboBox audioCodec;
@@ -87,15 +89,30 @@ namespace RedShot.Infrastructure.RecordingRedShot.Settings
 
             fps.ValueBinding.Convert(f => (int)f, t => t).BindDataContext((FFmpegOptions o) => o.Fps);
             userArgs.TextBinding.BindDataContext((FFmpegOptions o) => o.UserArgs);
-            useGdigrab.CheckedBinding.BindDataContext((FFmpegOptions o) => o.UseGdigrab);
+            var gdigrabBind = useGdigrab.CheckedBinding.BindDataContext((FFmpegOptions o) => o.UseGdigrab);
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                gdigrabBind.Changing += (o, e) =>
+                {
+                    if (e.Value is bool value)
+                    {
+                        videoDevices.Enabled = !value;
+                    }
+                };
+            }
+
             showCursor.CheckedBinding.BindDataContext((FFmpegOptions o) => o.DrawCursor);
 
-            useMicrophone.CheckedBinding.BindDataContext((FFmpegOptions o) => o.UseMicrophone);
+            useAudio.CheckedBinding.BindDataContext((FFmpegOptions o) => o.UseAudio);
 
             videoDevices.SelectedValueBinding.BindDataContext((FFmpegOptions o) => o.VideoDevice);
 
-            audioDevices.SelectedValueBinding.BindDataContext((FFmpegOptions o) => o.AudioDevice);
-            audioDevices.Bind(d => d.Enabled, ffmpegOptions, o => o.UseMicrophone);
+            primaryAudioDevices.SelectedValueBinding.BindDataContext((FFmpegOptions o) => o.PrimaryAudioDevice);
+            primaryAudioDevices.Bind(d => d.Enabled, ffmpegOptions, o => o.UseAudio);
+
+            optionalAudioDevices.SelectedValueBinding.BindDataContext((FFmpegOptions o) => o.OptionalAudioDevice);
+            optionalAudioDevices.Bind(d => d.Enabled, ffmpegOptions, o => o.UseAudio);
 
             audioCodec.SelectedValueBinding.Convert(
                 l =>

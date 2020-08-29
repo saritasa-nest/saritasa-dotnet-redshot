@@ -143,8 +143,6 @@ namespace RedShot.Recording.Recorders.Windows
                     RecordingManager.InitiateRecording();
                 });
 
-                //ZipFile.ExtractToDirectory(path, ffmpegPath);
-
                 return false;
             }
             catch (Exception e)

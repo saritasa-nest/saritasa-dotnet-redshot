@@ -28,12 +28,6 @@ namespace RedShot.Infrastructure.RecordingRedShot.Settings
 
             useGdigrab = new CheckBox();
 
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                useGdigrab.Enabled = false;
-                ffmpegOptions.UseGdigrab = false;
-            }
-
             videoCodecOptionsButton = new DefaultButton("Options", 60, 25);
 
             videoCodecOptionsButton.Clicked += VideoCodecOptionsButton_Clicked;
@@ -42,7 +36,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Settings
 
             audioCodecOptionsButton.Clicked += AudioCodecOptionsButton_Clicked;
 
-            useMicrophone = new CheckBox();
+            useAudio = new CheckBox();
 
             videoDevices = new ComboBox()
             {
@@ -55,15 +49,26 @@ namespace RedShot.Infrastructure.RecordingRedShot.Settings
                 videoDevices.Enabled = false;
             }
 
-            audioDevices = new ComboBox()
+            primaryAudioDevices = new ComboBox()
             {
                 Size = new Size(250, 21),
             };
-            audioDevices.DataStore = recordingDevices.AudioDevices;
+            primaryAudioDevices.DataStore = recordingDevices.AudioDevices;
 
-            if (audioDevices.DataStore.Count() == 0)
+            if (primaryAudioDevices.DataStore.Count() == 0)
             {
-                audioDevices.Enabled = false;
+                primaryAudioDevices.Enabled = false;
+            }
+
+            optionalAudioDevices = new ComboBox()
+            {
+                Size = new Size(250, 21),
+            };
+            optionalAudioDevices.DataStore = recordingDevices.AudioDevices;
+
+            if (optionalAudioDevices.DataStore.Count() < 2)
+            {
+                optionalAudioDevices.Enabled = false;
             }
 
             videoCodec = new ComboBox()
@@ -101,7 +106,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Settings
                         {
                             new GroupBox()
                             {
-                                Text = "Default",
+                                Text = "General",
                                 Size = new Size(250, 230),
                                 Content = GetDefaultOptionControl(),
                             },
@@ -142,6 +147,20 @@ namespace RedShot.Infrastructure.RecordingRedShot.Settings
                     }
                 }
             };
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                if (ffmpegOptions.UseGdigrab)
+                {
+                    videoDevices.Enabled = false;
+                }
+            }
+            else
+            {
+                useGdigrab.Enabled = false;
+                ffmpegOptions.UseGdigrab = false;
+            }
+
             BindOptions();
             this.Shown += RecordingOptionsView_Shown;
         }
@@ -160,11 +179,11 @@ namespace RedShot.Infrastructure.RecordingRedShot.Settings
                 HorizontalContentAlignment = HorizontalAlignment.Left,
                 Items =
                 {
-                    useMicrophone,
+                    useAudio,
                     FormsHelper.VoidBox(10),
                     new Label()
                     {
-                        Text = "Use microphone"
+                        Text = "Use audio"
                     }
                 }
             };
@@ -177,9 +196,14 @@ namespace RedShot.Infrastructure.RecordingRedShot.Settings
                 Text = "Video device"
             };
 
-            var audioLabel = new Label()
+            var primaryAudioLabel = new Label()
             {
-                Text = "Audio device"
+                Text = "Primary audio device"
+            };
+
+            var optionalAudioLabel = new Label()
+            {
+                Text = "Optional audio device"
             };
 
             return new StackLayout()
@@ -190,12 +214,16 @@ namespace RedShot.Infrastructure.RecordingRedShot.Settings
                 Items =
                     {
                         videoLabel,
-                        FormsHelper.VoidBox(10),
+                        FormsHelper.VoidBox(5),
                         videoDevices,
                         FormsHelper.VoidBox(20),
-                        audioLabel,
-                        FormsHelper.VoidBox(10),
-                        audioDevices,
+                        primaryAudioLabel,
+                        FormsHelper.VoidBox(5),
+                        primaryAudioDevices,
+                        FormsHelper.VoidBox(5),
+                        optionalAudioLabel,
+                        FormsHelper.VoidBox(5),
+                        optionalAudioDevices,
                         FormsHelper.VoidBox(15),
                         GetMicrophoneControl(),
                         FormsHelper.VoidBox(10),

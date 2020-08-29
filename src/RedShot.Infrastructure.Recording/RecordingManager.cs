@@ -106,11 +106,19 @@ namespace RedShot.Infrastructure.Recording
 
             var recordingDevices = RecordingService.GetRecordingDevices();
 
-            if (options.AudioDevice != null)
+            if (options.PrimaryAudioDevice != null)
             {
-                if (!recordingDevices.AudioDevices.Any(d => d.Name == options.AudioDevice.Name))
+                if (!recordingDevices.AudioDevices.Any(d => d.Name == options.PrimaryAudioDevice.Name))
                 {
-                    options.AudioDevice = null;
+                    options.PrimaryAudioDevice = null;
+                }
+            }
+
+            if (options.OptionalAudioDevice != null)
+            {
+                if (!recordingDevices.AudioDevices.Any(d => d.Name == options.OptionalAudioDevice.Name))
+                {
+                    options.OptionalAudioDevice = null;
                 }
             }
 

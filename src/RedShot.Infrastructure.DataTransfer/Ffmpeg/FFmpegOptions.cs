@@ -11,7 +11,8 @@ namespace RedShot.Infrastructure.DataTransfer.Ffmpeg
         private int fps;
         private bool drawCursor;
         private Device videoDevice;
-        private Device audioDevice;
+        private Device optionalAudioDevice;
+        private Device primaryAudioDevice;
         private FFmpegVideoCodec videoCodec;
         private FFmpegAudioCodec audioCodec;
         private FFmpegX264Preset x264Preset;
@@ -25,7 +26,7 @@ namespace RedShot.Infrastructure.DataTransfer.Ffmpeg
         private int mp3Qscale;
         private string userArgs;
         private bool useGdigrab;
-        private bool useMicrophone;
+        private bool useAudio;
 
         public FFmpegOptions()
         {
@@ -44,18 +45,18 @@ namespace RedShot.Infrastructure.DataTransfer.Ffmpeg
             MP3Qscale = 4;
             UserArgs = string.Empty;
             UseGdigrab = true;
-            useMicrophone = true;
+            useAudio = false;
         }
 
-        public bool UseMicrophone
+        public bool UseAudio
         {
-            get { return useMicrophone; }
+            get { return useAudio; }
 
             set
             {
-                if (useMicrophone != value)
+                if (useAudio != value)
                 {
-                    useMicrophone = value;
+                    useAudio = value;
                     OnPropertyChanged();
                 }
             }
@@ -121,15 +122,29 @@ namespace RedShot.Infrastructure.DataTransfer.Ffmpeg
             }
         }
 
-        public Device AudioDevice
+        public Device OptionalAudioDevice
         {
-            get { return audioDevice; }
+            get { return optionalAudioDevice; }
 
             set
             {
-                if (audioDevice != value)
+                if (optionalAudioDevice != value)
                 {
-                    audioDevice = value;
+                    optionalAudioDevice = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public Device PrimaryAudioDevice
+        {
+            get { return primaryAudioDevice; }
+
+            set
+            {
+                if (primaryAudioDevice != value)
+                {
+                    primaryAudioDevice = value;
                     OnPropertyChanged();
                 }
             }
