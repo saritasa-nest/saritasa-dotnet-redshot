@@ -44,6 +44,11 @@ namespace RedShot.Infrastructure.Painting
         public ImageButton RectangleEnableButton { get; private set; }
 
         /// <summary>
+        /// Button for enabling painting arrow action.
+        /// </summary>
+        public ImageButton ArrowEnableButton { get; private set; }
+
+        /// <summary>
         /// Button for enabling erasing action.
         /// </summary>
         public ImageButton EraseEnableButton { get; private set; }
@@ -101,20 +106,21 @@ namespace RedShot.Infrastructure.Painting
             var backImage = new Bitmap(Resources.Properties.Resources.Back);
             var rectangleImage = new Bitmap(Resources.Properties.Resources.Rectangle);
             var eraseImage = new Bitmap(Resources.Properties.Resources.EraseIcon);
+            var arrowImage = new Bitmap(Resources.Properties.Resources.Arrow);
 
             PointsEnableButton = new ImageButton(buttonSize, paintImage, scaleImageSize: imageSize)
             {
-                ToolTip = "Draw a line of any shape"
+                ToolTip = "Paint a line of any shape"
             };
 
             RectangleEnableButton = new ImageButton(buttonSize, rectangleImage, scaleImageSize: imageSize)
             {
-                ToolTip = "Draw a rectangle"
+                ToolTip = "Paint a rectangle"
             };
 
             SaveImageButton = new ImageButton(buttonSize, saveImage, scaleImageSize: imageSize)
             {
-                ToolTip = "Upload the image"
+                ToolTip = "Upload the picture"
             };
 
             PaintBackButton = new ImageButton(buttonSize, backImage, scaleImageSize: imageSize)
@@ -124,12 +130,18 @@ namespace RedShot.Infrastructure.Painting
 
             EraseEnableButton = new ImageButton(buttonSize, eraseImage, scaleImageSize: imageSize)
             {
-                ToolTip = "Erase lines from image"
+                ToolTip = "Erase paintings from the picture"
+            };
+
+            ArrowEnableButton = new ImageButton(buttonSize, arrowImage, scaleImageSize: imageSize)
+            {
+                ToolTip = "Paint an arrow"
             };
 
             PointsEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, PaintingState.Points);
             RectangleEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, PaintingState.Rectangle);
             EraseEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, PaintingState.Erase);
+            ArrowEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, PaintingState.Arrow);
         }
 
         private StackLayout GetContent()
@@ -149,6 +161,8 @@ namespace RedShot.Infrastructure.Painting
                     PointsEnableButton,
                     FormsHelper.VoidBox(10),
                     RectangleEnableButton,
+                    FormsHelper.VoidBox(10),
+                    ArrowEnableButton,
                     FormsHelper.VoidBox(10),
                     EraseEnableButton,
                     FormsHelper.VoidBox(20),

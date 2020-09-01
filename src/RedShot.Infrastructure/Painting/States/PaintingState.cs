@@ -5,7 +5,8 @@
         None,
         Points,
         Rectangle,
-        Erase
+        Erase,
+        Arrow
         // To be added.
         // Text.
     }

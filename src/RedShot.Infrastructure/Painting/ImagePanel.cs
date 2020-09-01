@@ -19,11 +19,16 @@ namespace RedShot.Infrastructure.Painting
     /// </summary>
     internal class ImagePanel : Panel
     {
+        /// <summary>
+        /// Shows true if the user has added new changes to their picture.
+        /// </summary>
+        public bool Uploaded { get; set; }
+
         private readonly SKBitmap image;
         private SKControl skControl;
         private UITimer renderTimer;
-        private List<IPaintingAction> paintingActions;
-        private List<IPaintingAction> previousPaintingActions;
+        private readonly List<IPaintingAction> paintingActions;
+        private readonly List<IPaintingAction> previousPaintingActions;
         private SKBitmap cachedImage;
         private IPaintingAction currentAction;
         private PaintingState paintingState;
@@ -115,12 +120,13 @@ namespace RedShot.Infrastructure.Painting
                         (int)skPaint.StrokeWidth > 3 ? (int)skPaint.StrokeWidth : 4);
                     break;
                 case PaintingState.Rectangle:
+                case PaintingState.Arrow:
                     Cursor = Cursors.Crosshair;
                     break;
                 case PaintingState.Erase:
                     Cursor = eraseCursor;
                     break;
-                case PaintingState.None:
+                default:
                     Cursor = Cursors.Arrow;
                     break;
             }
@@ -193,6 +199,7 @@ namespace RedShot.Infrastructure.Painting
                 canvas.DrawBitmap(image, new SKPoint(0, 0));
 
                 paintingActions.ForEach(a => a.Paint(surface));
+                Uploaded = false;
             }
 
             if (painting)
@@ -216,9 +223,7 @@ namespace RedShot.Infrastructure.Painting
                 {
                     surface.Canvas.DrawBitmap(image, new SKPoint(0, 0));
                     paintingActions.ForEach(a => a.Paint(surface));
-
                     previousPaintingActions.AddRange(diffResult.Added);
-
                     cachedImage = SKBitmap.FromImage(surface.Snapshot());
                 }
 

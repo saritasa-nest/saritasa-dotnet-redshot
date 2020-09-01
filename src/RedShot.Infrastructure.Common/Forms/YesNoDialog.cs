@@ -12,15 +12,8 @@ namespace RedShot.Infrastructure.Common.Forms
         /// </summary>
         public string Message
         {
-            get
-            {
-                return questionLabel?.Text;
-            }
-
-            set
-            {
-                questionLabel.Text = value;
-            }
+            get => questionLabel?.Text;
+            set => questionLabel.Text = value;
         }
 
         private DefaultButton yesButton;
@@ -38,6 +31,7 @@ namespace RedShot.Infrastructure.Common.Forms
             {
                 Orientation = Orientation.Vertical,
                 HorizontalContentAlignment = HorizontalAlignment.Center,
+                Width = 300,
                 Padding = 20,
                 Items =
                 {
@@ -48,7 +42,6 @@ namespace RedShot.Infrastructure.Common.Forms
                     {
                         Orientation = Orientation.Horizontal,
                         VerticalContentAlignment = VerticalAlignment.Center,
-                        Height = 50,
                         Items =
                         {
                             yesButton,
@@ -72,7 +65,7 @@ namespace RedShot.Infrastructure.Common.Forms
 
         private void NoButton_Clicked(object sender, System.EventArgs e)
         {
-            Result = DialogResult.Cancel;
+            Result = DialogResult.No;
             Close();
         }
 

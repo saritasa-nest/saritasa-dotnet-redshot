@@ -11,8 +11,8 @@ namespace Eto.Forms.Controls.SkiaSharp.Mac
     /// </summary>
     public class SKControlMac : NSView, IMacControl
     {
-        private NSTrackingArea trackarea;
-        private SKDrawable drawable;
+        private NSTrackingArea trackingArearea;
+        private readonly SKDrawable drawable;
         private SKSurface surface;
         private SKImageInfo skInfo;
         private bool disposed;
@@ -78,9 +78,9 @@ namespace Eto.Forms.Controls.SkiaSharp.Mac
         /// </summary>
         public override void UpdateTrackingAreas()
         {
-            if (trackarea != null) { RemoveTrackingArea(trackarea); }
-            trackarea = new NSTrackingArea(Frame, NSTrackingAreaOptions.ActiveWhenFirstResponder | NSTrackingAreaOptions.MouseMoved | NSTrackingAreaOptions.InVisibleRect, this, null);
-            AddTrackingArea(trackarea);
+            if (trackingArearea != null) { RemoveTrackingArea(trackingArearea); }
+            trackingArearea = new NSTrackingArea(Frame, NSTrackingAreaOptions.ActiveWhenFirstResponder | NSTrackingAreaOptions.MouseMoved | NSTrackingAreaOptions.InVisibleRect, this, null);
+            AddTrackingArea(trackingArearea);
         }
 
         /// <summary>
@@ -89,13 +89,8 @@ namespace Eto.Forms.Controls.SkiaSharp.Mac
         public override void DrawRect(CGRect dirtyRect)
         {
             base.DrawRect(dirtyRect);
-
             var ctx = NSGraphicsContext.CurrentContext.GraphicsPort;
-
-            if (drawable != null)
-            {
-                drawable.DrawSurface(ctx, Bounds, skInfo, surface);
-            }
+            drawable?.DrawSurface(ctx, Bounds, skInfo, surface);
         }
 
         /// <inheritdoc />
@@ -103,6 +98,7 @@ namespace Eto.Forms.Controls.SkiaSharp.Mac
         {
             if (disposed == false)
             {
+                disposed = true;
                 surface?.Dispose();
                 drawable?.Dispose();
                 base.Dispose();

@@ -1,10 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using SkiaSharp;
 using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Painting.States;
-using RedShot.Infrastructure.Screenshooting;
 
 namespace RedShot.Infrastructure.Painting
 {
@@ -20,9 +21,8 @@ namespace RedShot.Infrastructure.Painting
         private SKPaint paint;
 
         /// <summary>
-        /// Initializes painting view via image. 
+        /// Initializes painting view via image.
         /// </summary>
-        /// <param name="image"></param>
         public PaintingView(Bitmap image)
         {
             Title = "Image editor";
@@ -37,18 +37,34 @@ namespace RedShot.Infrastructure.Painting
             Content = GetContent();
 
             this.Shown += PaintingView_Shown;
+            this.Closing += OnClosing;
+        }
+
+        private void OnClosing(object sender, CancelEventArgs e)
+        {
+            if (imagePanel.Uploaded)
+            {
+                return;
+            }
+
+            var dialog = new YesNoDialog()
+            {
+                Message = "Do you want to close the editor without uploading the picture?",
+                Size = new Size(400, 200)
+            };
+
+            using (dialog)
+            {
+                if (dialog.ShowModal() != DialogResult.Yes)
+                {
+                    e.Cancel = true;
+                }
+            }
         }
 
         private void PaintingView_Shown(object sender, EventArgs e)
         {
             Location = ScreenHelper.GetCenterLocation(Size);
-        }
-
-        private void PaintingView_SizeChanged(object sender, EventArgs e)
-        {
-            paintingPanel.Width = Size.Width;
-
-            imagePanel.Size = new Size(Size.Width, Size.Height - paintingPanelWidth);
         }
 
         private void InitializeComponents()
@@ -83,6 +99,7 @@ namespace RedShot.Infrastructure.Painting
         {
             var bitmap = imagePanel.ScreenShot();
             ScreenshotManager.UploadScreenShot(bitmap);
+            imagePanel.Uploaded = true;
         }
 
         private void PaintingPanel_StateChanged(object sender, PaintingState state)
