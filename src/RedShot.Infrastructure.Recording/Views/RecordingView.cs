@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Abstractions.Recording;
@@ -21,6 +22,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
         private RecordingButton recordingButton;
         private ImageButton closeButton;
         private Label timerLabel;
+        private Label beforeStartLabel;
 
         /// <summary>
         /// Initializes recording view.
@@ -74,13 +76,29 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
             else
             {
                 recordingTimer.Reset();
+
+                ShowSeconds();
+
                 recorder.Start(recordingRectangle.OffsetRectangle(1));
 
                 while (!recorder.IsRecording)
                 {
                 }
 
+                beforeStartLabel.Text = "0";
                 recordingTimer.Start();
+            }
+        }
+
+        private void ShowSeconds()
+        {
+            int seconds = 4;
+
+            while (seconds != 1)
+            {
+                seconds--;
+                beforeStartLabel.Text = seconds.ToString();
+                Task.Delay(1000).Wait();
             }
         }
 
@@ -100,7 +118,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
 
         private void RecordingLabelTimer_Elapsed(object sender, System.EventArgs e)
         {
-            timerLabel.Text = recordingTimer.Elapsed.ToString();
+            timerLabel.Text = recordingTimer.Elapsed.ToString(@"hh\:mm\:ss");
             timerLabel.Invalidate();
         }
 
@@ -152,6 +170,13 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
                 Text = TimeSpan.Zero.ToString()
             };
 
+            beforeStartLabel = new Label()
+            {
+                TextColor = Colors.Red,
+                Text = "3",
+                Width = 10
+            };
+
             recordingButton = new RecordingButton(40, 35);
             recordingButton.Clicked += RecordingButton_Clicked;
 
@@ -174,9 +199,12 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
                 Items =
                     {
                         recordingButton,
+                        FormsHelper.VoidBox(5),
                         closeButton,
                         FormsHelper.VoidBox(20),
-                        timerLabel
+                        timerLabel,
+                        FormsHelper.VoidBox(30),
+                        beforeStartLabel
                     }
             };
         }
