@@ -26,13 +26,9 @@ namespace RedShot.Infrastructure.Painting
         public PaintingView(Bitmap image)
         {
             Title = "Image editor";
-
             MinimumSize = new Size(500, paintingPanelWidth);
-
             Resizable = false;
-
             this.image = image;
-
             InitializeComponents();
             Content = GetContent();
 

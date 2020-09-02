@@ -33,9 +33,8 @@ namespace RedShot.Infrastructure.Recording
         public bool IsRecording { get; private set; }
 
         /// <summary>
-        /// Initializes 
+        /// Initializes FFmpeg CLI manager.
         /// </summary>
-        /// <param name="ffmpegPath"></param>
         public FFmpegCliManager(string ffmpegPath) : base(ffmpegPath)
         {
             OutputDataReceived += FFmpeg_DataReceived;

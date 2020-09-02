@@ -83,7 +83,7 @@ namespace RedShot.Infrastructure.Painting
                 Increment = 1,
                 Width = 60,
                 Height = 30,
-                ToolTip = "Size of drawing line"
+                ToolTip = "Size of painting line"
             };
 
             drawSizeStepper.ValueChanged += DrawSizeStepper_ValueChanged;
@@ -93,7 +93,7 @@ namespace RedShot.Infrastructure.Painting
                 Width = 60,
                 Height = 30,
                 Value = Colors.Red,
-                ToolTip = "Pick a color for drawing"
+                ToolTip = "Pick a color for painting"
             };
 
             colorPicker.ValueChanged += ColorPicker_ValueChanged;

@@ -137,7 +137,7 @@ namespace RedShot.Recording.Recorders.Windows
             {
                 using var downloader = new Downloader();
 
-                downloader.DownloadAsync(url, ffmpegZipName, (path) => 
+                downloader.DownloadAsync(url, ffmpegZipName, (path) =>
                 {
                     ZipFile.ExtractToDirectory(path, GetFfmpegPath());
                     RecordingManager.InitiateRecording();

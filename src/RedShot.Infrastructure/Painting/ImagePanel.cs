@@ -56,7 +56,6 @@ namespace RedShot.Infrastructure.Painting
         /// <summary>
         /// Changes painting action (Drawing line, rectangle, erasing).
         /// </summary>
-        /// <param name="paintingState"></param>
         public void ChangePaintingState(PaintingState paintingState)
         {
             if (this.paintingState != paintingState)

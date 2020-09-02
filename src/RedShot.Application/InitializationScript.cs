@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using RedShot.Infrastructure.Formatting;
+using RedShot.Infrastructure.Formatting.Settings;
 using RedShot.Infrastructure.Recording;
 using RedShot.Infrastructure.Recording.Settings;
 using RedShot.Infrastructure.Uploaders.Ftp;
@@ -17,13 +19,15 @@ namespace RedShot.Application
             ConfigurationOptions = new List<Type>()
             {
                 typeof(FtpConfiguration),
-                typeof(FFmpegConfiguration)
+                typeof(FFmpegConfiguration),
+                typeof(FormatConfigurationOption)
             };
 
             SettingsOptions = new List<Type>()
             {
                 typeof(FtpSettingsOption),
                 typeof(RecordingSettingsOption),
+                typeof(FormatSettingsOption)
             };
         }
 

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -6,19 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RedShot.Infrastructure.Abstractions\RedShot.Infrastructure.Abstractions.csproj" />
-    <ProjectReference Include="..\RedShot.Infrastructure.Common\RedShot.Infrastructure.Common.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Ftp\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Eto.Forms" Version="2.5.5" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RedShot.Infrastructure.Abstractions\RedShot.Infrastructure.Abstractions.csproj" />
+    <ProjectReference Include="..\RedShot.Infrastructure.Configuration\RedShot.Infrastructure.Configuration.csproj" />
   </ItemGroup>
 
 </Project>

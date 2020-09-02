@@ -31,7 +31,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         public string About => "Uploads the file to FTP server";
 
         /// <summary>
-        /// Creates either FTP or STPS uploader.
+        /// Creates either FTP or SFTP uploader.
         /// </summary>
         public IUploader GetUploader()
         {

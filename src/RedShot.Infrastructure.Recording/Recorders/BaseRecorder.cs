@@ -4,6 +4,7 @@ using Eto.Drawing;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg;
+using RedShot.Infrastructure.Formatting;
 
 namespace RedShot.Infrastructure.Recording.Recorders
 {
@@ -43,7 +44,7 @@ namespace RedShot.Infrastructure.Recording.Recorders
         public virtual void Start(Rectangle area)
         {
             var deviceArgs = GetDeviceArgs(area);
-            var name = $"RedShot-Video-{DateTime.Now:yyyy-MM-ddTHH-mm-ss}";
+            var name = FormatManager.GetFormattedName();
             var path = Path.Combine(VideoFolderPath, $"{name}.{options.Extension}");
             LastVideo = new VideoFile(name.ToString(), path);
             var outputArgs = FFmpegArgsHelper.GetArgsForOutput(path);

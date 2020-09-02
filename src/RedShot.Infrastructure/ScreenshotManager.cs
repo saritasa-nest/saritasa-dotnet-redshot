@@ -3,13 +3,14 @@ using System.IO;
 using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Common.Forms.SelectionForm;
+using RedShot.Infrastructure.Formatting;
 using RedShot.Infrastructure.Painting;
 using RedShot.Infrastructure.Screenshooting;
 
 namespace RedShot.Infrastructure
 {
     /// <summary>
-    /// Manages screen shotting.
+    /// Manages screenshotting.
     /// </summary>
     public static class ScreenshotManager
     {
@@ -24,7 +25,7 @@ namespace RedShot.Infrastructure
         }
 
         /// <summary>
-        /// Runs screenshot selection view.
+        /// Run screenshot selection view.
         /// </summary>
         public static void RunScreenShotting()
         {
@@ -35,7 +36,7 @@ namespace RedShot.Infrastructure
         }
 
         /// <summary>
-        /// Runs image editor.
+        /// Run image editor.
         /// </summary>
         public static void RunPaintingView(Bitmap bitmap)
         {
@@ -48,7 +49,7 @@ namespace RedShot.Infrastructure
         /// </summary>
         public static void UploadScreenShot(Bitmap image)
         {
-            var imageName = $"RedShot-image-{DateTime.Now:yyyy-MM-ddTHH-mm-ss}";
+            var imageName = FormatManager.GetFormattedName();
             var path = Path.Combine(imagesFolder, $"{imageName}.png");
 
             image.Save(path, ImageFormat.Png);

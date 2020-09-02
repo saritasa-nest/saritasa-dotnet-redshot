@@ -6,6 +6,7 @@ using RedShot.Infrastructure.DataTransfer.Ftp;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Formatting;
 
 namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
 {
@@ -34,7 +35,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
         /// </summary>
         public FtpUploaderForm()
         {
-            FileName = $"RedShot-{DateTime.Now:yyyy-MM-ddTHH-mm-ss}";
+            FileName = FormatManager.GetFormattedName();
             ftpConfiguration = ConfigurationManager.GetSection<FtpConfiguration>();
             Title = "FTP Upload";
             Size = new Size(350, 280);
