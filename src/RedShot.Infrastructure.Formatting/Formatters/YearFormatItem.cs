@@ -9,7 +9,7 @@ namespace RedShot.Infrastructure.Formatting.Formatters
     internal class YearFormatItem : IFormatItem
     {
         /// <inheritdoc />
-        public string Name => "Current year";
+        public string Name => "Year";
 
         /// <inheritdoc />
         public string Pattern => "year";

@@ -15,7 +15,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
     /// </summary>
     internal class FtpUploaderForm : Dialog<DialogResult>
     {
-        private FtpConfiguration ftpConfiguration;
+        private readonly FtpConfiguration ftpConfiguration;
         private ComboBox accounts;
         private DefaultButton uploadButton;
         private TextBox fileNameBox;
@@ -124,7 +124,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
 
         private void UploadButton_Click(object sender, EventArgs e)
         {
-            if (accounts.DataStore.Count() > 0 && accounts.SelectedValue != null)
+            if (accounts.DataStore.Any() && accounts.SelectedValue != null)
             {
                 SelectedAccount = (FtpAccount)accounts.SelectedValue;
                 FileName = fileNameBox.Text;

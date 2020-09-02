@@ -17,7 +17,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         /// <summary>
         /// List of FTP accounts.
         /// </summary>
-        public List<FtpAccount> FtpAccounts { get; internal set; } = new List<FtpAccount>();
+        public List<FtpAccount> FtpAccounts { get; private set; } = new List<FtpAccount>();
 
         /// <inheritdoc cref="IEncryptable"/>
         public IEncryptable Encrypt(IEncryptionService encryptionService)

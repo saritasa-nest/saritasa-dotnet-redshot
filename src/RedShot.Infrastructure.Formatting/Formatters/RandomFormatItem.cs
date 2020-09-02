@@ -8,7 +8,7 @@ namespace RedShot.Infrastructure.Formatting.Formatters
     /// </summary>
     internal class RandomFormatItem : IFormatItem
     {
-        private const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        private const string Chars = "abcdefghijklmnopqrstuvwxyz0123456789";
         private static readonly Random randomizer;
 
         static RandomFormatItem()
@@ -25,12 +25,12 @@ namespace RedShot.Infrastructure.Formatting.Formatters
         /// <inheritdoc />
         public string GetText()
         {
-            var stringBuilder = new StringBuilder(15);
+            var stringBuilder = new StringBuilder(10);
 
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < 10; i++)
             {
-                var randomNumber = randomizer.Next(chars.Length);
-                var randomChar = chars[randomNumber].ToString();
+                var randomNumber = randomizer.Next(Chars.Length);
+                var randomChar = Chars[randomNumber].ToString();
                 stringBuilder.Append(randomChar);
             }
 

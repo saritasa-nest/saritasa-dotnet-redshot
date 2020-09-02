@@ -22,7 +22,7 @@ namespace RedShot.Infrastructure.Uploaders.File
 
                 if (file.FileType == FileType.Image)
                 {
-                    dialog.FileName = $"{DateTime.Now.ToFileTime()}.bmp";
+                    dialog.FileName = $"{file.FileName}.bmp";
                     dialog.Filters.Add(new FileFilter("Bmp format", ".bmp"));
                     dialog.Filters.Add(new FileFilter("Png format", ".png"));
 

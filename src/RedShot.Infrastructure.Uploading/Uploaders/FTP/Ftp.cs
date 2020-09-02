@@ -27,23 +27,10 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
 
         /// <inheritdoc cref="BaseUploader"/>
         public override event EventHandler Uploaded;
-
-        /// <inheritdoc cref="BaseUploader"/>
-        public override event EventHandler OnUploadStopped;
+        
 
         /// <inheritdoc cref="BaseUploader"/>.
         public override event EventHandler OnUploadStarted;
-
-        /// <summary>
-        /// Connection flag.
-        /// </summary>
-        public bool IsConnected
-        {
-            get
-            {
-                return client != null && client.IsConnected;
-            }
-        }
 
         /// <summary>
         /// Initializes FTP/FTPS uploader.
@@ -69,37 +56,38 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
                 client.DataConnectionType = FtpDataConnectionType.AutoPassive;
             }
 
-            if (account.Protocol == FtpProtocol.FTPS)
+            if (account.Protocol != FtpProtocol.FTPS)
             {
-                switch (account.FTPSEncryption)
-                {
-                    default:
-                    case FtpsEncryption.Explicit:
-                        client.EncryptionMode = FtpEncryptionMode.Explicit;
-                        break;
-                    case FtpsEncryption.Implicit:
-                        client.EncryptionMode = FtpEncryptionMode.Implicit;
-                        break;
-                }
+                return;
+            }
 
-                client.SslProtocols = SslProtocols.Tls | SslProtocols.Tls11 | SslProtocols.Tls12 | SslProtocols.Tls13;
-                client.DataConnectionEncryption = true;
+            switch (account.FTPSEncryption)
+            {
+                case FtpsEncryption.Implicit:
+                    client.EncryptionMode = FtpEncryptionMode.Implicit;
+                    break;
+                case FtpsEncryption.Explicit:
+                    client.EncryptionMode = FtpEncryptionMode.Explicit;
+                    break;
+            }
 
-                if (!string.IsNullOrEmpty(account.FTPSCertificateLocation) && System.IO.File.Exists(account.FTPSCertificateLocation))
+            client.SslProtocols = SslProtocols.Tls | SslProtocols.Tls11 | SslProtocols.Tls12 | SslProtocols.Tls13;
+            client.DataConnectionEncryption = true;
+
+            if (!string.IsNullOrEmpty(account.FTPSCertificateLocation) && System.IO.File.Exists(account.FTPSCertificateLocation))
+            {
+                var cert = X509Certificate.CreateFromSignedFile(account.FTPSCertificateLocation);
+                client.ClientCertificates.Add(cert);
+            }
+            else
+            {
+                client.ValidateCertificate += (control, e) =>
                 {
-                    var cert = X509Certificate.CreateFromSignedFile(account.FTPSCertificateLocation);
-                    client.ClientCertificates.Add(cert);
-                }
-                else
-                {
-                    client.ValidateCertificate += (control, e) =>
+                    if (e.PolicyErrors != SslPolicyErrors.None)
                     {
-                        if (e.PolicyErrors != SslPolicyErrors.None)
-                        {
-                            e.Accept = true;
-                        }
-                    };
-                }
+                        e.Accept = true;
+                    }
+                };
             }
         }
 
@@ -138,7 +126,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
             {
                 Logger.Warn(e, "FTP command error");
 
-                // Probably directory not exist, try creating it
+                // Probably directory not exist, try creating it.
                 if (e.CompletionCode == "550" || e.CompletionCode == "553")
                 {
                     CreateMultiDirectory(UrlHelper.GetDirectoryPath(path));
@@ -155,7 +143,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
             }
         }
 
-        /// <inheritdoc cref="BaseUploader"/>.
+        /// <inheritdoc cref="BaseUploader"/>
         public override void StopUpload()
         {
             if (IsUploading && !StopUploadRequested)
@@ -168,7 +156,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         /// <summary>
         /// Connects to destination FTP server.
         /// </summary>
-        public bool Connect()
+        private bool Connect()
         {
             if (!client.IsConnected)
             {
@@ -181,7 +169,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         /// <summary>
         /// Disconnects from destination FTP server.
         /// </summary>
-        public void Disconnect()
+        private void Disconnect()
         {
             if (client != null)
             {
@@ -199,7 +187,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         /// <summary>
         /// Creates directory on remote FTP server.
         /// </summary>
-        public bool CreateDirectory(string remotePath)
+        private bool CreateDirectory(string remotePath)
         {
             if (Connect())
             {
@@ -220,7 +208,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         /// <summary>
         /// Creates directories if need.
         /// </summary>
-        public IEnumerable<string> CreateMultiDirectory(string remotePath)
+        private IEnumerable<string> CreateMultiDirectory(string remotePath)
         {
             var paths = UrlHelper.GetPaths(remotePath);
 

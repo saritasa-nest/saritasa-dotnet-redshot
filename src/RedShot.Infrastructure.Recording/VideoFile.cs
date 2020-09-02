@@ -13,10 +13,10 @@ namespace RedShot.Infrastructure.Recording
         /// <summary>
         /// Initializes video file.
         /// </summary>
-        public VideoFile(string name, string videoPath)
+        public VideoFile(string name, string path)
         {
             FileName = name;
-            FilePath = videoPath;
+            FilePath = path;
         }
 
         /// <inheritdoc/>
@@ -31,10 +31,7 @@ namespace RedShot.Infrastructure.Recording
         /// <inheritdoc/>
         public Bitmap GetFilePreview()
         {
-            using (var stream = new MemoryStream())
-            {
-                return new Bitmap(Resources.Properties.Resources.Video);
-            }
+            return new Bitmap(Resources.Properties.Resources.Video);
         }
 
         /// <inheritdoc/>

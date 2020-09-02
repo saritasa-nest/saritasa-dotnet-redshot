@@ -7,7 +7,7 @@ namespace RedShot.Infrastructure.Screenshooting
     /// <summary>
     /// Painting panel for editor view.
     /// </summary>
-    public partial class ScreenShotPanel : Form
+    public class ScreenShotPanel : Form
     {
         /// <summary>
         /// Button for enabling painting mode.

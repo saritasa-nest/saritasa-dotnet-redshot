@@ -7,7 +7,7 @@ namespace RedShot.Infrastructure.Basics
     /// <summary>
     /// Base upload functions.
     /// </summary>
-    public abstract class BaseUploader : IUploader
+    internal abstract class BaseUploader : IUploader
     {
         /// <summary>
         /// Uploading flag.
@@ -25,22 +25,22 @@ namespace RedShot.Infrastructure.Basics
         public bool StopUploadRequested { get; protected set; }
 
         /// <summary>
-        /// Occures when uploading has finished.
+        /// Occurs when uploading has finished.
         /// </summary>
         public virtual event EventHandler Uploaded;
 
         /// <summary>
-        /// Occures when uploading has stoped.
+        /// Occurs when uploading has stopped.
         /// </summary>
         public virtual event EventHandler OnUploadStopped;
 
         /// <summary>
-        /// Occures when uploading has started.
+        /// Occurs when uploading has started.
         /// </summary>
         public virtual event EventHandler OnUploadStarted;
 
         /// <summary>
-        /// Occures by upload stopping.
+        /// Occurs by upload stopping.
         /// </summary>
         public virtual event EventHandler OnUploadError;
 

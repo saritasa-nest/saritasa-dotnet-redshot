@@ -108,7 +108,7 @@ namespace RedShot.Infrastructure.Recording
 
             if (options.PrimaryAudioDevice != null)
             {
-                if (!recordingDevices.AudioDevices.Any(d => d.Name == options.PrimaryAudioDevice.Name))
+                if (recordingDevices.AudioDevices.All(d => d.Name != options.PrimaryAudioDevice.Name))
                 {
                     options.PrimaryAudioDevice = null;
                 }
@@ -116,7 +116,7 @@ namespace RedShot.Infrastructure.Recording
 
             if (options.OptionalAudioDevice != null)
             {
-                if (!recordingDevices.AudioDevices.Any(d => d.Name == options.OptionalAudioDevice.Name))
+                if (recordingDevices.AudioDevices.All(d => d.Name != options.OptionalAudioDevice.Name))
                 {
                     options.OptionalAudioDevice = null;
                 }
@@ -124,7 +124,7 @@ namespace RedShot.Infrastructure.Recording
 
             if (options.VideoDevice != null)
             {
-                if (!recordingDevices.VideoDevices.Any(d => d.Name == options.VideoDevice.Name))
+                if (recordingDevices.VideoDevices.All(d => d.Name != options.VideoDevice.Name))
                 {
                     options.VideoDevice = null;
                 }

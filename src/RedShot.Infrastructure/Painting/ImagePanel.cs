@@ -70,7 +70,8 @@ namespace RedShot.Infrastructure.Painting
         /// </summary>
         public Bitmap ScreenShot()
         {
-            using var surface = SKSurface.Create(image.Width, image.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
+            var skInfo = new SKImageInfo(image.Width, image.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
+            using var surface = SKSurface.Create(skInfo);
             RenderImage(surface);
 
             return EtoDrawingHelper.GetEtoBitmapFromSkiaSurface(surface);

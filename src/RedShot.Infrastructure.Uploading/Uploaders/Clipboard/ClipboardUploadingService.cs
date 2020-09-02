@@ -12,13 +12,7 @@ namespace RedShot.Infrastructure.Uploaders.Clipboard
         public string Name => "Clipboard";
 
         /// <inheritdoc/>
-        public Bitmap ServiceImage
-        {
-            get
-            {
-                return new Bitmap(Resources.Properties.Resources.Form);
-            }
-        }
+        public Bitmap ServiceImage => new Bitmap(Resources.Properties.Resources.Form);
 
         /// <inheritdoc/>
         public string About => "Uploads the file to clipboard";
@@ -26,13 +20,11 @@ namespace RedShot.Infrastructure.Uploaders.Clipboard
         /// <inheritdoc/>
         public bool CheckOnSupporting(FileType fileType)
         {
-            switch (fileType)
+            return fileType switch
             {
-                case FileType.Image:
-                    return true;
-            }
-
-            return false;
+                FileType.Image => true,
+                _ => false
+            };
         }
 
         /// <inheritdoc/>

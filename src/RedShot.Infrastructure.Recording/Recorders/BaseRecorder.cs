@@ -44,9 +44,11 @@ namespace RedShot.Infrastructure.Recording.Recorders
         public virtual void Start(Rectangle area)
         {
             var deviceArgs = GetDeviceArgs(area);
+            var pathName = $"RedShot-Video-{DateTime.Now:yyyy-MM-ddTHH-mm-ss}";
+            var path = Path.Combine(VideoFolderPath, $"{pathName}.{options.Extension}");
             var name = FormatManager.GetFormattedName();
-            var path = Path.Combine(VideoFolderPath, $"{name}.{options.Extension}");
-            LastVideo = new VideoFile(name.ToString(), path);
+
+            LastVideo = new VideoFile(name, path);
             var outputArgs = FFmpegArgsHelper.GetArgsForOutput(path);
 
             cliManager.Run($"-thread_queue_size 1024 {deviceArgs} {options.GetFFmpegArgs()} {outputArgs}");

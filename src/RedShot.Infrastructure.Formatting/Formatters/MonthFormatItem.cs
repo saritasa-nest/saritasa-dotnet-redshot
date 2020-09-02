@@ -9,7 +9,7 @@ namespace RedShot.Infrastructure.Formatting.Formatters
     internal class MonthFormatItem : IFormatItem
     {
         /// <inheritdoc />
-        public string Name => "Current month";
+        public string Name => "Month";
 
         /// <inheritdoc />
         public string Pattern => "month";

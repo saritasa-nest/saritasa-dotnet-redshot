@@ -34,22 +34,14 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         public override event EventHandler Uploaded;
 
         /// <inheritdoc cref="BaseUploader"/>.
-        public override event EventHandler OnUploadStopped;
-
-        /// <inheritdoc cref="BaseUploader"/>.
         public override event EventHandler OnUploadStarted;
 
-        private FtpAccount account;
-
-        /// <summary>
-        /// Valid account flag.
-        /// </summary>
-        public bool IsValidAccount => (!string.IsNullOrEmpty(account.Keypath) && System.IO.File.Exists(account.Keypath)) || !string.IsNullOrEmpty(account.Password);
+        private readonly FtpAccount account;
 
         /// <summary>
         /// Connection flag.
         /// </summary>
-        public bool IsConnected => client != null && client.IsConnected;
+        private bool IsConnected => client != null && client.IsConnected;
 
         /// <inheritdoc cref="BaseUploader"/>.
         public override IUploadingResponse Upload(IFile file)
@@ -112,7 +104,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         /// <summary>
         /// Connects to destination FTP server.
         /// </summary>
-        public bool Connect()
+        private bool Connect()
         {
             if (client == null)
             {
@@ -158,7 +150,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         /// <summary>
         /// Disconnects from destination FTP server.
         /// </summary>
-        public void Disconnect()
+        private void Disconnect()
         {
             if (client != null && client.IsConnected)
             {
@@ -169,7 +161,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         /// <summary>
         /// Checks if directory exists.
         /// </summary>
-        public bool DirectoryExists(string path)
+        private bool DirectoryExists(string path)
         {
             if (Connect())
             {
@@ -182,7 +174,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         /// <summary>
         /// Creates directory on remote SFTP server.
         /// </summary>
-        public void CreateDirectory(string path, bool createMultiDirectory = false)
+        private void CreateDirectory(string path, bool createMultiDirectory = false)
         {
             if (Connect())
             {
@@ -203,13 +195,13 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         /// <summary>
         /// Creates directories if need.
         /// </summary>
-        public List<string> CreateMultiDirectory(string path)
+        private List<string> CreateMultiDirectory(string path)
         {
-            List<string> directoryList = new List<string>();
+            var directoryList = new List<string>();
 
-            List<string> paths = UrlHelper.GetPaths(path);
+            var paths = UrlHelper.GetPaths(path);
 
-            foreach (string directory in paths)
+            foreach (var directory in paths)
             {
                 if (!DirectoryExists(directory))
                 {

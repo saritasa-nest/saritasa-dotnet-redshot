@@ -19,13 +19,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         public FtpAccount Account { get; }
 
         /// <inheritdoc />
-        public Bitmap ServiceImage
-        {
-            get
-            {
-                return new Bitmap(Resources.Properties.Resources.Ftp);
-            }
-        }
+        public Bitmap ServiceImage => new Bitmap(Resources.Properties.Resources.Ftp);
 
         /// <inheritdoc />
         public string About => "Uploads the file to FTP server";

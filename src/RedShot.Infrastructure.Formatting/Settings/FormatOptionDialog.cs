@@ -66,9 +66,16 @@ namespace RedShot.Infrastructure.Formatting.Settings
             };
             patternTextBox.TextChanging += PatternTextBoxOnTextChanging;
             SetFormatExample(configurationOption.Pattern);
-            okButton = new DefaultButton("OK", 70, 30);
+            okButton = new DefaultButton("OK", 70, 30)
+            {
+                ToolTip = "Close dialog and save changes"
+            };
             okButton.Clicked += SaveButtonOnClicked;
-            guideButton = new DefaultButton("Guide", 60, 25);
+
+            guideButton = new DefaultButton("Guide", 60, 25)
+            {
+                ToolTip = "Open guide view"
+            };
             guideButton.Clicked += GuideButtonOnClicked;
 
             Content = new StackLayout()
@@ -123,10 +130,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
 
         private void SetFormatExample(string pattern)
         {
-            var lineSize = 45;
-            
             var text = exampleLabel.Text = FormatManager.GetFormattedName(pattern);
-
             text = BreakLine(text, 45);
 
             exampleLabel.Text = text;

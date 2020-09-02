@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using Eto.Drawing;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg;
+using RedShot.Infrastructure.Formatting;
 using RedShot.Infrastructure.Recording;
 using RedShot.Infrastructure.Recording.Recorders;
 
@@ -23,9 +24,11 @@ namespace RedShot.Recording.Recorders.Windows
         public override void Start(Rectangle area)
         {
             var deviceArgs = GetDeviceArgs(area);
-            var name = $"RedShot-Video-{DateTime.Now:yyyy-MM-ddTHH-mm-ss}";
-            var path = Path.Combine(VideoFolderPath, $"{name}.{options.Extension}");
-            LastVideo = new VideoFile(name.ToString(), path);
+            var pathName = $"RedShot-Video-{DateTime.Now:yyyy-MM-ddTHH-mm-ss}";
+            var path = Path.Combine(VideoFolderPath, $"{pathName}.{options.Extension}");
+            var name = FormatManager.GetFormattedName();
+
+            LastVideo = new VideoFile(name, path);
             var outputArgs = FFmpegArgsHelper.GetArgsForOutput(path);
 
             var mapArgs = string.Empty;

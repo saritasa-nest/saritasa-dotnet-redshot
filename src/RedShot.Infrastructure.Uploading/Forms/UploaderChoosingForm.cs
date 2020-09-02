@@ -14,7 +14,7 @@ namespace RedShot.Infrastructure.Uploading.Forms
     /// <summary>
     /// Uploader choosing form.
     /// </summary>
-    internal class UploaderChosingForm : Form
+    internal class UploaderChoosingForm : Form
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly IFile file;
@@ -23,17 +23,17 @@ namespace RedShot.Infrastructure.Uploading.Forms
         /// <summary>
         /// Initializes uploader choosing form.
         /// </summary>
-        public UploaderChosingForm(IFile file, IEnumerable<IUploadingService> uploadingServices)
+        public UploaderChoosingForm(IFile file, IEnumerable<IUploadingService> uploadingServices)
         {
             Title = $"{file.FileType} uploading";
             this.file = file;
             this.uploadingServices = uploadingServices;
             InitializeComponents();
-            this.Shown += UploaderChosingForm_Shown;
+            this.Shown += UploaderChoosingForm_Shown;
             Resizable = false;
         }
 
-        private void UploaderChosingForm_Shown(object sender, System.EventArgs e)
+        private void UploaderChoosingForm_Shown(object sender, System.EventArgs e)
         {
             Location = ScreenHelper.GetCenterLocation(Size);
         }

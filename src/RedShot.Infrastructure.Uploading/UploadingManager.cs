@@ -15,7 +15,7 @@ namespace RedShot.Infrastructure
     public static class UploadingManager
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        private static UploaderChosingForm uploaderChosingForm;
+        private static UploaderChoosingForm uploaderChoosingForm;
         private static IFile lastFile;
 
         /// <summary>
@@ -36,10 +36,10 @@ namespace RedShot.Infrastructure
         {
             lastFile = file;
 
-            uploaderChosingForm?.Close();
+            uploaderChoosingForm?.Close();
 
-            uploaderChosingForm = new UploaderChosingForm(file, GetUploadingServices());
-            uploaderChosingForm.Show();
+            uploaderChoosingForm = new UploaderChoosingForm(file, GetUploadingServices());
+            uploaderChoosingForm.Show();
         }
 
         /// <summary>
