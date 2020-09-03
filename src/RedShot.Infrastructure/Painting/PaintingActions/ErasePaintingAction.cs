@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Eto.Drawing;
 using SkiaSharp;
-using RedShot.Infrastructure.Abstractions.Painting;
+using RedShot.Infrastructure.Painting.PaintingActions.UserInputActions;
 
 namespace RedShot.Infrastructure.Painting.PaintingActions
 {
@@ -24,6 +24,18 @@ namespace RedShot.Infrastructure.Painting.PaintingActions
             this.bitmap = bitmap.Copy();
             this.paint = paint;
         }
+        
+        /// <inheritdoc />
+        public PaintingActionType PaintingActionType => PaintingActionType.MousePainting;
+
+        /// <inheritdoc />
+        public void InputUserAction(IInputAction inputAction)
+        {
+            if (inputAction is MouseInputAction mouseAction)
+            {
+                erasingPoints.Add(mouseAction.MouseLocation);
+            }
+        }
 
         /// <inheritdoc />
         public void Paint(SKSurface surface)
@@ -41,7 +53,7 @@ namespace RedShot.Infrastructure.Painting.PaintingActions
         }
 
         /// <inheritdoc />
-        public void AddPoint(Point point)
+        public void AddStartPoint(Point point)
         {
             erasingPoints.Add(point);
         }

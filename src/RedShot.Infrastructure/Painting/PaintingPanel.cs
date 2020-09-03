@@ -47,6 +47,11 @@ namespace RedShot.Infrastructure.Painting
         /// Button for enabling painting arrow action.
         /// </summary>
         public ImageButton ArrowEnableButton { get; private set; }
+        
+        /// <summary>
+        /// Button for enabling painting arrow action.
+        /// </summary>
+        public DefaultButton TextEnableButton { get; private set; }
 
         /// <summary>
         /// Button for enabling erasing action.
@@ -138,6 +143,9 @@ namespace RedShot.Infrastructure.Painting
                 ToolTip = "Paint an arrow"
             };
 
+            TextEnableButton = new DefaultButton("Text", buttonSize.Width, buttonSize.Height);
+
+            TextEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, PaintingState.Text);
             PointsEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, PaintingState.Points);
             RectangleEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, PaintingState.Rectangle);
             EraseEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, PaintingState.Erase);
@@ -157,6 +165,8 @@ namespace RedShot.Infrastructure.Painting
                     colorPicker,
                     FormsHelper.VoidBox(10),
                     drawSizeStepper,
+                    FormsHelper.VoidBox(10),
+                    TextEnableButton,
                     FormsHelper.VoidBox(10),
                     PointsEnableButton,
                     FormsHelper.VoidBox(10),

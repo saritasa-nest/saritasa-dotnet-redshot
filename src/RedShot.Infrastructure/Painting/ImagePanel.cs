@@ -6,11 +6,12 @@ using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
 using Saritasa.Tools.Common.Utils;
 using SkiaSharp;
-using RedShot.Infrastructure.Abstractions.Painting;
 using RedShot.Infrastructure.Painting.States;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Painting.PaintingActions;
+using RedShot.Infrastructure.Painting.PaintingActions.TextInput;
+using RedShot.Infrastructure.Painting.PaintingActions.UserInputActions;
 
 namespace RedShot.Infrastructure.Painting
 {
@@ -35,6 +36,8 @@ namespace RedShot.Infrastructure.Painting
         private bool painting;
         private SKPaint skPaint;
         private Cursor eraseCursor;
+        private TextInputView textInputView;
+        private bool textInputtingEnabled;
 
         /// <summary>
         /// Initializes image panel via Bitmap image.
@@ -136,19 +139,24 @@ namespace RedShot.Infrastructure.Painting
         {
             if (e.Buttons == MouseButtons.Primary)
             {
-                if (painting)
+                if (painting && currentAction.PaintingActionType == PaintingActionType.MousePainting)
                 {
-                    painting = false;
-                    paintingActions.Add(currentAction);
+                    FinishPaintingAction();
                 }
             }
+        }
+
+        private void FinishPaintingAction()
+        {
+            painting = false;
+            paintingActions.Add(currentAction);
         }
 
         private void ImagePanel_MouseMove(object sender, MouseEventArgs e)
         {
             if (painting)
             {
-                currentAction.AddPoint(new Point(e.Location));
+                currentAction.InputUserAction(new MouseInputAction((Point)e.Location));
             }
         }
 
@@ -156,18 +164,16 @@ namespace RedShot.Infrastructure.Painting
         {
             if (e.Buttons == MouseButtons.Primary)
             {
-                if (painting)
+                if (textInputtingEnabled)
                 {
-                    painting = false;
+                    textInputView?.Close();
+                    textInputtingEnabled = false;
+                    FinishPaintingAction();
                 }
-                else
+
+                if (painting == false && paintingState != PaintingState.None)
                 {
-                    if (paintingState != PaintingState.None)
-                    {
-                        SetAction();
-                        painting = true;
-                        currentAction.AddPoint(new Point(e.Location));
-                    }
+                    StartPaintingAction((Point)e.Location);
                 }
             }
             else if (e.Buttons == MouseButtons.Alternate)
@@ -176,9 +182,19 @@ namespace RedShot.Infrastructure.Painting
             }
         }
 
-        private void SetAction()
+        private void StartPaintingAction(Point startPoint)
         {
+            textInputView?.Close();
             currentAction = PaintingActionsService.MapFromState(paintingState, skPaint.Clone(), image);
+            currentAction.AddStartPoint(startPoint);
+            painting = true;
+
+            if (currentAction.PaintingActionType == PaintingActionType.KeyboardPainting)
+            {
+                textInputView = new TextInputView(currentAction);
+                textInputtingEnabled = true;
+                textInputView.Show();
+            }
         }
 
         private void RenderTimer_Elapsed(object sender, EventArgs e)

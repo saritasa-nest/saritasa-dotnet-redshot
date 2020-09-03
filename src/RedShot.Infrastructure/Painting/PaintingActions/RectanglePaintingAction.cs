@@ -1,7 +1,7 @@
 ﻿using Eto.Drawing;
 using SkiaSharp;
-using RedShot.Infrastructure.Abstractions.Painting;
 using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Painting.PaintingActions.UserInputActions;
 
 namespace RedShot.Infrastructure.Painting.PaintingActions
 {
@@ -11,7 +11,6 @@ namespace RedShot.Infrastructure.Painting.PaintingActions
     /// </summary>
     internal class RectanglePaintingAction : IPaintingAction
     {
-        private bool selectionStarted;
         private Point startPoint;
         private Point endPoint;
         private readonly SKPaint paint;
@@ -24,35 +23,33 @@ namespace RedShot.Infrastructure.Painting.PaintingActions
             this.paint = paint;
         }
 
-        /// <inheritdoc cref="IPaintingAction"/>
-        public void AddPoint(Point point)
+        /// <inheritdoc />
+        public PaintingActionType PaintingActionType => PaintingActionType.MousePainting;
+
+        /// <inheritdoc />
+        public void InputUserAction(IInputAction inputAction)
         {
-            if (selectionStarted)
+            if (inputAction is MouseInputAction mouseAction)
             {
-                endPoint = point;
-            }
-            else
-            {
-                startPoint = point;
-                endPoint = point;
-                selectionStarted = true;
+                endPoint = mouseAction.MouseLocation;
             }
         }
 
-        /// <inheritdoc cref="IPaintingAction"/>
+        /// <inheritdoc />
         public void Paint(SKSurface surface)
         {
-            if (selectionStarted)
-            {
-                var selectionRectangle = EtoDrawingHelper.CreateRectangle(startPoint, endPoint);
+            var selectionRectangle = EtoDrawingHelper.CreateRectangle(startPoint, endPoint);
+            var size = new SKSize(selectionRectangle.Width, selectionRectangle.Height);
+            var point = new SKPoint(selectionRectangle.X, selectionRectangle.Y);
+            var rectangle = SKRect.Create(point, size);
+            surface.Canvas.DrawRect(rectangle, paint);
+        }
 
-                var size = new SKSize(selectionRectangle.Width, selectionRectangle.Height);
-                var point = new SKPoint(selectionRectangle.X, selectionRectangle.Y);
-
-                var rectangle = SKRect.Create(point, size);
-
-                surface.Canvas.DrawRect(rectangle, paint);
-            }
+        /// <inheritdoc />
+        public void AddStartPoint(Point point)
+        {
+            startPoint = point;
+            endPoint = point;
         }
     }
 }

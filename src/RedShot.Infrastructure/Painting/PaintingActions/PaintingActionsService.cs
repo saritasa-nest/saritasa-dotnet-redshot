@@ -1,5 +1,5 @@
-﻿using SkiaSharp;
-using RedShot.Infrastructure.Abstractions.Painting;
+﻿using RedShot.Infrastructure.Painting.PaintingActions.TextInput;
+using SkiaSharp;
 using RedShot.Infrastructure.Painting.States;
 
 namespace RedShot.Infrastructure.Painting.PaintingActions
@@ -20,6 +20,7 @@ namespace RedShot.Infrastructure.Painting.PaintingActions
                 PaintingState.Rectangle => new RectanglePaintingAction(paint),
                 PaintingState.Erase => new ErasePaintingAction(paint, bitmap),
                 PaintingState.Arrow => new ArrowPaintingAction(paint),
+                PaintingState.Text => new TextPaintingAction(),
                 _ => null
             };
         }

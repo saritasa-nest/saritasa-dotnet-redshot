@@ -2,7 +2,7 @@
 using System.Linq;
 using Eto.Drawing;
 using SkiaSharp;
-using RedShot.Infrastructure.Abstractions.Painting;
+using RedShot.Infrastructure.Painting.PaintingActions.UserInputActions;
 
 namespace RedShot.Infrastructure.Painting.PaintingActions
 {
@@ -12,7 +12,7 @@ namespace RedShot.Infrastructure.Painting.PaintingActions
     /// </summary>
     internal class PointPaintingAction : IPaintingAction
     {
-        private HashSet<Point> points;
+        private readonly HashSet<Point> points;
         private readonly SKPaint paint;
 
         /// <summary>
@@ -23,17 +23,29 @@ namespace RedShot.Infrastructure.Painting.PaintingActions
             points = new HashSet<Point>();
             this.paint = paint;
         }
+        
+        /// <inheritdoc />
+        public PaintingActionType PaintingActionType => PaintingActionType.MousePainting;
 
         /// <inheritdoc />
-        public void AddPoint(Point point)
+        public void InputUserAction(IInputAction inputAction)
         {
-            points.Add(point);
+            if (inputAction is MouseInputAction mouseAction)
+            {
+                points.Add(mouseAction.MouseLocation);
+            }
         }
 
         /// <inheritdoc />
         public void Paint(SKSurface surface)
         {
             surface.Canvas.DrawPoints(SKPointMode.Polygon, points.Select(p => new SKPoint(p.X, p.Y)).ToArray(), paint);
+        }
+
+        /// <inheritdoc />
+        public void AddStartPoint(Point point)
+        {
+            points.Add(point);
         }
     }
 }

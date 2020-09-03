@@ -1,7 +1,7 @@
 ﻿using System;
 using Eto.Drawing;
+using RedShot.Infrastructure.Painting.PaintingActions.UserInputActions;
 using SkiaSharp;
-using RedShot.Infrastructure.Abstractions.Painting;
 
 namespace RedShot.Infrastructure.Painting.PaintingActions
 {
@@ -24,15 +24,17 @@ namespace RedShot.Infrastructure.Painting.PaintingActions
         }
 
         /// <inheritdoc />
-        public void AddPoint(Point point)
+        public PaintingActionType PaintingActionType => PaintingActionType.MousePainting;
+
+        /// <inheritdoc />
+        public void InputUserAction(IInputAction inputAction)
         {
-            if (startPoint.HasValue && startPoint != lastPoint)
+            if (inputAction is MouseInputAction mouseAction)
             {
-                lastPoint = point;
-            }
-            else
-            {
-                startPoint = point;
+                if (startPoint.HasValue)
+                {
+                    lastPoint = mouseAction.MouseLocation;
+                }
             }
         }
 
@@ -77,6 +79,12 @@ namespace RedShot.Infrastructure.Painting.PaintingActions
 
                 surface.Canvas.DrawPath(path, paint);
             }
+        }
+
+        /// <inheritdoc />
+        public void AddStartPoint(Point point)
+        {
+            startPoint = point;
         }
     }
 }
