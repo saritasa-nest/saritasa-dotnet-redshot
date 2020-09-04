@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\RedShot.Infrastructure.Abstractions\RedShot.Infrastructure.Abstractions.csproj" />
     <ProjectReference Include="..\RedShot.Infrastructure.Configuration\RedShot.Infrastructure.Configuration.csproj" />
+    <ProjectReference Include="..\RedShot.Infrastructure.Settings\RedShot.Infrastructure.Settings.csproj" />
   </ItemGroup>
 
 </Project>

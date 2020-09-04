@@ -15,7 +15,9 @@ namespace RedShot.Infrastructure.Formatting
     /// </summary>
     public static class FormatManager
     {
-        private static readonly string regexPattern = @"%(\w+)|%\[(\w|-|_)+\]";
+        public const string FormatTag = "%";
+
+        private static readonly string regexPattern = @$"{FormatTag}(\w+)|{FormatTag}\[(\w|-|_)+\]";
         private static readonly string usersTextPattern = @"^\[(\w|-|_)+\]$";
         private static readonly RegexOptions regexOptions = RegexOptions.CultureInvariant | RegexOptions.IgnorePatternWhitespace;
 

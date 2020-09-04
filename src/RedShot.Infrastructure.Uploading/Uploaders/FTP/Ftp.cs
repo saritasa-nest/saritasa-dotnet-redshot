@@ -27,7 +27,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
 
         /// <inheritdoc cref="BaseUploader"/>
         public override event EventHandler Uploaded;
-        
 
         /// <inheritdoc cref="BaseUploader"/>.
         public override event EventHandler OnUploadStarted;

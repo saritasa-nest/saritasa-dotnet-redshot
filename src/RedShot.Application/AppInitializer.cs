@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Settings;
+using RedShot.Infrastructure.Settings.Sections;
 
 namespace RedShot.Application
 {
@@ -20,10 +20,10 @@ namespace RedShot.Application
             ConfigurationManager.Load();
 
             var settingsOptions = InitializationScript.SettingsOptions
-                .Where(type => typeof(ISettingsOption).IsAssignableFrom(type) && !type.IsInterface)
-                .Select(t => (ISettingsOption)Activator.CreateInstance(t));
+                .Where(type => typeof(ISettingsSection).IsAssignableFrom(type) && !type.IsInterface)
+                .Select(t => (ISettingsSection)Activator.CreateInstance(t));
 
-            SettingsManager.SettingsOptions.AddRange(settingsOptions);
+            SettingsManager.SettingsSections.AddRange(settingsOptions);
         }
     }
 }

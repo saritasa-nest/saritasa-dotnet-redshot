@@ -10,7 +10,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
     /// <summary>
     /// FTP option dialog.
     /// </summary>
-    internal partial class FtpOptionDialog : Dialog<DialogResult>
+    internal partial class FtpOptionControl : Panel
     {
         private Button addButton;
         private Button delButton;
@@ -42,19 +42,24 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
         /// <summary>
         /// Initializes FTP option dialog.
         /// </summary>
-        public FtpOptionDialog(FtpConfiguration ftpConfiguration)
+        public FtpOptionControl(FtpConfiguration ftpConfiguration)
         {
             ftpAccounts = ftpConfiguration.FtpAccounts;
 
             InitializeComponents();
 
-            Title = "FTP/FTPS/SFTP Configuration";
-
             this.accounts.SelectedValueChanged += Accounts_SelectedValueChanged;
             this.accounts.DropDownClosed += Accounts_SelectedValueChanged;
 
             bindingList = new ObservableCollection<FtpAccount>(ftpAccounts);
+            bindingList.CollectionChanged += BindingList_CollectionChanged;
             accounts.Bind(a => a.DataStore, bindingList, b => b);
+        }
+
+        private void BindingList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            ftpAccounts.Clear();
+            ftpAccounts.AddRange(bindingList);
         }
 
         private void Accounts_SelectedValueChanged(object sender, EventArgs e)
@@ -126,21 +131,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
                     ftpsCertificateLocation.Text = dialog.FileName;
                 }
             }
-        }
-
-        private void OkButton_Click(object sender, EventArgs e)
-        {
-            ftpAccounts.Clear();
-            ftpAccounts.AddRange(bindingList);
-
-            Result = DialogResult.Ok;
-            Close();
-        }
-
-        private void CancelButton_Click(object sender, EventArgs e)
-        {
-            Result = DialogResult.Cancel;
-            Close();
         }
 
         private void CopyButton_Click(object sender, EventArgs e)

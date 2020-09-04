@@ -6,9 +6,9 @@ using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg.Encoding;
 
-namespace RedShot.Infrastructure.RecordingRedShot.Settings
+namespace RedShot.Infrastructure.Recording.Settings
 {
-    internal partial class RecordingOptionDialog : Dialog<DialogResult>
+    internal partial class RecordingOptionControl : Panel
     {
         private void InitializeComponents()
         {
@@ -82,9 +82,6 @@ namespace RedShot.Infrastructure.RecordingRedShot.Settings
                 Size = new Size(180, 21),
             };
             audioCodec.DataStore = EnumDescription<FFmpegAudioCodec>.GetEnumDescriptions(typeof(FFmpegAudioCodec));
-
-            okButton = new DefaultButton("OK", 80, 30);
-            okButton.Clicked += OkButton_Clicked;
 
             setDefaultButton = new DefaultButton("Set default", 100, 30);
             setDefaultButton.Clicked += SetDefaultButton_Clicked;
@@ -162,12 +159,6 @@ namespace RedShot.Infrastructure.RecordingRedShot.Settings
             }
 
             BindOptions();
-            this.Shown += RecordingOptionsView_Shown;
-        }
-
-        private void RecordingOptionsView_Shown(object sender, System.EventArgs e)
-        {
-            Location = ScreenHelper.GetCenterLocation(Size);
         }
 
         private Control GetMicrophoneControl()

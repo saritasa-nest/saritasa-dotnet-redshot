@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using Eto.Drawing;
 using Eto.Forms;
-using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
+using RedShot.Infrastructure.Settings.Sections;
 
 namespace RedShot.Infrastructure.Settings.Views
 {
@@ -11,18 +12,51 @@ namespace RedShot.Infrastructure.Settings.Views
     /// </summary>
     internal class SettingsView : Form
     {
-        private readonly IEnumerable<ISettingsOption> settingsOptions;
+        private readonly IEnumerable<ISettingsSection> settingsSections;
+
+        private GridView nagivationPanel;
+        private Scrollable contentPanel;
+        private DefaultButton okButton;
+        private DefaultButton cancelButton;
 
         /// <summary>
         /// Initializes settings view.
         /// </summary>
-        public SettingsView(IEnumerable<ISettingsOption> settingsOptions)
+        public SettingsView(IEnumerable<ISettingsSection> settingsSections)
         {
             Title = "RedShot Settings";
-            this.settingsOptions = settingsOptions;
-            Content = GetContentLayout();
+            this.settingsSections = settingsSections;
             Resizable = false;
             Shown += SettingsView_Shown;
+            MinimumSize = new Eto.Drawing.Size(400, 400);
+
+            InitializeComponents();
+        }
+
+        private void InitializeComponents()
+        {
+            nagivationPanel = GetNavigationPanel();
+            okButton = new DefaultButton("OK", 70, 25);
+            okButton.Clicked += OkButton_Clicked;
+
+            cancelButton = new DefaultButton("Cancel", 70, 25);
+            cancelButton.Clicked += CancelButton_Clicked;
+
+            Content = GetContentLayout();
+        }
+
+        private void CancelButton_Clicked(object sender, System.EventArgs e)
+        {
+            Close();
+        }
+
+        private void OkButton_Clicked(object sender, System.EventArgs e)
+        {
+            foreach (var section in settingsSections)
+            {
+                section.Save();
+            }
+            Close();
         }
 
         private void SettingsView_Shown(object sender, System.EventArgs e)
@@ -30,39 +64,80 @@ namespace RedShot.Infrastructure.Settings.Views
             Location = ScreenHelper.GetCenterLocation(Size);
         }
 
-        private Control GetContentLayout()
+        private GridView GetNavigationPanel()
         {
-            var layout = new StackLayout()
+            var gridView = new GridView()
             {
-                Orientation = Orientation.Vertical,
-                HorizontalContentAlignment = HorizontalAlignment.Center,
-                Padding = 20
+                Size = new Size(150, 400),
+                AllowMultipleSelection = false,
+                AllowColumnReordering = false,
+                ShowHeader = false,
+                AllowEmptySelection = false,
+                DataStore = settingsSections,
+                BackgroundColor = Colors.White
             };
 
-            layout.Items.Add(FormsHelper.VoidBox(30));
-
-            foreach (var option in settingsOptions)
+            gridView.Columns.Add(new GridColumn
             {
-                layout.Items.Add(GetOptionButton(option));
-                layout.Items.Add(FormsHelper.VoidBox(30));
-            }
+                DataCell = new TextBoxCell
+                {
+                    Binding = new DelegateBinding<ISettingsSection, string>(r => r.Name)
+                },
+                Editable = false
+            });
 
-            return layout;
+            gridView.CellClick += GridViewCellClick;
+
+            return gridView;
         }
 
-        private Control GetOptionButton(ISettingsOption option)
+        private void GridViewCellClick(object sender, GridCellMouseEventArgs e)
         {
-            var button = new DefaultButton(option.Name, 250, 40);
-            button.Clicked += (o, e) =>
+            if (e.Item is ISettingsSection section)
             {
-                var dialog = option.GetOptionDialog();
-                if (dialog != null && dialog.ShowModal(this) == DialogResult.Ok)
-                {
-                    option.Save();
-                }
+                contentPanel.Content = section.GetControl();
+            }
+        }
+
+        private Control GetContentLayout()
+        {
+            contentPanel = new Scrollable()
+            {
+                Size = new Size(500, 400)
             };
 
-            return button;
+            var splitter = new Splitter
+            {
+                Position = 150,
+                FixedPanel = SplitterFixedPanel.Panel1,
+                Panel1 = nagivationPanel,
+                Panel1MinimumSize = 150,
+                Panel2MinimumSize = 400,
+                Panel2 = contentPanel
+            };
+
+            return new StackLayout()
+            {
+                Orientation = Orientation.Vertical,
+                HorizontalContentAlignment = HorizontalAlignment.Right,
+                Padding = 20,
+                Items =
+                {
+                    splitter,
+                    new StackLayout()
+                    {
+                        Orientation = Orientation.Horizontal,
+                        VerticalContentAlignment = VerticalAlignment.Center,
+                        Padding = 10,
+                        Items =
+                        {
+                            okButton,
+                            FormsHelper.VoidRectangle(10, 1),
+                            cancelButton
+                        }
+                    }
+                }
+            };
         }
     }
 }

@@ -6,7 +6,7 @@ using RedShot.Infrastructure.DataTransfer.Ftp;
 
 namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
 {
-    internal partial class FtpOptionDialog : Dialog<DialogResult>
+    internal partial class FtpOptionControl : Panel
     {
         private void InitializeComponents()
         {
@@ -120,22 +120,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
             };
 
             copyButton.Click += CopyButton_Click;
-
-            okButton = new Button()
-            {
-                Text = "Ok",
-                Size = new Eto.Drawing.Size(100, 30),
-            };
-
-            okButton.Click += OkButton_Click;
-
-            cancelButton = new Button()
-            {
-                Text = "Cancel",
-                Size = new Eto.Drawing.Size(100, 30),
-            };
-
-            cancelButton.Click += CancelButton_Click;
 
             ftpsCertificateLocationButton = new Button()
             {

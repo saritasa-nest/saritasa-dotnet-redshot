@@ -13,12 +13,12 @@ using RedShot.Infrastructure.Recording.Validation;
 using RedShot.Recording.Settings.CodecsOptions.AudioOptions;
 using RedShot.Recording.Settings.CodecsOptions.VideoOptions;
 
-namespace RedShot.Infrastructure.RecordingRedShot.Settings
+namespace RedShot.Infrastructure.Recording.Settings
 {
     /// <summary>
     /// Recording option dialog.
     /// </summary>
-    internal partial class RecordingOptionDialog : Dialog<DialogResult>
+    internal partial class RecordingOptionControl : Panel
     {
         private readonly FFmpegConfiguration ffmpegConfiguration;
         private readonly IRecordingDevices recordingDevices;
@@ -31,7 +31,6 @@ namespace RedShot.Infrastructure.RecordingRedShot.Settings
         private DefaultButton videoCodecOptionsButton;
         private ComboBox audioCodec;
         private DefaultButton audioCodecOptionsButton;
-        private DefaultButton okButton;
         private DefaultButton setDefaultButton;
         private NumericStepper fps;
         private TextBox userArgs;
@@ -41,23 +40,13 @@ namespace RedShot.Infrastructure.RecordingRedShot.Settings
         /// <summary>
         /// Initializes recording option dialog.
         /// </summary>
-        public RecordingOptionDialog(IRecordingDevices recordingDevices, FFmpegConfiguration ffmpegConfiguration)
+        public RecordingOptionControl(IRecordingDevices recordingDevices, FFmpegConfiguration ffmpegConfiguration)
         {
-            Title = "FFmpeg Recording Options";
             this.ffmpegConfiguration = ffmpegConfiguration;
-            ffmpegOptions = ffmpegConfiguration.Options.Clone();
+            ffmpegOptions = ffmpegConfiguration.Options;
             this.recordingDevices = recordingDevices;
 
             InitializeComponents();
-
-            this.LoadComplete += RecordingOptionsView_LoadComplete;
-
-            ShowInTaskbar = true;
-        }
-
-        private void RecordingOptionsView_LoadComplete(object sender, EventArgs e)
-        {
-            Location = ScreenHelper.GetCenterLocation(ClientSize);
         }
 
         private void SetDefaultButton_Clicked(object sender, EventArgs e)
@@ -65,22 +54,6 @@ namespace RedShot.Infrastructure.RecordingRedShot.Settings
             ffmpegOptions = new FFmpegOptions();
             Content.Unbind();
             BindOptions();
-        }
-
-        private void OkButton_Clicked(object sender, EventArgs e)
-        {
-            var result = ffmpegOptions.Validate();
-
-            if (!result.IsSuccess)
-            {
-                MessageBox.Show(new StringBuilder().AppendJoin("\n", result.Errors).ToString(), "Validation error", MessageBoxButtons.OK, MessageBoxType.Warning);
-            }
-            else
-            {
-                ffmpegConfiguration.Options = ffmpegOptions;
-                Result = DialogResult.Ok;
-                Close();
-            }
         }
 
         private void BindOptions()

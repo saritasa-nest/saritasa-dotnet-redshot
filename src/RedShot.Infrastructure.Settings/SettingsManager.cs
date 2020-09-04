@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using RedShot.Infrastructure.Abstractions;
+using RedShot.Infrastructure.Settings.Sections;
 using RedShot.Infrastructure.Settings.Views;
 
 namespace RedShot.Infrastructure.Settings
@@ -13,14 +14,14 @@ namespace RedShot.Infrastructure.Settings
 
         static SettingsManager()
         {
-            SettingsOptions = new List<ISettingsOption>();
+            SettingsSections = new List<ISettingsSection>();
         }
 
         /// <summary>
         /// Settings options.
         /// Must implement ISettingsOption interface.
         /// </summary>
-        public static List<ISettingsOption> SettingsOptions { get; }
+        public static List<ISettingsSection> SettingsSections { get; }
 
         /// <summary>
         /// Open settings of the app.
@@ -29,7 +30,7 @@ namespace RedShot.Infrastructure.Settings
         {
             settingsView?.Close();
 
-            settingsView = new SettingsView(SettingsOptions);
+            settingsView = new SettingsView(SettingsSections);
             settingsView.Show();
         }
     }

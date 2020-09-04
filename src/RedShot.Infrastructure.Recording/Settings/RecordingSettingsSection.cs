@@ -1,21 +1,21 @@
 ﻿using Eto.Forms;
-using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Configuration;
-using RedShot.Infrastructure.RecordingRedShot.Settings;
+using RedShot.Infrastructure.Settings.Sections;
 
 namespace RedShot.Infrastructure.Recording.Settings
 {
     /// <summary>
     /// Recording settings option.
     /// </summary>
-    public class RecordingSettingsOption : ISettingsOption
+    public class RecordingSettingsSection : ISettingsSection
     {
         private readonly FFmpegConfiguration ffmpegConfiguration;
+        private Control recordingOptionControl;
 
         /// <summary>
         /// Initializes recording settings.
         /// </summary>
-        public RecordingSettingsOption()
+        public RecordingSettingsSection()
         {
             ffmpegConfiguration = ConfigurationManager.GetSection<FFmpegConfiguration>();
         }
@@ -24,16 +24,17 @@ namespace RedShot.Infrastructure.Recording.Settings
         public string Name => "FFmpeg recording options";
 
         /// <inheritdoc/>
-        public Dialog<DialogResult> GetOptionDialog()
+        public Control GetControl()
         {
-            if (RecordingManager.CheckInstallFfmpeg())
+            if (recordingOptionControl == null)
             {
-                return new RecordingOptionDialog(RecordingManager.RecordingService.GetRecordingDevices(), ffmpegConfiguration);
+                if (RecordingManager.CheckInstallFfmpeg())
+                {
+                    recordingOptionControl = new RecordingOptionControl(RecordingManager.RecordingService.GetRecordingDevices(), ffmpegConfiguration);
+                }
             }
-            else
-            {
-                return null;
-            }
+
+            return recordingOptionControl;
         }
 
         /// <inheritdoc/>

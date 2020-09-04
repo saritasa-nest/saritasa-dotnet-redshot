@@ -25,9 +25,9 @@ namespace RedShot.Application
 
             SettingsOptions = new List<Type>()
             {
-                typeof(FtpSettingsOption),
-                typeof(RecordingSettingsOption),
-                typeof(FormatSettingsOption)
+                typeof(FtpSettingsSection),
+                typeof(RecordingSettingsSection),
+                typeof(FormatSettingsSection)
             };
         }
 

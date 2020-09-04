@@ -1,11 +1,11 @@
 ﻿using Eto.Forms;
 
-namespace RedShot.Infrastructure.Abstractions
+namespace RedShot.Infrastructure.Settings.Sections
 {
     /// <summary>
     /// Abstraction for settings.
     /// </summary>
-    public interface ISettingsOption
+    public interface ISettingsSection
     {
         /// <summary>
         /// Setting name.
@@ -15,7 +15,7 @@ namespace RedShot.Infrastructure.Abstractions
         /// <summary>
         /// Gives option dialog.
         /// </summary>
-        Dialog<DialogResult> GetOptionDialog();
+        Control GetControl();
 
         /// <summary>
         /// Saves setting state.
