@@ -14,9 +14,6 @@ namespace RedShot.Infrastructure.Formatting.Formatters
         public string Pattern => "date";
 
         /// <inheritdoc />
-        public string GetText()
-        {
-            return $"{DateTime.Now:yyyy-MM-ddTHH-mm-ss}";
-        }
+        public string GetText() => $"{DateTime.Now:yyyy-MM-ddTHH-mm-ss}";
     }
 }

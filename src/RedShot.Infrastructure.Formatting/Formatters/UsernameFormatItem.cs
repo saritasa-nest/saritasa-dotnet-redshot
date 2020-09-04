@@ -14,9 +14,6 @@ namespace RedShot.Infrastructure.Formatting.Formatters
         public string Pattern => "user";
 
         /// <inheritdoc />
-        public string GetText()
-        {
-            return Environment.UserName;
-        }
+        public string GetText() =>Environment.UserName;
     }
 }

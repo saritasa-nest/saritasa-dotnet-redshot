@@ -43,7 +43,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Settings
         /// </summary>
         public RecordingOptionDialog(IRecordingDevices recordingDevices, FFmpegConfiguration ffmpegConfiguration)
         {
-            Title = "FFmpeg recording options";
+            Title = "FFmpeg Recording Options";
             this.ffmpegConfiguration = ffmpegConfiguration;
             ffmpegOptions = ffmpegConfiguration.Options.Clone();
             this.recordingDevices = recordingDevices;

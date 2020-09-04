@@ -13,7 +13,7 @@ namespace RedShot.Infrastructure.Formatting.Formatters
 
         static RandomFormatItem()
         {
-            randomizer = new Random((int)DateTime.Now.ToFileTime());
+            randomizer = new Random();
         }
 
         /// <inheritdoc />

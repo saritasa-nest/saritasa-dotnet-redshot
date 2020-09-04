@@ -15,9 +15,6 @@ namespace RedShot.Infrastructure.Formatting.Formatters
         public string Pattern => "month";
 
         /// <inheritdoc />
-        public string GetText()
-        {
-            return DateTime.Now.ToString("MMMM", CultureInfo.InvariantCulture);
-        }
+        public string GetText() => DateTime.Now.ToString("MMMM", CultureInfo.InvariantCulture);
     }
 }

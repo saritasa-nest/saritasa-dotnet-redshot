@@ -14,9 +14,6 @@ namespace RedShot.Infrastructure.Formatting.Formatters
         public string Pattern => "guid";
 
         /// <inheritdoc />
-        public string GetText()
-        {
-            return Guid.NewGuid().ToString();
-        }
+        public string GetText() => Guid.NewGuid().ToString();
     }
 }

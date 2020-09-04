@@ -90,6 +90,7 @@ Desktop.ini
 # common binary extensions on Windows
 *.exe
 *.dll
+*.pdb
 *.lib
 
 ### OSX ###

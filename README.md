@@ -1,39 +1,32 @@
-### RedShot
-
-
-RedShot is a crossplatform application for screenshotting and recording any area of your screen.
-
+RedShot
 =======
 
-Applications use case:
+RedShot is the cross-platform application for screenshotting and recording any area of your screen.
 
-- Cross platform desktop app;
-- Сonvenient work with the selection region;
+## Applications Features
+
+- Cross platform desktop app.
+- Сonvenient work with the selection region.
 - Own built in uploaders, easy to add new one.
 
-=======
-
-What RedShot can do:
+## What RedShot Can Do
 
 - Screenshotting:
-    - Multiscreen selecting region
-    - Region moving/resizing
-    - Image editor
+  - multiscreen selecting region;
+  - region moving/resizing;
+  - image editor;
 
 - Video recording:
-    - Same region features
-    - Many options for recording (Codecs, fps, output devices, etc..)
+  - same region features;
+  - Many options for recording (Codecs, fps, output devices, etc..)
 
-- Uploading:
-	- Clipboard
-	- File
-	- FTP
+- Upload targets:
+  - clipboard;
+  - file;
+  - FTP/SFTP;
 
-=======
+## Development Stack
 
-- Development stack:
-
-	- Eto forms (views);
-	- SkiaSharp (drawing);
-	- FFmpeg (video recording).
-
+- Eto Forms (views);
+- SkiaSharp (drawing);
+- FFmpeg (video recording).

@@ -68,7 +68,7 @@ namespace RedShot.Recording.Recorders.Linux
                 return true;
             }
 
-            MessageBox.Show("Download FFmpeg package to your system before recording video", MessageBoxButtons.OK, MessageBoxType.Information);
+            MessageBox.Show("Download FFmpeg package to your system before recording video.", MessageBoxButtons.OK, MessageBoxType.Information);
             return false;
         }
 

@@ -15,9 +15,6 @@ namespace RedShot.Infrastructure.Formatting.Formatters
         public string Pattern => "day";
 
         /// <inheritdoc />
-        public string GetText()
-        {
-            return DateTime.Now.ToString("dddd", CultureInfo.InvariantCulture);
-        }
+        public string GetText() => DateTime.Now.ToString("dddd", CultureInfo.InvariantCulture);
     }
 }

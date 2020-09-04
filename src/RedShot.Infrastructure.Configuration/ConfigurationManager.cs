@@ -88,7 +88,7 @@ namespace RedShot.Infrastructure.Configuration
 
             var settingsFilePath = GetFullPath();
             File.WriteAllText(settingsFilePath, rootObject.ToString(Formatting.Indented));
-            logger.Debug("The app's configuration was saved");
+            logger.Debug("The configuration has been saved.");
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace RedShot.Infrastructure.Configuration
                     settingsMap.Add(type, (IConfigurationOption)Activator.CreateInstance(type));
                 }
             }
-            logger.Debug("The app's configuration was loaded");
+            logger.Debug("The configuration has been loaded.");
         }
 
         private static bool TryGetConfigString(out string conf)

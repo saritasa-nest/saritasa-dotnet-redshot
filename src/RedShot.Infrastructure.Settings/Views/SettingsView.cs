@@ -18,7 +18,7 @@ namespace RedShot.Infrastructure.Settings.Views
         /// </summary>
         public SettingsView(IEnumerable<ISettingsOption> settingsOptions)
         {
-            Title = "RedShot settings";
+            Title = "RedShot Settings";
             this.settingsOptions = settingsOptions;
             Content = GetContentLayout();
             Resizable = false;
