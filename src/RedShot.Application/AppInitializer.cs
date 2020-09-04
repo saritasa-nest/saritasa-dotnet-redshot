@@ -19,11 +19,7 @@ namespace RedShot.Application
             ConfigurationManager.ConfigurationOptions.AddRange(InitializationScript.ConfigurationOptions);
             ConfigurationManager.Load();
 
-            var settingsOptions = InitializationScript.SettingsOptions
-                .Where(type => typeof(ISettingsSection).IsAssignableFrom(type) && !type.IsInterface)
-                .Select(t => (ISettingsSection)Activator.CreateInstance(t));
-
-            SettingsManager.SettingsSections.AddRange(settingsOptions);
+            SettingsManager.SettingsSections.AddRange(InitializationScript.SettingsOptions);
         }
     }
 }

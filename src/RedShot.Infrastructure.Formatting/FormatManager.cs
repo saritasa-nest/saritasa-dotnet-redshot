@@ -32,15 +32,45 @@ namespace RedShot.Infrastructure.Formatting
         internal static readonly IEnumerable<IFormatItem> FormatItems;
 
         /// <summary>
-        /// Get format name of for a file.
+        /// Try to format pattern.
         /// </summary>
-        public static string GetFormattedName(string pattern = default)
+        public static bool TryFormat(string pattern, out string formattedString)
+        {
+            formattedString = Format(pattern);
+
+            if (string.IsNullOrEmpty(formattedString) || string.IsNullOrWhiteSpace(formattedString))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Get format name of for a file.
+        /// Gets pattern from configuration.
+        /// </summary>
+        public static string GetFormattedName()
+        {
+            var pattern = GetPatternFromConfig();
+            var formattedString = Format(pattern);
+
+            if (string.IsNullOrEmpty(formattedString) || string.IsNullOrWhiteSpace(formattedString))
+            {
+                return "RedShot_invalid_format";
+            }
+            else
+            {
+                return formattedString;
+            }
+        }
+
+        private static string Format(string pattern)
         {
             var regex = new Regex(regexPattern, regexOptions);
-
-            pattern = string.IsNullOrEmpty(pattern) ? GetPatternFromConfig() : pattern;
             var matches = regex.Matches(pattern);
-
             var builder = new StringBuilder();
 
             foreach (var match in matches)
@@ -62,14 +92,7 @@ namespace RedShot.Infrastructure.Formatting
             var formattedString = builder.ToString();
             ReplaceInvalidChars(ref formattedString);
 
-            if (string.IsNullOrEmpty(formattedString) || string.IsNullOrWhiteSpace(formattedString))
-            {
-                return "RedShot_invalid_format";
-            }
-            else
-            {
-                return formattedString;
-            }
+            return formattedString;
         }
 
         private static bool TryFormatAsUsersText(string text, out string result)

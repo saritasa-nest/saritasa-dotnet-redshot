@@ -1,4 +1,5 @@
-﻿using RedShot.Infrastructure.Common;
+﻿using System.Collections.Generic;
+using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg.Encoding;
 
@@ -13,10 +14,8 @@ namespace RedShot.Infrastructure.Recording.Validation
         /// Returns result of the validation.
         /// Extension for FFmpeg options.
         /// </summary>
-        public static FFmpegValidationResult Validate(this FFmpegOptions options)
+        public static ValidationResult Validate(this FFmpegOptions options)
         {
-            var result = new FFmpegValidationResult();
-
             switch (options.VideoCodec)
             {
                 case FFmpegVideoCodec.libx264:
@@ -35,19 +34,12 @@ namespace RedShot.Infrastructure.Recording.Validation
                     break;
             }
 
-            result.IsSuccess = true;
-
-            return result;
+            return new ValidationResult(true);
         }
 
-        private static FFmpegValidationResult GetIncompatibleCodecResult(FFmpegOptions options)
+        private static ValidationResult GetIncompatibleCodecResult(FFmpegOptions options)
         {
-            var result = new FFmpegValidationResult();
-
-            result.IsSuccess = false;
-            result.Errors.Add(GetIncompatibleCodecMessage(options));
-
-            return result;
+            return new ValidationResult(false, GetIncompatibleCodecMessage(options));
         }
 
         private static string GetIncompatibleCodecMessage(FFmpegOptions options)

@@ -130,7 +130,6 @@ namespace RedShot.Infrastructure.Recording.Settings
                         VerticalContentAlignment = VerticalAlignment.Center,
                         Items =
                         {
-                            okButton,
                             FormsHelper.VoidBox(10),
                             setDefaultButton,
                             FormsHelper.VoidRectangle(40, 10),

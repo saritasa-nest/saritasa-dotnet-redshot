@@ -1,9 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
 using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Common.Forms;
-using RedShot.Infrastructure.Formatting.Formatters;
 
 namespace RedShot.Infrastructure.Formatting.Settings
 {
@@ -15,7 +13,6 @@ namespace RedShot.Infrastructure.Formatting.Settings
         private readonly FormatConfigurationOption configurationOption;
         private TextBox patternTextBox;
         private Label exampleLabel;
-        private DefaultButton okButton;
         private DefaultButton guideButton;
         private ContextMenu formatItemsMenu;
 
@@ -26,32 +23,6 @@ namespace RedShot.Infrastructure.Formatting.Settings
         {
             this.configurationOption = configurationOption;
             InitializeComponents();
-        }
-
-        private void OnClosing(object sender, CancelEventArgs e)
-        {
-            //if (Result == DialogResult.Ok)
-            //{
-            //    if (string.IsNullOrEmpty(patternTextBox.Text) || string.IsNullOrWhiteSpace(patternTextBox.Text))
-            //    {
-            //        var dialog = new YesNoDialog()
-            //        {
-            //            Message = "The format link is empty. Do you want to change it?",
-            //            Size = new Size(300, 200)
-            //        };
-
-            //        using (dialog)
-            //        {
-            //            if (dialog.ShowModal(this) == DialogResult.Yes)
-            //            {
-            //                e.Cancel = true;
-            //                return;
-            //            }
-            //        }
-            //    }
-
-            //    configurationOption.Pattern = patternTextBox.Text;
-            //}
         }
 
         private void InitializeComponents()
@@ -96,9 +67,21 @@ namespace RedShot.Infrastructure.Formatting.Settings
                         }
                     },
                     FormsHelper.VoidBox(5),
-                    exampleLabel,
-                    FormsHelper.VoidBox(15),
-                    okButton
+                    new StackLayout()
+                    {
+                        Orientation = Orientation.Horizontal,
+                        VerticalContentAlignment = VerticalAlignment.Center,
+                        Items =
+                        {
+                            new Label()
+                            {
+                                Text = "Example:"
+                            },
+                            FormsHelper.VoidBox(5),
+                            exampleLabel
+                        }
+                    },
+                    FormsHelper.VoidBox(15)
                 }
             };
         }
@@ -107,6 +90,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
         {
             var location = new Point(patternTextBox.Location.X + patternTextBox.Width, patternTextBox.Location.Y);
             GetFormatItemsMenu().Show((Control)sender, location);
+            patternTextBox.Focus();
         }
 
         private void GuideButtonOnClicked(object sender, EventArgs e)
@@ -167,15 +151,19 @@ namespace RedShot.Infrastructure.Formatting.Settings
 
         private void SetFormatExample(string pattern)
         {
-            var text = exampleLabel.Text = FormatManager.GetFormattedName(pattern);
-            text = BreakLine(text, 45);
-
-            exampleLabel.Text = text;
+            if (FormatManager.TryFormat(pattern, out var result))
+            {
+                exampleLabel.Text = BreakLine(result, 45);
+            }
+            else
+            {
+                exampleLabel.Text = "Invalid pattern";
+            }
         }
 
         private string BreakLine(string line, int lineSize)
         {
-            var brokenLine = string.Empty;
+            string brokenLine;
             if (line.Length > lineSize)
             {
                 brokenLine = line.Substring(0, lineSize) + "\r\n";

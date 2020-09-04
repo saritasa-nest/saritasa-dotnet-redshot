@@ -28,7 +28,7 @@ namespace RedShot.Infrastructure.Settings.Views
             this.settingsSections = settingsSections;
             Resizable = false;
             Shown += SettingsView_Shown;
-            MinimumSize = new Eto.Drawing.Size(400, 400);
+            MinimumSize = new Size(400, 400);
 
             InitializeComponents();
         }
@@ -52,11 +52,33 @@ namespace RedShot.Infrastructure.Settings.Views
 
         private void OkButton_Clicked(object sender, System.EventArgs e)
         {
+            if (ValidateSettings())
+            {
+                foreach (var section in settingsSections)
+                {
+                    section.Save();
+                }
+                Close();
+            }
+        }
+
+        private bool ValidateSettings()
+        {
             foreach (var section in settingsSections)
             {
-                section.Save();
+                if (section is IValidatableSection validatable)
+                {
+                    var result = validatable.Validate();
+
+                    if (!result.IsSuccess)
+                    {
+                        MessageBox.Show(this, result.ToString(), $"{section.Name} validation error", MessageBoxButtons.OK, MessageBoxType.Warning);
+                        return false;
+                    }
+                }
             }
-            Close();
+
+            return true;
         }
 
         private void SettingsView_Shown(object sender, System.EventArgs e)
@@ -68,7 +90,6 @@ namespace RedShot.Infrastructure.Settings.Views
         {
             var gridView = new GridView()
             {
-                Size = new Size(150, 400),
                 AllowMultipleSelection = false,
                 AllowColumnReordering = false,
                 ShowHeader = false,
@@ -108,7 +129,7 @@ namespace RedShot.Infrastructure.Settings.Views
 
             var splitter = new Splitter
             {
-                Position = 150,
+                Position = 149,
                 FixedPanel = SplitterFixedPanel.Panel1,
                 Panel1 = nagivationPanel,
                 Panel1MinimumSize = 150,

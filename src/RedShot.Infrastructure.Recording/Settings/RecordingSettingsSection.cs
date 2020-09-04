@@ -1,5 +1,7 @@
 ﻿using Eto.Forms;
+using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Configuration;
+using RedShot.Infrastructure.Recording.Validation;
 using RedShot.Infrastructure.Settings.Sections;
 
 namespace RedShot.Infrastructure.Recording.Settings
@@ -7,7 +9,7 @@ namespace RedShot.Infrastructure.Recording.Settings
     /// <summary>
     /// Recording settings option.
     /// </summary>
-    public class RecordingSettingsSection : ISettingsSection
+    public class RecordingSettingsSection : IValidatableSection
     {
         private readonly FFmpegConfiguration ffmpegConfiguration;
         private Control recordingOptionControl;
@@ -44,10 +46,10 @@ namespace RedShot.Infrastructure.Recording.Settings
             ConfigurationManager.Save();
         }
 
-        /// Return name of the settings option.
-        public override string ToString()
+        /// <inheritdoc/>
+        public ValidationResult Validate()
         {
-            return Name;
+            return FFmpegOptionsValidator.Validate(ffmpegConfiguration.Options);
         }
     }
 }
