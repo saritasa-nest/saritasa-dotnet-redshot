@@ -6,7 +6,7 @@ using Renci.SshNet.Common;
 using RedShot.Infrastructure.Abstractions.Uploading;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Common;
-using RedShot.Infrastructure.DataTransfer.Ftp;
+using RedShot.Infrastructure.Uploaders.Ftp.Models;
 using RedShot.Infrastructure.Basics;
 
 namespace RedShot.Infrastructure.Uploaders.Ftp
@@ -14,7 +14,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
     /// <summary>
     /// SFTP uploader.
     /// </summary>
-    internal sealed class Sftp : BaseUploader, IDisposable
+    internal sealed class SftpUploader : BaseUploader, IDisposable
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly string fileName;
@@ -24,7 +24,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         /// <summary>
         /// Initializes SFTP uploader.
         /// </summary>
-        public Sftp(FtpAccount account, string fileName)
+        public SftpUploader(FtpAccount account, string fileName)
         {
             this.account = account;
             this.fileName = fileName;

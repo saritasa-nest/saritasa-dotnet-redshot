@@ -5,12 +5,12 @@ namespace RedShot.Infrastructure.Common
 {
     public static class ClipboardHelper
     {
-        public static void SetStringInClipboard(string value, string serviceName)
+        public static void SetStringInClipboard(string value, string title, string serviceName)
         {
             Clipboard.Instance.Clear();
             Clipboard.Instance.Text = value;
 
-            NotifyHelper.Notify("A string was saved in clipboard", serviceName, NotifyStatus.Success);
+            NotifyHelper.Notify(title, serviceName, NotifyStatus.Success);
         }
     }
 }

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Eto.Forms;
-using RedShot.Infrastructure.DataTransfer.Ftp;
+using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Uploaders.Ftp.Models;
 
 namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
 {
@@ -12,6 +13,11 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
     /// </summary>
     internal partial class FtpOptionControl : Panel
     {
+        private CheckBox addExtensionCheckBox;
+        private Label previewLinkLabel;
+        private ComboBox browserTypeComboBox;
+        private TextBox homePathTextBox;
+
         private Button addButton;
         private Button delButton;
         private Button copyButton;
@@ -52,6 +58,15 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
             bindingList = new ObservableCollection<FtpAccount>(ftpAccounts);
             bindingList.CollectionChanged += BindingList_CollectionChanged;
             accounts.Bind(a => a.DataStore, bindingList, b => b);
+            accounts.SelectedValueChanged += FtpOptionControlChanged;
+        }
+
+        private void UpdatePreview()
+        {
+            if (accounts.SelectedValue is FtpAccount account)
+            {
+                previewLinkLabel.Text = account.GetFormatLink("artemka.png");
+            }
         }
 
         private void BindingList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -102,6 +117,34 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
             ftpsCertificateLocation.Bind(t => t.Text, selectedAccount, account => account.FTPSCertificateLocation);
             keypath.Bind(t => t.Text, selectedAccount, account => account.Keypath);
             passphrase.Bind(t => t.Text, selectedAccount, account => account.Passphrase);
+
+            addExtensionCheckBox.Bind(t => t.Checked, selectedAccount, account => account.HttpHomePathAddExtension).Changed += FtpOptionControlChanged;
+            homePathTextBox.Bind(t => t.Text, selectedAccount, account => account.HttpHomePath).Changed += FtpOptionControlChanged;
+
+            browserTypeComboBox.DataContext = selectedAccount;
+            browserTypeComboBox.DataStore = EnumDescription<BrowserProtocol>.GetEnumDescriptions(typeof(BrowserProtocol));
+            browserTypeComboBox.SelectedValueBinding.Convert(
+                l =>
+                {
+                    if (l == null)
+                    {
+                        return BrowserProtocol.Http;
+                    }
+                    else
+                    {
+                        var des = (EnumDescription<BrowserProtocol>)l;
+                        return des.EnumValue;
+                    }
+                },
+                v =>
+                {
+                    return browserTypeComboBox.DataStore.FirstOrDefault(o => ((EnumDescription<BrowserProtocol>)o).EnumValue == v);
+                }).BindDataContext((FtpAccount o) => o.BrowserProtocol).Changed += FtpOptionControlChanged;
+        }
+
+        private void FtpOptionControlChanged(object sender, EventArgs e)
+        {
+            UpdatePreview();
         }
 
         private void KeyPathButton_Click(object sender, EventArgs e)

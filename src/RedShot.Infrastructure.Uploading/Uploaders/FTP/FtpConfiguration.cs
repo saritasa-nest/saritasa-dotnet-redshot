@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using RedShot.Infrastructure.Abstractions;
-using RedShot.Infrastructure.DataTransfer.Ftp;
+using RedShot.Infrastructure.Uploaders.Ftp.Models;
 
 namespace RedShot.Infrastructure.Uploaders.Ftp
 {

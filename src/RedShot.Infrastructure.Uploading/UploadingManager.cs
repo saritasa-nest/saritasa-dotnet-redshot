@@ -61,8 +61,10 @@ namespace RedShot.Infrastructure
         /// <summary>
         /// Uploads file with specified uploader.
         /// </summary>
-        internal static void Upload(IUploader uploader, IFile file)
+        internal static void Upload(IUploadingService service, IFile file)
         {
+            var uploader = service.GetUploader();
+
             if (uploader == null || file == null)
             {
                 logger.Warn($"Upload failed");
@@ -77,8 +79,7 @@ namespace RedShot.Infrastructure
                 if (response.IsSuccess)
                 {
                     logger.Trace($"{file.FileType} has been uploaded", response);
-
-                    NotifyHelper.Notify($"{file.FileType} has been uploaded", "RedShot uploading", NotifyStatus.Success);
+                    service.OnUploaded(file);
                 }
                 else
                 {

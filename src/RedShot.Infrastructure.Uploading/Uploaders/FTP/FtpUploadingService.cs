@@ -1,7 +1,11 @@
 ﻿using Eto.Drawing;
+using Eto.Forms;
 using RedShot.Infrastructure.Abstractions.Uploading;
-using RedShot.Infrastructure.DataTransfer.Ftp;
+using RedShot.Infrastructure.Uploaders.Ftp.Models;
 using RedShot.Infrastructure.Uploaders.Ftp.Forms;
+using RedShot.Infrastructure.Abstractions;
+using System.IO;
+using RedShot.Infrastructure.Common.Notifying;
 
 namespace RedShot.Infrastructure.Uploaders.Ftp
 {
@@ -10,13 +14,10 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
     /// </summary>
     internal class FtpUploadingService : IUploadingService
     {
+        private FtpAccount account;
+
         /// <inheritdoc />
         public string Name => "FTP/SFTP/FTPS uploading service";
-
-        /// <summary>
-        /// Selected FTP account.
-        /// </summary>
-        public FtpAccount Account { get; }
 
         /// <inheritdoc />
         public Bitmap ServiceImage => new Bitmap(Resources.Properties.Resources.Ftp);
@@ -33,18 +34,18 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
             {
                 if (form.ShowModal() == Eto.Forms.DialogResult.Ok)
                 {
-                    var account = form.SelectedAccount;
+                    account = form.SelectedAccount;
                     var name = form.FileName;
 
                     if (account != null)
                     {
                         if (account.Protocol == FtpProtocol.FTP || account.Protocol == FtpProtocol.FTPS)
                         {
-                            return new Ftp(account, name);
+                            return new FtpUploader(account, name);
                         }
                         else if (account.Protocol == FtpProtocol.SFTP)
                         {
-                            return new Sftp(account, name);
+                            return new SftpUploader(account, name);
                         }
                     }
                 }
@@ -57,6 +58,17 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         public bool CheckOnSupporting(FileType fileType)
         {
             return true;
+        }
+
+        /// <inheritdoc />
+        public void OnUploaded(IFile file)
+        {
+            var link = account.GetFormatLink(Path.GetFileName(file.FilePath));
+
+            Eto.Forms.Clipboard.Instance.Clear();
+            Eto.Forms.Clipboard.Instance.Text = link;
+
+            NotifyHelper.Notify("The file has been uploaded to your FTP server.\nRedShot has saved format link to clipboard.", "RedShot", NotifyStatus.Success);
         }
     }
 }

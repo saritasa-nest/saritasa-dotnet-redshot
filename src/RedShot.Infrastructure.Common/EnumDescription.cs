@@ -9,6 +9,7 @@ namespace RedShot.Infrastructure.Common
     /// Works with Description attribute.
     /// </summary>
     public class EnumDescription<TEnum>
+         where TEnum : Enum
     {
         /// <summary>
         /// Initializes EnumDescription object. 
@@ -49,7 +50,7 @@ namespace RedShot.Infrastructure.Common
         /// <summary>
         /// Gives description name via enum value.
         /// </summary>
-        public static string GetDescriptionName(object enumValue)
+        public static string GetDescriptionName(Enum enumValue)
         {
             var fi = enumValue.GetType().GetField(enumValue.ToString());
 

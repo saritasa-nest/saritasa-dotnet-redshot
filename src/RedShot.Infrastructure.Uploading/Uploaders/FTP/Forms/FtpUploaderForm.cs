@@ -2,11 +2,11 @@ using System;
 using System.Linq;
 using Eto.Forms;
 using Eto.Drawing;
-using RedShot.Infrastructure.DataTransfer.Ftp;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Formatting;
+using RedShot.Infrastructure.Uploaders.Ftp.Models;
 
 namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
 {

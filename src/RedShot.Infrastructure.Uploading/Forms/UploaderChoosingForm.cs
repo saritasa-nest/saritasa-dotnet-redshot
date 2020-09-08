@@ -81,8 +81,7 @@ namespace RedShot.Infrastructure.Uploading.Forms
 
             button.Clicked += (o, e) =>
             {
-                var uploader = service.GetUploader();
-                UploadingManager.Upload(uploader, file);
+                UploadingManager.Upload(service, file);
             };
 
             button.Enabled = service.CheckOnSupporting(file.FileType);

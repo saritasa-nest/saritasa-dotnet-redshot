@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Eto.Forms;
 using RedShot.Infrastructure.Common.Forms;
-using RedShot.Infrastructure.DataTransfer.Ftp;
+using RedShot.Infrastructure.Uploaders.Ftp.Models;
 
 namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
 {
@@ -29,6 +29,15 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
         private void InitializeFileds()
         {
             var defaultSize = new Eto.Drawing.Size(200, 21);
+
+            addExtensionCheckBox = new CheckBox();
+            previewLinkLabel = new Label();
+            browserTypeComboBox = new ComboBox();
+            homePathTextBox = new TextBox()
+            {
+                Size = defaultSize
+            };
+
             name = new TextBox()
             {
                 Size = defaultSize,
@@ -166,7 +175,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
                     }
                 },
                 Text = "Account",
-                MinimumSize = new Eto.Drawing.Size(600, 400),
+                MinimumSize = new Eto.Drawing.Size(700, 400),
                 Padding = 20
             };
         }
@@ -197,15 +206,17 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
             return new StackLayout
             {
                 Orientation = Orientation.Vertical,
+                Spacing = 5,
                 Items =
                 {
                     FormsHelper.GetBaseStack("Name", name),
-                    FormsHelper.GetBaseStack("Ftp Protocol", ftpProtocol),
+                    FormsHelper.GetBaseStack("FTP Protocol", ftpProtocol),
                     GetAdressBoxes(),
                     FormsHelper.GetBaseStack("Username", username),
                     FormsHelper.GetBaseStack("Password", password),
                     FormsHelper.GetBaseStack("IsActive", isActive),
                     FormsHelper.GetBaseStack("SubFolderPath", subFolderPath),
+                    GetLinkBoxes()
                 }
             };
         }
@@ -223,7 +234,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
                 {
                     new Label()
                     {
-                        Text = "Accounts:",
+                        Text = "Accounts",
                     },
                     accounts,
                     addButton,
@@ -253,6 +264,45 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
                         Text = "Port:",
                     },
                     port,
+                }
+            };
+        }
+
+        private StackLayout GetLinkBoxes()
+        {
+            return new StackLayout
+            {
+                Orientation = Orientation.Vertical,
+                Spacing = 5,
+                Items =
+                {
+                    FormsHelper.GetBaseStack("URL path:", new StackLayout()
+                    {
+                        Orientation = Orientation.Horizontal,
+                        Spacing = 5,
+                        VerticalContentAlignment = VerticalAlignment.Center,
+                        Items =
+                        {
+                            browserTypeComboBox,
+                            homePathTextBox
+                        }
+                    }, controlWidth: 400),
+                    new StackLayout()
+                    {
+                        Orientation = Orientation.Horizontal,
+                        Padding = new Eto.Drawing.Padding(10, 0, 0, 0),
+                        Spacing = 5,
+                        VerticalContentAlignment = VerticalAlignment.Center,
+                        Items =
+                        {
+                            addExtensionCheckBox,
+                            new Label()
+                            {
+                                Text = "Add extension to the URL path"
+                            }
+                        }
+                    },
+                    FormsHelper.GetBaseStack("URL preview:", previewLinkLabel)
                 }
             };
         }

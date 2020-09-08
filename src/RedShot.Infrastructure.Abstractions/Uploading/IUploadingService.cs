@@ -32,5 +32,10 @@ namespace RedShot.Infrastructure.Abstractions.Uploading
         /// Checks on supporting file type.
         /// </summary>
         bool CheckOnSupporting(FileType fileType);
+
+        /// <summary>
+        /// On uploaded action.
+        /// </summary>
+        void OnUploaded(IFile file);
     }
 }

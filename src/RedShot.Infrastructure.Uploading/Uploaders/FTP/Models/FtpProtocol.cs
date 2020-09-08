@@ -1,4 +1,4 @@
-﻿namespace RedShot.Infrastructure.DataTransfer.Ftp
+﻿namespace RedShot.Infrastructure.Uploaders.Ftp.Models
 {
     /// <summary>
     /// FTP protocol enum.

@@ -1,18 +1,18 @@
 ﻿using System.ComponentModel;
 
-namespace RedShot.Infrastructure.DataTransfer.Ftp
+namespace RedShot.Infrastructure.Uploaders.Ftp.Models
 {
     public enum BrowserProtocol
     {
         [Description("http://")]
-        http,
+        Http,
         [Description("https://")]
-        https,
+        Https,
         [Description("ftp://")]
-        ftp,
+        Ftp,
         [Description("ftps://")]
-        ftps,
+        Ftps,
         [Description("file://")]
-        file
+        File
     }
 }

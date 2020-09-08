@@ -1,11 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text;
+using RedShot.Infrastructure.Common;
 
-namespace RedShot.Infrastructure.DataTransfer.Ftp
+namespace RedShot.Infrastructure.Uploaders.Ftp.Models
 {
     /// <summary>
-    /// Ftp account model.
+    /// FTP account model.
     /// </summary>
     public class FtpAccount : INotifyPropertyChanged, ICloneable
     {
@@ -22,8 +25,7 @@ namespace RedShot.Infrastructure.DataTransfer.Ftp
         private string keypath;
         private string passphrase;
         private string httpHomePath;
-        private bool httpHomePathAddSubFolderPath;
-        private bool httpHomePathNoExtension;
+        private bool httpHomePathAddExtension;
         private BrowserProtocol browserProtocol;
 
         /// <summary>
@@ -41,9 +43,30 @@ namespace RedShot.Infrastructure.DataTransfer.Ftp
             FTPSCertificateLocation = "";
             Id = Guid.NewGuid();
             HttpHomePath = "";
-            HttpHomePathAddSubFolderPath = true;
-            HttpHomePathNoExtension = false;
-            BrowserProtocol = BrowserProtocol.http;
+            HttpHomePathAddExtension = false;
+            BrowserProtocol = BrowserProtocol.Http;
+        }
+
+        public string GetFormatLink(string fileName)
+        {
+            if (string.IsNullOrEmpty(HttpHomePath))
+            {
+                return "EmptyUrl";
+            }
+
+            var builder = new StringBuilder();
+            builder.Append($"{EnumDescription<BrowserProtocol>.GetDescriptionName(BrowserProtocol)}{HttpHomePath}/");
+
+            if (HttpHomePathAddExtension)
+            {
+                builder.Append(fileName);
+            }
+            else
+            {
+                builder.Append(Path.GetFileNameWithoutExtension(fileName));
+            }
+
+            return builder.ToString();
         }
 
         /// <summary>
@@ -64,41 +87,24 @@ namespace RedShot.Infrastructure.DataTransfer.Ftp
         }
 
         /// <summary>
-        /// Http home path no extension.
+        /// HTTP home path no extension.
         /// </summary>
-        public bool HttpHomePathNoExtension
+        public bool HttpHomePathAddExtension
         {
-            get { return httpHomePathNoExtension; }
+            get { return httpHomePathAddExtension; }
 
             set
             {
-                if (httpHomePathNoExtension != value)
+                if (httpHomePathAddExtension != value)
                 {
-                    httpHomePathNoExtension = value;
+                    httpHomePathAddExtension = value;
                     OnPropertyChanged();
                 }
             }
         }
 
         /// <summary>
-        /// Http home path add sub folder path.
-        /// </summary>
-        public bool HttpHomePathAddSubFolderPath
-        {
-            get { return httpHomePathAddSubFolderPath; }
-
-            set
-            {
-                if (httpHomePathAddSubFolderPath != value)
-                {
-                    httpHomePathAddSubFolderPath = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Http home path.
+        /// HTTP home path.
         /// </summary>
         public string HttpHomePath
         {
@@ -137,7 +143,7 @@ namespace RedShot.Infrastructure.DataTransfer.Ftp
         }
 
         /// <summary>
-        /// Ftp protocol of the account.
+        /// FTP protocol of the account.
         /// </summary>
         public FtpProtocol Protocol
         {
@@ -188,7 +194,7 @@ namespace RedShot.Infrastructure.DataTransfer.Ftp
         }
 
         /// <summary>
-        /// Username of the account.
+        /// User name of the account.
         /// </summary>
         public string Username
         {
@@ -256,7 +262,7 @@ namespace RedShot.Infrastructure.DataTransfer.Ftp
         }
 
         /// <summary>
-        /// FTP adress property.
+        /// FTP address property.
         /// </summary>
         public string FTPAddress
         {
@@ -322,7 +328,7 @@ namespace RedShot.Infrastructure.DataTransfer.Ftp
         }
 
         /// <summary>
-        /// Keypath.
+        /// Key path.
         /// </summary>
         public string Keypath
         {
@@ -339,7 +345,7 @@ namespace RedShot.Infrastructure.DataTransfer.Ftp
         }
 
         /// <summary>
-        /// Passphrase.
+        /// Pass phrase.
         /// </summary>
         public string Passphrase
         {
@@ -385,6 +391,11 @@ namespace RedShot.Infrastructure.DataTransfer.Ftp
             {
                 return false;
             }
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
         }
 
         object ICloneable.Clone()

@@ -10,14 +10,14 @@ using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
 using RedShot.Infrastructure.Basics;
 using RedShot.Infrastructure.Common;
-using RedShot.Infrastructure.DataTransfer.Ftp;
+using RedShot.Infrastructure.Uploaders.Ftp.Models;
 
 namespace RedShot.Infrastructure.Uploaders.Ftp
 {
     /// <summary>
     /// FTP/FTPS uploader.
     /// </summary>
-    internal sealed class Ftp : BaseUploader, IDisposable
+    internal sealed class FtpUploader : BaseUploader, IDisposable
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly FtpAccount account;
@@ -28,7 +28,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         /// <summary>
         /// Initializes FTP/FTPS uploader.
         /// </summary>
-        public Ftp(FtpAccount account, string fileName)
+        public FtpUploader(FtpAccount account, string fileName)
         {
             this.fileName = fileName;
             this.account = account;

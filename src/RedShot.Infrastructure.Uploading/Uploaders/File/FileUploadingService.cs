@@ -1,5 +1,7 @@
 ﻿using Eto.Drawing;
+using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
+using RedShot.Infrastructure.Common.Notifying;
 
 namespace RedShot.Infrastructure.Uploaders.File
 {
@@ -33,6 +35,12 @@ namespace RedShot.Infrastructure.Uploaders.File
         public IUploader GetUploader()
         {
             return new FileUploader();
+        }
+
+        /// <inheritdoc />
+        public void OnUploaded(IFile file)
+        {
+            NotifyHelper.Notify("The file has been saved.", "RedShot", NotifyStatus.Success);
         }
     }
 }

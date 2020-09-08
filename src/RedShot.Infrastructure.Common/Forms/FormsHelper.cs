@@ -61,16 +61,35 @@ namespace RedShot.Infrastructure.Common.Forms
             return new Cursor(scaled, hotSpot);
         }
 
+        public static StackLayout GetCheckBoxStack(CheckBox checkBox, string text, int padding = 5)
+        {
+            return new StackLayout()
+            {
+                Orientation = Orientation.Horizontal,
+                Padding = padding,
+                Spacing = 5,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                Items =
+                {
+                    checkBox,
+                    new Label()
+                    {
+                        Text = text
+                    }
+                }
+            };
+        }
+
         /// <summary>
         /// Gives base stack (Label + control) in horizontal orientation.
         /// </summary>
-        public static StackLayout GetBaseStack(string name, Control control, int nameWidth = 200, int controlWidth = 300)
+        public static StackLayout GetBaseStack(string name, Control control, int nameWidth = 200, int controlWidth = 300, int padding = 5)
         {
             return new StackLayout
             {
                 Orientation = Orientation.Horizontal,
                 VerticalContentAlignment = VerticalAlignment.Center,
-                Padding = 5,
+                Padding = padding,
                 Items =
                 {
                     new StackLayout()
