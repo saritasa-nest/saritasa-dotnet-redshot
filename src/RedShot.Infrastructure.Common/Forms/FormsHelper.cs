@@ -12,7 +12,7 @@ namespace RedShot.Infrastructure.Common.Forms
         /// <summary>
         /// Returns control which contains void box.
         /// </summary>
-        public static Control VoidBox(int size)
+        public static Control GetVoidBox(int size)
         {
             return new Panel
             {
@@ -24,7 +24,7 @@ namespace RedShot.Infrastructure.Common.Forms
         /// <summary>
         /// Returns control which contains void rectangle.
         /// </summary>
-        public static Control VoidRectangle(int width, int height)
+        public static Control GetVoidRectangle(int width, int height)
         {
             return new StackLayout
             {

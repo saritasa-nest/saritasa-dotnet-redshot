@@ -34,7 +34,10 @@ namespace RedShot.Infrastructure.Painting.PaintingActions.TextInput
                 return;
             }
 
-            var lines = textInputAction.Text.Split(new[] {"\n", "\r\n", "\r"}, StringSplitOptions.None);
+            var lines = textInputAction.Text.Split(new[]
+            {
+                "\n", "\r\n", "\r"
+            }, StringSplitOptions.None);
             var paint = GetPaintByInput(textInputAction);
 
             for (var i = 0; i < lines.Length; i++)

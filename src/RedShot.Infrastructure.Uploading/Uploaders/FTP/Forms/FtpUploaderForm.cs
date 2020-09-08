@@ -76,7 +76,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
                 {
                     GetAccountLayout(),
                     GetImageNameLayout(),
-                    FormsHelper.VoidBox(20),
+                    FormsHelper.GetVoidBox(20),
                     uploadButton
                 }
             };
@@ -89,6 +89,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
                 Padding = 10,
                 Orientation = Orientation.Vertical,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
+                Spacing = 10,
                 Items =
                 {
                     new Label()
@@ -96,7 +97,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
                         Text = "Filename:",
                         Width = 100,
                     },
-                    FormsHelper.VoidBox(10),
                     fileNameBox
                 }
             };
@@ -109,6 +109,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
                 Padding = 10,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
                 Orientation = Orientation.Vertical,
+                Spacing = 10,
                 Items =
                 {
                     new Label()
@@ -116,7 +117,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
                         Text = "Account:",
                         Width = 100,
                     },
-                    FormsHelper.VoidBox(10),
                     accounts,
                 }
             };

@@ -16,7 +16,6 @@ namespace RedShot.Infrastructure.Painting.PaintingActions.TextInput
         private bool saveText;
         private ColorPicker textColorPicker;
         private FontPicker textFontPicker;
-        private NumericStepper textSizeStepper;
         private DefaultButton okButton;
         private TextArea textArea;
 
@@ -71,6 +70,7 @@ namespace RedShot.Infrastructure.Painting.PaintingActions.TextInput
                 Orientation = Orientation.Vertical,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
                 Padding = 20,
+                Spacing = 10,
                 Items =
                 {
                     new StackLayout()
@@ -80,15 +80,10 @@ namespace RedShot.Infrastructure.Painting.PaintingActions.TextInput
                         Items =
                         {
                             textColorPicker,
-                            FormsHelper.VoidBox(10),
-                            textFontPicker,
-                            FormsHelper.VoidBox(10),
-                            textSizeStepper
+                            textFontPicker
                         }
                     },
-                    FormsHelper.VoidBox(15),
                     textArea,
-                    FormsHelper.VoidBox(10),
                     okButton
                 }
             };
@@ -101,7 +96,7 @@ namespace RedShot.Infrastructure.Painting.PaintingActions.TextInput
             textPaintingAction.InputUserAction(action);
         }
 
-        private void OkButtonOnClicked(object? sender, EventArgs e)
+        private void OkButtonOnClicked(object sender, EventArgs e)
         {
             saveText = true;
             Close();

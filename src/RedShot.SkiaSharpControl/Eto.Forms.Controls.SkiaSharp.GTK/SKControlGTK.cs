@@ -65,6 +65,7 @@ namespace Eto.Forms.Controls.SkiaSharp.GTK
         {
             if (disposed == false)
             {
+                disposed = true;
                 bitmap?.Dispose();
                 skSurface?.Dispose();
                 surface?.Dispose();

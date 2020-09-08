@@ -30,12 +30,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
             this.fileName = fileName;
         }
 
-        /// <inheritdoc cref="BaseUploader"/>.
-        public override event EventHandler Uploaded;
-
-        /// <inheritdoc cref="BaseUploader"/>.
-        public override event EventHandler OnUploadStarted;
-
         private readonly FtpAccount account;
 
         /// <summary>
@@ -60,13 +54,10 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
 
             IsUploading = true;
 
-            OnUploadStarted?.Invoke(this, EventArgs.Empty);
-
             try
             {
                 if (UploadStream(file.GetStream(), path, true))
                 {
-                    Uploaded?.Invoke(this, EventArgs.Empty);
                     return new BaseUploadingResponse(true);
                 }
             }

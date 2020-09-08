@@ -58,10 +58,10 @@ namespace RedShot.Infrastructure.Formatting.Settings
                 Orientation = Orientation.Vertical,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
                 Padding = 15,
+                Spacing = 15,
                 Items =
                 {
                     GetGuideFormatsStack(),
-                    FormsHelper.VoidBox(15),
                     GetUsersTextFormatGuide()
                 }
             };
@@ -83,20 +83,19 @@ namespace RedShot.Infrastructure.Formatting.Settings
             {
                 Orientation = Orientation.Horizontal,
                 VerticalContentAlignment = VerticalAlignment.Center,
+                Spacing = 15,
                 Items =
                 {
                     formatsListBox,
-                    FormsHelper.VoidBox(15),
                     new StackLayout()
                     {
                         Orientation = Orientation.Vertical,
                         HorizontalContentAlignment = HorizontalAlignment.Left,
+                        Spacing = 10,
                         Items =
                         {
                             FormsHelper.GetBaseStack("Name:", nameLabel, 80, 250),
-                            FormsHelper.VoidBox(10),
                             FormsHelper.GetBaseStack("Pattern:", patternLabel, 80, 250),
-                            FormsHelper.VoidBox(10),
                             FormsHelper.GetBaseStack("Example:", exampleLabel, 80, 250),
                         }
                     }
@@ -110,13 +109,13 @@ namespace RedShot.Infrastructure.Formatting.Settings
             {
                 Orientation = Orientation.Horizontal,
                 VerticalContentAlignment = VerticalAlignment.Center,
+                Spacing = 10,
                 Items =
                 {
                     new Label()
                     {
                         Text = "If you want to insert your own text:"
                     },
-                    FormsHelper.VoidBox(10),
                     new Label()
                     {
                         Text = "%[your_text]"

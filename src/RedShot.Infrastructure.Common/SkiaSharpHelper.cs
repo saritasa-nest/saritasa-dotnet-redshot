@@ -28,7 +28,9 @@ namespace RedShot.Infrastructure.Common
         /// </summary>
         public static SKImage GetPointerForPainting(SKColor color, int radius)
         {
+#pragma warning disable CS0618 // 'SKSurface.Create(int, int, SKColorType, SKAlphaType)" является устаревшим: 'Use Create(SKImageInfo) instead.'
             using var surface = SKSurface.Create(radius * 2, radius * 2, SKColorType.Bgra8888, SKAlphaType.Premul);
+#pragma warning restore CS0618 // 'SKSurface.Create(int, int, SKColorType, SKAlphaType)" является устаревшим: 'Use Create(SKImageInfo) instead.'
 
             var paint = new SKPaint()
             {
@@ -54,7 +56,9 @@ namespace RedShot.Infrastructure.Common
         /// </summary>
         public static SKImage GetScaledImage(Bitmap bitmap, Size size)
         {
+#pragma warning disable CS0618 // 'SKSurface.Create(int, int, SKColorType, SKAlphaType)" является устаревшим: 'Use Create(SKImageInfo) instead.'
             using var surface = SKSurface.Create(size.Width, size.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
+#pragma warning restore CS0618 // 'SKSurface.Create(int, int, SKColorType, SKAlphaType)" является устаревшим: 'Use Create(SKImageInfo) instead.'
 
             var image = ConvertFromEtoBitmap(bitmap).Resize(new SKImageInfo(size.Width, size.Height), SKFilterQuality.High);
 

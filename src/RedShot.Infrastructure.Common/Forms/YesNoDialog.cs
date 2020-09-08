@@ -33,19 +33,18 @@ namespace RedShot.Infrastructure.Common.Forms
                 HorizontalContentAlignment = HorizontalAlignment.Center,
                 Width = 300,
                 Padding = 20,
+                Spacing = 15,
                 Items =
                 {
-                    FormsHelper.VoidBox(20),
                     questionLabel,
-                    FormsHelper.VoidBox(20),
                     new StackLayout()
                     {
                         Orientation = Orientation.Horizontal,
                         VerticalContentAlignment = VerticalAlignment.Center,
+                        Spacing = 15,
                         Items =
                         {
                             yesButton,
-                            FormsHelper.VoidRectangle(20, 1),
                             noButton
                         }
                     }

@@ -150,14 +150,8 @@ namespace RedShot.Infrastructure.Configuration
 
         private static string GetDefaultFolder()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                return Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), DefaultFolderName)).FullName;
-            }
-            else
-            {
-                return Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), DefaultFolderName)).FullName;
-            }
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), DefaultFolderName);
+            return Directory.CreateDirectory(path).FullName;
         }
     }
 }

@@ -57,14 +57,12 @@ namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
                 Orientation = Orientation.Vertical,
                 Padding = 10,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
+                Spacing = 15,
                 Items =
                 {
                     FormsHelper.GetBaseStack("Preset:", x264Preset, 50, 200),
-                    FormsHelper.VoidBox(10),
                     FormsHelper.GetBaseStack("Quality:", GetQualityField(), 50, 250),
-                    FormsHelper.VoidBox(20),
                     okButton,
-                    FormsHelper.VoidBox(10)
                 }
             };
         }
@@ -109,10 +107,10 @@ namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
             {
                 Orientation = Orientation.Horizontal,
                 VerticalContentAlignment = VerticalAlignment.Center,
+                Spacing = 10,
                 Items =
                 {
                     x264Quality,
-                    FormsHelper.VoidBox(10),
                     qualityAbout
                 }
             };

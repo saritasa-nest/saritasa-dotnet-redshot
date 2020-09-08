@@ -48,40 +48,38 @@ namespace RedShot.Infrastructure.Formatting.Settings
                 Orientation = Orientation.Vertical,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
                 Padding = 20,
+                Spacing = 5,
                 Items =
                 {
                     new Label()
                     {
                         Text = "Pattern"
                     },
-                    FormsHelper.VoidBox(5),
                     new StackLayout()
                     {
                         Orientation = Orientation.Horizontal,
                         VerticalContentAlignment = VerticalAlignment.Center,
+                        Spacing = 10,
                         Items =
                         {
                             patternTextBox,
-                            FormsHelper.VoidBox(10),
                             guideButton
                         }
                     },
-                    FormsHelper.VoidBox(5),
                     new StackLayout()
                     {
                         Orientation = Orientation.Horizontal,
                         VerticalContentAlignment = VerticalAlignment.Center,
+                        Spacing = 5,
                         Items =
                         {
                             new Label()
                             {
                                 Text = "Example:"
                             },
-                            FormsHelper.VoidBox(5),
                             exampleLabel
                         }
                     },
-                    FormsHelper.VoidBox(15)
                 }
             };
         }

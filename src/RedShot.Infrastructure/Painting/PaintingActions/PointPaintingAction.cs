@@ -23,7 +23,7 @@ namespace RedShot.Infrastructure.Painting.PaintingActions
             points = new HashSet<Point>();
             this.paint = paint;
         }
-        
+
         /// <inheritdoc />
         public PaintingActionType PaintingActionType => PaintingActionType.MousePainting;
 

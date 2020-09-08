@@ -14,7 +14,7 @@ namespace Eto.Forms.Controls.SkiaSharp.Mac
         private bool disposed;
 
         /// <summary>
-        /// Initialize control and handler. 
+        /// Initialize control and handler.
         /// </summary>
         public SKControlHandler()
         {

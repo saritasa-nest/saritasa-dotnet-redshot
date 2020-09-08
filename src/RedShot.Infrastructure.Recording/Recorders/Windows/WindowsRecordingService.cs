@@ -147,7 +147,9 @@ namespace RedShot.Recording.Recorders.Windows
             }
             catch (Exception e)
             {
+#pragma warning disable CS0618 // 'Logger.Error(string, Exception)" является устаревшим: 'Use Error(Exception exception, string message, params object[] args) method instead. Marked obsolete before v4.3.11'
                 logger.Error("An error occurred while FFmpeg was installing.", e);
+#pragma warning restore CS0618 // 'Logger.Error(string, Exception)" является устаревшим: 'Use Error(Exception exception, string message, params object[] args) method instead. Marked obsolete before v4.3.11'
                 MessageBox.Show($"An error occurred while FFmpeg was installing: {e.Message}", MessageBoxButtons.OK, MessageBoxType.Error);
 
                 return false;

@@ -21,6 +21,10 @@ namespace RedShot.Infrastructure.DataTransfer.Ftp
         private string ftpsCertificateLocation;
         private string keypath;
         private string passphrase;
+        private string httpHomePath;
+        private bool httpHomePathAddSubFolderPath;
+        private bool httpHomePathNoExtension;
+        private BrowserProtocol browserProtocol;
 
         /// <summary>
         /// Inits base values.
@@ -36,6 +40,78 @@ namespace RedShot.Infrastructure.DataTransfer.Ftp
             FTPSEncryption = FtpsEncryption.Explicit;
             FTPSCertificateLocation = "";
             Id = Guid.NewGuid();
+            HttpHomePath = "";
+            HttpHomePathAddSubFolderPath = true;
+            HttpHomePathNoExtension = false;
+            BrowserProtocol = BrowserProtocol.http;
+        }
+
+        /// <summary>
+        /// Browser protocol.
+        /// </summary>
+        public BrowserProtocol BrowserProtocol
+        {
+            get { return browserProtocol; }
+
+            set
+            {
+                if (browserProtocol != value)
+                {
+                    browserProtocol = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Http home path no extension.
+        /// </summary>
+        public bool HttpHomePathNoExtension
+        {
+            get { return httpHomePathNoExtension; }
+
+            set
+            {
+                if (httpHomePathNoExtension != value)
+                {
+                    httpHomePathNoExtension = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Http home path add sub folder path.
+        /// </summary>
+        public bool HttpHomePathAddSubFolderPath
+        {
+            get { return httpHomePathAddSubFolderPath; }
+
+            set
+            {
+                if (httpHomePathAddSubFolderPath != value)
+                {
+                    httpHomePathAddSubFolderPath = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Http home path.
+        /// </summary>
+        public string HttpHomePath
+        {
+            get { return httpHomePath; }
+
+            set
+            {
+                if (httpHomePath != value)
+                {
+                    httpHomePath = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         /// <summary>
@@ -297,6 +373,18 @@ namespace RedShot.Infrastructure.DataTransfer.Ftp
         public FtpAccount Clone()
         {
             return MemberwiseClone() as FtpAccount;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is FtpAccount account)
+            {
+                return this.Id == account.Id;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         object ICloneable.Clone()

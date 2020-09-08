@@ -50,12 +50,12 @@ namespace RedShot.Recording.Settings.CodecsOptions.AudioOptions
                 Orientation = Orientation.Vertical,
                 Padding = 20,
                 HorizontalContentAlignment = HorizontalAlignment.Center,
+                Spacing = 10,
                 Items =
                 {
                     FormsHelper.GetBaseStack("Quality:", GetQualityField(), 50, 250),
-                    FormsHelper.VoidBox(20),
-                    okButton,
-                    FormsHelper.VoidBox(10)
+                    FormsHelper.GetVoidBox(10),
+                    okButton
                 }
             };
 
@@ -96,10 +96,10 @@ namespace RedShot.Recording.Settings.CodecsOptions.AudioOptions
             {
                 Orientation = Orientation.Horizontal,
                 VerticalContentAlignment = VerticalAlignment.Center,
+                Spacing = 10,
                 Items =
                 {
                     codecQuality,
-                    FormsHelper.VoidBox(10),
                     qualityAbout
                 }
             };

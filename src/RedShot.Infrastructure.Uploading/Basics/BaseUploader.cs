@@ -25,26 +25,6 @@ namespace RedShot.Infrastructure.Basics
         public bool StopUploadRequested { get; protected set; }
 
         /// <summary>
-        /// Occurs when uploading has finished.
-        /// </summary>
-        public virtual event EventHandler Uploaded;
-
-        /// <summary>
-        /// Occurs when uploading has stopped.
-        /// </summary>
-        public virtual event EventHandler OnUploadStopped;
-
-        /// <summary>
-        /// Occurs when uploading has started.
-        /// </summary>
-        public virtual event EventHandler OnUploadStarted;
-
-        /// <summary>
-        /// Occurs by upload stopping.
-        /// </summary>
-        public virtual event EventHandler OnUploadError;
-
-        /// <summary>
         /// Stops upload.
         /// </summary>
         public abstract void StopUpload();

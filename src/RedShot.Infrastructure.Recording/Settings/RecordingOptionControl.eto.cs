@@ -93,12 +93,14 @@ namespace RedShot.Infrastructure.Recording.Settings
                 Orientation = Orientation.Vertical,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
                 Padding = 10,
+                Spacing = 10,
                 Items =
                 {
                     new StackLayout()
                     {
                         Orientation = Orientation.Horizontal,
                         HorizontalContentAlignment = HorizontalAlignment.Center,
+                        Spacing = 15,
                         Items =
                         {
                             new GroupBox()
@@ -107,14 +109,12 @@ namespace RedShot.Infrastructure.Recording.Settings
                                 Size = new Size(250, 230),
                                 Content = GetDefaultOptionControl(),
                             },
-                            FormsHelper.VoidBox(15),
                             new GroupBox()
                             {
                                 Text = "Encoding",
                                 Size = groupBoxSize,
                                 Content = GetEncodingSelectionControl(),
                             },
-                            FormsHelper.VoidBox(15),
                             new GroupBox()
                             {
                                 Text = "Recording devices",
@@ -123,21 +123,19 @@ namespace RedShot.Infrastructure.Recording.Settings
                             }
                         }
                     },
-                    FormsHelper.VoidBox(10),
                     new StackLayout()
                     {
                         Orientation = Orientation.Horizontal,
                         VerticalContentAlignment = VerticalAlignment.Center,
+                        Spacing = 10,
                         Items =
                         {
-                            FormsHelper.VoidBox(10),
                             setDefaultButton,
-                            FormsHelper.VoidRectangle(40, 10),
+                            FormsHelper.GetVoidRectangle(40, 10),
                             new Label()
                             {
                                 Text = "Custom FFmpeg arguments:"
                             },
-                            FormsHelper.VoidBox(10),
                             userArgs
                         }
                     }
@@ -167,10 +165,10 @@ namespace RedShot.Infrastructure.Recording.Settings
                 Orientation = Orientation.Horizontal,
                 VerticalContentAlignment = VerticalAlignment.Center,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
+                Spacing = 10,
                 Items =
                 {
                     useAudio,
-                    FormsHelper.VoidBox(10),
                     new Label()
                     {
                         Text = "Use audio"
@@ -200,23 +198,19 @@ namespace RedShot.Infrastructure.Recording.Settings
             {
                 Orientation = Orientation.Vertical,
                 Padding = 20,
+                Spacing = 5,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
                 Items =
                     {
                         videoLabel,
-                        FormsHelper.VoidBox(5),
                         videoDevices,
-                        FormsHelper.VoidBox(20),
+                        FormsHelper.GetVoidBox(15),
                         primaryAudioLabel,
-                        FormsHelper.VoidBox(5),
                         primaryAudioDevices,
-                        FormsHelper.VoidBox(5),
                         optionalAudioLabel,
-                        FormsHelper.VoidBox(5),
                         optionalAudioDevices,
-                        FormsHelper.VoidBox(15),
-                        GetMicrophoneControl(),
-                        FormsHelper.VoidBox(10),
+                        FormsHelper.GetVoidBox(10),
+                        GetMicrophoneControl()
                     }
             };
         }
@@ -238,16 +232,14 @@ namespace RedShot.Infrastructure.Recording.Settings
                 Orientation = Orientation.Vertical,
                 Padding = 20,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
+                Spacing = 10,
                 Items =
                     {
                         videoLabel,
-                        FormsHelper.VoidBox(10),
                         GetVideoCodecField(),
-                        FormsHelper.VoidBox(20),
+                        FormsHelper.GetVoidBox(10),
                         audioLabel,
-                        FormsHelper.VoidBox(10),
-                        GetAudioCodecField(),
-                        FormsHelper.VoidBox(25),
+                        GetAudioCodecField()
                     }
             };
         }
@@ -258,10 +250,10 @@ namespace RedShot.Infrastructure.Recording.Settings
             {
                 Orientation = Orientation.Horizontal,
                 VerticalContentAlignment = VerticalAlignment.Center,
+                Spacing = 10,
                 Items =
                 {
                     videoCodec,
-                    FormsHelper.VoidBox(10),
                     videoCodecOptionsButton,
                 }
             };
@@ -273,10 +265,10 @@ namespace RedShot.Infrastructure.Recording.Settings
             {
                 Orientation = Orientation.Horizontal,
                 VerticalContentAlignment = VerticalAlignment.Center,
+                Spacing = 10,
                 Items =
                 {
                     audioCodec,
-                    FormsHelper.VoidBox(10),
                     audioCodecOptionsButton,
                 }
             };
@@ -290,15 +282,12 @@ namespace RedShot.Infrastructure.Recording.Settings
                 Orientation = Orientation.Vertical,
                 Padding = 20,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
+                Spacing = 15,
                 Items =
                     {
-                        FormsHelper.VoidBox(10),
                         FormsHelper.GetBaseStack("FPS:", fps, 100, 150),
-                        FormsHelper.VoidBox(15),
                         FormsHelper.GetBaseStack("Show cursor:", showCursor, 100, 150),
-                        FormsHelper.VoidBox(15),
                         FormsHelper.GetBaseStack("Use Gdigrab:", useGdigrab, 100, 150),
-                        FormsHelper.VoidBox(15),
                     }
             };
         }

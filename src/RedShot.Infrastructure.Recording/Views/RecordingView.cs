@@ -195,15 +195,15 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
                 VerticalContentAlignment = VerticalAlignment.Center,
                 Padding = 3,
                 Size = new Size(240, 40),
+                Spacing = 5,
                 BackgroundColor = Colors.WhiteSmoke,
                 Items =
                     {
                         recordingButton,
-                        FormsHelper.VoidBox(5),
                         closeButton,
-                        FormsHelper.VoidBox(20),
+                        FormsHelper.GetVoidBox(15),
                         timerLabel,
-                        FormsHelper.VoidBox(30),
+                        FormsHelper.GetVoidBox(25),
                         beforeStartLabel
                     }
             };

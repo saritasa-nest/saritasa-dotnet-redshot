@@ -159,25 +159,18 @@ namespace RedShot.Infrastructure.Painting
                 VerticalContentAlignment = VerticalAlignment.Center,
                 HorizontalContentAlignment = HorizontalAlignment.Right,
                 Orientation = Orientation.Horizontal,
+                Spacing = 10,
                 Items =
                 {
-                    FormsHelper.VoidBox(10),
                     colorPicker,
-                    FormsHelper.VoidBox(10),
                     drawSizeStepper,
-                    FormsHelper.VoidBox(10),
                     TextEnableButton,
-                    FormsHelper.VoidBox(10),
                     PointsEnableButton,
-                    FormsHelper.VoidBox(10),
                     RectangleEnableButton,
-                    FormsHelper.VoidBox(10),
                     ArrowEnableButton,
-                    FormsHelper.VoidBox(10),
                     EraseEnableButton,
-                    FormsHelper.VoidBox(20),
+                    FormsHelper.GetVoidBox(10),
                     PaintBackButton,
-                    FormsHelper.VoidBox(10),
                     SaveImageButton
                 }
             };

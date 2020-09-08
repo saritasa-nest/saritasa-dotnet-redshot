@@ -44,15 +44,13 @@ namespace RedShot.Infrastructure.Uploading.Forms
             {
                 Orientation = Orientation.Horizontal,
                 Padding = 10,
+                Spacing = 10
             };
 
-            stack.Items.Add(FormsHelper.VoidBox(10));
             stack.Items.Add(GetPreviewButton());
-            stack.Items.Add(FormsHelper.VoidBox(10));
             foreach (var service in uploadingServices)
             {
                 stack.Items.Add(GetServiceButton(service));
-                stack.Items.Add(FormsHelper.VoidBox(10));
             }
 
             Content = stack;

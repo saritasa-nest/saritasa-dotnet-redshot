@@ -127,7 +127,8 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         protected SelectionFormBase()
         {
             selectionScreen = Screen.FromPoint(Mouse.Position);
-            InitializeComponent();
+            InitializeComponents();
+            Focus();
         }
 
         UITimer screenTimer;
@@ -135,7 +136,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         /// <summary>
         /// Initializes whole view.
         /// </summary>
-        private void InitializeComponent()
+        private void InitializeComponents()
         {
             SetScreenImage();
             WindowState = WindowState.Maximized;

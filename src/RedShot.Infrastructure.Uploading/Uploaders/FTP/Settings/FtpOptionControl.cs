@@ -15,8 +15,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
         private Button addButton;
         private Button delButton;
         private Button copyButton;
-        private Button okButton;
-        private Button cancelButton;
         private ComboBox accounts;
         private TextBox name;
         private ComboBox ftpProtocol;

@@ -47,12 +47,12 @@ namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
                 Orientation = Orientation.Vertical,
                 Padding = 20,
                 HorizontalContentAlignment = HorizontalAlignment.Center,
+                Spacing = 10,
                 Items =
                 {
                     FormsHelper.GetBaseStack("Quality:", GetQualityField(), 50, 250),
-                    FormsHelper.VoidBox(20),
+                    FormsHelper.GetVoidBox(10),
                     okButton,
-                    FormsHelper.VoidBox(10)
                 }
             };
         }
@@ -75,10 +75,10 @@ namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
             {
                 Orientation = Orientation.Horizontal,
                 VerticalContentAlignment = VerticalAlignment.Center,
+                Spacing = 10,
                 Items =
                 {
                     mpeg4Quality,
-                    FormsHelper.VoidBox(10),
                     qualityAbout
                 }
             };

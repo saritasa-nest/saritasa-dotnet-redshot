@@ -17,12 +17,11 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
                 VerticalContentAlignment = VerticalAlignment.Center,
                 Orientation = Orientation.Vertical,
                 Padding = 10,
+                Spacing = 10,
                 Items =
                 {
                     GetAccountsPanel(),
                     accountFields,
-                    FormsHelper.VoidBox(10),
-                    GetFinishButtons()
                 }
             };
         }
@@ -152,20 +151,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
             accountFields.Enabled = false;
         }
 
-        private Control GetFinishButtons()
-        {
-            return new StackLayout()
-            {
-                Orientation = Orientation.Horizontal,
-                Items =
-                {
-                    okButton,
-                    FormsHelper.VoidBox(10),
-                    cancelButton
-                }
-            };
-        }
-
         private Control GetAccountFieldsControl()
         {
             return new GroupBox()
@@ -232,6 +217,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
                 VerticalContentAlignment = VerticalAlignment.Center,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
                 Padding = 10,
+                Spacing = 10,
                 Orientation = Orientation.Horizontal,
                 Items =
                 {
@@ -239,13 +225,9 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
                     {
                         Text = "Accounts:",
                     },
-                    FormsHelper.VoidBox(10),
                     accounts,
-                    FormsHelper.VoidBox(10),
                     addButton,
-                    FormsHelper.VoidBox(10),
                     delButton,
-                    FormsHelper.VoidBox(10),
                     copyButton
                 }
             };
@@ -258,20 +240,18 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
                 VerticalContentAlignment = VerticalAlignment.Center,
                 Orientation = Orientation.Horizontal,
                 Padding = 5,
+                Spacing = 10,
                 Items =
                 {
                     new Label()
                     {
                         Text = "Host:",
                     },
-                    FormsHelper.VoidBox(10),
                     host,
-                    FormsHelper.VoidBox(10),
                     new Label()
                     {
                         Text = "Port:",
                     },
-                    FormsHelper.VoidBox(10),
                     port,
                 }
             };
@@ -312,10 +292,10 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
                                 {
                                     HorizontalContentAlignment = HorizontalAlignment.Left,
                                     Orientation = Orientation.Horizontal,
+                                    Spacing = 10,
                                     Items =
                                     {
                                         ftpsCertificateLocation,
-                                        FormsHelper.VoidBox(10),
                                         ftpsCertificateLocationButton
                                     }
                                 }
@@ -359,10 +339,10 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
                                 {
                                     HorizontalContentAlignment = HorizontalAlignment.Left,
                                     Orientation = Orientation.Horizontal,
+                                    Spacing = 10,
                                     Items =
                                     {
                                         keypath,
-                                        FormsHelper.VoidBox(10),
                                         keyPathButton
                                     }
                                 }

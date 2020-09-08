@@ -65,11 +65,10 @@ namespace RedShot.Infrastructure.Common.Forms
                 Orientation = Orientation.Vertical,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
                 Padding = 10,
+                Spacing = 10,
                 Items =
                 {
-                    FormsHelper.VoidBox(10),
                     progressBar,
-                    FormsHelper.VoidBox(10),
                     stateInfo
                 }
             };

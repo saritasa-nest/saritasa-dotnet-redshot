@@ -25,12 +25,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         private FtpClient client;
         private bool disposed;
 
-        /// <inheritdoc cref="BaseUploader"/>
-        public override event EventHandler Uploaded;
-
-        /// <inheritdoc cref="BaseUploader"/>.
-        public override event EventHandler OnUploadStarted;
-
         /// <summary>
         /// Initializes FTP/FTPS uploader.
         /// </summary>
@@ -107,13 +101,10 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
 
             IsUploading = true;
 
-            OnUploadStarted?.Invoke(this, EventArgs.Empty);
-
             try
             {
                 if (UploadData(file.GetStream(), path))
                 {
-                    Uploaded?.Invoke(this, EventArgs.Empty);
                     return new BaseUploadingResponse(true);
                 }
                 else

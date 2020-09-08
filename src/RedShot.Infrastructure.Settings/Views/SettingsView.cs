@@ -95,7 +95,8 @@ namespace RedShot.Infrastructure.Settings.Views
                 ShowHeader = false,
                 AllowEmptySelection = false,
                 DataStore = settingsSections,
-                BackgroundColor = Colors.White
+                BackgroundColor = Colors.White,
+                Width = 150
             };
 
             gridView.Columns.Add(new GridColumn
@@ -124,16 +125,16 @@ namespace RedShot.Infrastructure.Settings.Views
         {
             contentPanel = new Scrollable()
             {
-                Size = new Size(500, 400)
+                Size = new Size(800, 500)
             };
 
             var splitter = new Splitter
             {
-                Position = 149,
+                Position = 150,
                 FixedPanel = SplitterFixedPanel.Panel1,
                 Panel1 = nagivationPanel,
                 Panel1MinimumSize = 150,
-                Panel2MinimumSize = 400,
+                Panel2MinimumSize = 800,
                 Panel2 = contentPanel
             };
 
@@ -141,7 +142,7 @@ namespace RedShot.Infrastructure.Settings.Views
             {
                 Orientation = Orientation.Vertical,
                 HorizontalContentAlignment = HorizontalAlignment.Right,
-                Padding = 20,
+                Padding = 10,
                 Items =
                 {
                     splitter,
@@ -150,10 +151,10 @@ namespace RedShot.Infrastructure.Settings.Views
                         Orientation = Orientation.Horizontal,
                         VerticalContentAlignment = VerticalAlignment.Center,
                         Padding = 10,
+                        Spacing = 10,
                         Items =
                         {
                             okButton,
-                            FormsHelper.VoidRectangle(10, 1),
                             cancelButton
                         }
                     }

@@ -22,7 +22,6 @@ namespace RedShot.Infrastructure.Screenshooting
             base.InitializeSelectionManageForm();
 
             selectionManageForm.EnablePaintingModeButton.Clicked += EnablePaintingModeButton_Clicked;
-            selectionManageForm.SaveScreenShotButton.Clicked += SaveScreenShotButton_Clicked;
         }
 
         private Bitmap GetScreenShot()
@@ -31,13 +30,6 @@ namespace RedShot.Infrastructure.Screenshooting
         }
 
         private void EnablePaintingModeButton_Clicked(object sender, EventArgs e)
-        {
-            var screenshot = GetScreenShot();
-            ScreenshotManager.RunPaintingView(screenshot);
-            Close();
-        }
-
-        private void SaveScreenShotButton_Clicked(object sender, EventArgs e)
         {
             FinishSelection();
         }
@@ -49,7 +41,8 @@ namespace RedShot.Infrastructure.Screenshooting
         {
             if (captured)
             {
-                ScreenshotManager.UploadScreenShot(GetScreenShot());
+                var screenshot = GetScreenShot();
+                ScreenshotManager.RunPaintingView(screenshot);
                 Close();
             }
         }

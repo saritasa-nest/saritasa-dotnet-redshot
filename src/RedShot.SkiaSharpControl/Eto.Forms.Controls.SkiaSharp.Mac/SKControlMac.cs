@@ -78,7 +78,10 @@ namespace Eto.Forms.Controls.SkiaSharp.Mac
         /// </summary>
         public override void UpdateTrackingAreas()
         {
-            if (trackingArearea != null) { RemoveTrackingArea(trackingArearea); }
+            if (trackingArearea != null)
+            {
+                RemoveTrackingArea(trackingArearea);
+            }
             trackingArearea = new NSTrackingArea(Frame, NSTrackingAreaOptions.ActiveWhenFirstResponder | NSTrackingAreaOptions.MouseMoved | NSTrackingAreaOptions.InVisibleRect, this, null);
             AddTrackingArea(trackingArearea);
         }
