@@ -61,15 +61,14 @@ namespace RedShot.Recording.Recorders.Linux
         }
 
         /// <inheritdoc />
-        public bool InstallFFmpeg()
+        public void InstallFFmpeg()
         {
             if (CheckFFmpeg())
             {
-                return true;
+                throw new Exception("FFmpeg is installed already!");
             }
 
             MessageBox.Show("Download FFmpeg package to your system before recording video.", MessageBoxButtons.OK, MessageBoxType.Information);
-            return false;
         }
 
         private void ThrowIfNotFoundFfmpegBinary()

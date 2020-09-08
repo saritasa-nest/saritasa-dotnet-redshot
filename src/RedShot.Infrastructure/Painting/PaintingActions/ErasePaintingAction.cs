@@ -24,7 +24,7 @@ namespace RedShot.Infrastructure.Painting.PaintingActions
             this.bitmap = bitmap.Copy();
             this.paint = paint;
         }
-        
+
         /// <inheritdoc />
         public PaintingActionType PaintingActionType => PaintingActionType.MousePainting;
 

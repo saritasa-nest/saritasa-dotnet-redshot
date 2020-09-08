@@ -14,7 +14,7 @@
         /// <summary>
         /// Install FFmpeg binaries.
         /// </summary>
-        bool InstallFFmpeg();
+        void InstallFFmpeg();
 
         /// <summary>
         /// Check on existing FFmpeg binaries.

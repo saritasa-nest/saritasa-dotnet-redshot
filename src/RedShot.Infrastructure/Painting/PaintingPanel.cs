@@ -47,7 +47,7 @@ namespace RedShot.Infrastructure.Painting
         /// Button for enabling painting arrow action.
         /// </summary>
         public ImageButton ArrowEnableButton { get; private set; }
-        
+
         /// <summary>
         /// Button for enabling painting arrow action.
         /// </summary>

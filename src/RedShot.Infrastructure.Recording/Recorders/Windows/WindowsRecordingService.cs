@@ -9,6 +9,7 @@ using Eto.Forms;
 using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
+using RedShot.Infrastructure.Common.Notifying;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.DataTransfer.Ffmpeg.Devices;
 using RedShot.Infrastructure.Recording;
@@ -101,7 +102,7 @@ namespace RedShot.Recording.Recorders.Windows
         }
 
         /// <inheritdoc />
-        public bool InstallFFmpeg()
+        public void InstallFFmpeg()
         {
             if (CheckFFmpeg())
             {
@@ -116,7 +117,7 @@ namespace RedShot.Recording.Recorders.Windows
 
                 if (yesNoDialog.ShowModal() != DialogResult.Yes)
                 {
-                    return false;
+                    return;
                 }
             }
 
@@ -136,24 +137,19 @@ namespace RedShot.Recording.Recorders.Windows
             try
             {
                 using var downloader = new Downloader();
-
-                downloader.DownloadAsync(url, ffmpegZipName, (path) =>
-                {
-                    ZipFile.ExtractToDirectory(path, GetFfmpegPath());
-                    RecordingManager.InitiateRecording();
-                });
-
-                return false;
+                downloader.DownloadAsync(url, ffmpegZipName, DownloadingCallBack);
             }
             catch (Exception e)
             {
-#pragma warning disable CS0618 // 'Logger.Error(string, Exception)" является устаревшим: 'Use Error(Exception exception, string message, params object[] args) method instead. Marked obsolete before v4.3.11'
                 logger.Error("An error occurred while FFmpeg was installing.", e);
-#pragma warning restore CS0618 // 'Logger.Error(string, Exception)" является устаревшим: 'Use Error(Exception exception, string message, params object[] args) method instead. Marked obsolete before v4.3.11'
                 MessageBox.Show($"An error occurred while FFmpeg was installing: {e.Message}", MessageBoxButtons.OK, MessageBoxType.Error);
-
-                return false;
             }
+        }
+
+        private void DownloadingCallBack(string path)
+        {
+            ZipFile.ExtractToDirectory(path, GetFfmpegPath());
+            NotifyHelper.Notify("FFmpeg has been downloaded", "RedShot", NotifyStatus.Success);
         }
 
         private void ThrowIfNotFoundFfmpegBinary()

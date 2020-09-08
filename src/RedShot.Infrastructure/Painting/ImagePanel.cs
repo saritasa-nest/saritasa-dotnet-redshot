@@ -129,6 +129,9 @@ namespace RedShot.Infrastructure.Painting
                 case PaintingState.Erase:
                     Cursor = eraseCursor;
                     break;
+                case PaintingState.Text:
+                    Cursor = Cursors.IBeam;
+                    break;
                 default:
                     Cursor = Cursors.Arrow;
                     break;

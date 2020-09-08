@@ -73,7 +73,8 @@ namespace RedShot.Infrastructure.Recording
         {
             if (!RecordingService.CheckFFmpeg())
             {
-                return RecordingService.InstallFFmpeg();
+                RecordingService.InstallFFmpeg();
+                return false;
             }
             else
             {

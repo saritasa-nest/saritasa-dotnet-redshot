@@ -51,7 +51,7 @@ namespace RedShot.Infrastructure.Painting.PaintingActions.TextInput
             textFontPicker = new FontPicker()
             {
                 Size = new Size(200, 30),
-                Value = Fonts.Fantasy(14)
+                Value = Fonts.Fantasy(25)
             };
             textFontPicker.ValueChanged += TextOptionsChanged;
 
@@ -77,6 +77,7 @@ namespace RedShot.Infrastructure.Painting.PaintingActions.TextInput
                     {
                         Orientation = Orientation.Horizontal,
                         VerticalContentAlignment = VerticalAlignment.Center,
+                        Spacing = 10,
                         Items =
                         {
                             textColorPicker,
