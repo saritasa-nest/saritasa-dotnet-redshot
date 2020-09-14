@@ -18,6 +18,7 @@ namespace RedShot.Infrastructure.Settings.Views
         private Scrollable contentPanel;
         private DefaultButton okButton;
         private DefaultButton cancelButton;
+        private bool saved;
 
         /// <summary>
         /// Initializes settings view.
@@ -36,6 +37,11 @@ namespace RedShot.Infrastructure.Settings.Views
 
         private void SettingsView_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (saved)
+            {
+                return;
+            }
+
             var dialog = new YesNoDialog()
             {
                 Message = "Do you want to close the settings without saving it?",
@@ -76,6 +82,7 @@ namespace RedShot.Infrastructure.Settings.Views
                 {
                     section.Save();
                 }
+                saved = true;
                 Close();
             }
         }

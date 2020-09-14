@@ -71,7 +71,8 @@ namespace RedShot.Infrastructure.Painting
                 StrokeWidth = 1,
                 Style = SKPaintStyle.Stroke,
                 StrokeJoin = SKStrokeJoin.Round,
-                IsAntialias = true
+                IsAntialias = true,
+                FilterQuality = SKFilterQuality.High
             };
 
             imagePanel = new ImagePanel(image);

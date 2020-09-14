@@ -1,10 +1,8 @@
-﻿using Eto.Forms;
-using RedShot.Infrastructure.Common.Forms;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.IO;
 using System.Net;
-using System.Threading.Tasks;
+using RedShot.Infrastructure.Common.Forms;
 
 namespace RedShot.Infrastructure.Common
 {

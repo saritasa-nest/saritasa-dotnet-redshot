@@ -40,7 +40,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
 
             addButton = new DefaultButton("Add", 60, 25)
             {
-                ToolTip = "App format item"
+                ToolTip = "Add format item"
             };
             addButton.Clicked += AddButtonClicked;
 

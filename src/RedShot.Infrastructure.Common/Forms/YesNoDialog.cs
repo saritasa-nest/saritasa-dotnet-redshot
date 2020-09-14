@@ -1,4 +1,5 @@
-﻿using Eto.Forms;
+﻿using Eto.Drawing;
+using Eto.Forms;
 
 namespace RedShot.Infrastructure.Common.Forms
 {
@@ -25,6 +26,7 @@ namespace RedShot.Infrastructure.Common.Forms
         /// </summary>
         public YesNoDialog()
         {
+            Title = "RedShot question";
             InitializeComponents();
 
             Content = new StackLayout()
@@ -32,7 +34,7 @@ namespace RedShot.Infrastructure.Common.Forms
                 Orientation = Orientation.Vertical,
                 HorizontalContentAlignment = HorizontalAlignment.Center,
                 Width = 300,
-                Padding = 20,
+                Padding = new Padding(10, 30),
                 Spacing = 15,
                 Items =
                 {

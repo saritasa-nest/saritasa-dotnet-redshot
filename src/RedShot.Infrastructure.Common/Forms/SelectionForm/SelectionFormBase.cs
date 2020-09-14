@@ -130,8 +130,6 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             Focus();
         }
 
-        UITimer screenTimer;
-
         /// <summary>
         /// Initializes whole view.
         /// </summary>
@@ -154,10 +152,6 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             UnLoad += EditorViewDrawingSkiaSharp_UnLoad;
 
             InitializeSelectionManageForm();
-
-            screenTimer = new UITimer();
-            screenTimer.Interval = 0.1;
-            screenTimer.Elapsed += ScreenTimer_Elapsed;
 
             var capturedIcon = new Bitmap(Resources.Properties.Resources.Pointer);
             capturedCursor = FormsHelper.GetCursor(capturedIcon, new Size(20, 20), new Point(3, 3));
@@ -289,6 +283,17 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             KeyDown += EditorView_KeyDown;
 
             skcontrol.Execute((surface) => PaintClearImage(surface.Canvas));
+#if _WINDOWS
+            StartScreenSelecting();
+#endif
+        }
+
+        private void StartScreenSelecting()
+        {
+            var screenTimer = new UITimer();
+            screenTimer.Interval = 0.1;
+            screenTimer.Elapsed += ScreenTimer_Elapsed;
+
             screenSelecting = true;
             screenTimer.Start();
         }

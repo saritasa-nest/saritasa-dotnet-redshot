@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Abstractions.Recording;
@@ -49,11 +48,8 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
             };
 
             SetupLocations();
-
             BackgroundColor = Colors.Red;
-
             recordingTimer = new Stopwatch();
-
             labelRenderTimer = new UITimer();
             labelRenderTimer.Interval = 0.01;
             labelRenderTimer.Elapsed += RecordingLabelTimer_Elapsed;
@@ -69,40 +65,52 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
 
         private void RecordingButton_Clicked(object sender, System.EventArgs e)
         {
+            recordingButton.Enabled = false;
             if (recordingButton.IsRecording)
             {
                 StopRecording();
+                recordingButton.Enabled = true;
             }
             else
             {
                 recordingTimer.Reset();
-
-                ShowSeconds();
-
-                recorder.Start(recordingRectangle.OffsetRectangle(1));
-
-                while (!recorder.IsRecording)
-                {
-                }
-
-                beforeStartLabel.Text = "0";
-                recordingTimer.Start();
+                StartWithDelay();
             }
         }
 
-        private void ShowSeconds()
+        private void StartWithDelay()
         {
-            int seconds = 4;
+            int seconds = 3;
 
-            while (seconds != 1)
+            var beforeRecordTimer = new UITimer()
             {
-                seconds--;
-                beforeStartLabel.Text = seconds.ToString();
-                Task.Delay(1000).Wait();
-            }
+                Interval = 1
+            };
+            beforeRecordTimer.Elapsed += (o, e) =>
+            {
+                if (seconds != 1)
+                {
+                    seconds--;
+                    beforeStartLabel.Text = seconds.ToString();
+                }
+                else
+                {
+                    beforeRecordTimer.Stop();
+                    recorder.Start(recordingRectangle.OffsetRectangle(1));
+
+                    while (!recorder.IsRecording)
+                    {
+                    }
+
+                    beforeStartLabel.Text = "0";
+                    recordingTimer.Start();
+                    recordingButton.Enabled = true;
+                }
+            };
+            beforeRecordTimer.Start();
         }
 
-        private void CloseButton_Clicked(object sender, System.EventArgs e)
+        private void CloseButton_Clicked(object sender, EventArgs e)
         {
             recorder.Stop();
             Close();
@@ -116,7 +124,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
             UploadingManager.RunUploading(recorder.GetVideo());
         }
 
-        private void RecordingLabelTimer_Elapsed(object sender, System.EventArgs e)
+        private void RecordingLabelTimer_Elapsed(object sender, EventArgs e)
         {
             timerLabel.Text = recordingTimer.Elapsed.ToString(@"hh\:mm\:ss");
             timerLabel.Invalidate();
