@@ -12,7 +12,7 @@ namespace RedShot.Infrastructure.Common
          where TEnum : Enum
     {
         /// <summary>
-        /// Initializes EnumDescription object. 
+        /// Initializes EnumDescription object.
         /// </summary>
         public EnumDescription(TEnum enumValue, string enumDescription)
         {

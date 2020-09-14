@@ -5,12 +5,12 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg.Encoding
     public enum FFmpegVideoCodec
     {
         [Description("H.264 / x264")]
-        libx264,
+        Libx264,
         [Description("H.265 / HEVC")]
-        libx265,
+        Libx265,
         [Description("VP9 (WebM)")]
-        libvpx_vp9,
+        Libvpx_vp9,
         [Description("MPEG-4 / Xvid")]
-        libxvid,
+        Libxvid,
     }
 }

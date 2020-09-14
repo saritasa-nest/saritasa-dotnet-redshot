@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Net;
 using System.Net.Security;
@@ -88,19 +89,18 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         public override IUploadingResponse Upload(IFile file)
         {
             var subFolderPath = account.SubFolderPath;
-
             string path;
+
             if (string.IsNullOrEmpty(fileName))
             {
-                path = UrlHelper.CombineUrl(subFolderPath, Path.GetFileName(file.FilePath));
+                path = UrlHelper.CombineUrl(subFolderPath, $"{file.FileName}{Path.GetExtension(file.FilePath)}");
             }
             else
             {
-                path = UrlHelper.CombineUrl(subFolderPath, $"{file}{Path.GetExtension(file.FilePath)}");
+                path = UrlHelper.CombineUrl(subFolderPath, $"{fileName}{Path.GetExtension(file.FilePath)}");
             }
 
             IsUploading = true;
-
             try
             {
                 if (UploadData(file.GetStream(), path))

@@ -13,7 +13,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
         private readonly FormatConfigurationOption configurationOption;
         private TextBox patternTextBox;
         private Label exampleLabel;
-        private DefaultButton guideButton;
+        private DefaultButton addButton;
         private ContextMenu formatItemsMenu;
 
         /// <summary>
@@ -27,7 +27,9 @@ namespace RedShot.Infrastructure.Formatting.Settings
 
         private void InitializeComponents()
         {
+            formatItemsMenu = GetFormatItemsMenu();
             exampleLabel = new Label();
+            SetFormatExample(configurationOption.Pattern);
 
             patternTextBox = new TextBox()
             {
@@ -35,13 +37,12 @@ namespace RedShot.Infrastructure.Formatting.Settings
                 Text = configurationOption.Pattern
             };
             patternTextBox.TextChanging += PatternTextBoxOnTextChanging;
-            patternTextBox.MouseDown += PatternTextBoxMouseDown;
 
-            guideButton = new DefaultButton("Guide", 60, 25)
+            addButton = new DefaultButton("Add", 60, 25)
             {
-                ToolTip = "Open guide view"
+                ToolTip = "App format item"
             };
-            guideButton.Clicked += GuideButtonOnClicked;
+            addButton.Clicked += AddButtonClicked;
 
             Content = new StackLayout()
             {
@@ -63,7 +64,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
                         Items =
                         {
                             patternTextBox,
-                            guideButton
+                            addButton
                         }
                     },
                     new StackLayout()
@@ -80,33 +81,25 @@ namespace RedShot.Infrastructure.Formatting.Settings
                             exampleLabel
                         }
                     },
+                    FormsHelper.GetVoidBox(20),
+                    new GroupBox()
+                    {
+                        Text = "Guide",
+                        Content = new FormatGuidePanel()
+                    }
                 }
             };
         }
 
-        private void PatternTextBoxMouseDown(object sender, MouseEventArgs e)
+        private void AddButtonClicked(object sender, EventArgs e)
         {
-            var location = new Point(patternTextBox.Location.X + patternTextBox.Width, patternTextBox.Location.Y);
-            GetFormatItemsMenu().Show((Control)sender, location);
-            patternTextBox.Focus();
-        }
-
-        private void GuideButtonOnClicked(object sender, EventArgs e)
-        {
-            using (var guideDialog = new FormatGuideDialog())
-            {
-                guideDialog.ShowModal(this);
-            }
+            var location = new Point(addButton.Location.X + addButton.Width, addButton.Location.Y);
+            formatItemsMenu.Show((Control)sender, location);
         }
 
         private ContextMenu GetFormatItemsMenu()
         {
-            if (formatItemsMenu != null)
-            {
-                return formatItemsMenu;
-            }
-
-            formatItemsMenu = new ContextMenu();
+            var formatItemsMenu = new ContextMenu();
 
             foreach (var formatItem in FormatManager.FormatItems)
             {
@@ -151,28 +144,12 @@ namespace RedShot.Infrastructure.Formatting.Settings
         {
             if (FormatManager.TryFormat(pattern, out var result))
             {
-                exampleLabel.Text = BreakLine(result, 45);
+                exampleLabel.Text = result;
             }
             else
             {
                 exampleLabel.Text = "Invalid pattern";
             }
-        }
-
-        private string BreakLine(string line, int lineSize)
-        {
-            string brokenLine;
-            if (line.Length > lineSize)
-            {
-                brokenLine = line.Substring(0, lineSize) + "\r\n";
-                brokenLine += BreakLine(line.Substring(lineSize, line.Length - lineSize), lineSize);
-            }
-            else
-            {
-                brokenLine = line;
-            }
-
-            return brokenLine;
         }
     }
 }

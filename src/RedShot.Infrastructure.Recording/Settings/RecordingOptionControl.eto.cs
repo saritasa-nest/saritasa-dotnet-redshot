@@ -112,16 +112,16 @@ namespace RedShot.Infrastructure.Recording.Settings
                             new GroupBox()
                             {
                                 Text = "Encoding",
-                                Size = groupBoxSize,
+                                Size = new Size(300, 230),
                                 Content = GetEncodingSelectionControl(),
-                            },
-                            new GroupBox()
-                            {
-                                Text = "Recording devices",
-                                Size = groupBoxSize,
-                                Content = GetDeviceSelectionControl(),
                             }
                         }
+                    },
+                    new GroupBox()
+                    {
+                        Text = "Recording devices",
+                        Size = new Size(300, 250),
+                        Content = GetDeviceSelectionControl()
                     },
                     new StackLayout()
                     {

@@ -141,7 +141,7 @@ namespace RedShot.Recording.Recorders.Windows
             }
             catch (Exception e)
             {
-                logger.Error("An error occurred while FFmpeg was installing.", e);
+                logger.Error(e, "An error occurred while FFmpeg was installing.");
                 MessageBox.Show($"An error occurred while FFmpeg was installing: {e.Message}", MessageBoxButtons.OK, MessageBoxType.Error);
             }
         }

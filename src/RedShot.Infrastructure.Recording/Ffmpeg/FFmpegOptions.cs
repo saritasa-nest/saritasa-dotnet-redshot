@@ -32,9 +32,9 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
         {
             Fps = 30;
             DrawCursor = true;
-            VideoCodec = FFmpegVideoCodec.libx264;
-            AudioCodec = FFmpegAudioCodec.libvoaacenc;
-            X264Preset = FFmpegX264Preset.faster;
+            VideoCodec = FFmpegVideoCodec.Libx264;
+            AudioCodec = FFmpegAudioCodec.Libvoaacenc;
+            X264Preset = FFmpegX264Preset.Faster;
             X264Crf = 23;
             Vp9Crf = 35;
             XviDQscale = 10;
@@ -347,12 +347,12 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             {
                 switch (VideoCodec)
                 {
-                    case FFmpegVideoCodec.libx264:
-                    case FFmpegVideoCodec.libx265:
+                    case FFmpegVideoCodec.Libx264:
+                    case FFmpegVideoCodec.Libx265:
                         return "mp4";
-                    case FFmpegVideoCodec.libvpx_vp9:
+                    case FFmpegVideoCodec.Libvpx_vp9:
                         return "webm";
-                    case FFmpegVideoCodec.libxvid:
+                    case FFmpegVideoCodec.Libxvid:
                         return "avi";
                 }
 

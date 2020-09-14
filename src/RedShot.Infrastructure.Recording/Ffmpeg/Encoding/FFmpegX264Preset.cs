@@ -5,22 +5,22 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg.Encoding
     public enum FFmpegX264Preset
     {
         [Description("Ultra fast")]
-        ultrafast,
+        Ultrafast,
         [Description("Super fast")]
-        superfast,
+        Superfast,
         [Description("Very fast")]
-        veryfast,
+        Veryfast,
         [Description("Faster")]
-        faster,
+        Faster,
         [Description("Fast")]
-        fast,
+        Fast,
         [Description("Medium")]
-        medium,
+        Medium,
         [Description("Slow")]
-        slow,
+        Slow,
         [Description("Slower")]
-        slower,
+        Slower,
         [Description("Very slow")]
-        veryslow
+        Veryslow
     }
 }

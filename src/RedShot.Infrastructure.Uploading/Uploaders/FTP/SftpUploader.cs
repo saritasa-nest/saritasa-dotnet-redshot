@@ -40,12 +40,12 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         /// <inheritdoc cref="BaseUploader"/>.
         public override IUploadingResponse Upload(IFile file)
         {
-            string subFolderPath = account.SubFolderPath;
-
+            var subFolderPath = account.SubFolderPath;
             string path;
+
             if (string.IsNullOrEmpty(fileName))
             {
-                path = UrlHelper.CombineUrl(subFolderPath, Path.GetFileName(file.FilePath));
+                path = UrlHelper.CombineUrl(subFolderPath, $"{file.FileName}{Path.GetExtension(file.FilePath)}");
             }
             else
             {

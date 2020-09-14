@@ -61,6 +61,9 @@ namespace RedShot.Infrastructure.Common.Forms
             return new Cursor(scaled, hotSpot);
         }
 
+        /// <summary>
+        /// Get check box stack.
+        /// </summary>
         public static StackLayout GetCheckBoxStack(CheckBox checkBox, string text, int padding = 5)
         {
             return new StackLayout()

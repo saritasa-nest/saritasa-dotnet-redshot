@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using Eto.Forms;
 using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Recording.Ffmpeg;
 using RedShot.Infrastructure.Recording.Ffmpeg.Encoding;
-using RedShot.Infrastructure.Recording;
-using RedShot.Infrastructure.Recording.Validation;
 using RedShot.Recording.Settings.CodecsOptions.AudioOptions;
 using RedShot.Recording.Settings.CodecsOptions.VideoOptions;
 
@@ -20,7 +17,6 @@ namespace RedShot.Infrastructure.Recording.Settings
     /// </summary>
     internal partial class RecordingOptionControl : Panel
     {
-        private readonly FFmpegConfiguration ffmpegConfiguration;
         private readonly IRecordingDevices recordingDevices;
         private FFmpegOptions ffmpegOptions;
         private ComboBox videoDevices;
@@ -40,10 +36,9 @@ namespace RedShot.Infrastructure.Recording.Settings
         /// <summary>
         /// Initializes recording option dialog.
         /// </summary>
-        public RecordingOptionControl(IRecordingDevices recordingDevices, FFmpegConfiguration ffmpegConfiguration)
+        public RecordingOptionControl(IRecordingDevices recordingDevices, FFmpegOptions ffmpegOptions)
         {
-            this.ffmpegConfiguration = ffmpegConfiguration;
-            ffmpegOptions = ffmpegConfiguration.Options;
+            this.ffmpegOptions = ffmpegOptions;
             this.recordingDevices = recordingDevices;
 
             InitializeComponents();
@@ -92,7 +87,7 @@ namespace RedShot.Infrastructure.Recording.Settings
                 {
                     if (l == null)
                     {
-                        return FFmpegAudioCodec.libvoaacenc;
+                        return FFmpegAudioCodec.Libvoaacenc;
                     }
                     else
                     {
@@ -110,7 +105,7 @@ namespace RedShot.Infrastructure.Recording.Settings
                 {
                     if (l == null)
                     {
-                        return FFmpegVideoCodec.libx264;
+                        return FFmpegVideoCodec.Libx264;
                     }
                     else
                     {
@@ -128,22 +123,22 @@ namespace RedShot.Infrastructure.Recording.Settings
         {
             switch (ffmpegOptions.VideoCodec)
             {
-                case FFmpegVideoCodec.libx264:
-                case FFmpegVideoCodec.libx265:
+                case FFmpegVideoCodec.Libx264:
+                case FFmpegVideoCodec.Libx265:
                     using (var options = new H264H265CodecOptions(ffmpegOptions))
                     {
                         options.ShowModal(this);
                     }
                     break;
 
-                case FFmpegVideoCodec.libvpx_vp9:
+                case FFmpegVideoCodec.Libvpx_vp9:
                     using (var options = new Vp9CodecOptions(ffmpegOptions))
                     {
                         options.ShowModal(this);
                     }
                     break;
 
-                case FFmpegVideoCodec.libxvid:
+                case FFmpegVideoCodec.Libxvid:
                     using (var options = new MpegCodecOptions(ffmpegOptions))
                     {
                         options.ShowModal(this);
@@ -156,28 +151,28 @@ namespace RedShot.Infrastructure.Recording.Settings
         {
             switch (ffmpegOptions.AudioCodec)
             {
-                case FFmpegAudioCodec.libvoaacenc:
+                case FFmpegAudioCodec.Libvoaacenc:
                     using (var options = new AacOptions(ffmpegOptions))
                     {
                         options.ShowModal(this);
                     }
                     break;
 
-                case FFmpegAudioCodec.libopus:
+                case FFmpegAudioCodec.Libopus:
                     using (var options = new OpusOptions(ffmpegOptions))
                     {
                         options.ShowModal(this);
                     }
                     break;
 
-                case FFmpegAudioCodec.libvorbis:
+                case FFmpegAudioCodec.Libvorbis:
                     using (var options = new VorbisOptions(ffmpegOptions))
                     {
                         options.ShowModal(this);
                     }
                     break;
 
-                case FFmpegAudioCodec.libmp3lame:
+                case FFmpegAudioCodec.Libmp3lame:
                     using (var options = new Mp3Options(ffmpegOptions))
                     {
                         options.ShowModal(this);

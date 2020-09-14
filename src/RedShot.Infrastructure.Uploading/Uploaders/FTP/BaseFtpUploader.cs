@@ -1,6 +1,8 @@
 ﻿using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
+using RedShot.Infrastructure.Common;
 using System;
+using System.IO;
 
 namespace RedShot.Infrastructure.Uploaders.Ftp
 {

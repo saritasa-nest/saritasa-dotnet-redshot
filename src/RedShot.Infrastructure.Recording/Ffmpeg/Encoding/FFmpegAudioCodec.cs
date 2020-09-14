@@ -5,12 +5,12 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg.Encoding
     public enum FFmpegAudioCodec
     {
         [Description("AAC")]
-        libvoaacenc,
+        Libvoaacenc,
         [Description("Opus")]
-        libopus,
+        Libopus,
         [Description("Vorbis")]
-        libvorbis,
+        Libvorbis,
         [Description("MP3")]
-        libmp3lame
+        Libmp3lame
     }
 }

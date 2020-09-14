@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using Eto.Drawing;
 using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
@@ -183,7 +182,6 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 
                 if (screen.Bounds != selectionScreen.Bounds)
                 {
-                    selectionScreen = screen;
                     screenSelecting = false;
                     Close();
                     RunNew(this);

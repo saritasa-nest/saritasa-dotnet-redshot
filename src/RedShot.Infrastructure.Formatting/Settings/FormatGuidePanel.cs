@@ -11,7 +11,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
     /// Format guide dialog.
     /// Guides how an user can format file link.
     /// </summary>
-    public class FormatGuideDialog : Dialog
+    public class FormatGuidePanel : Panel
     {
         private IEnumerable<IFormatItem> formatItems;
         private ListBox formatsListBox;
@@ -22,9 +22,8 @@ namespace RedShot.Infrastructure.Formatting.Settings
         /// <summary>
         /// Initializes format guide dialog.
         /// </summary>
-        public FormatGuideDialog()
+        public FormatGuidePanel()
         {
-            Title = "Format guide";
             formatItems = FormatManager.FormatItems;
             InitializeComponents();
         }

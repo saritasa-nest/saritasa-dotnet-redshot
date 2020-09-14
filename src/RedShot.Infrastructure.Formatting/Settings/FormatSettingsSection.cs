@@ -19,7 +19,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
         }
 
         /// <inheritdoc />
-        public string Name => "Format link";
+        public string Name => "Format name";
 
         /// <inheritdoc />
         public Control GetControl()

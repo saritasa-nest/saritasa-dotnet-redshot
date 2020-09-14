@@ -31,6 +31,24 @@ namespace RedShot.Infrastructure.Settings.Views
             MinimumSize = new Size(400, 400);
 
             InitializeComponents();
+            this.Closing += SettingsView_Closing;
+        }
+
+        private void SettingsView_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var dialog = new YesNoDialog()
+            {
+                Message = "Do you want to close the settings without saving it?",
+                Size = new Size(400, 200)
+            };
+
+            using (dialog)
+            {
+                if (dialog.ShowModal() != DialogResult.Yes)
+                {
+                    e.Cancel = true;
+                }
+            }
         }
 
         private void InitializeComponents()

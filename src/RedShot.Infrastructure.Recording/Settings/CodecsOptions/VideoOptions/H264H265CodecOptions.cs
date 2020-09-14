@@ -85,7 +85,7 @@ namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
                 {
                     if (l == null)
                     {
-                        return FFmpegX264Preset.medium;
+                        return FFmpegX264Preset.Medium;
                     }
                     else
                     {

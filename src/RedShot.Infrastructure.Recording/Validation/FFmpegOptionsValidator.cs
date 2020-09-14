@@ -17,16 +17,16 @@ namespace RedShot.Infrastructure.Recording.Validation
         {
             switch (options.VideoCodec)
             {
-                case FFmpegVideoCodec.libx264:
-                case FFmpegVideoCodec.libxvid:
-                    if (options.AudioCodec == FFmpegAudioCodec.libopus || options.AudioCodec == FFmpegAudioCodec.libvorbis)
+                case FFmpegVideoCodec.Libx264:
+                case FFmpegVideoCodec.Libxvid:
+                    if (options.AudioCodec == FFmpegAudioCodec.Libopus || options.AudioCodec == FFmpegAudioCodec.Libvorbis)
                     {
                         return GetIncompatibleCodecResult(options);
                     }
                     break;
 
-                case FFmpegVideoCodec.libvpx_vp9:
-                    if (options.AudioCodec == FFmpegAudioCodec.libmp3lame || options.AudioCodec == FFmpegAudioCodec.libvoaacenc)
+                case FFmpegVideoCodec.Libvpx_vp9:
+                    if (options.AudioCodec == FFmpegAudioCodec.Libmp3lame || options.AudioCodec == FFmpegAudioCodec.Libvoaacenc)
                     {
                         return GetIncompatibleCodecResult(options);
                     }

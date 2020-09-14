@@ -32,7 +32,7 @@ namespace RedShot.Infrastructure.Recording.Settings
             {
                 if (RecordingManager.CheckInstallFfmpeg())
                 {
-                    recordingOptionControl = new RecordingOptionControl(RecordingManager.RecordingService.GetRecordingDevices(), ffmpegConfiguration);
+                    recordingOptionControl = new RecordingOptionControl(RecordingManager.RecordingService.GetRecordingDevices(), ffmpegConfiguration.Options);
                 }
             }
 

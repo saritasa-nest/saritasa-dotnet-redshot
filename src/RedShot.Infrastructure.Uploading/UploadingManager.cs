@@ -95,7 +95,7 @@ namespace RedShot.Infrastructure
             }
             catch (Exception ex)
             {
-                var message = $"An error was occurred while {file.FileType} was uploading.\n Exception: ";
+                var message = $"An error was occurred while {file.FileType} was uploading.\nError: ";
 
                 if (ex.InnerException != null)
                 {
