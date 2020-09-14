@@ -32,26 +32,34 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         {
             using (var form = new FtpUploaderForm())
             {
-                if (form.ShowModal() == Eto.Forms.DialogResult.Ok)
+                if (form.ShowModal() == DialogResult.Ok)
                 {
                     account = form.SelectedAccount;
                     var name = form.FileName;
 
                     if (account != null)
                     {
-                        if (account.Protocol == FtpProtocol.FTP || account.Protocol == FtpProtocol.FTPS)
-                        {
-                            return new FtpUploader(account, name);
-                        }
-                        else if (account.Protocol == FtpProtocol.SFTP)
-                        {
-                            return new SftpUploader(account, name);
-                        }
+                        return GetFtpUploader(account, name);
                     }
                 }
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Get FTP uploader.
+        /// </summary>
+        internal BaseFtpUploader GetFtpUploader(FtpAccount account, string fileName)
+        {
+            if (account.Protocol == FtpProtocol.FTP || account.Protocol == FtpProtocol.FTPS)
+            {
+                return new FtpUploader(account, fileName);
+            }
+            else
+            {
+                return new SftpUploader(account, fileName);
+            }
         }
 
         /// <inheritdoc />

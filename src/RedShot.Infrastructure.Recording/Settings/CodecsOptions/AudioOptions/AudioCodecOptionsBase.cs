@@ -1,7 +1,7 @@
 ﻿using System;
 using Eto.Forms;
 using RedShot.Infrastructure.Common.Forms;
-using RedShot.Infrastructure.DataTransfer.Ffmpeg;
+using RedShot.Infrastructure.Recording.Ffmpeg;
 
 namespace RedShot.Recording.Settings.CodecsOptions.AudioOptions
 {

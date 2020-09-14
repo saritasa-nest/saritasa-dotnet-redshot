@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using RedShot.Infrastructure.DataTransfer.Ffmpeg.Devices;
-using RedShot.Infrastructure.DataTransfer.Ffmpeg.Encoding;
+using RedShot.Infrastructure.Recording.Ffmpeg.Devices;
+using RedShot.Infrastructure.Recording.Ffmpeg.Encoding;
 
-namespace RedShot.Infrastructure.DataTransfer.Ffmpeg
+namespace RedShot.Infrastructure.Recording.Ffmpeg
 {
     public class FFmpegOptions : INotifyPropertyChanged, ICloneable
     {

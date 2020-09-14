@@ -17,7 +17,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
     /// <summary>
     /// FTP/FTPS uploader.
     /// </summary>
-    internal sealed class FtpUploader : BaseUploader, IDisposable
+    internal sealed class FtpUploader : BaseFtpUploader, IDisposable
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly FtpAccount account;
@@ -96,7 +96,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
             }
             else
             {
-                path = UrlHelper.CombineUrl(subFolderPath, $"{fileName}{Path.GetExtension(file.FilePath)}");
+                path = UrlHelper.CombineUrl(subFolderPath, $"{file}{Path.GetExtension(file.FilePath)}");
             }
 
             IsUploading = true;
@@ -146,7 +146,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         /// <summary>
         /// Connects to destination FTP server.
         /// </summary>
-        private bool Connect()
+        protected override bool Connect()
         {
             if (!client.IsConnected)
             {

@@ -14,7 +14,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
     /// <summary>
     /// SFTP uploader.
     /// </summary>
-    internal sealed class SftpUploader : BaseUploader, IDisposable
+    internal sealed class SftpUploader : BaseFtpUploader, IDisposable
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly string fileName;
@@ -95,7 +95,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         /// <summary>
         /// Connects to destination FTP server.
         /// </summary>
-        private bool Connect()
+        protected override bool Connect()
         {
             if (client == null)
             {

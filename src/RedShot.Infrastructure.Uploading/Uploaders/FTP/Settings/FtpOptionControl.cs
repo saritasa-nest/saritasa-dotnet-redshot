@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Eto.Forms;
 using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Common.Forms;
+using RedShot.Infrastructure.Common.Notifying;
 using RedShot.Infrastructure.Uploaders.Ftp.Models;
 
 namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
@@ -13,11 +15,12 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
     /// </summary>
     internal partial class FtpOptionControl : Panel
     {
+        private FtpAccount SelectedAccount => accounts.SelectedValue as FtpAccount;
+
         private CheckBox addExtensionCheckBox;
         private Label previewLinkLabel;
         private ComboBox browserTypeComboBox;
         private TextBox homePathTextBox;
-
         private Button addButton;
         private Button delButton;
         private Button copyButton;
@@ -40,6 +43,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
         private Control sftpBoxes;
         private Control accountFields;
         private ObservableCollection<FtpAccount> bindingList;
+        private DefaultButton testButton;
 
         private readonly List<FtpAccount> ftpAccounts;
 
@@ -59,6 +63,25 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
             bindingList.CollectionChanged += BindingList_CollectionChanged;
             accounts.Bind(a => a.DataStore, bindingList, b => b);
             accounts.SelectedValueChanged += FtpOptionControlChanged;
+        }
+
+        private void TestButtonClicked(object sender, EventArgs e)
+        {
+            if (SelectedAccount != null)
+            {
+                var ftpManager = new FtpUploadingService();
+                var uploader = ftpManager.GetFtpUploader(SelectedAccount, string.Empty);
+                var result = uploader.TestConnection();
+
+                if (result)
+                {
+                    NotifyHelper.Notify("Connection to the FTP server was succeed!", "RedShot", NotifyStatus.Success);
+                }
+                else
+                {
+                    NotifyHelper.Notify("Connection to the FTP server was failed!", "RedShot", NotifyStatus.Failed);
+                }
+            }
         }
 
         private void UpdatePreview()

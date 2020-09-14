@@ -11,7 +11,7 @@ using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Common.Notifying;
 using RedShot.Infrastructure.Configuration;
-using RedShot.Infrastructure.DataTransfer.Ffmpeg.Devices;
+using RedShot.Infrastructure.Recording.Ffmpeg.Devices;
 using RedShot.Infrastructure.Recording;
 
 namespace RedShot.Recording.Recorders.Windows

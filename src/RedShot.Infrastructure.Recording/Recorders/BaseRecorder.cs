@@ -3,7 +3,7 @@ using System.IO;
 using Eto.Drawing;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Recording;
-using RedShot.Infrastructure.DataTransfer.Ffmpeg;
+using RedShot.Infrastructure.Recording.Ffmpeg;
 using RedShot.Infrastructure.Formatting;
 
 namespace RedShot.Infrastructure.Recording.Recorders

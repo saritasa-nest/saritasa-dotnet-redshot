@@ -38,6 +38,9 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
                 Size = defaultSize
             };
 
+            testButton = new DefaultButton("Test connection", 100, 25);
+            testButton.Clicked += TestButtonClicked;
+
             name = new TextBox()
             {
                 Size = defaultSize,
@@ -206,6 +209,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
             return new StackLayout
             {
                 Orientation = Orientation.Vertical,
+                HorizontalContentAlignment = HorizontalAlignment.Left,
                 Spacing = 5,
                 Items =
                 {
@@ -216,7 +220,8 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
                     FormsHelper.GetBaseStack("Password", password),
                     FormsHelper.GetBaseStack("IsActive", isActive),
                     FormsHelper.GetBaseStack("SubFolderPath", subFolderPath),
-                    GetLinkBoxes()
+                    GetLinkBoxes(),
+                    testButton
                 }
             };
         }

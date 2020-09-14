@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 using Eto.Drawing;
-using RedShot.Infrastructure.DataTransfer.Ffmpeg;
+using RedShot.Infrastructure.Recording.Ffmpeg;
 using RedShot.Infrastructure.Formatting;
 using RedShot.Infrastructure.Recording;
 using RedShot.Infrastructure.Recording.Recorders;

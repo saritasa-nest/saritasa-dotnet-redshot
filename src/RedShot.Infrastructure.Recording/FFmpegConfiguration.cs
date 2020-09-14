@@ -1,6 +1,6 @@
 ﻿using System;
 using RedShot.Infrastructure.Abstractions;
-using RedShot.Infrastructure.DataTransfer.Ffmpeg;
+using RedShot.Infrastructure.Recording.Ffmpeg;
 
 namespace RedShot.Infrastructure.Recording
 {

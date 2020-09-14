@@ -4,8 +4,8 @@ using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
-using RedShot.Infrastructure.DataTransfer.Ffmpeg;
-using RedShot.Infrastructure.DataTransfer.Ffmpeg.Encoding;
+using RedShot.Infrastructure.Recording.Ffmpeg;
+using RedShot.Infrastructure.Recording.Ffmpeg.Encoding;
 
 namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
 {

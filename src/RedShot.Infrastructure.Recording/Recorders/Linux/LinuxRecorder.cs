@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using Eto.Drawing;
-using RedShot.Infrastructure.DataTransfer.Ffmpeg;
+using RedShot.Infrastructure.Recording.Ffmpeg;
 using RedShot.Infrastructure.Recording.Recorders;
 
 namespace RedShot.Recording.Recorders.Linux

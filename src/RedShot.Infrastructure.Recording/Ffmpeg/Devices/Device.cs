@@ -1,6 +1,6 @@
 ﻿using RedShot.Infrastructure.Abstractions.Recording;
 
-namespace RedShot.Infrastructure.DataTransfer.Ffmpeg.Devices
+namespace RedShot.Infrastructure.Recording.Ffmpeg.Devices
 {
     public class Device : IRecordingDevice
     {

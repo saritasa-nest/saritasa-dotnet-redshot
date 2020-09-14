@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using RedShot.Infrastructure.Common;
-using RedShot.Infrastructure.DataTransfer.Ffmpeg;
-using RedShot.Infrastructure.DataTransfer.Ffmpeg.Encoding;
+﻿using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Recording.Ffmpeg;
+using RedShot.Infrastructure.Recording.Ffmpeg.Encoding;
 
 namespace RedShot.Infrastructure.Recording.Validation
 {

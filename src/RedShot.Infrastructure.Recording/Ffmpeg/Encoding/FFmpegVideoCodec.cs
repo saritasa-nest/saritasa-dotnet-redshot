@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace RedShot.Infrastructure.DataTransfer.Ffmpeg.Encoding
+namespace RedShot.Infrastructure.Recording.Ffmpeg.Encoding
 {
     public enum FFmpegVideoCodec
     {

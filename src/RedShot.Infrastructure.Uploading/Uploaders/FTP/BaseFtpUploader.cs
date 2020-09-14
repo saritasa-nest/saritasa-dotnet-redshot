@@ -2,12 +2,12 @@
 using RedShot.Infrastructure.Abstractions.Uploading;
 using System;
 
-namespace RedShot.Infrastructure.Basics
+namespace RedShot.Infrastructure.Uploaders.Ftp
 {
     /// <summary>
     /// Base upload functions.
     /// </summary>
-    internal abstract class BaseUploader : IUploader
+    internal abstract class BaseFtpUploader : IUploader
     {
         /// <summary>
         /// Uploading flag.
@@ -25,13 +25,33 @@ namespace RedShot.Infrastructure.Basics
         public bool StopUploadRequested { get; protected set; }
 
         /// <summary>
-        /// Stops upload.
+        /// Stop upload.
         /// </summary>
         public abstract void StopUpload();
 
         /// <summary>
-        /// Uploads file to destination resource.
+        /// Upload file to destination resource.
         /// </summary>
         public abstract IUploadingResponse Upload(IFile file);
+
+        /// <summary>
+        /// Connect to FTP server.
+        /// </summary>
+        protected abstract bool Connect();
+
+        /// <summary>
+        /// Test connection.
+        /// </summary>
+        public bool TestConnection()
+        {
+            try
+            {
+                return Connect();
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }
