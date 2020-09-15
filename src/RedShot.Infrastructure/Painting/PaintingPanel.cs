@@ -159,6 +159,7 @@ namespace RedShot.Infrastructure.Painting
                 VerticalContentAlignment = VerticalAlignment.Center,
                 HorizontalContentAlignment = HorizontalAlignment.Right,
                 Orientation = Orientation.Horizontal,
+                Padding = new Padding(10, 0),
                 Spacing = 10,
                 Items =
                 {

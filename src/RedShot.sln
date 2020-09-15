@@ -44,6 +44,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Platforms.Linux", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Infrastructure.Formatting", "RedShot.Infrastructure.Formatting\RedShot.Infrastructure.Formatting.csproj", "{4568177C-8DC9-4309-8898-73B3D537B408}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedShot.Shortcut", "RedShot.Shortcut\RedShot.Shortcut.csproj", "{1ACBACD1-3E44-4551-9176-F9756A684935}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,6 +116,10 @@ Global
 		{4568177C-8DC9-4309-8898-73B3D537B408}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4568177C-8DC9-4309-8898-73B3D537B408}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4568177C-8DC9-4309-8898-73B3D537B408}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1ACBACD1-3E44-4551-9176-F9756A684935}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1ACBACD1-3E44-4551-9176-F9756A684935}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1ACBACD1-3E44-4551-9176-F9756A684935}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1ACBACD1-3E44-4551-9176-F9756A684935}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

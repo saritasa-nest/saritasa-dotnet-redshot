@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using Eto.Drawing;
-using Eto.Forms;
-using RedShot.Infrastructure.Common.Forms.SelectionForm;
 using RedShot.Infrastructure.Formatting;
 using RedShot.Infrastructure.Painting;
 using RedShot.Infrastructure.Screenshooting;
@@ -54,7 +52,6 @@ namespace RedShot.Infrastructure
             var path = Path.Combine(imagesFolder, $"{baseName}.png");
 
             image.Save(path, ImageFormat.Png);
-
             ApplicationManager.RunUploadView(new ImageFile(image, path, imageName));
         }
     }

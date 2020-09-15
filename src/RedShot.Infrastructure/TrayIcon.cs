@@ -31,12 +31,14 @@ namespace RedShot.Infrastructure
             {
                 Text = "Record",
                 ToolTip = "Opens view for video recording",
+                Shortcut = Keys.Control | Keys.F3,
                 Command = new Command((e, o) => ApplicationManager.RunRecording())
             });
             menu.Items.Add(new ButtonMenuItem()
             {
                 Text = "Capture",
                 ToolTip = "Opens view for screen shooting",
+                Shortcut = Keys.Control | Keys.F2,
                 Command = new Command((e, o) => ApplicationManager.RunScreenShooting())
             });
 
@@ -60,7 +62,7 @@ namespace RedShot.Infrastructure
             menu.Items.Add(new ButtonMenuItem()
             {
                 Text = "Exit",
-                Shortcut = Application.Instance.AlternateModifier | Keys.F4,
+                Shortcut = Keys.Control | Keys.F4,
                 Command = new Command((e, o) => Exit())
             });
 

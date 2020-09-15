@@ -37,11 +37,7 @@ namespace RedShot.Infrastructure
         /// </summary>
         public static void RunScreenShooting()
         {
-            trayIcon.Tray.Visible = false;
-
             ScreenshotManager.RunScreenShotting();
-
-            trayIcon.Tray.Visible = true;
         }
 
         /// <summary>

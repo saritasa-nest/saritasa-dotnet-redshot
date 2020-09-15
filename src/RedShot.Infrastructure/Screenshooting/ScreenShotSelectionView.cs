@@ -39,12 +39,9 @@ namespace RedShot.Infrastructure.Screenshooting
         /// </summary>
         protected override void FinishSelection()
         {
-            if (captured)
-            {
-                var screenshot = GetScreenShot();
-                ScreenshotManager.RunPaintingView(screenshot);
-                Close();
-            }
+            var screenshot = GetScreenShot();
+            ScreenshotManager.RunPaintingView(screenshot);
+            Close();
         }
     }
 }

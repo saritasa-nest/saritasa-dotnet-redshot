@@ -816,7 +816,13 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             return rect;
         }
 
-        protected abstract void FinishSelection();
+        protected virtual void FinishSelection()
+        {
+            if (!(captured || capturing))
+            {
+                return;
+            }
+        }
 
         /// <summary>
         /// Disposes UI elements.
