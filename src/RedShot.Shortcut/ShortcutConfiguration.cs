@@ -9,7 +9,7 @@ namespace RedShot.Shortcut
     {
         public string UniqueName => "Shortcut configuration";
 
-
+        public List<ShortCutMap> ShortCutMaps { get; } = new List<ShortCutMap>();
 
         public object Clone()
         {

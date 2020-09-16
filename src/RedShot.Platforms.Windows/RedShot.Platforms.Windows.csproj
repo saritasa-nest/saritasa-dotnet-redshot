@@ -1,17 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <CodeAnalysisRuleSet>../../tools/Saritasa.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>NU1701;$(NoWarn)</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Eto.Forms" Version="2.5.5" />
     <PackageReference Include="Eto.Platform.Windows" Version="2.5.5" />
     <PackageReference Include="NLog" Version="4.7.4" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Shortcut" Version="2.0.0-beta" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,7 @@
 ﻿using System;
 using Eto.Drawing;
 using Eto.Forms;
+using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Painting.PaintingActions.UserInputActions;
 
@@ -28,6 +29,12 @@ namespace RedShot.Infrastructure.Painting.PaintingActions.TextInput
             Title = "Text input dialog";
             InitializeComponents();
             this.Closed += OnClosed;
+            this.Shown += TextInputView_Shown;
+        }
+
+        private void TextInputView_Shown(object sender, EventArgs e)
+        {
+            Location = ScreenHelper.GetCenterLocation(Size);
         }
 
         private void OnClosed(object sender, EventArgs e)

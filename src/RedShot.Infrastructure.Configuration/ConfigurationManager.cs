@@ -47,7 +47,7 @@ namespace RedShot.Infrastructure.Configuration
             }
             else
             {
-                throw new KeyNotFoundException($"{type.Name} section isn't defined in RedShot.Infrastructure.DataTransfer project. Please, do it.");
+                throw new KeyNotFoundException($"{type.Name} section isn't defined. Please, do it.");
             }
         }
 
