@@ -1,16 +1,23 @@
-﻿using RedShot.Infrastructure.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using RedShot.Infrastructure.Abstractions;
+using RedShot.Shortcut.Mapping;
 
 namespace RedShot.Shortcut
 {
+    /// <summary>
+    /// Shortcut configuration.
+    /// </summary>
     public class ShortcutConfiguration : IConfigurationOption
     {
+        /// <inheritdoc/>
         public string UniqueName => "Shortcut configuration";
 
-        public List<ShortCutMap> ShortCutMaps { get; } = new List<ShortCutMap>();
+        /// <summary>
+        /// Shortcut maps.
+        /// </summary>
+        public List<ShortcutMap> ShortCutMaps { get; } = new List<ShortcutMap>();
 
+        /// <inheritdoc/>
         public object Clone()
         {
             return this.MemberwiseClone();

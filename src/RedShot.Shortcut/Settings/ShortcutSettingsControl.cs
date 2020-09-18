@@ -1,14 +1,21 @@
 ﻿using Eto.Drawing;
 using Eto.Forms;
-using RedShot.Shortcuts;
 using System.Collections.Generic;
+using RedShot.Shortcut.Shortcuts;
+using RedShot.Infrastructure.Common.Forms;
 
 namespace RedShot.Shortcut.Settings
 {
+    /// <summary>
+    /// Shortcut settings control.
+    /// </summary>
     internal class ShortcutSettingsControl : Panel
     {
-        List<IShortcut> shortcuts;
+        private readonly List<IShortcut> shortcuts;
 
+        /// <summary>
+        /// Create the control.
+        /// </summary>
         public ShortcutSettingsControl(List<IShortcut> shortcuts)
         {
             this.shortcuts = shortcuts;
@@ -19,7 +26,7 @@ namespace RedShot.Shortcut.Settings
         {
             var stackLayout = new StackLayout()
             {
-                Padding = 50,
+                Padding = 30,
                 Spacing = 15
             };
 
@@ -31,28 +38,15 @@ namespace RedShot.Shortcut.Settings
         {
             var shortcutTextBox = new ShortcutTextBox()
             {
-                Size = new Size(200, 22)
+                Size = new Size(200, 22),
+                Keys = shortcut.Keys
             };
             shortcutTextBox.TextChanging += (o, e) =>
             {
                 shortcut.Keys = shortcutTextBox.Keys;
             };
 
-            return new StackLayout()
-            {
-                Orientation = Orientation.Horizontal,
-                VerticalContentAlignment = VerticalAlignment.Center,
-                Padding = 10,
-                Spacing = 10,
-                Items =
-                {
-                    new Label()
-                    {
-                        Text = shortcut.Name
-                    },
-                    shortcutTextBox
-                }
-            };
+            return FormsHelper.GetBaseStack(shortcut.Name, shortcutTextBox);
         }
     }
 }

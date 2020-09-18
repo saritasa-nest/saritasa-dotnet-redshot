@@ -1,18 +1,20 @@
 ﻿using Eto.Forms;
 using RedShot.Infrastructure;
-using RedShot.Shortcuts;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RedShot.Shortcut.Shortcuts
 {
+    /// <summary>
+    /// Record shortcut.
+    /// </summary>
     internal class RecordShortcut : IShortcut
     {
+        /// <inheritdoc/>
         public string Name => "Record video";
 
+        /// <inheritdoc/>
         public Keys Keys { get; set; }
 
+        /// <inheritdoc/>
         public void OnPressedAction()
         {
             ApplicationManager.RunRecording();

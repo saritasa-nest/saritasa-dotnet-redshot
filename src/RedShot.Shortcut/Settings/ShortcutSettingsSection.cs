@@ -1,42 +1,51 @@
-﻿using Eto.Forms;
-using RedShot.Infrastructure.Settings.Sections;
-using RedShot.Shortcuts;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Eto.Forms;
+using RedShot.Infrastructure.Settings.Sections;
+using RedShot.Shortcut.Mapping;
+using RedShot.Shortcut.Shortcuts;
 
 namespace RedShot.Shortcut.Settings
 {
+    /// <summary>
+    /// Shortcut settings section.
+    /// </summary>
     public class ShortcutSettingsSection : ISettingsSection
     {
+        private readonly List<IShortcut> shortcuts;
+
+        /// <inheritdoc/>
+        public string Name => "Shortcuts";
+
+        /// <summary>
+        /// Create the setting section.
+        /// </summary>
         public ShortcutSettingsSection()
         {
             shortcuts = ShortcutManager.GetMappedShortcuts().ToList();
         }
 
-        public string Name => "Shortcuts";
-
-        private List<IShortcut> shortcuts;
-
+        /// <inheritdoc/>
         public Control GetControl()
         {
             var control = new ShortcutSettingsControl(shortcuts);
             control.Load += (o, e) =>
             {
-                ShortcutManager.UnbindShortcuts(shortcuts);
+                ShortcutManager.UnbindShortcuts();
             };
             control.UnLoad += (o, e) =>
             {
-                ShortcutManager.BindShortcuts(shortcuts);
+                ShortcutManager.BindShortcuts();
             };
 
-            return new ShortcutSettingsControl(shortcuts);
+            return control;
         }
 
+        /// <inheritdoc/>
         public void Save()
         {
-            ShortcutManager.BindShortcuts(shortcuts);
+            var shortcutMaps = ShortcutMappingHelper.GetShortcutMaps(shortcuts);
+            ShortcutManager.SaveShortcutMapsInConfiguration(shortcutMaps);
         }
     }
 }

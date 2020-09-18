@@ -1,13 +1,8 @@
-﻿using Eto.Forms;
+﻿using System;
 using Eto.WinForms;
-using Shortcut;
-using Shortcut.Forms;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
+using RedShot.Platforms.Windows.Shortcuts.HotkeyClasses;
 
-namespace RedShot.Platforms.Windows
+namespace RedShot.Platforms.Windows.Shortcuts
 {
     public static class WindowsShortcutBinder
     {
@@ -22,6 +17,7 @@ namespace RedShot.Platforms.Windows
         public static void UnbindShortcuts(Eto.Forms.Keys keys)
         {
             var hotkey = GetHotkey(keys);
+
             if (hotkeyBinder.IsHotkeyAlreadyBound(hotkey))
             {
                 hotkeyBinder.Unbind(hotkey);

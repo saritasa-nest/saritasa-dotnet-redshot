@@ -20,27 +20,28 @@ namespace RedShot.Application
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        /// Runs the app.
+        /// Runs the application.
         /// </summary>
         [STAThread]
         public static void Main(string[] args)
         {
-            logger.Debug("The app was started!");
+            logger.Debug("The RedShot application was started!");
 
             AppInitializer.Initialize();
 
             var app = new Eto.Forms.Application(Eto.Platform.Detect);
             app.UnhandledException += InstanceOnUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += DomainUnhandledException;
-
+            AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
             AddControl();
             AddStyles();
+            Shortcut.ShortcutManager.BindShortcuts();
             app.Run(ApplicationManager.GetTrayApp());
-            AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
         }
 
         private static void CurrentDomain_ProcessExit(object sender, EventArgs e)
         {
+            Shortcut.ShortcutManager.UnbindShortcuts();
             ConfigurationManager.Save();
         }
 

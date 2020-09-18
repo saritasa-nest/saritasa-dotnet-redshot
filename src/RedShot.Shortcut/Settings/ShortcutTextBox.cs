@@ -2,10 +2,16 @@
 
 namespace RedShot.Shortcut.Settings
 {
+    /// <summary>
+    /// Shortcut textbox.
+    /// </summary>
     internal class ShortcutTextBox : TextBox
     {
         private Keys keys;
 
+        /// <summary>
+        /// Hotkeys.
+        /// </summary>
         public Keys Keys
         {
             get { return keys; }
@@ -21,11 +27,24 @@ namespace RedShot.Shortcut.Settings
             }
         }
 
+        /// <summary>
+        /// Create the text box.
+        /// </summary>
         public ShortcutTextBox()
         {
             Text = "None";
         }
 
+        /// <summary>
+        /// Reset the value of the text box.
+        /// </summary>
+        public void Reset()
+        {
+            Keys = Keys.None;
+            Text = "None";
+        }
+
+        /// <inheritdoc/>
         protected override void OnKeyDown(KeyEventArgs e)
         {
             e.Handled = true;
@@ -41,6 +60,7 @@ namespace RedShot.Shortcut.Settings
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnKeyUp(KeyEventArgs e)
         {
             e.Handled = true;
@@ -49,12 +69,6 @@ namespace RedShot.Shortcut.Settings
         private void RenderText()
         {
             Text = Keys.ToShortcutString();
-        }
-
-        public void Reset()
-        {
-            Keys = Keys.None;
-            Text = "None";
         }
     }
 }
