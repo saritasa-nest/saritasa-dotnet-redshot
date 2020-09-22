@@ -6,9 +6,9 @@ using Eto.Forms;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Common.Notifying;
-using RedShot.Infrastructure.Uploaders.Ftp.Models;
+using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 
-namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
+namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 {
     /// <summary>
     /// FTP option dialog.
@@ -70,7 +70,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
             if (SelectedAccount != null)
             {
                 var ftpManager = new FtpUploadingService();
-                var uploader = ftpManager.GetFtpUploader(SelectedAccount, string.Empty);
+                var uploader = ftpManager.GetFtpUploader(SelectedAccount);
                 var result = uploader.TestConnection();
 
                 if (result)

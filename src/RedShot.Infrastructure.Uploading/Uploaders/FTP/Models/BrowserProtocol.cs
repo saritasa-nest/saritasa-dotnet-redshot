@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace RedShot.Infrastructure.Uploaders.Ftp.Models
+namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
 {
     public enum BrowserProtocol
     {

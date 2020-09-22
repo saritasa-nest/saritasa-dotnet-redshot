@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using RedShot.Infrastructure.Abstractions;
-using RedShot.Infrastructure.Uploaders.Ftp.Models;
+using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 
-namespace RedShot.Infrastructure.Uploaders.Ftp
+namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
 {
     /// <summary>
     /// FTP configuration.

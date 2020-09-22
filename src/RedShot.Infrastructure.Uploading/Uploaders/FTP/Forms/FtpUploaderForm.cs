@@ -5,10 +5,9 @@ using Eto.Drawing;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Common;
-using RedShot.Infrastructure.Formatting;
-using RedShot.Infrastructure.Uploaders.Ftp.Models;
+using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 
-namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
+namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Forms
 {
     /// <summary>
     /// FTP uploader form.
@@ -18,12 +17,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
         private readonly FtpConfiguration ftpConfiguration;
         private ComboBox accounts;
         private DefaultButton uploadButton;
-        private TextBox fileNameBox;
-
-        /// <summary>
-        /// Name of the file.
-        /// </summary>
-        public string FileName { get; private set; }
 
         /// <summary>
         /// Selected FTP account.
@@ -35,7 +28,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
         /// </summary>
         public FtpUploaderForm()
         {
-            FileName = FormatManager.GetFormattedName();
             ftpConfiguration = ConfigurationManager.GetSection<FtpConfiguration>();
             Title = "FTP Upload";
             Size = new Size(350, 280);
@@ -57,12 +49,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
                 accounts.SelectedValue = ftpConfiguration.FtpAccounts.First();
             }
 
-            fileNameBox = new TextBox()
-            {
-                Size = new Size(250, 21),
-                Text = FileName
-            };
-
             uploadButton = new DefaultButton("Upload", 100, 30);
             uploadButton.Clicked += UploadButton_Click;
 
@@ -75,29 +61,8 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
                 Items =
                 {
                     GetAccountLayout(),
-                    GetImageNameLayout(),
                     FormsHelper.GetVoidBox(20),
                     uploadButton
-                }
-            };
-        }
-
-        private StackLayout GetImageNameLayout()
-        {
-            return new StackLayout()
-            {
-                Padding = 10,
-                Orientation = Orientation.Vertical,
-                HorizontalContentAlignment = HorizontalAlignment.Left,
-                Spacing = 10,
-                Items =
-                {
-                    new Label()
-                    {
-                        Text = "Filename:",
-                        Width = 100,
-                    },
-                    fileNameBox
                 }
             };
         }
@@ -127,7 +92,6 @@ namespace RedShot.Infrastructure.Uploaders.Ftp.Forms
             if (accounts.DataStore.Any() && accounts.SelectedValue != null)
             {
                 SelectedAccount = (FtpAccount)accounts.SelectedValue;
-                FileName = fileNameBox.Text;
                 Result = DialogResult.Ok;
             }
             else

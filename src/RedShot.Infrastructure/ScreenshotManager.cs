@@ -48,7 +48,7 @@ namespace RedShot.Infrastructure
         public static void UploadScreenShot(Bitmap image)
         {
             var imageName = FormatManager.GetFormattedName();
-            var baseName = $"RedShot-Video-{DateTime.Now:yyyy-MM-ddTHH-mm-ss}";
+            var baseName = $"RedShot-Image-{DateTime.Now:yyyy-MM-ddTHH-mm-ss}";
             var path = Path.Combine(imagesFolder, $"{baseName}.png");
 
             image.Save(path, ImageFormat.Png);

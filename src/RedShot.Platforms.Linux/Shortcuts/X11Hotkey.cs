@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eto.Forms;
+using System;
 using System.Runtime.InteropServices;
 
 namespace RedShot.Platforms.Linux.Shortcuts
@@ -12,13 +13,13 @@ namespace RedShot.Platforms.Linux.Shortcuts
         private const int KeyPress = 2;
         private const int GrabModeAsync = 1;
         private int keycode;
+        private Gdk.Window rootWin = Gdk.Global.DefaultRootWindow;
 
         public X11Hotkey(Gdk.Key key, Gdk.ModifierType modifiers)
         {
             this.Key = key;
             this.Modifiers = modifiers;
 
-            Gdk.Window rootWin = Gdk.Global.DefaultRootWindow;
             IntPtr xDisplay = GetXDisplay(rootWin);
             this.keycode = XKeysymToKeycode(xDisplay, (int)this.Key);
             if (Environment.Is64BitProcess)
@@ -35,7 +36,6 @@ namespace RedShot.Platforms.Linux.Shortcuts
 
         public void Register()
         {
-            Gdk.Window rootWin = Gdk.Global.DefaultRootWindow;
             IntPtr xDisplay = GetXDisplay(rootWin);
 
             XGrabKey(
@@ -50,7 +50,6 @@ namespace RedShot.Platforms.Linux.Shortcuts
 
         public void Unregister()
         {
-            Gdk.Window rootWin = Gdk.Global.DefaultRootWindow;
             IntPtr xDisplay = GetXDisplay(rootWin);
 
             XUngrabKey(

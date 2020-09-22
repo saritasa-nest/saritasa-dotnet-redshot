@@ -1,8 +1,6 @@
 ﻿using Eto.Forms;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Settings.Sections;
-using RedShot.Infrastructure.Uploaders.Ftp;
-using RedShot.Infrastructure.Uploaders.Ftp.Settings;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 {

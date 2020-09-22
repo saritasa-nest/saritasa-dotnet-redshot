@@ -2,9 +2,9 @@ using System;
 using System.Linq;
 using Eto.Forms;
 using RedShot.Infrastructure.Common.Forms;
-using RedShot.Infrastructure.Uploaders.Ftp.Models;
+using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 
-namespace RedShot.Infrastructure.Uploaders.Ftp.Settings
+namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 {
     internal partial class FtpOptionControl : Panel
     {

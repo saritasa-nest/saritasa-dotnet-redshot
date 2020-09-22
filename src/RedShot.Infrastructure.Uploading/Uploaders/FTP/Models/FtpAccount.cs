@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using RedShot.Infrastructure.Common;
 
-namespace RedShot.Infrastructure.Uploaders.Ftp.Models
+namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
 {
     /// <summary>
     /// FTP account model.

@@ -1,13 +1,12 @@
 ﻿using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Abstractions.Uploading;
-using RedShot.Infrastructure.Uploaders.Ftp.Models;
-using RedShot.Infrastructure.Uploaders.Ftp.Forms;
 using RedShot.Infrastructure.Abstractions;
-using System.IO;
 using RedShot.Infrastructure.Common.Notifying;
+using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
+using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Forms;
 
-namespace RedShot.Infrastructure.Uploaders.Ftp
+namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
 {
     /// <summary>
     /// Manages FTP uploading.
@@ -30,17 +29,23 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         /// </summary>
         public IUploader GetUploader()
         {
+            account = GetFtpAccount();
+
+            if (account != null)
+            {
+                return GetFtpUploader(account);
+            }
+
+            return null;
+        }
+
+        private FtpAccount GetFtpAccount()
+        {
             using (var form = new FtpUploaderForm())
             {
                 if (form.ShowModal() == DialogResult.Ok)
                 {
-                    account = form.SelectedAccount;
-                    var name = form.FileName;
-
-                    if (account != null)
-                    {
-                        return GetFtpUploader(account, name);
-                    }
+                    return form.SelectedAccount;
                 }
             }
 
@@ -50,15 +55,15 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         /// <summary>
         /// Get FTP uploader.
         /// </summary>
-        internal BaseFtpUploader GetFtpUploader(FtpAccount account, string fileName)
+        internal BaseFtpUploader GetFtpUploader(FtpAccount account)
         {
             if (account.Protocol == FtpProtocol.FTP || account.Protocol == FtpProtocol.FTPS)
             {
-                return new FtpUploader(account, fileName);
+                return new FtpUploader(account);
             }
             else
             {
-                return new SftpUploader(account, fileName);
+                return new SftpUploader(account);
             }
         }
 
@@ -71,7 +76,7 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         /// <inheritdoc />
         public void OnUploaded(IFile file)
         {
-            var link = account.GetFormatLink(Path.GetFileName(file.FilePath));
+            var link = account.GetFormatLink(FtpHelper.GetFullFileName(file));
 
             Eto.Forms.Clipboard.Instance.Clear();
             Eto.Forms.Clipboard.Instance.Text = link;

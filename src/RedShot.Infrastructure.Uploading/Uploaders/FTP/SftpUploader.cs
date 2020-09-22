@@ -6,10 +6,10 @@ using Renci.SshNet.Common;
 using RedShot.Infrastructure.Abstractions.Uploading;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Common;
-using RedShot.Infrastructure.Uploaders.Ftp.Models;
 using RedShot.Infrastructure.Basics;
+using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 
-namespace RedShot.Infrastructure.Uploaders.Ftp
+namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
 {
     /// <summary>
     /// SFTP uploader.
@@ -17,20 +17,17 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
     internal sealed class SftpUploader : BaseFtpUploader, IDisposable
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-        private readonly string fileName;
+        private readonly FtpAccount account;
         private bool disposed;
         private SftpClient client;
 
         /// <summary>
         /// Initializes SFTP uploader.
         /// </summary>
-        public SftpUploader(FtpAccount account, string fileName)
+        public SftpUploader(FtpAccount account)
         {
             this.account = account;
-            this.fileName = fileName;
         }
-
-        private readonly FtpAccount account;
 
         /// <summary>
         /// Connection flag.
@@ -41,16 +38,8 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         public override IUploadingResponse Upload(IFile file)
         {
             var subFolderPath = account.SubFolderPath;
-            string path;
-
-            if (string.IsNullOrEmpty(fileName))
-            {
-                path = UrlHelper.CombineUrl(subFolderPath, $"{file.FileName}{Path.GetExtension(file.FilePath)}");
-            }
-            else
-            {
-                path = UrlHelper.CombineUrl(subFolderPath, $"{fileName}{Path.GetExtension(file.FilePath)}");
-            }
+            var fullFileName = FtpHelper.GetFullFileName(file);
+            var path = UrlHelper.CombineUrl(subFolderPath, fullFileName);
 
             IsUploading = true;
 

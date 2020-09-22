@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Net;
 using System.Net.Security;
@@ -11,9 +10,9 @@ using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
 using RedShot.Infrastructure.Basics;
 using RedShot.Infrastructure.Common;
-using RedShot.Infrastructure.Uploaders.Ftp.Models;
+using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 
-namespace RedShot.Infrastructure.Uploaders.Ftp
+namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
 {
     /// <summary>
     /// FTP/FTPS uploader.
@@ -22,18 +21,20 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly FtpAccount account;
-        private readonly string fileName;
         private FtpClient client;
         private bool disposed;
 
         /// <summary>
         /// Initializes FTP/FTPS uploader.
         /// </summary>
-        public FtpUploader(FtpAccount account, string fileName)
+        public FtpUploader(FtpAccount account)
         {
-            this.fileName = fileName;
             this.account = account;
+            InitializeFtpClient();
+        }
 
+        private void InitializeFtpClient()
+        {
             client = new FtpClient()
             {
                 Host = account.Host,
@@ -89,16 +90,8 @@ namespace RedShot.Infrastructure.Uploaders.Ftp
         public override IUploadingResponse Upload(IFile file)
         {
             var subFolderPath = account.SubFolderPath;
-            string path;
-
-            if (string.IsNullOrEmpty(fileName))
-            {
-                path = UrlHelper.CombineUrl(subFolderPath, $"{file.FileName}{Path.GetExtension(file.FilePath)}");
-            }
-            else
-            {
-                path = UrlHelper.CombineUrl(subFolderPath, $"{fileName}{Path.GetExtension(file.FilePath)}");
-            }
+            var fullFileName = FtpHelper.GetFullFileName(file);
+            var path = UrlHelper.CombineUrl(subFolderPath, fullFileName);
 
             IsUploading = true;
             try
