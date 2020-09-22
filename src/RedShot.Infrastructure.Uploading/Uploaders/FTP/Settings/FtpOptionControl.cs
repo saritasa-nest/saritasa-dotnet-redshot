@@ -44,7 +44,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         private Control accountFields;
         private ObservableCollection<FtpAccount> bindingList;
         private DefaultButton testButton;
-
         private readonly List<FtpAccount> ftpAccounts;
 
         /// <summary>

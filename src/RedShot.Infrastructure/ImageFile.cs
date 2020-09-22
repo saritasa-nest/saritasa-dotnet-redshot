@@ -35,10 +35,7 @@ namespace RedShot.Infrastructure
 
         public Stream GetStream()
         {
-            var stream = new MemoryStream();
-            image.Save(stream, ImageFormat.Png);
-
-            return stream;
+            return File.Open(FilePath, FileMode.Open);
         }
     }
 }

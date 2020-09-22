@@ -16,7 +16,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Forms
     {
         private readonly FtpConfiguration ftpConfiguration;
         private ComboBox accounts;
-        private DefaultButton uploadButton;
+        private DefaultButton selectionButton;
 
         /// <summary>
         /// Selected FTP account.
@@ -29,8 +29,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Forms
         public FtpUploaderForm()
         {
             ftpConfiguration = ConfigurationManager.GetSection<FtpConfiguration>();
-            Title = "FTP Upload";
-            Size = new Size(350, 280);
+            Title = "FTP account selection";
             ShowInTaskbar = true;
             InitializeComponents();
             Location = ScreenHelper.GetCenterLocation(Size);
@@ -49,20 +48,20 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Forms
                 accounts.SelectedValue = ftpConfiguration.FtpAccounts.First();
             }
 
-            uploadButton = new DefaultButton("Upload", 100, 30);
-            uploadButton.Clicked += UploadButton_Click;
+            selectionButton = new DefaultButton("Select", 120, 30);
+            selectionButton.Clicked += SelectionButtonClick;
 
             Content = new StackLayout
             {
                 VerticalContentAlignment = VerticalAlignment.Center,
                 HorizontalContentAlignment = HorizontalAlignment.Center,
                 Orientation = Orientation.Vertical,
-                Padding = 20,
+                Padding = new Padding(15, 5),
+                Spacing = 15,
                 Items =
                 {
                     GetAccountLayout(),
-                    FormsHelper.GetVoidBox(20),
-                    uploadButton
+                    selectionButton
                 }
             };
         }
@@ -87,7 +86,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Forms
             };
         }
 
-        private void UploadButton_Click(object sender, EventArgs e)
+        private void SelectionButtonClick(object sender, EventArgs e)
         {
             if (accounts.DataStore.Any() && accounts.SelectedValue != null)
             {
