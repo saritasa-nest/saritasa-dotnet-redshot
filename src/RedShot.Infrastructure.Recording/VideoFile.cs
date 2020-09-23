@@ -33,11 +33,5 @@ namespace RedShot.Infrastructure.Recording
         {
             return new Bitmap(Resources.Properties.Resources.Video);
         }
-
-        /// <inheritdoc/>
-        public Stream GetStream()
-        {
-            return File.Open(FilePath, FileMode.Open);
-        }
     }
 }

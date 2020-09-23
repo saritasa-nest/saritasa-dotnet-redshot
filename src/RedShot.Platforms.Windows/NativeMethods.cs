@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace RedShot.Platforms.Windows.Shortcuts.HotkeyClasses
+namespace RedShot.Platforms.Windows
 {
     internal static class NativeMethods
     {

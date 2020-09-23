@@ -20,6 +20,7 @@ namespace RedShot.Platforms.Linux.Shortcuts
             this.Key = key;
             this.Modifiers = modifiers;
 
+
             IntPtr xDisplay = GetXDisplay(rootWin);
             this.keycode = XKeysymToKeycode(xDisplay, (int)this.Key);
             if (Environment.Is64BitProcess)

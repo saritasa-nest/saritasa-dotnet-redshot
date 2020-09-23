@@ -33,6 +33,10 @@ namespace RedShot.Shortcut.Settings
         public ShortcutTextBox()
         {
             Text = "None";
+
+#if _WINDOWS
+            RedShot.Platforms.Windows.WindowsNativeHelper.HideCaret(this.ControlObject);
+#endif
         }
 
         /// <summary>

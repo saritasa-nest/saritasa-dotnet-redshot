@@ -12,7 +12,10 @@ namespace RedShot.Infrastructure.Abstractions
         /// <summary>
         /// Gives stream of the file.
         /// </summary>
-        Stream GetStream();
+        public Stream GetStream()
+        {
+            return File.Open(FilePath, FileMode.Open);
+        }
 
         /// <summary>
         /// File path of the file.

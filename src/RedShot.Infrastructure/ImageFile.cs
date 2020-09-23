@@ -22,20 +22,19 @@ namespace RedShot.Infrastructure
             FileName = fileName;
         }
 
+        /// <inheritdoc/>
         public string FileName { get; }
 
+        /// <inheritdoc/>
         public FileType FileType => FileType.Image;
 
+        /// <inheritdoc/>
         public string FilePath { get; }
 
+        /// <inheritdoc/>
         public Bitmap GetFilePreview()
         {
             return image;
-        }
-
-        public Stream GetStream()
-        {
-            return File.Open(FilePath, FileMode.Open);
         }
     }
 }

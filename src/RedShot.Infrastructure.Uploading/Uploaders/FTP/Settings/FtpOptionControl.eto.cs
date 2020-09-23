@@ -47,7 +47,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             };
             host = new TextBox()
             {
-                Size = defaultSize,
+                Size = defaultSize
             };
 
             username = new TextBox()
@@ -86,7 +86,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 MaxValue = 65535,
                 Increment = 1,
                 Value = 21,
-                Size = new Eto.Drawing.Size(40, 21),
+                Size = new Eto.Drawing.Size(60, 21),
             };
 
             ftpProtocol = new ComboBox()
@@ -105,7 +105,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
             accounts = new ComboBox()
             {
-                Size = new Eto.Drawing.Size(150, 21),
+                Size = new Eto.Drawing.Size(200, 21),
             };
 
             addButton = new Button()
