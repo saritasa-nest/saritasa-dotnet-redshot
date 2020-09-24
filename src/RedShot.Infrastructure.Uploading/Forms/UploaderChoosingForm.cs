@@ -8,6 +8,7 @@ using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
+using RedShot.Resources;
 
 namespace RedShot.Infrastructure.Uploading.Forms
 {
@@ -58,7 +59,7 @@ namespace RedShot.Infrastructure.Uploading.Forms
 
         private Control GetPreviewButton()
         {
-            var previewIcon = new Bitmap(Resources.Properties.Resources.Open);
+            var previewIcon = Icons.Open;
             var button = new ImageButton(new Size(100, 100), previewIcon)
             {
                 ToolTip = "Opens the file"

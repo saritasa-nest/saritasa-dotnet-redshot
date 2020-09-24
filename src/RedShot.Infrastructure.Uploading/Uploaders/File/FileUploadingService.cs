@@ -2,6 +2,7 @@
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
 using RedShot.Infrastructure.Common.Notifying;
+using RedShot.Resources;
 
 namespace RedShot.Infrastructure.Uploaders.File
 {
@@ -18,7 +19,7 @@ namespace RedShot.Infrastructure.Uploaders.File
         {
             get
             {
-                return new Bitmap(Resources.Properties.Resources.Folder);
+                return Icons.Folder;
             }
         }
 

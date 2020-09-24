@@ -5,9 +5,10 @@ using System.Reflection;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
 using RedShot.Infrastructure.Common.Notifying;
+using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Uploading.Forms;
 
-namespace RedShot.Infrastructure
+namespace RedShot.Infrastructure.Uploading
 {
     /// <summary>
     /// This class manages uploading process.
@@ -35,27 +36,70 @@ namespace RedShot.Infrastructure
         public static void RunUploading(IFile file)
         {
             lastFile = file;
+            var configuration = GetUploadingConfiguration();
 
+            if (configuration.AutoUpload)
+            {
+                var uploadingServices = GetUploadingServices(configuration.UploadersTypes);
+                RunAutoUpload(uploadingServices, file);
+            }
+            else
+            {
+                RunManualUpload(file);
+            }
+        }
+
+        private static void RunManualUpload(IFile file)
+        {
             uploaderChoosingForm?.Close();
-
-            uploaderChoosingForm = new UploaderChoosingForm(file, GetUploadingServices());
+            uploaderChoosingForm = new UploaderChoosingForm(file, GetUploadingServices(GetAllUploadingTypes()));
             uploaderChoosingForm.Show();
+        }
+
+        private static void RunAutoUpload(IEnumerable<IUploadingService> uploadingServices, IFile file)
+        {
+            uploadingServices = uploadingServices.Where(u => u.CheckOnSupporting(file.FileType)).ToList();
+
+            if (uploadingServices.Count() == 0)
+            {
+                NotifyHelper.Notify("Auto-upload mode was enabled, but no uploader was selected", "RedShot", NotifyStatus.Failed);
+                RunManualUpload(file);
+                return;
+            }
+
+            foreach (var uploadingService in uploadingServices)
+            {
+                Upload(uploadingService, file);
+            }
+        }
+
+        private static UploadingConfiguration GetUploadingConfiguration()
+        {
+            return ConfigurationManager.GetSection<UploadingConfiguration>();
         }
 
         /// <summary>
         /// Returns uploading services.
         /// </summary>
-        public static IEnumerable<IUploadingService> GetUploadingServices()
+        internal static IEnumerable<IUploadingService> GetUploadingServices(IEnumerable<Type> uploadingTypes)
+        {
+            foreach (var type in uploadingTypes)
+            {
+                yield return (IUploadingService)Activator.CreateInstance(type);
+            }
+        }
+
+        /// <summary>
+        /// Get uploading types.
+        /// </summary>
+        internal static IEnumerable<Type> GetAllUploadingTypes()
         {
             var types = Assembly
                 .GetAssembly(typeof(UploadingManager))
                 ?.GetTypes()
                 .Where(type => typeof(IUploadingService).IsAssignableFrom(type) && !type.IsInterface);
 
-            foreach (var type in types)
-            {
-                yield return (IUploadingService)Activator.CreateInstance(type);
-            }
+            return types;
         }
 
         /// <summary>

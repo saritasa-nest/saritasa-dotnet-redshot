@@ -60,8 +60,9 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
             bindingList = new ObservableCollection<FtpAccount>(ftpAccounts);
             bindingList.CollectionChanged += BindingList_CollectionChanged;
-            accounts.Bind(a => a.DataStore, bindingList, b => b);
+            accounts.DataStore = bindingList;
             accounts.SelectedValueChanged += FtpOptionControlChanged;
+            accounts.ItemKeyBinding = new DelegateBinding<FtpAccount, string>(a => a.Name);
         }
 
         private void TestButtonClicked(object sender, EventArgs e)

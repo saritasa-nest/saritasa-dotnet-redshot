@@ -5,6 +5,8 @@ using Eto.Forms;
 using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
+using RedShot.Infrastructure.Uploading;
+using RedShot.Resources;
 
 namespace RedShot.Infrastructure.RecordingRedShot.Views
 {
@@ -14,10 +16,10 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
     internal class RecordingView : Form
     {
         private Control managePanel;
-        private IRecorder recorder;
+        private readonly IRecorder recorder;
         private Rectangle recordingRectangle;
-        private UITimer labelRenderTimer;
-        private Stopwatch recordingTimer;
+        private readonly UITimer labelRenderTimer;
+        private readonly Stopwatch recordingTimer;
         private RecordingButton recordingButton;
         private ImageButton closeButton;
         private Label timerLabel;
@@ -50,8 +52,10 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
             SetupLocations();
             BackgroundColor = Colors.Red;
             recordingTimer = new Stopwatch();
-            labelRenderTimer = new UITimer();
-            labelRenderTimer.Interval = 0.01;
+            labelRenderTimer = new UITimer
+            {
+                Interval = 0.01
+            };
             labelRenderTimer.Elapsed += RecordingLabelTimer_Elapsed;
             labelRenderTimer.Start();
 
@@ -188,7 +192,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
             recordingButton = new RecordingButton(40, 35);
             recordingButton.Clicked += RecordingButton_Clicked;
 
-            var closeImage = new Bitmap(Resources.Properties.Resources.Close);
+            var closeImage = Icons.Close;
             closeButton = new ImageButton(new Size(40, 35), closeImage, scaleImageSize: new Size(20, 18));
             closeButton.Clicked += CloseButton_Clicked;
 

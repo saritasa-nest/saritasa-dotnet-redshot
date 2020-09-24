@@ -2,6 +2,7 @@
 using Eto.Drawing;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
+using RedShot.Resources;
 
 namespace RedShot.Infrastructure.Recording
 {
@@ -31,7 +32,7 @@ namespace RedShot.Infrastructure.Recording
         /// <inheritdoc/>
         public Bitmap GetFilePreview()
         {
-            return new Bitmap(Resources.Properties.Resources.Video);
+            return Icons.Video;
         }
     }
 }

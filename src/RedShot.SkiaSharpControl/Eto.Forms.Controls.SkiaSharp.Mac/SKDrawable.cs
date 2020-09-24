@@ -59,13 +59,11 @@ namespace Eto.Forms.Controls.SkiaSharp.Mac
             surface.Canvas.Flush();
 
             // draw the image onto the context
-            using (var dataProvider = new CGDataProvider(bitmapData, lastLength))
-            using (var colorSpace = CGColorSpace.CreateDeviceRGB())
-            using (var image = new CGImage(info.Width, info.Height, BitsPerByte, info.BytesPerPixel * BitsPerByte, info.RowBytes, colorSpace, BitmapFlags, dataProvider, null, false, CGColorRenderingIntent.Default))
-            {
-                // Draw the image.
-                ctx.DrawImage(viewBounds, image);
-            }
+            using var dataProvider = new CGDataProvider(bitmapData, lastLength);
+            using var colorSpace = CGColorSpace.CreateDeviceRGB();
+            using var image = new CGImage(info.Width, info.Height, BitsPerByte, info.BytesPerPixel * BitsPerByte, info.RowBytes, colorSpace, BitmapFlags, dataProvider, null, false, CGColorRenderingIntent.Default);
+            // Draw the image.
+            ctx.DrawImage(viewBounds, image);
         }
 
         /// <summary>

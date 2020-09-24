@@ -5,6 +5,7 @@ using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Common.Notifying;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Forms;
+using RedShot.Resources;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
 {
@@ -16,10 +17,10 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         private FtpAccount account;
 
         /// <inheritdoc />
-        public string Name => "FTP/SFTP/FTPS uploading service";
+        public string Name => "FTP";
 
         /// <inheritdoc />
-        public Bitmap ServiceImage => new Bitmap(Resources.Properties.Resources.Ftp);
+        public Bitmap ServiceImage => Icons.Ftp;
 
         /// <inheritdoc />
         public string About => "Uploads the file to FTP server";
@@ -78,10 +79,10 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         {
             var link = account.GetFormatLink(FtpHelper.GetFullFileName(file));
 
-            Eto.Forms.Clipboard.Instance.Clear();
-            Eto.Forms.Clipboard.Instance.Text = link;
+            Clipboard.Instance.Clear();
+            Clipboard.Instance.Text = link;
 
-            NotifyHelper.Notify("The file has been uploaded to your FTP server.\nRedShot has saved format link to clipboard.", "RedShot", NotifyStatus.Success);
+            NotifyHelper.Notify("The file has been uploaded to your FTP server.\n\nRedShot has saved the file link in clipboard.", "RedShot", NotifyStatus.Success);
         }
     }
 }

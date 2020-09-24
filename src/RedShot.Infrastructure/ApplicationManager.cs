@@ -3,6 +3,8 @@ using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Recording;
+using RedShot.Infrastructure.Uploading;
+using RedShot.Resources;
 
 namespace RedShot.Infrastructure
 {
@@ -22,7 +24,7 @@ namespace RedShot.Infrastructure
         {
             try
             {
-                trayIcon = new TrayIcon("RedShot", new Bitmap(Resources.Properties.Resources.Redcircle));
+                trayIcon = new TrayIcon("RedShot", Icons.RedCircle);
             }
             catch (Exception ex)
             {

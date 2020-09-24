@@ -47,10 +47,8 @@ namespace RedShot.Infrastructure.Common
         /// </summary>
         public static Bitmap GetEtoBitmapFromSkiaSurface(SKSurface surface)
         {
-            using (var shapshot = surface.Snapshot())
-            {
-                return GetEtoBitmapFromSkiaImage(shapshot);
-            }
+            using var shapshot = surface.Snapshot();
+            return GetEtoBitmapFromSkiaImage(shapshot);
         }
 
         /// <summary>
@@ -58,14 +56,10 @@ namespace RedShot.Infrastructure.Common
         /// </summary>
         public static Bitmap GetEtoBitmapFromSkiaImage(SKImage skImage)
         {
-            using (var data = skImage.Encode())
-            {
-                using (var stream = data.AsStream())
-                {
-                    stream.Seek(0, SeekOrigin.Begin);
-                    return new Bitmap(stream);
-                }
-            }
+            using var data = skImage.Encode();
+            using var stream = data.AsStream();
+            stream.Seek(0, SeekOrigin.Begin);
+            return new Bitmap(stream);
         }
 
         /// <summary>

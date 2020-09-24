@@ -3,6 +3,7 @@ using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Painting.States;
+using RedShot.Resources;
 
 namespace RedShot.Infrastructure.Painting
 {
@@ -106,39 +107,32 @@ namespace RedShot.Infrastructure.Painting
             var buttonSize = new Size(60, 30);
             var imageSize = new Size(20, 20);
 
-            var paintImage = new Bitmap(Resources.Properties.Resources.Paintbrush);
-            var saveImage = new Bitmap(Resources.Properties.Resources.Upload);
-            var backImage = new Bitmap(Resources.Properties.Resources.Back);
-            var rectangleImage = new Bitmap(Resources.Properties.Resources.Rectangle);
-            var eraseImage = new Bitmap(Resources.Properties.Resources.EraseIcon);
-            var arrowImage = new Bitmap(Resources.Properties.Resources.Arrow);
-
-            PointsEnableButton = new ImageButton(buttonSize, paintImage, scaleImageSize: imageSize)
+            PointsEnableButton = new ImageButton(buttonSize, Icons.PaintBrush, scaleImageSize: imageSize)
             {
                 ToolTip = "Paint a line of any shape"
             };
 
-            RectangleEnableButton = new ImageButton(buttonSize, rectangleImage, scaleImageSize: imageSize)
+            RectangleEnableButton = new ImageButton(buttonSize, Icons.Rectangle, scaleImageSize: imageSize)
             {
                 ToolTip = "Paint a rectangle"
             };
 
-            SaveImageButton = new ImageButton(buttonSize, saveImage, scaleImageSize: imageSize)
+            SaveImageButton = new ImageButton(buttonSize, Icons.Upload, scaleImageSize: imageSize)
             {
                 ToolTip = "Upload the picture"
             };
 
-            PaintBackButton = new ImageButton(buttonSize, backImage, scaleImageSize: imageSize)
+            PaintBackButton = new ImageButton(buttonSize, Icons.Back, scaleImageSize: imageSize)
             {
                 ToolTip = "Take a step back"
             };
 
-            EraseEnableButton = new ImageButton(buttonSize, eraseImage, scaleImageSize: imageSize)
+            EraseEnableButton = new ImageButton(buttonSize, Icons.EraseIcon, scaleImageSize: imageSize)
             {
                 ToolTip = "Erase paintings from the picture"
             };
 
-            ArrowEnableButton = new ImageButton(buttonSize, arrowImage, scaleImageSize: imageSize)
+            ArrowEnableButton = new ImageButton(buttonSize, Icons.Arrow, scaleImageSize: imageSize)
             {
                 ToolTip = "Paint an arrow"
             };

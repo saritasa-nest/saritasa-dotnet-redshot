@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Eto.Drawing;
 using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
+using RedShot.Resources;
 using SkiaSharp;
 
 namespace RedShot.Infrastructure.Common.Forms.SelectionForm
@@ -80,7 +81,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         /// <summary>
         /// Return screen which user works with.
         /// </summary>
-        private Screen selectionScreen;
+        private readonly Screen selectionScreen;
 
         /// <summary>
         /// Selection region size and location.
@@ -98,7 +99,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         #region Styles
         private Cursor capturedCursor;
         private Stopwatch penTimer;
-        private float[] dash = new float[] { 5, 5 };
+        private readonly float[] dash = new float[] { 5, 5 };
         #endregion Styles
 
         #region Movingfields
@@ -153,7 +154,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 
             InitializeSelectionManageForm();
 
-            var capturedIcon = new Bitmap(Resources.Properties.Resources.Pointer);
+            var capturedIcon = Icons.Pointer;
             capturedCursor = FormsHelper.GetCursor(capturedIcon, new Size(20, 20), new Point(3, 3));
 
             SetPlatformOptions();
@@ -290,8 +291,10 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 
         private void StartScreenSelecting()
         {
-            var screenTimer = new UITimer();
-            screenTimer.Interval = 0.1;
+            var screenTimer = new UITimer
+            {
+                Interval = 0.1
+            };
             screenTimer.Elapsed += ScreenTimer_Elapsed;
 
             screenSelecting = true;
@@ -470,10 +473,9 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
                 Color = SKColors.DeepSkyBlue.WithAlpha(200)
             };
 
-            SKPoint drawCoords = default;
             SKRect textStrokeRect = default;
             SKRect textfillRect = default;
-
+            SKPoint drawCoords;
             if (selectionRectangle.Y > paint.TextSize + 10)
             {
                 drawCoords = new SKPoint(selectionRectangle.X + 2, selectionRectangle.Y - 15);
@@ -544,8 +546,10 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         protected virtual void PaintDarkregion(SKCanvas canvas, SKRect editorRect, SKRect selectionRect = default)
         {
             // the path to use as a mask
-            var maskPath = new SKPath();
-            maskPath.FillType = SKPathFillType.EvenOdd; // make the first rect dark, cut the next
+            var maskPath = new SKPath
+            {
+                FillType = SKPathFillType.EvenOdd // make the first rect dark, cut the next
+            };
             maskPath.AddRect(editorRect);
             if (selectionRect != default)
             {
@@ -553,9 +557,11 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             }
 
             // the dark paint overlay
-            var maskPaint = new SKPaint();
-            maskPaint.Color = SKColors.Black.WithAlpha(100);
-            maskPaint.Style = SKPaintStyle.Fill;
+            var maskPaint = new SKPaint
+            {
+                Color = SKColors.Black.WithAlpha(100),
+                Style = SKPaintStyle.Fill
+            };
 
             // draw
             canvas.DrawPath(maskPath, maskPaint);

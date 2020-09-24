@@ -32,7 +32,7 @@ namespace RedShot.Infrastructure.Common
 
             if (url1.EndsWith("/"))
             {
-                url1 = url1.Substring(0, url1.Length - 1);
+                url1 = url1[0..^1];
             }
 
             if (url2.StartsWith("/"))

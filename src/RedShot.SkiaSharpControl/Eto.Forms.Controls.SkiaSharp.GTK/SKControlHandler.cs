@@ -10,7 +10,7 @@ namespace Eto.Forms.Controls.SkiaSharp.GTK
     /// </summary>
     public class SKControlHandler : GtkControl<EventBox, SKControl, Control.ICallback>, ISKControl
     {
-        private SKControlGtk nativecontrol;
+        private readonly SKControlGtk nativecontrol;
         private bool disposed;
 
         /// <summary>

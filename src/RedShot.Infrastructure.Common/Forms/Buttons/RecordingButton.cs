@@ -1,6 +1,7 @@
 ﻿using System;
 using Eto.Drawing;
 using Eto.Forms;
+using RedShot.Resources;
 
 namespace RedShot.Infrastructure.Common.Forms
 {
@@ -19,8 +20,8 @@ namespace RedShot.Infrastructure.Common.Forms
         /// </summary>
         public bool IsRecording { get; private set; }
 
-        private Bitmap playIcon;
-        private Bitmap stopIcon;
+        private readonly Bitmap playIcon;
+        private readonly Bitmap stopIcon;
         private Button button;
 
         /// <summary>
@@ -31,17 +32,19 @@ namespace RedShot.Infrastructure.Common.Forms
             Width = width;
             Height = height;
 
-            playIcon = new Bitmap(Resources.Properties.Resources.Play);
-            stopIcon = new Bitmap(Resources.Properties.Resources.Stop);
+            playIcon = Icons.Play;
+            stopIcon = Icons.Stop;
 
             InitializeComponents();
         }
 
         private void InitializeComponents()
         {
-            button = new Button();
-            button.Width = Width;
-            button.Height = Height;
+            button = new Button
+            {
+                Width = Width,
+                Height = Height
+            };
 
             SetImage(playIcon);
 

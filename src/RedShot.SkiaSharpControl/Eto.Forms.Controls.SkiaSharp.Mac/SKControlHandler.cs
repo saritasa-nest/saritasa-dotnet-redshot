@@ -10,7 +10,7 @@ namespace Eto.Forms.Controls.SkiaSharp.Mac
     /// </summary>
     public class SKControlHandler : MacView<NSView, SKControl, Control.ICallback>, ISKControl
     {
-        private SKControlMac nativecontrol;
+        private readonly SKControlMac nativecontrol;
         private bool disposed;
 
         /// <summary>

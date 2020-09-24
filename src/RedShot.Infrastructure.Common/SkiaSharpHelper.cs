@@ -14,13 +14,11 @@ namespace RedShot.Infrastructure.Common
         /// </summary>
         public static SKBitmap ConvertFromEtoBitmap(Bitmap bitmap)
         {
-            using (var ms = new MemoryStream())
-            {
-                bitmap.Save(ms, ImageFormat.Bitmap);
-                ms.Seek(0, SeekOrigin.Begin);
+            using var ms = new MemoryStream();
+            bitmap.Save(ms, ImageFormat.Bitmap);
+            ms.Seek(0, SeekOrigin.Begin);
 
-                return SKBitmap.Decode(ms);
-            }
+            return SKBitmap.Decode(ms);
         }
 
         /// <summary>

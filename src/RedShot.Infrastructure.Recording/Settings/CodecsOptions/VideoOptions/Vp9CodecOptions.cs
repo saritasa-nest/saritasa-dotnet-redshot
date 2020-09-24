@@ -11,7 +11,7 @@ namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
     /// </summary>
     internal class Vp9CodecOptions : Dialog
     {
-        private FFmpegOptions options;
+        private readonly FFmpegOptions options;
         private NumericStepper vp9Quality;
         private DefaultButton qualityAbout;
         private TextBox vp9Bitrate;

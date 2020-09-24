@@ -2,6 +2,7 @@
 using Eto.Forms;
 using Eto.Drawing;
 using RedShot.Infrastructure.Settings;
+using RedShot.Infrastructure.Uploading;
 
 namespace RedShot.Infrastructure
 {

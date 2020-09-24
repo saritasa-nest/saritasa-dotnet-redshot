@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Common;
@@ -14,7 +15,7 @@ namespace RedShot.Infrastructure.Settings.Views
     {
         private readonly IEnumerable<ISettingsSection> settingsSections;
 
-        private GridView nagivationPanel;
+        private ListBox settingsListPanel;
         private Scrollable contentPanel;
         private DefaultButton okButton;
         private DefaultButton cancelButton;
@@ -59,7 +60,7 @@ namespace RedShot.Infrastructure.Settings.Views
 
         private void InitializeComponents()
         {
-            nagivationPanel = GetNavigationPanel();
+            settingsListPanel = GetSettingsListPanel();
             okButton = new DefaultButton("OK", 70, 25);
             okButton.Clicked += OkButton_Clicked;
 
@@ -111,36 +112,23 @@ namespace RedShot.Infrastructure.Settings.Views
             Location = ScreenHelper.GetCenterLocation(Size);
         }
 
-        private GridView GetNavigationPanel()
+        private ListBox GetSettingsListPanel()
         {
-            var gridView = new GridView()
+            var listBox = new ListBox()
             {
-                AllowMultipleSelection = false,
-                AllowColumnReordering = false,
-                ShowHeader = false,
-                AllowEmptySelection = false,
                 DataStore = settingsSections,
-                BackgroundColor = Colors.White,
                 Width = 150
             };
 
-            gridView.Columns.Add(new GridColumn
-            {
-                DataCell = new TextBoxCell
-                {
-                    Binding = new DelegateBinding<ISettingsSection, string>(r => r.Name)
-                },
-                Editable = false
-            });
+            listBox.ItemTextBinding = new DelegateBinding<ISettingsSection, string>(r => r.Name);
+            listBox.SelectedValueChanged += ListBoxSelectedKeyChanged;
 
-            gridView.CellClick += GridViewCellClick;
-
-            return gridView;
+            return listBox;
         }
 
-        private void GridViewCellClick(object sender, GridCellMouseEventArgs e)
+        private void ListBoxSelectedKeyChanged(object sender, EventArgs e)
         {
-            if (e.Item is ISettingsSection section)
+            if (settingsListPanel.SelectedValue is ISettingsSection section)
             {
                 contentPanel.Content = section.GetControl();
             }
@@ -157,7 +145,7 @@ namespace RedShot.Infrastructure.Settings.Views
             {
                 Position = 150,
                 FixedPanel = SplitterFixedPanel.Panel1,
-                Panel1 = nagivationPanel,
+                Panel1 = settingsListPanel,
                 Panel1MinimumSize = 150,
                 Panel2MinimumSize = 800,
                 Panel2 = contentPanel

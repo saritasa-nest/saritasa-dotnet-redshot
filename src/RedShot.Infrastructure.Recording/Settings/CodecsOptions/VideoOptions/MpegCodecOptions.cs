@@ -10,7 +10,7 @@ namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
     /// </summary>
     internal class MpegCodecOptions : Dialog
     {
-        private FFmpegOptions options;
+        private readonly FFmpegOptions options;
         private NumericStepper mpeg4Quality;
         private DefaultButton qualityAbout;
         private DefaultButton okButton;

@@ -14,11 +14,12 @@ namespace RedShot.Infrastructure.Painting
     /// </summary>
     internal class PaintingView : Form
     {
-        private int paintingPanelWidth = 60;
+        private readonly int paintingPanelWidth = 60;
         private readonly Bitmap image;
         private PaintingPanel paintingPanel;
         private ImagePanel imagePanel;
         private SKPaint paint;
+        private bool uploaded;
 
         /// <summary>
         /// Initializes painting view via image.
@@ -38,7 +39,7 @@ namespace RedShot.Infrastructure.Painting
 
         private void OnClosing(object sender, CancelEventArgs e)
         {
-            if (imagePanel.Uploaded)
+            if (uploaded)
             {
                 return;
             }
@@ -77,6 +78,7 @@ namespace RedShot.Infrastructure.Painting
 
             imagePanel = new ImagePanel(image);
             imagePanel.ChangePaint(paint);
+            imagePanel.ImageChanged += ImagePanelImageChanged;
 
             paintingPanel = new PaintingPanel();
 
@@ -85,6 +87,11 @@ namespace RedShot.Infrastructure.Painting
             paintingPanel.StateChanged += PaintingPanel_StateChanged;
             paintingPanel.SaveImageButton.Clicked += SaveImageButton_Clicked;
             paintingPanel.PaintBackButton.Clicked += PaintBackButton_Clicked;
+        }
+
+        private void ImagePanelImageChanged(object sender, EventArgs e)
+        {
+            uploaded = false;
         }
 
         private void PaintBackButton_Clicked(object sender, EventArgs e)
@@ -96,7 +103,7 @@ namespace RedShot.Infrastructure.Painting
         {
             var bitmap = imagePanel.ScreenShot();
             ScreenshotManager.UploadScreenShot(bitmap);
-            imagePanel.Uploaded = true;
+            uploaded = true;
         }
 
         private void PaintingPanel_StateChanged(object sender, PaintingState state)

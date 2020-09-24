@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using Eto.Drawing;
 using Eto.Forms;
+using RedShot.Resources;
 
 namespace RedShot.Infrastructure.Common.Notifying
 {
@@ -37,8 +38,8 @@ namespace RedShot.Infrastructure.Common.Notifying
         {
             return status switch
             {
-                NotifyStatus.Failed => new Bitmap(Resources.Properties.Resources.Failed),
-                _ => new Bitmap(Resources.Properties.Resources.Success)
+                NotifyStatus.Failed => Icons.Failed,
+                _ => Icons.Success
             };
         }
 

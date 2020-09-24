@@ -12,6 +12,7 @@ using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Painting.PaintingActions;
 using RedShot.Infrastructure.Painting.PaintingActions.TextInput;
 using RedShot.Infrastructure.Painting.PaintingActions.UserInputActions;
+using RedShot.Resources;
 
 namespace RedShot.Infrastructure.Painting
 {
@@ -21,9 +22,9 @@ namespace RedShot.Infrastructure.Painting
     internal class ImagePanel : Panel
     {
         /// <summary>
-        /// Shows true if the user has added new changes to their picture.
+        /// Invokes if the user has added new changes to their picture.
         /// </summary>
-        public bool Uploaded { get; set; }
+        public event EventHandler ImageChanged;
 
         private readonly SKBitmap image;
         private SKControl skControl;
@@ -187,6 +188,7 @@ namespace RedShot.Infrastructure.Painting
 
         private void StartPaintingAction(Point startPoint)
         {
+            ImageChanged?.Invoke(this, EventArgs.Empty);
             textInputView?.Close();
             currentAction = PaintingActionsService.MapFromState(paintingState, skPaint.Clone(), image);
             currentAction.AddStartPoint(startPoint);
@@ -218,7 +220,6 @@ namespace RedShot.Infrastructure.Painting
                 canvas.DrawBitmap(image, new SKPoint(0, 0));
 
                 paintingActions.ForEach(a => a.Paint(surface));
-                Uploaded = false;
             }
 
             if (painting)
@@ -261,7 +262,7 @@ namespace RedShot.Infrastructure.Painting
 
         private void InitializeComponents()
         {
-            var eraseImage = new Bitmap(Resources.Properties.Resources.EraserPointer);
+            var eraseImage = Icons.ErasePointer;
             eraseCursor = FormsHelper.GetCursor(eraseImage, new Size(20, 20), new Point(5, 5));
 
             renderTimer = new UITimer()

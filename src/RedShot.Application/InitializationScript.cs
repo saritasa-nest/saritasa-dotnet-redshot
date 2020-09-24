@@ -4,6 +4,8 @@ using RedShot.Infrastructure.Formatting;
 using RedShot.Infrastructure.Formatting.Settings;
 using RedShot.Infrastructure.Recording;
 using RedShot.Infrastructure.Recording.Settings;
+using RedShot.Infrastructure.Uploading;
+using RedShot.Infrastructure.Uploading.Settings;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings;
 using RedShot.Shortcut;
@@ -24,6 +26,7 @@ namespace RedShot.Application
                 typeof(FFmpegConfiguration),
                 typeof(FormatConfigurationOption),
                 typeof(ShortcutConfiguration),
+                typeof(UploadingConfiguration)
             };
 
             SettingsOptions = new List<Type>()
@@ -31,7 +34,8 @@ namespace RedShot.Application
                 typeof(FtpSettingsSection),
                 typeof(RecordingSettingsSection),
                 typeof(FormatSettingsSection),
-                typeof(ShortcutSettingsSection)
+                typeof(ShortcutSettingsSection),
+                typeof(UploadingSettingsSection)
             };
         }
 

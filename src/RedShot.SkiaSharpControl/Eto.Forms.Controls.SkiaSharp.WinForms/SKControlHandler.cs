@@ -9,7 +9,7 @@ namespace Eto.Forms.Controls.SkiaSharp.WinForms
     /// </summary>
     public class SKControlHandler : WindowsControl<System.Windows.Forms.Control, SKControl, Control.ICallback>, ISKControl
     {
-        private SKControlWinForms nativecontrol;
+        private readonly SKControlWinForms nativecontrol;
         private bool disposed;
 
         /// <summary>

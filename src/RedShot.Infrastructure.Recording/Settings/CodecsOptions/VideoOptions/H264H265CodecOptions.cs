@@ -14,7 +14,7 @@ namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
     /// </summary>
     internal class H264H265CodecOptions : Dialog
     {
-        private FFmpegOptions options;
+        private readonly FFmpegOptions options;
         private ComboBox x264Preset;
         private NumericStepper x264Quality;
         private DefaultButton qualityAbout;
