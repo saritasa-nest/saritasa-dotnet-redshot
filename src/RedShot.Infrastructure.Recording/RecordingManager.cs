@@ -7,6 +7,7 @@ using RedShot.Recording.Recorders.Windows;
 using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.RecordingRedShot.Views;
 using System;
+using RedShot.Infrastructure.Recording.Views;
 
 namespace RedShot.Infrastructure.Recording
 {

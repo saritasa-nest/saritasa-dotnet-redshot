@@ -1,224 +1,84 @@
 ﻿using System;
-using System.Diagnostics;
 using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.Common;
-using RedShot.Infrastructure.Common.Forms;
-using RedShot.Infrastructure.Uploading;
-using RedShot.Resources;
 
-namespace RedShot.Infrastructure.RecordingRedShot.Views
+namespace RedShot.Infrastructure.Recording.Views
 {
     /// <summary>
     /// Recording view.
     /// </summary>
     internal class RecordingView : Form
     {
-        private Control managePanel;
         private readonly IRecorder recorder;
-        private Rectangle recordingRectangle;
-        private readonly UITimer labelRenderTimer;
-        private readonly Stopwatch recordingTimer;
-        private RecordingButton recordingButton;
-        private ImageButton closeButton;
-        private Label timerLabel;
-        private Label beforeStartLabel;
+        private readonly Rectangle recordingRectangle;
 
         /// <summary>
         /// Initializes recording view.
         /// </summary>
         public RecordingView(IRecorder recorder, Rectangle recordingRectangle)
         {
-            this.recorder = recorder;
             this.recordingRectangle = recordingRectangle;
-            this.Resizable = false;
-            this.MovableByWindowBackground = false;
-
-            WindowStyle = WindowStyle.None;
+            this.recorder = recorder;
             Topmost = true;
+            Resizable = false;
 
             InitializeComponents();
+        }
+
+        private void InitializeComponents()
+        {
+            var recordingVideoPanel = new RecordingVideoPanel(recorder, recordingRectangle);
+            recordingVideoPanel.Closed += RecordingVideoPanelClosed;
 
             Content = new StackLayout()
             {
                 Orientation = Orientation.Vertical,
                 Items =
                 {
-                    managePanel
+                    recordingVideoPanel
                 }
             };
 
-            SetupLocations();
-            BackgroundColor = Colors.Red;
-            recordingTimer = new Stopwatch();
-            labelRenderTimer = new UITimer
-            {
-                Interval = 0.01
-            };
-            labelRenderTimer.Elapsed += RecordingLabelTimer_Elapsed;
-            labelRenderTimer.Start();
-
-            this.Closed += RecordingView_Closed;
-        }
-
-        private void RecordingView_Closed(object sender, EventArgs e)
-        {
-            recorder?.Stop();
-        }
-
-        private void RecordingButton_Clicked(object sender, System.EventArgs e)
-        {
-            recordingButton.Enabled = false;
-            if (recordingButton.IsRecording)
-            {
-                StopRecording();
-                recordingButton.Enabled = true;
-            }
-            else
-            {
-                recordingTimer.Reset();
-                StartWithDelay();
-            }
-        }
-
-        private void StartWithDelay()
-        {
-            int seconds = 3;
-
-            var beforeRecordTimer = new UITimer()
-            {
-                Interval = 1
-            };
-            beforeRecordTimer.Elapsed += (o, e) =>
-            {
-                if (seconds != 1)
-                {
-                    seconds--;
-                    beforeStartLabel.Text = seconds.ToString();
-                }
-                else
-                {
-                    beforeRecordTimer.Stop();
-                    recorder.Start(recordingRectangle.OffsetRectangle(1));
-
-                    while (!recorder.IsRecording)
-                    {
-                    }
-
-                    beforeStartLabel.Text = "0";
-                    recordingTimer.Start();
-                    recordingButton.Enabled = true;
-                }
-            };
-            beforeRecordTimer.Start();
-        }
-
-        private void CloseButton_Clicked(object sender, EventArgs e)
-        {
-            recorder.Stop();
-            Close();
-        }
-
-        private void StopRecording()
-        {
-            recordingTimer.Stop();
-            recorder.Stop();
-
-            UploadingManager.RunUploading(recorder.GetVideo());
-        }
-
-        private void RecordingLabelTimer_Elapsed(object sender, EventArgs e)
-        {
-            timerLabel.Text = recordingTimer.Elapsed.ToString(@"hh\:mm\:ss");
-            timerLabel.Invalidate();
-        }
-
-        /// <summary>
-        /// Makes the view leaky.
-        /// </summary>
-        private void SetupLocations()
-        {
-            if ((recordingRectangle.Location.Y - managePanel.Height) > 0)
-            {
-                Location = new Point(recordingRectangle.X, recordingRectangle.Y - managePanel.Height - 1);
 #if _WINDOWS
-                Size = new Size(recordingRectangle.Width, recordingRectangle.Height + managePanel.Height + 1);
+            recordingVideoPanel.BackgroundColor = Colors.WhiteSmoke;
+            BackgroundColor = Colors.Red;
+            this.MovableByWindowBackground = false;
 
-                var excludeRect = new Rectangle(new Point(0, managePanel.Height), new Size(recordingRectangle.Width, recordingRectangle.Height + 1)).OffsetRectangle(1);
+            WindowStyle = WindowStyle.None;
+            BackgroundColor = Colors.Red;
 
-                var excludeRect2 = new Rectangle(new Point(managePanel.Width, 0), new Size(recordingRectangle.Width - managePanel.Width, managePanel.Height));
+            Rectangle excludeRectangle = default;
+            Rectangle excludeRectangle2 = default;
 
-                RedShot.Platforms.Windows.WindowsRegionHelper.Exclude(this.ControlObject, excludeRect, excludeRect2);
-#endif
+            if ((recordingRectangle.Location.Y - recordingVideoPanel.Height) > 0)
+            {
+                Location = new Point(recordingRectangle.X, recordingRectangle.Y - recordingVideoPanel.Height - 1);
+                Size = new Size(recordingRectangle.Width, recordingRectangle.Height + recordingVideoPanel.Height + 1);
+                excludeRectangle = new Rectangle(new Point(0, recordingVideoPanel.Height), new Size(recordingRectangle.Width, recordingRectangle.Height + 1)).OffsetRectangle(1);
+                excludeRectangle2 = new Rectangle(new Point(recordingVideoPanel.Width, 0), new Size(recordingRectangle.Width - recordingVideoPanel.Width, recordingVideoPanel.Height));
             }
             else
             {
                 var screenBounds = ScreenHelper.GetScreenBounds();
 
-                if ((recordingRectangle.Location.Y + managePanel.Height) < screenBounds.Height)
+                if ((recordingRectangle.Location.Y + recordingVideoPanel.Height) < screenBounds.Height)
                 {
                     Location = recordingRectangle.Location;
-#if _WINDOWS
                     Size = new Size(recordingRectangle.Width, recordingRectangle.Height + 1);
-
-                    var excludeRect = new Rectangle(new Point(0, managePanel.Height - 1), new Size(recordingRectangle.Width, recordingRectangle.Height - managePanel.Height + 2)).OffsetRectangle(1);
-
-                    var excludeRect2 = new Rectangle(new Point(managePanel.Width, 1), new Size(recordingRectangle.Width - managePanel.Width - 1, managePanel.Height));
-
-                    RedShot.Platforms.Windows.WindowsRegionHelper.Exclude(this.ControlObject, excludeRect, excludeRect2);
-#endif
+                    excludeRectangle = new Rectangle(new Point(0, recordingVideoPanel.Height - 1), new Size(recordingRectangle.Width, recordingRectangle.Height - recordingVideoPanel.Height + 2)).OffsetRectangle(1);
+                    excludeRectangle2 = new Rectangle(new Point(recordingVideoPanel.Width, 1), new Size(recordingRectangle.Width - recordingVideoPanel.Width - 1, recordingVideoPanel.Height));
                 }
             }
-#if _UNIX
-            Size = new Size(managePanel.Width, managePanel.Height);
+
+            RedShot.Platforms.Windows.WindowsRegionHelper.Exclude(this.ControlObject, excludeRectangle, excludeRectangle2);
 #endif
-            }
-
-        private void InitializeComponents()
-        {
-            timerLabel = new Label()
-            {
-                Text = TimeSpan.Zero.ToString()
-            };
-
-            beforeStartLabel = new Label()
-            {
-                TextColor = Colors.Red,
-                Text = "3",
-                Width = 10
-            };
-
-            recordingButton = new RecordingButton(40, 35);
-            recordingButton.Clicked += RecordingButton_Clicked;
-
-            var closeImage = Icons.Close;
-            closeButton = new ImageButton(new Size(40, 35), closeImage, scaleImageSize: new Size(20, 18));
-            closeButton.Clicked += CloseButton_Clicked;
-
-            managePanel = GetManageControl();
         }
 
-        private Control GetManageControl()
+        private void RecordingVideoPanelClosed(object sender, EventArgs e)
         {
-            return new StackLayout()
-            {
-                Orientation = Orientation.Horizontal,
-                VerticalContentAlignment = VerticalAlignment.Center,
-                Padding = 3,
-                Size = new Size(240, 40),
-                Spacing = 5,
-                BackgroundColor = Colors.WhiteSmoke,
-                Items =
-                    {
-                        recordingButton,
-                        closeButton,
-                        FormsHelper.GetVoidBox(15),
-                        timerLabel,
-                        FormsHelper.GetVoidBox(25),
-                        beforeStartLabel
-                    }
-            };
+            Close();
         }
     }
 }
