@@ -4,7 +4,6 @@ using RedShot.Infrastructure.Abstractions.Uploading;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Common.Notifying;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
-using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Forms;
 using RedShot.Resources;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
@@ -30,24 +29,11 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// </summary>
         public IUploader GetUploader()
         {
-            account = GetFtpAccount();
+            account = FtpAccountManager.GetFtpAccount();
 
             if (account != null)
             {
                 return GetFtpUploader(account);
-            }
-
-            return null;
-        }
-
-        private FtpAccount GetFtpAccount()
-        {
-            using (var form = new FtpUploaderForm())
-            {
-                if (form.ShowModal() == DialogResult.Ok)
-                {
-                    return form.SelectedAccount;
-                }
             }
 
             return null;

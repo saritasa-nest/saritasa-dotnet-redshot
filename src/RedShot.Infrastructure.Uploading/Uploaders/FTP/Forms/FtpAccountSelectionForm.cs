@@ -12,7 +12,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Forms
     /// <summary>
     /// FTP uploader form.
     /// </summary>
-    internal class FtpUploaderForm : Dialog<DialogResult>
+    internal class FtpAccountSelectionForm : Dialog<DialogResult>
     {
         private readonly FtpConfiguration ftpConfiguration;
         private ComboBox accounts;
@@ -24,9 +24,9 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Forms
         public FtpAccount SelectedAccount { get; private set; }
 
         /// <summary>
-        /// Initializes FTP uploader form.
+        /// Initializes new FTP account selection form.
         /// </summary>
-        public FtpUploaderForm()
+        public FtpAccountSelectionForm()
         {
             ftpConfiguration = ConfigurationManager.GetSection<FtpConfiguration>();
             Title = "FTP account selection";

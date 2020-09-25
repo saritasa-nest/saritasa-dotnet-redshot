@@ -45,24 +45,57 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         private ObservableCollection<FtpAccount> bindingList;
         private DefaultButton testButton;
         private readonly List<FtpAccount> ftpAccounts;
+        private readonly FtpConfiguration ftpConfiguration;
+        private ComboBox primaryAccountSelectionComboBox;
 
         /// <summary>
         /// Initializes FTP option dialog.
         /// </summary>
         public FtpOptionControl(FtpConfiguration ftpConfiguration)
         {
+            this.ftpConfiguration = ftpConfiguration;
             ftpAccounts = ftpConfiguration.FtpAccounts;
 
             InitializeComponents();
+            InitializeAccountsBinding();
+        }
 
-            this.accounts.SelectedValueChanged += Accounts_SelectedValueChanged;
-            this.accounts.DropDownClosed += Accounts_SelectedValueChanged;
-
+        private void InitializeAccountsBinding()
+        {
             bindingList = new ObservableCollection<FtpAccount>(ftpAccounts);
             bindingList.CollectionChanged += BindingList_CollectionChanged;
+
+            accounts.DropDownClosed += AccountsSelectedValueChanged;
             accounts.DataStore = bindingList;
             accounts.SelectedValueChanged += FtpOptionControlChanged;
             accounts.ItemKeyBinding = new DelegateBinding<FtpAccount, string>(a => a.Name);
+
+            primaryAccountSelectionComboBox.DataStore = bindingList;
+            primaryAccountSelectionComboBox.DataContext = ftpConfiguration;
+            primaryAccountSelectionComboBox.SelectedValueBinding.Convert(
+                l =>
+                {
+                    if (l == null)
+                    {
+                        return default;
+                    }
+                    else
+                    {
+                        return ((FtpAccount)l).Id;
+                    }
+                },
+                guid =>
+                {
+                    if (FtpAccountManager.TryGetAccountByGuid(guid, ftpAccounts, out var ftpAccount))
+                    {
+                        return ftpAccount;
+                    }
+                    else
+                    {
+                        return ftpAccounts.FirstOrDefault();
+                    }
+
+                }).BindDataContext((FtpConfiguration o) => o.PrimaryAccountGuid);
         }
 
         private void TestButtonClicked(object sender, EventArgs e)
@@ -88,7 +121,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         {
             if (accounts.SelectedValue is FtpAccount account)
             {
-                previewLinkLabel.Text = account.GetFormatLink("artemka.png");
+                previewLinkLabel.Text = account.GetFormatLink("example.png");
             }
         }
 
@@ -98,7 +131,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             ftpAccounts.AddRange(bindingList);
         }
 
-        private void Accounts_SelectedValueChanged(object sender, EventArgs e)
+        private void AccountsSelectedValueChanged(object sender, EventArgs e)
         {
             RefreshAccountFields();
         }

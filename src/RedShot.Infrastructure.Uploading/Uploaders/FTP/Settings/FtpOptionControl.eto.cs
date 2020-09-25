@@ -20,10 +20,16 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 Spacing = 10,
                 Items =
                 {
+                    GetPrimaryAccountSelectionFields(),
                     GetAccountsPanel(),
                     accountFields,
                 }
             };
+        }
+
+        private Control GetPrimaryAccountSelectionFields()
+        {
+            return FormsHelper.GetBaseStack("Primary account:", primaryAccountSelectionComboBox, nameWidth: 100, padding: 10);
         }
 
         private void InitializeFileds()
@@ -100,18 +106,23 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             {
                 DataStore = Enum.GetValues(typeof(FtpsEncryption)).Cast<FtpsEncryption>()
                 .Select(p => p.ToString()),
-                Size = defaultSize,
+                Size = defaultSize
             };
 
             accounts = new ComboBox()
             {
-                Size = new Eto.Drawing.Size(200, 21),
+                Size = new Eto.Drawing.Size(250, 21)
+            };
+
+            primaryAccountSelectionComboBox = new ComboBox()
+            {
+                Size = new Eto.Drawing.Size(250, 21)
             };
 
             addButton = new Button()
             {
                 Text = "Add",
-                Size = new Eto.Drawing.Size(100, 30),
+                Size = new Eto.Drawing.Size(100, 30)
             };
 
             addButton.Click += AddButton_Click;

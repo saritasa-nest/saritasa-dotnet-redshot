@@ -15,6 +15,11 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         public string UniqueName => "FTP accounts configuration";
 
         /// <summary>
+        /// Primary account guid.
+        /// </summary>
+        public Guid PrimaryAccountGuid { get; set; }
+
+        /// <summary>
         /// List of FTP accounts.
         /// </summary>
         public List<FtpAccount> FtpAccounts { get; private set; } = new List<FtpAccount>();

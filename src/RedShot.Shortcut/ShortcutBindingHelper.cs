@@ -21,7 +21,7 @@ namespace RedShot.Shortcut
 #if _WINDOWS
                     Platforms.Windows.Shortcuts.WindowsShortcutBinder.BindShortcut(shortcut.Keys, shortcut.OnPressedAction);
 #elif _UNIX
-                    Platforms.Linux.Shortcuts.LinuxShortcutBinder.BindShortcut(shortcut.Keys, shortcut.OnPressedAction);
+                    //Platforms.Linux.Shortcuts.LinuxShortcutBinder.BindShortcut(shortcut.Keys, shortcut.OnPressedAction);
 #endif
                 }
             }
@@ -39,7 +39,7 @@ namespace RedShot.Shortcut
 #if _WINDOWS
                     Platforms.Windows.Shortcuts.WindowsShortcutBinder.UnbindShortcuts(shortcut.Keys);
 #elif _UNIX
-                    Platforms.Linux.Shortcuts.LinuxShortcutBinder.UnbindShortcuts(shortcut.Keys);
+                    //Platforms.Linux.Shortcuts.LinuxShortcutBinder.UnbindShortcuts(shortcut.Keys);
 #endif
                 }
             }
