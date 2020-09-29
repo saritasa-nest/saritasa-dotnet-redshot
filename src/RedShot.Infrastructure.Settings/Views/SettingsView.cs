@@ -117,7 +117,7 @@ namespace RedShot.Infrastructure.Settings.Views
             var listBox = new ListBox()
             {
                 DataStore = settingsSections,
-                Width = 150
+                Width = 180
             };
 
             listBox.ItemTextBinding = new DelegateBinding<ISettingsSection, string>(r => r.Name);
@@ -143,10 +143,10 @@ namespace RedShot.Infrastructure.Settings.Views
 
             var splitter = new Splitter
             {
-                Position = 150,
-                FixedPanel = SplitterFixedPanel.Panel1,
+                Position = 180,
+                FixedPanel = SplitterFixedPanel.Panel2,
                 Panel1 = settingsListPanel,
-                Panel1MinimumSize = 150,
+                Panel1MinimumSize = 180,
                 Panel2MinimumSize = 800,
                 Panel2 = contentPanel
             };

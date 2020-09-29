@@ -37,8 +37,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         private TextBox ftpsCertificateLocation;
         private TextBox keypath;
         private PasswordBox passphrase;
-        private Button ftpsCertificateLocationButton;
-        private Button keyPathButton;
+        private DefaultButton ftpsCertificateLocationButton;
+        private DefaultButton keyPathButton;
         private Control ftpsBoxes;
         private Control sftpBoxes;
         private Control accountFields;
@@ -66,6 +66,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             bindingList.CollectionChanged += BindingList_CollectionChanged;
 
             accounts.DropDownClosed += AccountsSelectedValueChanged;
+            accounts.SelectedValueChanged += AccountsSelectedValueChanged;
             accounts.DataStore = bindingList;
             accounts.SelectedValueChanged += FtpOptionControlChanged;
             accounts.ItemKeyBinding = new DelegateBinding<FtpAccount, string>(a => a.Name);
@@ -203,7 +204,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             UpdatePreview();
         }
 
-        private void KeyPathButton_Click(object sender, EventArgs e)
+        private void KeyPathButtonClick(object sender, EventArgs e)
         {
             using (var dialog = new OpenFileDialog())
             {
@@ -216,7 +217,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             }
         }
 
-        private void FtpsCertificateLocationButton_Click(object sender, EventArgs e)
+        private void FtpsCertificateLocationButtonClick(object sender, EventArgs e)
         {
             using (var dialog = new OpenFileDialog())
             {
@@ -230,7 +231,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             }
         }
 
-        private void CopyButton_Click(object sender, EventArgs e)
+        private void CopyButtonClick(object sender, EventArgs e)
         {
             if (accounts.SelectedValue != null)
             {
@@ -239,7 +240,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             }
         }
 
-        private void DelButton_Click(object sender, EventArgs e)
+        private void DelButtonClick(object sender, EventArgs e)
         {
             if (accounts.DataStore.Count() > 0 && accounts.SelectedValue != null)
             {
@@ -252,7 +253,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             }
         }
 
-        private void AddButton_Click(object sender, EventArgs e)
+        private void AddButtonClick(object sender, EventArgs e)
         {
             CreateNewAccount();
         }

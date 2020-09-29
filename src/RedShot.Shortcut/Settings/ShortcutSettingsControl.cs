@@ -31,6 +31,14 @@ namespace RedShot.Shortcut.Settings
             };
 
             shortcuts.ForEach((s) => stackLayout.Items.Add(GetShortcutStack(s)));
+
+#if _UNIX
+            stackLayout.Items.Add(new Label()
+            {
+                TextColor = Colors.Red,
+                Text = "Shortcuts are not supported on this platform!"
+            });
+#endif
             Content = stackLayout;
         }
 

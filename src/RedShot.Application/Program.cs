@@ -31,12 +31,17 @@ namespace RedShot.Application
 
             var app = new Eto.Forms.Application(Eto.Platform.Detect);
             app.UnhandledException += InstanceOnUnhandledException;
+            app.Initialized += AppInitialized;
             AppDomain.CurrentDomain.UnhandledException += DomainUnhandledException;
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
             AddControl();
             AddStyles();
-            Shortcut.ShortcutManager.BindShortcuts();
             app.Run(ApplicationManager.GetTrayApp());
+        }
+
+        private static void AppInitialized(object sender, EventArgs e)
+        {
+            Shortcut.ShortcutManager.BindShortcuts();
         }
 
         private static void CurrentDomain_ProcessExit(object sender, EventArgs e)

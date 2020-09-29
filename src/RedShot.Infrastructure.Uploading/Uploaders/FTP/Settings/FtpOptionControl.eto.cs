@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Runtime.InteropServices;
+using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
@@ -34,7 +36,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
         private void InitializeFileds()
         {
-            var defaultSize = new Eto.Drawing.Size(200, 21);
+            var defaultSize = new Size(200, 21);
 
             addExtensionCheckBox = new CheckBox();
             previewLinkLabel = new Label();
@@ -92,14 +94,14 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 MaxValue = 65535,
                 Increment = 1,
                 Value = 21,
-                Size = new Eto.Drawing.Size(60, 21),
+                Size = new Size(60, 21),
             };
 
             ftpProtocol = new ComboBox()
             {
                 DataStore = Enum.GetValues(typeof(FtpProtocol)).Cast<FtpProtocol>()
                 .Select(p => p.ToString()),
-                Size = new Eto.Drawing.Size(200, 21),
+                Size = new Size(200, 21),
             };
 
             ftpsEncryption = new ComboBox()
@@ -111,55 +113,42 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
             accounts = new ComboBox()
             {
-                Size = new Eto.Drawing.Size(250, 21)
+                Size = new Size(250, 21)
             };
 
             primaryAccountSelectionComboBox = new ComboBox()
             {
-                Size = new Eto.Drawing.Size(250, 21)
+                Size = new Size(250, 21)
             };
 
             addButton = new Button()
             {
                 Text = "Add",
-                Size = new Eto.Drawing.Size(100, 30)
+                Size = new Size(100, 30)
             };
-
-            addButton.Click += AddButton_Click;
+            addButton.Click += AddButtonClick;
 
             delButton = new Button()
             {
                 Text = "Delete",
-                Size = new Eto.Drawing.Size(100, 30),
+                Size = new Size(100, 30),
             };
-
-            delButton.Click += DelButton_Click;
+            delButton.Click += DelButtonClick;
 
             copyButton = new Button()
             {
                 Text = "Copy",
-                Size = new Eto.Drawing.Size(100, 30),
+                Size = new Size(100, 30),
             };
+            copyButton.Click += CopyButtonClick;
 
-            copyButton.Click += CopyButton_Click;
+            ftpsCertificateLocationButton = new DefaultButton("...", 35, 21);
+            ftpsCertificateLocationButton.Clicked += FtpsCertificateLocationButtonClick;
 
-            ftpsCertificateLocationButton = new Button()
-            {
-                Text = "...",
-                Size = new Eto.Drawing.Size(35, 21),
-            };
+            keyPathButton = new DefaultButton("...", 35, 21);
+            keyPathButton.Clicked += KeyPathButtonClick;
 
-            ftpsCertificateLocationButton.Click += FtpsCertificateLocationButton_Click;
-
-            keyPathButton = new Button()
-            {
-                Text = "...",
-                Size = new Eto.Drawing.Size(35, 21),
-            };
-
-            keyPathButton.Click += KeyPathButton_Click;
-
-            ftpProtocol.SelectedValueChanged += FtpProtocol_SelectedValueChanged;
+            ftpProtocol.SelectedValueChanged += FtpProtocolSelectedValueChanged;
 
             ftpsBoxes = GetFtpsBoxes();
             ftpsBoxes.Visible = false;
@@ -181,20 +170,22 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 Content = new StackLayout()
                 {
                     Orientation = Orientation.Vertical,
+                    Spacing = 10,
                     Items =
                     {
                         BaseAccountBoxes(),
                         ftpsBoxes,
-                        sftpBoxes
+                        sftpBoxes,
+                        testButton
                     }
                 },
                 Text = "Account",
-                MinimumSize = new Eto.Drawing.Size(700, 400),
+                MinimumSize = new Size(700, 400),
                 Padding = 20
             };
         }
 
-        private void FtpProtocol_SelectedValueChanged(object sender, EventArgs e)
+        private void FtpProtocolSelectedValueChanged(object sender, EventArgs e)
         {
             switch (Enum.Parse(typeof(FtpProtocol), (string)ftpProtocol.SelectedValue))
             {
@@ -232,7 +223,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                     FormsHelper.GetBaseStack("IsActive", isActive),
                     FormsHelper.GetBaseStack("SubFolderPath", subFolderPath),
                     GetLinkBoxes(),
-                    testButton
                 }
             };
         }
@@ -279,46 +269,57 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                     {
                         Text = "Port:",
                     },
-                    port,
+                    port
                 }
             };
         }
 
         private StackLayout GetLinkBoxes()
         {
+            var pathBoxes = new StackLayout()
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 5,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                Items =
+                {
+                    browserTypeComboBox,
+                    homePathTextBox
+                }
+            };
+
+            Control pathControl;
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                pathControl = FormsHelper.GetBaseStack("URL path:", pathBoxes, controlWidth: 400);
+            }
+            else
+            {
+                pathControl = new StackLayout()
+                {
+                    Orientation = Orientation.Vertical,
+                    Padding = 5,
+                    Items =
+                    {
+                        new Label()
+                        {
+                            Text = "URL path:"
+                        },
+                        pathBoxes
+                    }
+                };
+            }
+
             return new StackLayout
             {
                 Orientation = Orientation.Vertical,
                 Spacing = 5,
                 Items =
                 {
-                    FormsHelper.GetBaseStack("URL path:", new StackLayout()
-                    {
-                        Orientation = Orientation.Horizontal,
-                        Spacing = 5,
-                        VerticalContentAlignment = VerticalAlignment.Center,
-                        Items =
-                        {
-                            browserTypeComboBox,
-                            homePathTextBox
-                        }
-                    }, controlWidth: 400),
-                    new StackLayout()
-                    {
-                        Orientation = Orientation.Horizontal,
-                        Padding = new Eto.Drawing.Padding(10, 0, 0, 0),
-                        Spacing = 5,
-                        VerticalContentAlignment = VerticalAlignment.Center,
-                        Items =
-                        {
-                            addExtensionCheckBox,
-                            new Label()
-                            {
-                                Text = "Add extension to the URL path"
-                            }
-                        }
-                    },
-                    FormsHelper.GetBaseStack("URL preview:", previewLinkLabel)
+                    pathControl,
+                    FormsHelper.GetBaseStack("Add extension to the URL path", addExtensionCheckBox),
+                    FormsHelper.GetBaseStack("URL preview:", previewLinkLabel, controlWidth: 300)
                 }
             };
         }

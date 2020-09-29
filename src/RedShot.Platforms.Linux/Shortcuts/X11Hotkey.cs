@@ -13,15 +13,16 @@ namespace RedShot.Platforms.Linux.Shortcuts
         private const int KeyPress = 2;
         private const int GrabModeAsync = 1;
         private int keycode;
-        private Gdk.Window rootWin = Gdk.Global.DefaultRootWindow;
+        private Gdk.Window rootWin;
+        private IntPtr xDisplay;
 
         public X11Hotkey(Gdk.Key key, Gdk.ModifierType modifiers)
         {
             this.Key = key;
             this.Modifiers = modifiers;
 
-
-            IntPtr xDisplay = GetXDisplay(rootWin);
+            rootWin = Gdk.Global.DefaultRootWindow;
+            xDisplay = GetXDisplay(rootWin);
             this.keycode = XKeysymToKeycode(xDisplay, (int)this.Key);
             if (Environment.Is64BitProcess)
             {
@@ -37,8 +38,6 @@ namespace RedShot.Platforms.Linux.Shortcuts
 
         public void Register()
         {
-            IntPtr xDisplay = GetXDisplay(rootWin);
-
             XGrabKey(
                      xDisplay,
                      this.keycode,
@@ -51,8 +50,6 @@ namespace RedShot.Platforms.Linux.Shortcuts
 
         public void Unregister()
         {
-            IntPtr xDisplay = GetXDisplay(rootWin);
-
             XUngrabKey(
                      xDisplay,
                      this.keycode,
@@ -131,19 +128,19 @@ namespace RedShot.Platforms.Linux.Shortcuts
                 gdk_x11_window_get_drawable_impl(window.Handle));
         }
 
-        [DllImport("libgtk-x11-2.0")]
+        [DllImport("libgtk-x11-2.0.so.0")]
         private static extern IntPtr gdk_x11_drawable_get_xid(IntPtr gdkWindow);
 
-        [DllImport("libgtk-x11-2.0")]
+        [DllImport("libgtk-x11-2.0.so.0")]
         private static extern IntPtr gdk_x11_drawable_get_xdisplay(IntPtr gdkDrawable);
 
-        [DllImport("libgtk-x11-2.0")]
+        [DllImport("libgtk-x11-2.0.so.0")]
         private static extern IntPtr gdk_x11_window_get_drawable_impl(IntPtr gdkWindow);
 
-        [DllImport("libX11")]
+        [DllImport("libX11.so.6")]
         private static extern int XKeysymToKeycode(IntPtr display, int key);
 
-        [DllImport("libX11")]
+        [DllImport("libX11.so.6")]
         private static extern int XGrabKey(
             IntPtr display,
             int keycode,
@@ -153,7 +150,7 @@ namespace RedShot.Platforms.Linux.Shortcuts
             int pointer_mode,
             int keyboard_mode);
 
-        [DllImport("libX11")]
+        [DllImport("libX11.so.6")]
         private static extern int XUngrabKey(
             IntPtr display,
             int keycode,
