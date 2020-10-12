@@ -1,13 +1,10 @@
-﻿using System;
-using System.Linq;
-using RedShot.Infrastructure.Configuration;
+﻿using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Settings;
-using RedShot.Infrastructure.Settings.Sections;
 
 namespace RedShot.Application
 {
     /// <summary>
-    /// App initializer.
+    /// Application initializer.
     /// </summary>
     internal static class AppInitializer
     {

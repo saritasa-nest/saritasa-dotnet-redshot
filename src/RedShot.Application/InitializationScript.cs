@@ -40,13 +40,13 @@ namespace RedShot.Application
         }
 
         /// <summary>
-        /// List of configuration options of the app.
+        /// List of configuration options of the application.
         /// They should implement IConfigurationOption interface.
         /// </summary>
         public static IEnumerable<Type> ConfigurationOptions { get; private set; }
 
         /// <summary>
-        /// List of setting options of the app.
+        /// List of setting options of the application.
         /// They should implement ISettingOption interface.
         /// </summary>
         public static IEnumerable<Type> SettingsOptions { get; private set; }

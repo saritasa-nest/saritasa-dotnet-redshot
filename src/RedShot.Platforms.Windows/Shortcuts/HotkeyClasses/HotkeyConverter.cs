@@ -51,9 +51,21 @@ namespace RedShot.Platforms.Windows.Shortcuts.HotkeyClasses
             {
                 Keys keys = (Keys) value;
                 Modifiers modifiers = Modifiers.None;
-                if (keys.HasFlag(Keys.Alt)) modifiers |= Modifiers.Alt;
-                if (keys.HasFlag(Keys.Control)) modifiers |= Modifiers.Control;
-                if (keys.HasFlag(Keys.Shift)) modifiers |= Modifiers.Shift;
+                if (keys.HasFlag(Keys.Alt))
+                {
+                    modifiers |= Modifiers.Alt;
+                }
+
+                if (keys.HasFlag(Keys.Control))
+                {
+                    modifiers |= Modifiers.Control;
+                }
+
+                if (keys.HasFlag(Keys.Shift))
+                {
+                    modifiers |= Modifiers.Shift;
+                }
+
                 keys = ExtractNonMods(keys);
                 return new Hotkey(modifiers, keys);
             }

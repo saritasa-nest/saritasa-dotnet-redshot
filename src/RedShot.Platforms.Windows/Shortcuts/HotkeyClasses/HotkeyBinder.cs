@@ -43,7 +43,9 @@ namespace RedShot.Platforms.Windows.Shortcuts.HotkeyClasses
                     (uint)hotkeyCombo.Key);
 
             if (!successful)
+            {
                 return true;
+            }
 
             NativeMethods.UnregisterHotKey(
                 hotkeyWindow.Handle,
@@ -57,8 +59,6 @@ namespace RedShot.Platforms.Windows.Shortcuts.HotkeyClasses
         /// </summary>
         /// <param name="modifiers">The modifers that constitute this hotkey.</param>
         /// <param name="keys">The keys that constitute this hotkey.</param>
-        /// <exception cref="HotkeyAlreadyBoundException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
         public HotkeyCallback Bind(Modifiers modifiers, Keys keys)
         {
             return Bind(new Hotkey(modifiers, keys));
@@ -67,12 +67,12 @@ namespace RedShot.Platforms.Windows.Shortcuts.HotkeyClasses
         /// <summary>
         /// Binds a <see cref="Hotkey"/> to a <see cref="HotkeyCallback"/>.
         /// </summary>
-        /// <exception cref="HotkeyAlreadyBoundException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
         public HotkeyCallback Bind(Hotkey hotkeyCombo)
         {
-            if (hotkeyCombo == null) 
+            if (hotkeyCombo == null)
+            {
                 throw new ArgumentNullException("hotkeyCombo");
+            }
 
             HotkeyCallback callback = new HotkeyCallback();
             container.Add(hotkeyCombo, callback);
@@ -91,7 +91,9 @@ namespace RedShot.Platforms.Windows.Shortcuts.HotkeyClasses
                     (uint)hotkeyCombo.Key);
 
             if (!successful)
+            {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
         }
 
         /// <summary>
@@ -105,8 +107,6 @@ namespace RedShot.Platforms.Windows.Shortcuts.HotkeyClasses
         /// <summary>
         /// Unbinds a previously bound <see cref="Hotkey"/>.
         /// </summary>
-        /// <exception cref="HotkeyNotBoundException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
         public void Unbind(Hotkey hotkeyCombo)
         {
             container.Remove(hotkeyCombo);
@@ -115,19 +115,15 @@ namespace RedShot.Platforms.Windows.Shortcuts.HotkeyClasses
 
         private void UnregisterHotkey(Hotkey hotkeyCombo)
         {
-            bool successful =
-                NativeMethods.UnregisterHotKey(
-                    hotkeyWindow.Handle, 
-                    hotkeyCombo.GetHashCode());
-
-            if (!successful)
-                throw new HotkeyNotBoundException(Marshal.GetLastWin32Error());
+            NativeMethods.UnregisterHotKey(
+                hotkeyWindow.Handle,
+                hotkeyCombo.GetHashCode());
         }
 
         private void OnHotkeyPressed(object sender, HotkeyPressedEventArgs e)
         {
             HotkeyCallback callback = container.Find(e.Hotkey);
-            
+
             if (!callback.Assigned)
             {
                 throw new InvalidOperationException(

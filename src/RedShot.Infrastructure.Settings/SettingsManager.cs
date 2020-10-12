@@ -29,10 +29,17 @@ namespace RedShot.Infrastructure.Settings
         /// </summary>
         public static void OpenSettings()
         {
-            settingsView?.Close();
+            if (settingsView != null && !settingsView.IsDisposed && settingsView.Loaded)
+            {
+                settingsView.BringToFront();
+            }
+            else
+            {
+                settingsView?.Close();
 
-            settingsView = new SettingsView(ActivateSections());
-            settingsView.Show();
+                settingsView = new SettingsView(ActivateSections());
+                settingsView.Show();
+            }
         }
 
         private static IEnumerable<ISettingsSection> ActivateSections()

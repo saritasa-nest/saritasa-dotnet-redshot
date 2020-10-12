@@ -45,8 +45,16 @@ namespace RedShot.Platforms.Windows.Shortcuts.HotkeyClasses
         /// </returns>
         public bool Equals(Hotkey other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
             return Modifier.Equals(other.Modifier) && Key.Equals(other.Key);
         }
 

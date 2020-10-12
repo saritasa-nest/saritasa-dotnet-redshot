@@ -14,8 +14,6 @@ namespace RedShot.Platforms.Windows.Shortcuts.HotkeyClasses
             CreateHandle(new CreateParams());
         }
 
-        // Unconventional, I know. But you can watch my screen-cast where I explain
-        // this particular method in more detail if you want: http://youtu.be/dvtV3jc4maY
         protected override void WndProc(ref Message m)
         {
             if (m.Msg == WM_HOTKEY)
