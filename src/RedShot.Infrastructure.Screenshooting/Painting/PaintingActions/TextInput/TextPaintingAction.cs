@@ -1,10 +1,10 @@
 ﻿using System;
 using Eto.Drawing;
-using RedShot.Infrastructure.Common;
 using SkiaSharp;
-using RedShot.Infrastructure.Painting.PaintingActions.UserInputActions;
+using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.UserInputActions;
 
-namespace RedShot.Infrastructure.Painting.PaintingActions.TextInput
+namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextInput
 {
     /// <summary>
     /// Text painting action.

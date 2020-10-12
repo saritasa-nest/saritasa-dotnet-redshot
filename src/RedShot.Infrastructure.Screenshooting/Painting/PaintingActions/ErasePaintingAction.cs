@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Eto.Drawing;
 using SkiaSharp;
-using RedShot.Infrastructure.Painting.PaintingActions.UserInputActions;
+using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.UserInputActions;
 
-namespace RedShot.Infrastructure.Painting.PaintingActions
+namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions
 {
     /// <summary>
     /// Erase painting action.

@@ -6,15 +6,15 @@ using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
 using Saritasa.Tools.Common.Utils;
 using SkiaSharp;
-using RedShot.Infrastructure.Painting.States;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
-using RedShot.Infrastructure.Painting.PaintingActions;
-using RedShot.Infrastructure.Painting.PaintingActions.TextInput;
-using RedShot.Infrastructure.Painting.PaintingActions.UserInputActions;
 using RedShot.Resources;
+using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions;
+using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextInput;
+using RedShot.Infrastructure.Screenshooting.Painting.States;
+using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.UserInputActions;
 
-namespace RedShot.Infrastructure.Painting
+namespace RedShot.Infrastructure.Screenshooting.Painting
 {
     /// <summary>
     /// Image panel.

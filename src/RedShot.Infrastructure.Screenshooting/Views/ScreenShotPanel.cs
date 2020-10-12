@@ -3,7 +3,7 @@ using Eto.Drawing;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Resources;
 
-namespace RedShot.Infrastructure.Screenshooting
+namespace RedShot.Infrastructure.Screenshooting.Views
 {
     /// <summary>
     /// Painting panel for editor view.

@@ -1,14 +1,17 @@
-﻿using System;
-using System.IO;
-using Eto.Drawing;
+﻿using Eto.Drawing;
 using RedShot.Infrastructure.Formatting;
-using RedShot.Infrastructure.Painting;
-using RedShot.Infrastructure.Screenshooting;
+using RedShot.Infrastructure.Screenshooting.Painting;
+using RedShot.Infrastructure.Screenshooting.Views;
+using RedShot.Infrastructure.Uploading;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
-namespace RedShot.Infrastructure
+namespace RedShot.Infrastructure.Screenshooting
 {
     /// <summary>
-    /// Manages screenshotting.
+    /// Manages screen shotting.
     /// </summary>
     public static class ScreenshotManager
     {
@@ -23,7 +26,7 @@ namespace RedShot.Infrastructure
         }
 
         /// <summary>
-        /// Run screenshot selection view.
+        /// Run screen shot selection view.
         /// </summary>
         public static void RunScreenShotting()
         {
@@ -52,7 +55,7 @@ namespace RedShot.Infrastructure
             var path = Path.Combine(imagesFolder, $"{baseName}.png");
 
             image.Save(path, ImageFormat.Png);
-            ApplicationManager.RunUploadView(new ImageFile(image, path, imageName));
+            UploadingManager.RunUploading(new ImageFile(image, path, imageName));
         }
     }
 }

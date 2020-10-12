@@ -1,8 +1,7 @@
 ﻿using System;
-using Eto.Drawing;
 using Eto.Forms;
-using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Recording;
+using RedShot.Infrastructure.Screenshooting;
 using RedShot.Infrastructure.Uploading;
 using RedShot.Resources;
 
@@ -25,6 +24,7 @@ namespace RedShot.Infrastructure
             try
             {
                 trayIcon = new TrayIcon("RedShot", Icons.RedCircle);
+                UploadingManager.UploadStarted += UploadingManagerUploadStarted;
             }
             catch (Exception ex)
             {
@@ -35,7 +35,7 @@ namespace RedShot.Infrastructure
         }
 
         /// <summary>
-        /// Runs screenshot editor.
+        /// Runs screen shot editor.
         /// </summary>
         public static void RunScreenShooting()
         {
@@ -43,21 +43,16 @@ namespace RedShot.Infrastructure
         }
 
         /// <summary>
-        /// Runs upload view.
-        /// </summary>
-        public static void RunUploadView(IFile file)
-        {
-            trayIcon.UploadLastFile.Visible = true;
-            UploadingManager.RunUploading(file);
-        }
-
-        /// <summary>
         /// Runs recording.
         /// </summary>
         public static void RunRecording()
         {
-            trayIcon.UploadLastFile.Visible = true;
             RecordingManager.InitiateRecording();
+        }
+
+        private static void UploadingManagerUploadStarted(object sender, EventArgs e)
+        {
+            trayIcon.UploadLastFile.Visible = true;
         }
     }
 }

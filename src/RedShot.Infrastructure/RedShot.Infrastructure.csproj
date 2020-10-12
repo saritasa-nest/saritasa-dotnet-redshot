@@ -20,8 +20,8 @@
   <ItemGroup>
     <ProjectReference Include="..\RedShot.Infrastructure.Common\RedShot.Infrastructure.Common.csproj" />
     <ProjectReference Include="..\RedShot.Infrastructure.Recording\RedShot.Infrastructure.Recording.csproj" />
+    <ProjectReference Include="..\RedShot.Infrastructure.Screenshooting\RedShot.Infrastructure.Screenshooting.csproj" />
     <ProjectReference Include="..\RedShot.Infrastructure.Settings\RedShot.Infrastructure.Settings.csproj" />
-    <ProjectReference Include="..\RedShot.Infrastructure.Uploading\RedShot.Infrastructure.Uploading.csproj" />
     <ProjectReference Include="..\RedShot.Resources\RedShot.Resources.csproj" />
   </ItemGroup>
 

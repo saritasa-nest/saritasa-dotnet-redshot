@@ -3,9 +3,9 @@ using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
-using RedShot.Infrastructure.Painting.PaintingActions.UserInputActions;
+using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.UserInputActions;
 
-namespace RedShot.Infrastructure.Painting.PaintingActions.TextInput
+namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextInput
 {
     /// <summary>
     /// Text input view.

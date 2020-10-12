@@ -1,14 +1,13 @@
-﻿using System.IO;
-using Eto.Drawing;
+﻿using Eto.Drawing;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
 
-namespace RedShot.Infrastructure
+namespace RedShot.Infrastructure.Screenshooting
 {
     /// <summary>
     /// Image file implementation.
     /// </summary>
-    public class ImageFile : IFile
+    internal class ImageFile : IFile
     {
         private readonly Bitmap image;
 

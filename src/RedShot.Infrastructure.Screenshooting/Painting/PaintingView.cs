@@ -5,9 +5,9 @@ using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
-using RedShot.Infrastructure.Painting.States;
+using RedShot.Infrastructure.Screenshooting.Painting.States;
 
-namespace RedShot.Infrastructure.Painting
+namespace RedShot.Infrastructure.Screenshooting.Painting
 {
     /// <summary>
     /// Painting view.

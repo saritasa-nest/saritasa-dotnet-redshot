@@ -1,6 +1,6 @@
 ﻿using Eto.Drawing;
 
-namespace RedShot.Infrastructure.Painting.PaintingActions.UserInputActions
+namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.UserInputActions
 {
     /// <summary>
     /// Text input action.

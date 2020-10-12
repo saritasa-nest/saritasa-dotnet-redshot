@@ -146,14 +146,14 @@ namespace RedShot.Infrastructure.Recording.Views
                 Size = new Size(240, 40),
                 Spacing = 5,
                 Items =
-                    {
-                        recordingButton,
-                        closeButton,
-                        FormsHelper.GetVoidBox(15),
-                        timerLabel,
-                        FormsHelper.GetVoidBox(25),
-                        beforeStartLabel
-                    }
+                {
+                    recordingButton,
+                    closeButton,
+                    FormsHelper.GetVoidBox(15),
+                    timerLabel,
+                    FormsHelper.GetVoidBox(25),
+                    beforeStartLabel
+                }
             };
         }
     }

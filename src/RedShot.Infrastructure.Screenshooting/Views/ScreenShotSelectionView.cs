@@ -2,10 +2,10 @@
 using Eto.Drawing;
 using RedShot.Infrastructure.Common.Forms.SelectionForm;
 
-namespace RedShot.Infrastructure.Screenshooting
+namespace RedShot.Infrastructure.Screenshooting.Views
 {
     /// <summary>
-    /// Screenshot selection view.
+    /// Screen shot selection view.
     /// </summary>
     public sealed class ScreenShotSelectionView : SelectionFormBase<ScreenShotPanel>
     {

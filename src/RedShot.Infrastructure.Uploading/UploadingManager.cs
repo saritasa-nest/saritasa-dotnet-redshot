@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
 using RedShot.Infrastructure.Common.Notifying;
@@ -18,6 +19,8 @@ namespace RedShot.Infrastructure.Uploading
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private static UploaderChoosingForm uploaderChoosingForm;
         private static IFile lastFile;
+
+        public static event EventHandler UploadStarted;
 
         /// <summary>
         /// Runs uploading the latest file, if it exists.
@@ -36,8 +39,9 @@ namespace RedShot.Infrastructure.Uploading
         public static void RunUploading(IFile file)
         {
             lastFile = file;
-            var configuration = GetUploadingConfiguration();
+            UploadStarted?.Invoke(null, EventArgs.Empty);
 
+            var configuration = GetUploadingConfiguration();
             if (configuration.AutoUpload)
             {
                 var uploadingServices = GetUploadingServices(configuration.UploadersTypes);

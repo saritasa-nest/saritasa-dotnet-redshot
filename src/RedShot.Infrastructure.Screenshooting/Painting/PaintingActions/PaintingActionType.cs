@@ -1,4 +1,4 @@
-﻿namespace RedShot.Infrastructure.Painting.PaintingActions
+﻿namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions
 {
     /// <summary>
     /// Painting types.

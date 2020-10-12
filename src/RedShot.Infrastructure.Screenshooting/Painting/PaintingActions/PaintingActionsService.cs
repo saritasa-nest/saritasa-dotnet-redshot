@@ -1,8 +1,8 @@
-﻿using RedShot.Infrastructure.Painting.PaintingActions.TextInput;
-using SkiaSharp;
-using RedShot.Infrastructure.Painting.States;
+﻿using SkiaSharp;
+using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextInput;
+using RedShot.Infrastructure.Screenshooting.Painting.States;
 
-namespace RedShot.Infrastructure.Painting.PaintingActions
+namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions
 {
     /// <summary>
     /// Painting action services.
