@@ -21,6 +21,7 @@ namespace RedShot.Recording.Recorders.Windows
     /// </summary>
     internal class WindowsRecordingService : IRecordingService
     {
+        private const string BinariesUrl = "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2020-10-11-12-31/ffmpeg-N-99531-g2be3eb7f77-win64-gpl.zip";
         private readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly string ffmpegBinaryName;
 
@@ -121,35 +122,23 @@ namespace RedShot.Recording.Recorders.Windows
                 }
             }
 
-            string url;
-
-            if (Environment.Is64BitOperatingSystem)
+            var downloader = new Downloader();
+            downloader.DownloadAsync(BinariesUrl, "ffmpeg.zip", (path) =>
             {
-                url = "https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-latest-win64-static.zip";
-            }
-            else
-            {
-                url = "https://ffmpeg.zeranoe.com/builds/win32/static/ffmpeg-latest-win32-static.zip";
-            }
+                try
+                {
+                    ZipFile.ExtractToDirectory(path, GetFfmpegPath());
+                    NotifyHelper.Notify("FFmpeg has been downloaded", "RedShot", NotifyStatus.Success);
+                    downloader.Dispose();
+                }
+                catch (Exception e)
+                {
+                    var errorMessage = "An error occurred while FFmpeg was installing";
 
-            var ffmpegZipName = "ffmpeg.zip";
-
-            try
-            {
-                using var downloader = new Downloader();
-                downloader.DownloadAsync(url, ffmpegZipName, DownloadingCallBack);
-            }
-            catch (Exception e)
-            {
-                logger.Error(e, "An error occurred while FFmpeg was installing.");
-                MessageBox.Show($"An error occurred while FFmpeg was installing: {e.Message}", MessageBoxButtons.OK, MessageBoxType.Error);
-            }
-        }
-
-        private void DownloadingCallBack(string path)
-        {
-            ZipFile.ExtractToDirectory(path, GetFfmpegPath());
-            NotifyHelper.Notify("FFmpeg has been downloaded", "RedShot", NotifyStatus.Success);
+                    logger.Error(e, $"{errorMessage}.");
+                    MessageBox.Show($"{errorMessage}: {e.Message}", MessageBoxButtons.OK, MessageBoxType.Error);
+                }
+            });
         }
 
         private void ThrowIfNotFoundFfmpegBinary()

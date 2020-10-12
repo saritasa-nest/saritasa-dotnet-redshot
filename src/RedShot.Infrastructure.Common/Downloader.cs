@@ -54,7 +54,7 @@ namespace RedShot.Infrastructure.Common
 
             var path = Path.Combine(downloadDirectory, fileName);
 
-            webClient.DownloadFileTaskAsync(url, path);
+            webClient.DownloadFileAsync(new Uri(url), path);
             webClient.DownloadFileCompleted += (o, e) => callback.Invoke(path);
         }
 
