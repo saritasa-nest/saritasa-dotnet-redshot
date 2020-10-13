@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using RedShot.Infrastructure.Common;
@@ -23,11 +24,6 @@ namespace RedShot.Infrastructure.Recording
         public event DataReceivedEventHandler ErrorDataReceived;
 
         /// <summary>
-        /// Process status.
-        /// </summary>
-        public bool IsProcessFinished { get; private set; }
-
-        /// <summary>
         /// Recording status.
         /// </summary>
         public bool IsRecording { get; private set; }
@@ -39,6 +35,7 @@ namespace RedShot.Infrastructure.Recording
         {
             OutputDataReceived += FFmpeg_DataReceived;
             ErrorDataReceived += FFmpeg_DataReceived;
+            AppDomain.CurrentDomain.ProcessExit += (o, e) => Stop();
         }
 
         /// <inheritdoc/>
@@ -49,8 +46,7 @@ namespace RedShot.Infrastructure.Recording
             if (IsProcessRunning)
             {
                 Stop();
-
-                process?.Kill();
+                WaitForExit();
             }
 
             Open(filePath, args);
@@ -58,7 +54,7 @@ namespace RedShot.Infrastructure.Recording
 
         private void Open(string path, string args)
         {
-            IsProcessFinished = false;
+            IsProcessRunning = true;
 
             Task.Run(() =>
             {
@@ -79,16 +75,12 @@ namespace RedShot.Infrastructure.Recording
                     };
 
                     process.EnableRaisingEvents = true;
-
                     process.OutputDataReceived += CliOutputDataReceived;
                     process.ErrorDataReceived += CliErrorDataReceived;
-
                     process.OutputDataReceived += RecordingCheck;
                     process.ErrorDataReceived += RecordingCheck;
 
                     process.StartInfo = processInfo;
-
-                    IsProcessRunning = true;
                     try
                     {
                         process.Start();
@@ -100,7 +92,6 @@ namespace RedShot.Infrastructure.Recording
                     {
                         IsRecording = false;
                         IsProcessRunning = false;
-                        IsProcessFinished = true;
                         logger.Trace("Recording finished!");
                     }
                 }
@@ -112,7 +103,7 @@ namespace RedShot.Infrastructure.Recording
         /// </summary>
         public void WaitForExit()
         {
-            while (!IsProcessFinished)
+            while (IsProcessRunning)
             {
             }
         }
@@ -138,6 +129,8 @@ namespace RedShot.Infrastructure.Recording
                         return;
                     }
                 }
+
+                process?.Kill();
             }
         }
 
@@ -173,11 +166,6 @@ namespace RedShot.Infrastructure.Recording
             {
                 Output.AppendLine(data);
             }
-        }
-
-        ~FFmpegCliManager()
-        {
-            Stop();
         }
     }
 }

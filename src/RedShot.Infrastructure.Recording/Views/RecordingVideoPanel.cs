@@ -137,13 +137,12 @@ namespace RedShot.Infrastructure.Recording.Views
             closeButton = new ImageButton(new Size(40, 35), closeImage, scaleImageSize: new Size(20, 18));
             closeButton.Clicked += CloseButton_Clicked;
 
-            Size = new Size(240, 40);
+            Size = new Size(240, 41);
             Content = new StackLayout()
             {
                 Orientation = Orientation.Horizontal,
                 VerticalContentAlignment = VerticalAlignment.Center,
                 Padding = 3,
-                Size = new Size(240, 40),
                 Spacing = 5,
                 Items =
                 {
