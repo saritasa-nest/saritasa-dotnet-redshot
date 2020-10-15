@@ -68,7 +68,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             Clipboard.Instance.Clear();
             Clipboard.Instance.Text = link;
 
-            NotifyHelper.Notify("The file has been uploaded to your FTP server.\n\nRedShot has saved the file link in clipboard.", "RedShot", NotifyStatus.Success);
+            NotifyHelper.Notify("The file has been uploaded to your FTP server.\n\nRedShot saved the link to the file to the clipboard.", "RedShot", NotifyStatus.Success);
         }
     }
 }

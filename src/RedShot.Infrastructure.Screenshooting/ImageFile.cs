@@ -22,7 +22,7 @@ namespace RedShot.Infrastructure.Screenshooting
         }
 
         /// <inheritdoc/>
-        public string FileName { get; }
+        public string FileName { get; set; }
 
         /// <inheritdoc/>
         public FileType FileType => FileType.Image;

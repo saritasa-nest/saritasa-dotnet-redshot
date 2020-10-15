@@ -3,8 +3,8 @@ using System.Diagnostics;
 using Eto.Drawing;
 using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
-using RedShot.Resources;
 using SkiaSharp;
+using RedShot.Resources;
 
 namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 {
@@ -13,10 +13,12 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
     /// </summary>
     public abstract class SelectionFormBase<T> : Form where T : Form, new()
     {
+#region Fields
+
         /// <summary>
         /// Top message.
         /// </summary>
-        protected virtual string TopMessage { get; set; } = "Please select a region";
+        protected abstract string TopMessage { get; set; }
 
         /// <summary>
         /// Disposed flag.
@@ -36,7 +38,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         /// <summary>
         /// Timer for rendering.
         /// </summary>
-        protected UITimer timer;
+        protected UITimer renderTimer;
 
         /// <summary>
         /// Control for rendering image of the editor.
@@ -49,7 +51,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         protected SKBitmap skScreenImage;
 
         /// <summary>
-        /// User's screen snapshot in Eto format.
+        /// User's screen snapshot in ETO format.
         /// </summary>
         protected Bitmap etoScreenImage;
 
@@ -93,39 +95,38 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         /// </summary>
         protected Rectangle screenRectangle;
 
-        /// <summary>
-        /// For beauty.
-        /// </summary>
-        #region Styles
+#endregion Fields
+
+#region Styles
         private Cursor capturedCursor;
         private Stopwatch penTimer;
         private readonly float[] dash = new float[] { 5, 5 };
-        #endregion Styles
+#endregion Styles
 
-        #region Movingfields
+#region Moving fields
         private bool moving;
         private float relativeX;
         private float relativeY;
-        #endregion Movingfields
+#endregion Moving fields
 
-        /// <summary>
-        /// Fields for resizing selected area.
-        /// </summary>
-        #region ResizingFields
+#region Resizing fields
         private bool resizing;
         private ResizePart resizePart;
         private LineF oppositeBorder;
         private PointF oppositeAngle;
-        #endregion Resizingfields
+#endregion Resizing fields
+
+#region Initialization
 
         /// <summary>
-        /// Render frametime in milliseconds.
+        /// Render frame time in milliseconds.
         /// Should be more than 10 in Linux OS.
         /// </summary>
         private readonly double renderFrameTime = 10;
 
         protected SelectionFormBase()
         {
+            Icon = new Icon(1, Icons.RedCircle);
             selectionScreen = Screen.FromPoint(Mouse.Position);
             InitializeComponents();
             Focus();
@@ -142,9 +143,9 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 
             penTimer = Stopwatch.StartNew();
 
-            timer = new UITimer();
-            timer.Elapsed += RenderFrame;
-            timer.Interval = renderFrameTime / 1000;
+            renderTimer = new UITimer();
+            renderTimer.Elapsed += RenderFrame;
+            renderTimer.Interval = renderFrameTime / 1000;
 
             skcontrol = new SKControl();
             Content = skcontrol;
@@ -162,9 +163,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 
         private void SetPlatformOptions()
         {
-#if _WINDOWS
-            Topmost = true;
-#elif _UNIX
+#if _UNIX
             RedShot.Platforms.Linux.GtkHelper.SetFullScreen(this.ControlObject, Size);
 #endif
         }
@@ -225,10 +224,8 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
                 }
             }
         }
+#endregion Initialization
 
-        /// <summary>
-        /// For changing mouse pointer.
-        /// </summary>
 #region PointerFunctions
 
         private void SetMousePointer(PointF location)
@@ -269,15 +266,14 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             Cursor = Cursors.Arrow;
         }
 
-#endregion PointerFunctions
+        #endregion PointerFunctions
 
-        /// <summary>
-        /// Handlers for window events.
-        /// </summary>
-#region WindowEvents
+#region Window events
         private void EditorView_Shown(object sender, EventArgs e)
         {
-            timer.Start();
+            renderTimer.Start();
+
+            SetSelectionSize();
             MouseUp += EditorViewDrawingSkiaSharp_MouseUp;
             MouseDown += EditorView_MouseDown;
             MouseMove += EditorView_MouseMove;
@@ -299,6 +295,11 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 
             screenSelecting = true;
             screenTimer.Start();
+        }
+
+        private void SetSelectionSize()
+        {
+            selectionRectangle = new RectangleF(0, 0, Width, Height);
         }
 
         private void EditorView_MouseMove(object sender, MouseEventArgs e)
@@ -369,6 +370,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             }
             else if (e.Buttons == MouseButtons.Alternate)
             {
+                SetSelectionSize();
                 if (capturing)
                 {
                     capturing = false;
@@ -424,11 +426,8 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
                     break;
             }
         }
-#endregion WindowEvents
+#endregion Window events
 
-        /// <summary>
-        /// Skia sharp drawing functions.
-        /// </summary>
 #region SkiaSharpCommands
 
         protected virtual void PaintTopMessage(SKCanvas canvas)
@@ -592,7 +591,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 
 #endregion SkiaSharpCommands
 
-#region MovingResizing
+#region Moving & Resizing
 
 #region Checking
 
@@ -761,9 +760,9 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             }
         }
 
-#endregion MovingResizing
+#endregion Moving & Resizing
 
-#region SelectionManageForm
+#region Selection manage form
 
         protected virtual void InitializeSelectionManageForm()
         {
@@ -790,10 +789,12 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             selectionManageForm.Visible = false;
         }
 
-#endregion SelectionManageForm
+        #endregion Selection manage form
+
+#region Selection processing
 
         /// <summary>
-        /// Returns rectangle with location regarding screenshot image coordinates.
+        /// Returns rectangle with location regarding screen shot image coordinates.
         /// </summary>
         protected Rectangle GetSelectionRegion()
         {
@@ -822,13 +823,10 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             return rect;
         }
 
-        protected virtual void FinishSelection()
-        {
-            if (!(captured || capturing))
-            {
-                return;
-            }
-        }
+        protected abstract void FinishSelection();
+        #endregion Selection processing
+
+#region Dispose
 
         /// <summary>
         /// Disposes UI elements.
@@ -838,12 +836,15 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             if (disposed == false)
             {
                 disposed = true;
-                timer?.Dispose();
+                renderTimer?.Dispose();
                 etoScreenImage?.Dispose();
                 skScreenImage?.Dispose();
                 skcontrol?.Dispose();
                 selectionManageForm?.Dispose();
             }
         }
+
+#endregion Dispose
+
     }
 }

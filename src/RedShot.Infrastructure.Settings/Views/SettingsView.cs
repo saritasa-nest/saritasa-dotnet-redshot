@@ -5,6 +5,7 @@ using Eto.Forms;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Settings.Sections;
+using RedShot.Resources;
 
 namespace RedShot.Infrastructure.Settings.Views
 {
@@ -26,6 +27,7 @@ namespace RedShot.Infrastructure.Settings.Views
         /// </summary>
         public SettingsView(IEnumerable<ISettingsSection> settingsSections)
         {
+            Icon = new Icon(1, Icons.RedCircle);
             Title = "RedShot Settings";
             this.settingsSections = settingsSections;
             Resizable = false;

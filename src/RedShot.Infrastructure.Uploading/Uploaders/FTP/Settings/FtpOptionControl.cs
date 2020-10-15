@@ -31,7 +31,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         private NumericStepper port;
         private TextBox username;
         private PasswordBox password;
-        private CheckBox isActive = new CheckBox();
+        private CheckBox isActive;
         private TextBox subFolderPath;
         private ComboBox ftpsEncryption;
         private TextBox ftpsCertificateLocation;

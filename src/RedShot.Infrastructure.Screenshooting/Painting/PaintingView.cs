@@ -6,6 +6,7 @@ using Eto.Forms;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Screenshooting.Painting.States;
+using RedShot.Resources;
 
 namespace RedShot.Infrastructure.Screenshooting.Painting
 {
@@ -26,6 +27,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         /// </summary>
         public PaintingView(Bitmap image)
         {
+            Icon = new Icon(1, Icons.RedCircle);
             Title = "Image editor";
             MinimumSize = new Size(500, paintingPanelWidth);
             Resizable = false;

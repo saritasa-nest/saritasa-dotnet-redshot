@@ -38,6 +38,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         {
             var defaultSize = new Size(200, 21);
 
+            isActive = new CheckBox();
             addExtensionCheckBox = new CheckBox();
             previewLinkLabel = new Label();
             browserTypeComboBox = new ComboBox();

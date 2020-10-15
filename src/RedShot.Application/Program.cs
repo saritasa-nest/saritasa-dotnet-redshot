@@ -17,7 +17,7 @@ namespace RedShot.Application
     /// </summary>
     internal class Program
     {
-        private const string ApplicationGuid = "01e8516a-42a1-4fde-87ff-71e6e5b32b28";
+        private const string ApplicationId = "RedShot-01e8516a-42a1-4fde-87ff-71e6e5b32b28";
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace RedShot.Application
         [STAThread]
         public static void Main()
         {
-            using var mutex = new System.Threading.Mutex(false, ApplicationGuid);
+            using var mutex = new System.Threading.Mutex(false, ApplicationId);
             if (mutex.WaitOne(0, false))
             {
                 StartApplication();

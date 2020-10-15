@@ -7,6 +7,14 @@
     <AssemblyName>redshot</AssemblyName>
     <ApplicationIcon>Redcircle.ico</ApplicationIcon>
     <NoWarn>NU1701;$(NoWarn)</NoWarn>
+    <Company>Saritasa</Company>
+    <Product>RedShot</Product>
+    <NeutralLanguage />
+    <Description>RedShot is the cross-platform application for screenshotting and recording any area of your screen.</Description>
+    <Authors>Ivan Kozhin, Pavel Terentev</Authors>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+    <FileVersion>1.0.0.1</FileVersion>
+    <Version>1.0.0.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">

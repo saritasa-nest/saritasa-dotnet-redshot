@@ -1,5 +1,6 @@
 ﻿using Eto.Drawing;
 using Eto.Forms;
+using RedShot.Resources;
 
 namespace RedShot.Infrastructure.Common.Forms
 {
@@ -26,6 +27,7 @@ namespace RedShot.Infrastructure.Common.Forms
         /// </summary>
         public YesNoDialog()
         {
+            Icon = new Icon(1, Icons.RedCircle);
             Title = "RedShot question";
             InitializeComponents();
 

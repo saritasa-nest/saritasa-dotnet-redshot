@@ -25,7 +25,7 @@ namespace RedShot.Infrastructure.Abstractions
         /// <summary>
         /// File name of the file.
         /// </summary>
-        string FileName { get; }
+        string FileName { get; set; }
 
         /// <summary>
         /// Gives file preview in Bitmap.

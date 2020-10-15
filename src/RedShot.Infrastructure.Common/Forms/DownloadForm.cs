@@ -1,5 +1,7 @@
-﻿using Eto.Forms;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Eto.Drawing;
+using Eto.Forms;
+using RedShot.Resources;
 
 namespace RedShot.Infrastructure.Common.Forms
 {
@@ -17,13 +19,13 @@ namespace RedShot.Infrastructure.Common.Forms
         /// </summary>
         public DownloadForm(Downloader downloader, string title)
         {
+            Icon = new Icon(1, Icons.RedCircle);
             Title = title;
             downloader.DownloadFileCompleted += Downloader_DownloadFileCompleted;
             downloader.DownloadProgressChanged += Downloader_DownloadProgressChanged;
+            this.Shown += DownloadForm_Shown;
 
             IntitializeComponents();
-
-            this.Shown += DownloadForm_Shown;
         }
 
         private void DownloadForm_Shown(object sender, System.EventArgs e)
