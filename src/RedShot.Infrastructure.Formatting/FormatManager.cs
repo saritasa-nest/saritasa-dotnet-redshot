@@ -19,7 +19,8 @@ namespace RedShot.Infrastructure.Formatting
 
         private static readonly string regexPattern = @$"{FormatTag}(\w+)|{FormatTag}\[(\w|-|_)+\]";
         private static readonly string usersTextPattern = @"^\[(\w|-|_)+\]$";
-        private static readonly RegexOptions regexOptions = RegexOptions.CultureInvariant | RegexOptions.IgnorePatternWhitespace;
+        private static readonly RegexOptions regexOptions = RegexOptions.CultureInvariant | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled;
+        private static readonly Regex formatExpression = new Regex(regexPattern, regexOptions);
 
         static FormatManager()
         {
@@ -34,18 +35,11 @@ namespace RedShot.Infrastructure.Formatting
         /// <summary>
         /// Try to format pattern.
         /// </summary>
-        public static bool TryFormat(string pattern, out string formattedString)
+        internal static bool TryFormat(string pattern, out string formattedString)
         {
             formattedString = Format(pattern);
 
-            if (string.IsNullOrEmpty(formattedString) || string.IsNullOrWhiteSpace(formattedString))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return !string.IsNullOrWhiteSpace(formattedString);
         }
 
         /// <summary>
@@ -69,8 +63,7 @@ namespace RedShot.Infrastructure.Formatting
 
         private static string Format(string pattern)
         {
-            var regex = new Regex(regexPattern, regexOptions);
-            var matches = regex.Matches(pattern);
+            var matches = formatExpression.Matches(pattern);
             var builder = new StringBuilder();
 
             foreach (var match in matches)

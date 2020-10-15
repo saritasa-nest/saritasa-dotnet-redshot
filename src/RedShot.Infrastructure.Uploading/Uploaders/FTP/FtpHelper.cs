@@ -4,7 +4,7 @@ using RedShot.Infrastructure.Abstractions;
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
 {
     /// <summary>
-    /// Ftp helper.
+    /// FTP helper.
     /// </summary>
     internal static class FtpHelper
     {

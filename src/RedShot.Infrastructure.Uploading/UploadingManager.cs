@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
 using RedShot.Infrastructure.Common.Notifying;
@@ -38,6 +37,8 @@ namespace RedShot.Infrastructure.Uploading
         /// </summary>
         public static void RunUploading(IFile file)
         {
+            file.FileName = Formatting.FormatManager.GetFormattedName();
+
             lastFile = file;
             UploadStarted?.Invoke(null, EventArgs.Empty);
 
