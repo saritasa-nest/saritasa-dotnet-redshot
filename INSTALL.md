@@ -7,7 +7,7 @@ You need following software installed
 
 Build command:
 
-- `dotnet publish src/RedShot.Application/RedShot.Application.csproj -r {{platform_id}} -f netcoreapp3.1 -c Release /p:PublishSingleFile=true /p:PublishTrimmed=true -o ./build`
+- `dotnet publish src/RedShot.Application/RedShot.Application.csproj -r {{platform_id}} -f netcoreapp3.1 -c Release -p:PublishSingleFile=true -p:PublishTrimmed=true -o ./build`
 
 Supported platforms:
 

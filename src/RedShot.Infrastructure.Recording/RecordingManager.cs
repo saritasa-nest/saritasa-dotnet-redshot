@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 using System.Linq;
 using Eto.Drawing;
 using RedShot.Infrastructure.Configuration;
@@ -6,7 +7,6 @@ using RedShot.Recording.Recorders.Linux;
 using RedShot.Recording.Recorders.Windows;
 using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.RecordingRedShot.Views;
-using System;
 using RedShot.Infrastructure.Recording.Views;
 
 namespace RedShot.Infrastructure.Recording
@@ -57,15 +57,6 @@ namespace RedShot.Infrastructure.Recording
         }
 
         /// <summary>
-        /// Opens recording selection view.
-        /// </summary>
-        public static void OpenSelectionView()
-        {
-            var view = new RecordingRegionSelectionView();
-            view.Show();
-        }
-
-        /// <summary>
         /// Checks FFmpeg binaries in the OS.
         /// If they don't exist, it tries to install them.
         /// </summary>
@@ -96,6 +87,15 @@ namespace RedShot.Infrastructure.Recording
             ConfigureDevices();
             recordingView?.Close();
             OpenSelectionView();
+        }
+
+        /// <summary>
+        /// Opens recording selection view.
+        /// </summary>
+        private static void OpenSelectionView()
+        {
+            var view = new RecordingRegionSelectionView();
+            view.Show();
         }
 
         /// <summary>

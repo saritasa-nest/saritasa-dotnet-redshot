@@ -12,6 +12,7 @@ namespace RedShot.Infrastructure.Recording
     public sealed class FFmpegCliManager : CliManager
     {
         private readonly NLog.Logger logger = NLog.LogManager.GetLogger("Ffmpeg");
+        private readonly object lockObject = new object();
 
         /// <summary>
         /// Output data received event.
@@ -91,8 +92,12 @@ namespace RedShot.Infrastructure.Recording
                     finally
                     {
                         IsRecording = false;
-                        IsProcessRunning = false;
                         logger.Trace("Recording finished!");
+
+                        lock (lockObject)
+                        {
+                            IsProcessRunning = false;
+                        }
                     }
                 }
             });
@@ -105,6 +110,14 @@ namespace RedShot.Infrastructure.Recording
         {
             while (IsProcessRunning)
             {
+                lock (lockObject)
+                {
+                    if (!IsProcessRunning)
+                    {
+                        break;
+                    }
+                }
+                Task.Delay(100).Wait();
             }
         }
 

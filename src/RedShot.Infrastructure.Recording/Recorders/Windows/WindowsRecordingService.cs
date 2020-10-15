@@ -21,17 +21,9 @@ namespace RedShot.Recording.Recorders.Windows
     /// </summary>
     internal class WindowsRecordingService : IRecordingService
     {
+        private const string FfmpegBinaryName = "ffmpeg.exe";
         private const string BinariesUrl = "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2020-10-11-12-31/ffmpeg-N-99531-g2be3eb7f77-win64-gpl.zip";
         private readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        private readonly string ffmpegBinaryName;
-
-        /// <summary>
-        /// Initializes Windows recording service.
-        /// </summary>
-        public WindowsRecordingService()
-        {
-            ffmpegBinaryName = "ffmpeg.exe";
-        }
 
         /// <inheritdoc />
         public IRecorder GetRecorder()
@@ -60,7 +52,6 @@ namespace RedShot.Recording.Recorders.Windows
             var audioDevices = new List<Device>();
 
             cli.Run("-list_devices true -f dshow -i dummy");
-
             cli.WaitForExit();
 
             string output = cli.Output.ToString();
@@ -145,7 +136,7 @@ namespace RedShot.Recording.Recorders.Windows
         {
             if (!CheckFFmpeg())
             {
-                throw new FileNotFoundException($"FFmpeg binary is not found!", ffmpegBinaryName);
+                throw new FileNotFoundException($"FFmpeg binary is not found!", FfmpegBinaryName);
             }
         }
 
@@ -156,7 +147,7 @@ namespace RedShot.Recording.Recorders.Windows
 
         private string[] GetFfmpegFiles()
         {
-            return Directory.GetFiles(GetFfmpegPath(), ffmpegBinaryName, SearchOption.AllDirectories);
+            return Directory.GetFiles(GetFfmpegPath(), FfmpegBinaryName, SearchOption.AllDirectories);
         }
 
         private string[] GetLines(string text)
