@@ -80,7 +80,7 @@ namespace RedShot.Infrastructure.Common.Forms
 
         private void SetImage(Bitmap image)
         {
-            button.Image = new Bitmap(image, Convert.ToInt32(Width * 0.7), Convert.ToInt32(Height * 0.7), ImageInterpolation.High);
+            button.Image = new Bitmap(image, Convert.ToInt32(Width * 0.6), Convert.ToInt32(Height * 0.6), ImageInterpolation.High);
         }
 
         private void Btn_Click(object sender, EventArgs e)
