@@ -17,13 +17,23 @@ namespace RedShot.Application
     /// </summary>
     internal class Program
     {
+        private const string ApplicationGuid = "01e8516a-42a1-4fde-87ff-71e6e5b32b28";
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// Runs the application.
         /// </summary>
         [STAThread]
-        public static void Main(string[] args)
+        public static void Main()
+        {
+            using var mutex = new System.Threading.Mutex(false, ApplicationGuid);
+            if (mutex.WaitOne(0, false))
+            {
+                StartApplication();
+            }
+        }
+
+        private static void StartApplication()
         {
             logger.Debug("The RedShot application was started!");
 

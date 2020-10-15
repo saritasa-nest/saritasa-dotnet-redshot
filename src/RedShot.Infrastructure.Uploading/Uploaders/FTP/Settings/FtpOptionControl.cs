@@ -95,7 +95,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                     {
                         return ftpAccounts.FirstOrDefault();
                     }
-
                 }).BindDataContext((FtpConfiguration o) => o.PrimaryAccountGuid);
         }
 
@@ -206,28 +205,28 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
         private void KeyPathButtonClick(object sender, EventArgs e)
         {
-            using (var dialog = new OpenFileDialog())
+            using var dialog = new OpenFileDialog
             {
-                dialog.Title = "Key path";
+                Title = "Key path"
+            };
 
-                if (dialog.ShowDialog(this) == DialogResult.Ok)
-                {
-                    keypath.Text = dialog.FileName;
-                }
+            if (dialog.ShowDialog(this) == DialogResult.Ok)
+            {
+                keypath.Text = dialog.FileName;
             }
         }
 
         private void FtpsCertificateLocationButtonClick(object sender, EventArgs e)
         {
-            using (var dialog = new OpenFileDialog())
+            using var dialog = new OpenFileDialog
             {
-                dialog.Title = "FTPS certificate";
-                dialog.Filters.Add(new FileFilter("*.cer format", ".cer"));
+                Title = "FTPS certificate"
+            };
+            dialog.Filters.Add(new FileFilter("*.cer format", ".cer"));
 
-                if (dialog.ShowDialog(this) == DialogResult.Ok)
-                {
-                    ftpsCertificateLocation.Text = dialog.FileName;
-                }
+            if (dialog.ShowDialog(this) == DialogResult.Ok)
+            {
+                ftpsCertificateLocation.Text = dialog.FileName;
             }
         }
 

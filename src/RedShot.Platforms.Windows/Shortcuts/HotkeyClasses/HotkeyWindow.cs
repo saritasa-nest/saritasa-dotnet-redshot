@@ -26,8 +26,8 @@ namespace RedShot.Platforms.Windows.Shortcuts.HotkeyClasses
 
         private static Hotkey ExtractHotkeyCombination(Message m)
         {
-            var modifier = (Modifiers) ((int) m.LParam & 0xFFFF);
-            var key = (Keys) ((int) m.LParam >> 16);
+            var modifier = (Modifiers)((int) m.LParam & 0xFFFF);
+            var key = (Keys)((int) m.LParam >> 16);
             return new Hotkey(modifier, key);
         }
 

@@ -13,7 +13,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
     /// </summary>
     public class FormatGuidePanel : Panel
     {
-        private IEnumerable<IFormatItem> formatItems;
+        private readonly IEnumerable<IFormatItem> formatItems;
         private ListBox formatsListBox;
         private Label exampleLabel;
         private Label patternLabel;

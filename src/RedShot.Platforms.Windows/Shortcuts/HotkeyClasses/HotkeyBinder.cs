@@ -23,14 +23,14 @@ namespace RedShot.Platforms.Windows.Shortcuts.HotkeyClasses
         }
 
         /// <summary>
-        /// Indicates whether a <see cref="Hotkey"/> has been bound already either 
+        /// Indicates whether a <see cref="Hotkey"/> has been bound already either
         /// by this application or another application.
         /// </summary>
         /// <param name="hotkeyCombo">
         /// The <see cref="Hotkey"/> to evaluate.
         /// </param>
         /// <returns>
-        /// <c>true</c> if the <see cref="Hotkey"/> has not been previously bound 
+        /// <c>true</c> if the <see cref="Hotkey"/> has not been previously bound
         /// and is available to be bound; otherwise, <c>false</c>.
         /// </returns>
         public bool IsHotkeyAlreadyBound(Hotkey hotkeyCombo)

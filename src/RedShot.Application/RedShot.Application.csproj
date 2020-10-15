@@ -17,7 +17,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Condition=" '$(OS)' != 'Windows_NT' " Include="SkiaSharp.NativeAssets.Linux" Version="2.80.1" />
+    <PackageReference Condition=" '$(OS)' != 'Windows_NT' " Include="SkiaSharp.NativeAssets.Linux" Version="2.80.2" />
     <ProjectReference Include="..\RedShot.Infrastructure.Configuration\RedShot.Infrastructure.Configuration.csproj" />
     <ProjectReference Include="..\RedShot.Infrastructure.Settings\RedShot.Infrastructure.Settings.csproj" />
     <ProjectReference Include="..\RedShot.Shortcut\RedShot.Shortcut.csproj" />
@@ -29,9 +29,9 @@
 
   <ItemGroup>
     <PackageReference Condition=" '$(OS)' != 'Windows_NT' " Include="Eto.Platform.Gtk" Version="2.5.5" />
-    <PackageReference Condition=" '$(OS)' == 'Windows_NT' " Include="Eto.Platform.Windows" Version="2.5.5" />
+    <PackageReference Condition=" '$(OS)' == 'Windows_NT' " Include="Eto.Platform.Windows" Version="2.5.6" />
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="3.0.0" />
-    <PackageReference Include="NLog" Version="4.7.4" />
+    <PackageReference Include="NLog" Version="4.7.5" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
   </ItemGroup>
 

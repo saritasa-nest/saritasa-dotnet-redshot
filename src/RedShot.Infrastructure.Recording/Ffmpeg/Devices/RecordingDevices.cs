@@ -7,8 +7,8 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg.Devices
     {
         public RecordingDevices(IEnumerable<IRecordingDevice> videoDevices = null, IEnumerable<IRecordingDevice> audioDevices = null)
         {
-            VideoDevices = videoDevices != null ? videoDevices : new List<IRecordingDevice>();
-            AudioDevices = audioDevices != null ? audioDevices : new List<IRecordingDevice>();
+            VideoDevices = videoDevices ?? new List<IRecordingDevice>();
+            AudioDevices = audioDevices ?? new List<IRecordingDevice>();
         }
 
         public IEnumerable<IRecordingDevice> VideoDevices { get; }

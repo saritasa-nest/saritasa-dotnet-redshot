@@ -47,7 +47,7 @@ namespace RedShot.Platforms.Windows.Shortcuts.HotkeyClasses
                 value = base.ConvertFrom(context, culture, value);
             }
 
-            if (value.GetType() == typeof (Keys))
+            if (value.GetType() == typeof(Keys))
             {
                 Keys keys = (Keys) value;
                 Modifiers modifiers = Modifiers.None;

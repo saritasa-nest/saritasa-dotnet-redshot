@@ -40,12 +40,12 @@ namespace RedShot.Platforms.Windows.Shortcuts.HotkeyClasses
         /// </summary>
         /// <param name="other">The value to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the value of this <see cref="Hotkey"/> is equal to the 
+        /// <c>true</c> if the value of this <see cref="Hotkey"/> is equal to the
         /// value of the <paramref name="other"/> parameter; otherwise, false.
         /// </returns>
         public bool Equals(Hotkey other)
         {
-            if (ReferenceEquals(null, other))
+            if (other is null)
             {
                 return false;
             }
@@ -70,12 +70,12 @@ namespace RedShot.Platforms.Windows.Shortcuts.HotkeyClasses
         /// The <see cref="System.Object"/> to compare with this instance.
         /// </param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="System.Object"/> is equal to this 
+        /// <c>true</c> if the specified <see cref="System.Object"/> is equal to this
         /// instance; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object other)
         {
-            if (ReferenceEquals(null, other))
+            if (other is null)
             {
                 return false;
             }
@@ -126,7 +126,7 @@ namespace RedShot.Platforms.Windows.Shortcuts.HotkeyClasses
         }
 
         /// <summary>
-        /// Implements the operator != (inequality)
+        /// Implements the operator != (inequality).
         /// </summary>
         /// <param name="left">The left-hand side of the operator.</param>
         /// <param name="right">The right-hand side of the operator.</param>

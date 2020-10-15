@@ -6,7 +6,7 @@ namespace RedShot.Platforms.Windows.Shortcuts
 {
     public static class WindowsShortcutBinder
     {
-        private static HotkeyBinder hotkeyBinder = new HotkeyBinder();
+        private static readonly HotkeyBinder hotkeyBinder = new HotkeyBinder();
 
         public static void BindShortcut(Eto.Forms.Keys keys, Action callback)
         {
