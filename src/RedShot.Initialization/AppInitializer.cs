@@ -1,12 +1,12 @@
 ﻿using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Settings;
 
-namespace RedShot.Application
+namespace RedShot.Initialization
 {
     /// <summary>
     /// Application initializer.
     /// </summary>
-    internal static class AppInitializer
+    public static class AppInitializer
     {
         /// <summary>
         /// Initializes configuration options and settings.

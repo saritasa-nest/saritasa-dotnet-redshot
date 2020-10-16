@@ -11,7 +11,7 @@ using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings;
 using RedShot.Shortcut;
 using RedShot.Shortcut.Settings;
 
-namespace RedShot.Application
+namespace RedShot.Initialization
 {
     /// <summary>
     /// Class which contains all configuration options and settings of the app.

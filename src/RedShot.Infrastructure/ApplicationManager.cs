@@ -19,7 +19,7 @@ namespace RedShot.Infrastructure
         /// Gives tray icon form.
         /// </summary>
         /// <returns>Form.</returns>
-        public static Form GetTrayApp()
+        public static Form GetTray()
         {
             try
             {

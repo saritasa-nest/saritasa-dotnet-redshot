@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <CodeAnalysisRuleSet>../../tools/Saritasa.ruleset</CodeAnalysisRuleSet>
@@ -23,20 +24,16 @@
   <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
     <DefineConstants>_UNIX</DefineConstants>
   </PropertyGroup>
-  
+
   <ItemGroup>
-    <PackageReference Condition=" '$(OS)' != 'Windows_NT' " Include="SkiaSharp.NativeAssets.Linux" Version="2.80.2" />
-    <ProjectReference Include="..\RedShot.Infrastructure.Configuration\RedShot.Infrastructure.Configuration.csproj" />
     <ProjectReference Include="..\RedShot.Initialization\RedShot.Initialization.csproj" />
-    <ProjectReference Condition=" '$(OS)' != 'Windows_NT' " Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.GTK\Eto.Forms.Controls.SkiaSharp.GTK.csproj" />
-    <ProjectReference Condition=" '$(OS)' == 'Windows_NT' " Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.WinForms\Eto.Forms.Controls.SkiaSharp.WinForms.csproj" />
     <ProjectReference Include="..\RedShot.Infrastructure\RedShot.Infrastructure.csproj" />
+    <ProjectReference Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.Mac\Eto.Forms.Controls.SkiaSharp.Mac.csproj" />
     <ProjectReference Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp\Eto.Forms.Controls.SkiaSharp.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Condition=" '$(OS)' != 'Windows_NT' " Include="Eto.Platform.Gtk" Version="2.5.6" />
-    <PackageReference Condition=" '$(OS)' == 'Windows_NT' " Include="Eto.Platform.Windows" Version="2.5.6" />
+    <PackageReference Include="Eto.Platform.Mac64" Version="2.5.6" />
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="3.0.0" />
     <PackageReference Include="NLog" Version="4.7.5" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />

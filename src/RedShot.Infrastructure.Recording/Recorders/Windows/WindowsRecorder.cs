@@ -44,16 +44,6 @@ namespace RedShot.Recording.Recorders.Windows
         /// <inheritdoc/>
         protected override string GetDeviceArgs(Rectangle captureArea)
         {
-            if (captureArea.Width % 2 != 0)
-            {
-                captureArea.Width--;
-            }
-
-            if (captureArea.Height % 2 != 0)
-            {
-                captureArea.Height--;
-            }
-
             var args = new StringBuilder();
 
             if (options.UseAudio)
