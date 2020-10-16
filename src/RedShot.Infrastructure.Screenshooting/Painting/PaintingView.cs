@@ -36,22 +36,23 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             Content = GetContent();
 
             this.Shown += PaintingView_Shown;
-            this.Closing += OnClosing;
         }
 
-        private void OnClosing(object sender, CancelEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
+            base.OnClosing(e);
+
+            imagePanel.TextInputView?.Close();
+
             if (uploaded)
             {
                 return;
             }
-
             var dialog = new YesNoDialog()
             {
                 Message = "Do you want to close the editor without uploading the picture?",
                 Size = new Size(400, 200)
             };
-
             using (dialog)
             {
                 if (dialog.ShowModal() != DialogResult.Yes)

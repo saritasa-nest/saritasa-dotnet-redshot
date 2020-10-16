@@ -26,6 +26,8 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         /// </summary>
         public event EventHandler ImageChanged;
 
+        internal TextInputView TextInputView { get; set; }
+
         private readonly SKBitmap image;
         private SKControl skControl;
         private UITimer renderTimer;
@@ -37,7 +39,6 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         private bool painting;
         private SKPaint skPaint;
         private Cursor eraseCursor;
-        private TextInputView textInputView;
         private bool textInputtingEnabled;
 
         /// <summary>
@@ -170,7 +171,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             {
                 if (textInputtingEnabled)
                 {
-                    textInputView?.Close();
+                    TextInputView?.Close();
                     textInputtingEnabled = false;
                     FinishPaintingAction();
                 }
@@ -189,16 +190,16 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         private void StartPaintingAction(Point startPoint)
         {
             ImageChanged?.Invoke(this, EventArgs.Empty);
-            textInputView?.Close();
+            TextInputView?.Close();
             currentAction = PaintingActionsService.MapFromState(paintingState, skPaint.Clone(), image);
             currentAction.AddStartPoint(startPoint);
             painting = true;
 
             if (currentAction.PaintingActionType == PaintingActionType.KeyboardPainting)
             {
-                textInputView = new TextInputView(currentAction);
+                TextInputView = new TextInputView(currentAction);
                 textInputtingEnabled = true;
-                textInputView.Show();
+                TextInputView.Show();
             }
         }
 
