@@ -263,6 +263,16 @@ namespace RedShot.Resources.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
+        internal static byte[] Text {
+            get {
+                object obj = ResourceManager.GetObject("Text", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
         internal static byte[] Upload {
             get {
                 object obj = ResourceManager.GetObject("Upload", resourceCulture);

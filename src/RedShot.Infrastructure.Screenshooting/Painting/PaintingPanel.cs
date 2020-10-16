@@ -52,7 +52,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         /// <summary>
         /// Button for enabling painting arrow action.
         /// </summary>
-        public DefaultButton TextEnableButton { get; private set; }
+        public ImageButton TextEnableButton { get; private set; }
 
         /// <summary>
         /// Button for enabling erasing action.
@@ -137,7 +137,10 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
                 ToolTip = "Paint an arrow"
             };
 
-            TextEnableButton = new DefaultButton("Text", buttonSize.Width, buttonSize.Height);
+            TextEnableButton = new ImageButton(buttonSize, Icons.Text, scaleImageSize: imageSize)
+            {
+                ToolTip = "Write text"
+            };
 
             TextEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, PaintingState.Text);
             PointsEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, PaintingState.Points);

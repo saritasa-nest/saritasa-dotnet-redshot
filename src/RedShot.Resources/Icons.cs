@@ -47,5 +47,7 @@ namespace RedShot.Resources
         public static Bitmap Upload => new Bitmap(Properties.Resources.Upload);
 
         public static Bitmap Video => new Bitmap(Properties.Resources.Video);
+
+        public static Bitmap Text => new Bitmap(Properties.Resources.Text);
     }
 }
