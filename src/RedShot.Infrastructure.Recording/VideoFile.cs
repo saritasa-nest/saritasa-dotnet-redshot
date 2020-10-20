@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Eto.Drawing;
+﻿using Eto.Drawing;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
 using RedShot.Resources;

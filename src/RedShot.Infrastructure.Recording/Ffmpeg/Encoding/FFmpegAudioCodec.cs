@@ -2,6 +2,9 @@
 
 namespace RedShot.Infrastructure.Recording.Ffmpeg.Encoding
 {
+    /// <summary>
+    /// FFmpeg audio codecs.
+    /// </summary>
     public enum FFmpegAudioCodec
     {
         [Description("AAC")]

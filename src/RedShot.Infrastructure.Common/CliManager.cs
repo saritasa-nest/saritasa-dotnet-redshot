@@ -40,7 +40,7 @@ namespace RedShot.Infrastructure.Common
         }
 
         /// <summary>
-        /// Runs process.
+        /// Run process.
         /// </summary>
         public virtual void Run(string args)
         {
@@ -104,7 +104,7 @@ namespace RedShot.Infrastructure.Common
         }
 
         /// <summary>
-        /// Inputs message to CLI.
+        /// Input message to CLI.
         /// </summary>
         public virtual void WriteInput(string input)
         {
@@ -115,7 +115,7 @@ namespace RedShot.Infrastructure.Common
         }
 
         /// <summary>
-        /// Stops process.
+        /// Stop process.
         /// </summary>
         public virtual void Stop()
         {

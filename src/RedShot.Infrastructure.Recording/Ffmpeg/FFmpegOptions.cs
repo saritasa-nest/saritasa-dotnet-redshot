@@ -6,6 +6,9 @@ using RedShot.Infrastructure.Recording.Ffmpeg.Encoding;
 
 namespace RedShot.Infrastructure.Recording.Ffmpeg
 {
+    /// <summary>
+    /// FFmpeg options.
+    /// </summary>
     public class FFmpegOptions : INotifyPropertyChanged, ICloneable
     {
         private int fps;

@@ -10,8 +10,14 @@ using RedShot.Resources;
 
 namespace RedShot.Infrastructure.Recording.Views
 {
+    /// <summary>
+    /// Recording video panel.
+    /// </summary>
     internal class RecordingVideoPanel : Panel
     {
+        /// <summary>
+        /// Closed event.
+        /// </summary>
         public event EventHandler Closed;
 
         private readonly IRecorder recorder;

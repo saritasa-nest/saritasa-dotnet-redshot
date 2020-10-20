@@ -7,12 +7,17 @@ using RedShot.Infrastructure.Recording.Ffmpeg.Devices;
 
 namespace RedShot.Infrastructure.Recording.Recorders.MacOs
 {
+    /// <summary>
+    /// Mac OS recording service.
+    /// </summary>
     internal class MacOsRecordingService : BaseRecordingService
     {
         private static readonly Regex deviceExpression = new Regex(@"\[AVFoundation input device @ \w+\] \[([0-9]+)] (.+)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
+        /// <inheritdoc />
         protected override string FfmpegBinaryName => "ffmpeg";
 
+        /// <inheritdoc />
         protected override string BinariesUrl => "https://evermeet.cx/ffmpeg/get/zip";
 
         /// <inheritdoc />

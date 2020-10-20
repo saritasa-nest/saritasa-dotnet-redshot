@@ -53,6 +53,50 @@ namespace RedShot.Infrastructure.Recording
             Open(filePath, args);
         }
 
+        /// <summary>
+        /// Waits for the process finished.
+        /// </summary>
+        public void WaitForExit()
+        {
+            while (IsProcessRunning)
+            {
+                lock (lockObject)
+                {
+                    if (!IsProcessRunning)
+                    {
+                        break;
+                    }
+                }
+                Task.Delay(100).Wait();
+            }
+        }
+
+        /// <inheritdoc/>
+        public override void Stop()
+        {
+            if (IsProcessRunning && process != null)
+            {
+                int closeTryCount = 0;
+
+                while (closeTryCount <= 10)
+                {
+                    if (IsProcessRunning)
+                    {
+                        WriteInput("q");
+                        closeTryCount++;
+
+                        Task.Delay(500).Wait();
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+
+                process?.Kill();
+            }
+        }
+
         private void Open(string path, string args)
         {
             IsProcessRunning = true;
@@ -101,50 +145,6 @@ namespace RedShot.Infrastructure.Recording
                     }
                 }
             });
-        }
-
-        /// <summary>
-        /// Waits for the process finished.
-        /// </summary>
-        public void WaitForExit()
-        {
-            while (IsProcessRunning)
-            {
-                lock (lockObject)
-                {
-                    if (!IsProcessRunning)
-                    {
-                        break;
-                    }
-                }
-                Task.Delay(100).Wait();
-            }
-        }
-
-        /// <inheritdoc/>
-        public override void Stop()
-        {
-            if (IsProcessRunning && process != null)
-            {
-                int closeTryCount = 0;
-
-                while (closeTryCount <= 10)
-                {
-                    if (IsProcessRunning)
-                    {
-                        WriteInput("q");
-                        closeTryCount++;
-
-                        Task.Delay(500).Wait();
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-
-                process?.Kill();
-            }
         }
 
         private void CliOutputDataReceived(object sender, DataReceivedEventArgs e)

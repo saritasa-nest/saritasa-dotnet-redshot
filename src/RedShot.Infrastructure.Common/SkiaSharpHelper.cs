@@ -26,16 +26,14 @@ namespace RedShot.Infrastructure.Common
         /// </summary>
         public static SKImage GetPointerForPainting(SKColor color, int radius)
         {
-#pragma warning disable CS0618 // 'SKSurface.Create(int, int, SKColorType, SKAlphaType)" является устаревшим: 'Use Create(SKImageInfo) instead.'
-            using var surface = SKSurface.Create(radius * 2, radius * 2, SKColorType.Bgra8888, SKAlphaType.Premul);
-#pragma warning restore CS0618 // 'SKSurface.Create(int, int, SKColorType, SKAlphaType)" является устаревшим: 'Use Create(SKImageInfo) instead.'
+            var imageInfo = new SKImageInfo(radius * 2, radius * 2, SKColorType.Bgra8888, SKAlphaType.Premul);
 
+            using var surface = SKSurface.Create(imageInfo);
             var paint = new SKPaint()
             {
                 Style = SKPaintStyle.Fill,
                 Color = color
             };
-
             surface.Canvas.DrawCircle(radius, radius, radius, paint);
 
             return surface.Snapshot();
@@ -54,12 +52,10 @@ namespace RedShot.Infrastructure.Common
         /// </summary>
         public static SKImage GetScaledImage(Bitmap bitmap, Size size)
         {
-#pragma warning disable CS0618 // 'SKSurface.Create(int, int, SKColorType, SKAlphaType)" является устаревшим: 'Use Create(SKImageInfo) instead.'
-            using var surface = SKSurface.Create(size.Width, size.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
-#pragma warning restore CS0618 // 'SKSurface.Create(int, int, SKColorType, SKAlphaType)" является устаревшим: 'Use Create(SKImageInfo) instead.'
+            var imageInfo = new SKImageInfo(size.Width, size.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
 
+            using var surface = SKSurface.Create(imageInfo);
             var image = ConvertFromEtoBitmap(bitmap).Resize(new SKImageInfo(size.Width, size.Height), SKFilterQuality.High);
-
             surface.Canvas.DrawBitmap(image, new SKPoint(0, 0));
 
             return surface.Snapshot();

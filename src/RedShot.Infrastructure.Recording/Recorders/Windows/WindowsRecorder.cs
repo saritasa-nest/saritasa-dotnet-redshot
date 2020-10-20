@@ -21,6 +21,7 @@ namespace RedShot.Recording.Recorders.Windows
         {
         }
 
+        /// <inheritdoc />
         public override void Start(Rectangle area)
         {
             var deviceArgs = GetDeviceArgs(area);

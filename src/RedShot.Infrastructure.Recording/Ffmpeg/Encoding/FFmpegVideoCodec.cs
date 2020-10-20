@@ -2,6 +2,9 @@
 
 namespace RedShot.Infrastructure.Recording.Ffmpeg.Encoding
 {
+    /// <summary>
+    /// FFmpeg video codecs.
+    /// </summary>
     public enum FFmpegVideoCodec
     {
         [Description("H.264 / x264")]

@@ -11,12 +11,24 @@ using RedShot.Infrastructure.Common.Notifying;
 
 namespace RedShot.Infrastructure.Recording.Recorders
 {
+    /// <summary>
+    /// Base recording service.
+    /// </summary>
     internal abstract class BaseRecordingService : IRecordingService
     {
+        /// <summary>
+        /// FFmpeg binary name.
+        /// </summary>
         protected abstract string FfmpegBinaryName { get; }
 
+        /// <summary>
+        /// Binaries URL.
+        /// </summary>
         protected abstract string BinariesUrl { get; }
 
+        /// <summary>
+        /// Logger.
+        /// </summary>
         protected readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         /// <inheritdoc />
@@ -70,6 +82,9 @@ namespace RedShot.Infrastructure.Recording.Recorders
             });
         }
 
+        /// <summary>
+        /// Throw if not found FFmpeg binary.
+        /// </summary>
         protected virtual void ThrowIfNotFoundFfmpegBinary()
         {
             if (!CheckFFmpeg())
@@ -78,21 +93,33 @@ namespace RedShot.Infrastructure.Recording.Recorders
             }
         }
 
+        /// <summary>
+        /// Get lines.
+        /// </summary>
         protected string[] GetLines(string text)
         {
             return text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
         }
 
+        /// <summary>
+        /// Get full FFmpeg path.
+        /// </summary>
         protected virtual string GetFullFfmpegPath()
         {
             return GetFfmpegFiles().First();
         }
 
+        /// <summary>
+        /// Get FFmpeg files.
+        /// </summary>
         protected virtual string[] GetFfmpegFiles()
         {
             return Directory.GetFiles(GetFfmpegPath(), FfmpegBinaryName, SearchOption.AllDirectories);
         }
 
+        /// <summary>
+        /// Get FFmpeg path.
+        /// </summary>
         protected virtual string GetFfmpegPath()
         {
             return Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FFmpeg")).FullName;

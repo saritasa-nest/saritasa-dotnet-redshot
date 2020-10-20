@@ -55,24 +55,24 @@ namespace RedShot.Infrastructure.Common.Forms
                 }
             };
 
-            yesButton.Clicked += YesButton_Clicked;
-            noButton.Clicked += NoButton_Clicked;
+            yesButton.Clicked += YesButtonClicked;
+            noButton.Clicked += NoButtonClicked;
 
-            this.Shown += YesNoDialog_Shown;
+            this.Shown += YesNoDialogShown;
         }
 
-        private void YesNoDialog_Shown(object sender, System.EventArgs e)
+        private void YesNoDialogShown(object sender, System.EventArgs e)
         {
             Location = ScreenHelper.GetCenterLocation(Size);
         }
 
-        private void NoButton_Clicked(object sender, System.EventArgs e)
+        private void NoButtonClicked(object sender, System.EventArgs e)
         {
             Result = DialogResult.No;
             Close();
         }
 
-        private void YesButton_Clicked(object sender, System.EventArgs e)
+        private void YesButtonClicked(object sender, System.EventArgs e)
         {
             Result = DialogResult.Yes;
             Close();

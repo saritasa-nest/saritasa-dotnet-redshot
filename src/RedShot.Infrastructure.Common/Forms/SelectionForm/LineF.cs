@@ -8,7 +8,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
     public struct LineF
     {
         /// <summary>
-        /// Inits Line.
+        /// Create line.
         /// </summary>
         public LineF(PointF start, PointF end)
         {

@@ -150,8 +150,8 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             skcontrol = new SKControl();
             Content = skcontrol;
 
-            Shown += EditorView_Shown;
-            UnLoad += EditorViewDrawingSkiaSharp_UnLoad;
+            Shown += EditorViewShown;
+            UnLoad += EditorViewDrawingSkiaSharpUnLoad;
 
             InitializeSelectionManageForm();
 
@@ -269,21 +269,21 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         #endregion PointerFunctions
 
 #region Window events
-        private void EditorView_Shown(object sender, EventArgs e)
+        private void EditorViewShown(object sender, EventArgs e)
         {
             renderTimer.Start();
 
             SetSelectionSize();
-            MouseUp += EditorViewDrawingSkiaSharp_MouseUp;
-            MouseDown += EditorView_MouseDown;
-            MouseMove += EditorView_MouseMove;
-            KeyDown += EditorView_KeyDown;
+            MouseUp += EditorViewDrawingSkiaSharpMouseUp;
+            MouseDown += EditorViewMouseDown;
+            MouseMove += EditorViewMouseMove;
+            KeyDown += EditorViewKeyDown;
 
             skcontrol.Execute((surface) => PaintClearImage(surface.Canvas));
 #if _WINDOWS
             StartScreenSelecting();
-#endif
             BringToFront();
+#endif
         }
 
         private void StartScreenSelecting()
@@ -303,7 +303,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             selectionRectangle = new RectangleF(0, 0, Width, Height);
         }
 
-        private void EditorView_MouseMove(object sender, MouseEventArgs e)
+        private void EditorViewMouseMove(object sender, MouseEventArgs e)
         {
             if (screenSelecting)
             {
@@ -330,7 +330,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             }
         }
 
-        private void EditorView_MouseDown(object sender, MouseEventArgs e)
+        private void EditorViewMouseDown(object sender, MouseEventArgs e)
         {
             if (e.Buttons == MouseButtons.Primary)
             {
@@ -393,7 +393,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             }
         }
 
-        private void EditorViewDrawingSkiaSharp_MouseUp(object sender, MouseEventArgs e)
+        private void EditorViewDrawingSkiaSharpMouseUp(object sender, MouseEventArgs e)
         {
             if (e.Buttons == MouseButtons.Primary)
             {
@@ -408,13 +408,13 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             }
         }
 
-        private void EditorViewDrawingSkiaSharp_UnLoad(object sender, EventArgs e)
+        private void EditorViewDrawingSkiaSharpUnLoad(object sender, EventArgs e)
         {
             screenSelecting = false;
             Dispose();
         }
 
-        private void EditorView_KeyDown(object sender, KeyEventArgs e)
+        private void EditorViewKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
             {
@@ -545,10 +545,9 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 
         protected virtual void PaintDarkregion(SKCanvas canvas, SKRect editorRect, SKRect selectionRect = default)
         {
-            // the path to use as a mask
             var maskPath = new SKPath
             {
-                FillType = SKPathFillType.EvenOdd // make the first rect dark, cut the next
+                FillType = SKPathFillType.EvenOdd
             };
             maskPath.AddRect(editorRect);
             if (selectionRect != default)
@@ -556,14 +555,12 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
                 maskPath.AddRect(selectionRect);
             }
 
-            // the dark paint overlay
             var maskPaint = new SKPaint
             {
                 Color = SKColors.Black.WithAlpha(100),
                 Style = SKPaintStyle.Fill
             };
 
-            // draw
             canvas.DrawPath(maskPath, maskPaint);
         }
 
@@ -774,7 +771,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
                 (int)(Size.Height * 0.05) + Location.Y);
 
             selectionManageForm.Location = selectionManageFormLocation;
-            selectionManageForm.KeyDown += EditorView_KeyDown;
+            selectionManageForm.KeyDown += EditorViewKeyDown;
             selectionManageForm.Show();
             selectionManageForm.Visible = false;
         }

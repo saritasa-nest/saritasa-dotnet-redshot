@@ -30,7 +30,7 @@ namespace RedShot.Infrastructure.Common
         /// <summary>
         /// List of errors.
         /// </summary>
-        public ReadOnlyCollection<string> Errors { get; }
+        public IReadOnlyCollection<string> Errors { get; }
 
         /// <summary>
         /// Status of validation.

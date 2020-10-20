@@ -45,7 +45,7 @@ namespace RedShot.Application
             app.Initialized += AppInitialized;
             AppDomain.CurrentDomain.UnhandledException += DomainUnhandledException;
             AppDomain.CurrentDomain.ProcessExit += CurrentDomainProcessExit;
-            AddControl();
+            AddAreaControl();
             AddStyles();
             app.Run(ApplicationManager.GetTrayApp());
         }
@@ -61,7 +61,7 @@ namespace RedShot.Application
             ConfigurationManager.Save();
         }
 
-        private static void AddControl()
+        private static void AddAreaControl()
         {
 #if _WINDOWS
             Eto.Platform.Detect.Add<ISKControl>(() => new Eto.Forms.Controls.SkiaSharp.WinForms.SKControlHandler());

@@ -42,6 +42,9 @@ namespace RedShot.Infrastructure.Formatting
             return MemberwiseClone();
         }
 
+        /// <summary>
+        /// Property changed event.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] string memberName = null)

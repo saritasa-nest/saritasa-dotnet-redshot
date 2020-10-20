@@ -13,6 +13,9 @@ namespace RedShot.Infrastructure.Formatting.Settings
         private Control formatOptionControl;
         private readonly FormatConfigurationOption configurationOption;
 
+        /// <summary>
+        /// Initialize.
+        /// </summary>
         public FormatSettingsSection()
         {
             configurationOption = ConfigurationManager.GetSection<FormatConfigurationOption>();

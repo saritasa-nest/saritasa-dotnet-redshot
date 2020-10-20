@@ -8,12 +8,24 @@ using RedShot.Infrastructure.Formatting;
 
 namespace RedShot.Infrastructure.Recording.Recorders
 {
+    /// <summary>
+    /// Base recorder.
+    /// </summary>
     internal abstract class BaseRecorder : IRecorder
     {
+        /// <summary>
+        /// Video folder path.
+        /// </summary>
         public string VideoFolderPath { get; }
 
+        /// <summary>
+        /// Last video.
+        /// </summary>
         public VideoFile LastVideo { get; protected set; }
 
+        /// <summary>
+        /// Is recording.
+        /// </summary>
         public bool IsRecording
         {
             get
@@ -22,9 +34,19 @@ namespace RedShot.Infrastructure.Recording.Recorders
             }
         }
 
+        /// <summary>
+        /// FFmpeg options.
+        /// </summary>
         protected readonly FFmpegOptions options;
+
+        /// <summary>
+        /// CLI manager.
+        /// </summary>
         protected readonly FFmpegCliManager cliManager;
 
+        /// <summary>
+        /// Initialize.
+        /// </summary>
         public BaseRecorder(FFmpegOptions options, string ffmpegPath, string videoFolderPath = null)
         {
             this.options = options;
@@ -60,12 +82,18 @@ namespace RedShot.Infrastructure.Recording.Recorders
             cliManager.Stop();
         }
 
-        protected abstract string GetDeviceArgs(Rectangle captureArea);
-
+        /// <summary>
+        /// Get last video.
+        /// </summary>
         public virtual IFile GetVideo()
         {
             Stop();
             return LastVideo;
         }
+
+        /// <summary>
+        /// Get device arguments.
+        /// </summary>
+        protected abstract string GetDeviceArgs(Rectangle captureArea);
     }
 }

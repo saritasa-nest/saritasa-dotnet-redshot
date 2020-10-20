@@ -5,7 +5,7 @@ using RedShot.Infrastructure.Recording.Ffmpeg.Encoding;
 namespace RedShot.Infrastructure.Recording
 {
     /// <summary>
-    /// FFmpeg args helper.
+    /// FFmpeg arguments helper.
     /// </summary>
     public static class FFmpegArgsHelper
     {
@@ -68,6 +68,9 @@ namespace RedShot.Infrastructure.Recording
             return args.ToString();
         }
 
+        /// <summary>
+        /// Get arguments for output.
+        /// </summary>
         public static string GetArgsForOutput(string filepath)
         {
             var args = new StringBuilder();

@@ -15,6 +15,9 @@ namespace RedShot.Infrastructure.Formatting
     /// </summary>
     public static class FormatManager
     {
+        /// <summary>
+        /// Format Tag.
+        /// </summary>
         public const string FormatTag = "%";
 
         private static readonly string regexPattern = @$"{FormatTag}(\w+)|{FormatTag}\[(\w|-|_)+\]";

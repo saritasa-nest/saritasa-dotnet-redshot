@@ -2,6 +2,9 @@
 
 namespace RedShot.Infrastructure.Recording.Ffmpeg.Encoding
 {
+    /// <summary>
+    /// FFmpeg x264 presets.
+    /// </summary>
     public enum FFmpegX264Preset
     {
         [Description("Ultra fast")]
