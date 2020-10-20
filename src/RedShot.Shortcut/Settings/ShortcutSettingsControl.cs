@@ -1,7 +1,6 @@
 ﻿using Eto.Drawing;
 using Eto.Forms;
 using System.Collections.Generic;
-using RedShot.Shortcut.Shortcuts;
 using RedShot.Infrastructure.Common.Forms;
 
 namespace RedShot.Shortcut.Settings
@@ -11,12 +10,12 @@ namespace RedShot.Shortcut.Settings
     /// </summary>
     internal class ShortcutSettingsControl : Panel
     {
-        private readonly List<IShortcut> shortcuts;
+        private readonly List<Shortcuts.Shortcut> shortcuts;
 
         /// <summary>
         /// Create the control.
         /// </summary>
-        public ShortcutSettingsControl(List<IShortcut> shortcuts)
+        public ShortcutSettingsControl(List<Shortcuts.Shortcut> shortcuts)
         {
             this.shortcuts = shortcuts;
             InitializeComponents();
@@ -42,7 +41,7 @@ namespace RedShot.Shortcut.Settings
             Content = stackLayout;
         }
 
-        private Control GetShortcutStack(IShortcut shortcut)
+        private Control GetShortcutStack(Shortcuts.Shortcut shortcut)
         {
             var shortcutTextBox = new ShortcutTextBox()
             {

@@ -5,21 +5,21 @@ namespace RedShot.Shortcut.Shortcuts
     /// <summary>
     /// Shortcut abstraction.
     /// </summary>
-    internal interface IShortcut
+    internal abstract class Shortcut
     {
         /// <summary>
         /// Shortcut name.
         /// </summary>
-        string Name { get; }
+        public abstract string Name { get; }
 
         /// <summary>
         /// Shortcut hotkeys.
         /// </summary>
-        Keys Keys { get; set; }
+        public Keys Keys { get; set; }
 
         /// <summary>
         /// On pressed action.
         /// </summary>
-        void OnPressedAction();
+        public abstract void OnPressedAction();
     }
 }

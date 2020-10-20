@@ -1,5 +1,4 @@
-﻿using System;
-using Eto.Drawing;
+﻿using Eto.Drawing;
 using RedShot.Infrastructure.Common.Forms.SelectionForm;
 
 namespace RedShot.Infrastructure.Screenshooting.Views
@@ -7,7 +6,7 @@ namespace RedShot.Infrastructure.Screenshooting.Views
     /// <summary>
     /// Screen shot selection view.
     /// </summary>
-    public sealed class ScreenShotSelectionView : SelectionFormBase<ScreenShotPanel>
+    internal class ScreenShotSelectionView : SelectionFormBase<ScreenShotPanel>
     {
         /// <summary>
         /// <inheritdoc/>
@@ -20,18 +19,15 @@ namespace RedShot.Infrastructure.Screenshooting.Views
         protected override void InitializeSelectionManageForm()
         {
             base.InitializeSelectionManageForm();
-
-            selectionManageForm.EnablePaintingModeButton.Clicked += EnablePaintingModeButton_Clicked;
+            selectionManageForm.FinishSelectionButton.Clicked += (o, e) => FinishSelection();
         }
 
-        private Bitmap GetScreenShot()
+        /// <summary>
+        /// Get screen shot.
+        /// </summary>
+        protected Bitmap GetScreenShot()
         {
             return etoScreenImage.Clone(GetSelectionRegion());
-        }
-
-        private void EnablePaintingModeButton_Clicked(object sender, EventArgs e)
-        {
-            FinishSelection();
         }
 
         /// <summary>
@@ -40,7 +36,7 @@ namespace RedShot.Infrastructure.Screenshooting.Views
         protected override void FinishSelection()
         {
             var screenshot = GetScreenShot();
-            ScreenshotManager.RunPaintingView(screenshot);
+            ScreenshotManager.UploadScreenShot(screenshot);
             Close();
         }
     }

@@ -3,17 +3,17 @@
 namespace RedShot.Shortcut.Shortcuts
 {
     /// <summary>
-    /// Screen shot shortcut.
+    /// Paint shortcut.
     /// </summary>
-    internal sealed class ScreenShotShortcut : Shortcut
+    internal sealed class PaintShortcut : Shortcut
     {
         /// <inheritdoc/>
-        public override string Name => "Take screen shot";
+        public override string Name => "Paint captured area";
 
         /// <inheritdoc/>
         public override void OnPressedAction()
         {
-            ApplicationManager.RunScreenShooting();
+            ApplicationManager.RunPainting();
         }
     }
 }

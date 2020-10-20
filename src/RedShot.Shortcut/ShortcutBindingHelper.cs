@@ -12,7 +12,7 @@ namespace RedShot.Shortcut
         /// <summary>
         /// Bind shortcut list.
         /// </summary>
-        internal static void BindShortcutsList(IEnumerable<IShortcut> shortcuts)
+        internal static void BindShortcutsList(IEnumerable<Shortcuts.Shortcut> shortcuts)
         {
             foreach (var shortcut in shortcuts)
             {
@@ -30,7 +30,7 @@ namespace RedShot.Shortcut
         /// <summary>
         /// Unbind shortcut list.
         /// </summary>
-        internal static void UnbindShortcutsList(IEnumerable<IShortcut> shortcuts)
+        internal static void UnbindShortcutsList(IEnumerable<Shortcuts.Shortcut> shortcuts)
         {
             foreach (var shortcut in shortcuts)
             {

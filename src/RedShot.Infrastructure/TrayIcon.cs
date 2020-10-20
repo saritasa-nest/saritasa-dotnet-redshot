@@ -7,7 +7,7 @@ using RedShot.Infrastructure.Uploading;
 namespace RedShot.Infrastructure
 {
     /// <summary>
-    /// Tray icon for the app.
+    /// Tray icon for the application.
     /// </summary>
     public class TrayIcon : Form
     {
@@ -31,21 +31,26 @@ namespace RedShot.Infrastructure
             menu.Items.Add(new ButtonMenuItem()
             {
                 Text = "Record",
-                ToolTip = "Opens view for video recording",
-                Shortcut = Keys.Control | Keys.F3,
+                ToolTip = "Open view for video recording",
                 Command = new Command((e, o) => ApplicationManager.RunRecording())
             });
             menu.Items.Add(new ButtonMenuItem()
             {
                 Text = "Capture",
-                ToolTip = "Opens view for screen shooting",
-                Shortcut = Keys.Control | Keys.F2,
+                ToolTip = "Open view for screen shooting",
                 Command = new Command((e, o) => ApplicationManager.RunScreenShooting())
+            });
+            menu.Items.Add(new ButtonMenuItem()
+            {
+                Text = "Capture with painting",
+                ToolTip = "Open view for painting captured area",
+                Command = new Command((e, o) => ApplicationManager.RunPainting())
             });
 
             UploadLastFile = new ButtonMenuItem()
             {
                 Text = "Upload last file",
+                ToolTip = "Upload last created file",
                 Visible = false,
                 Command = new Command((e, o) => UploadingManager.UploadLastFile())
             };

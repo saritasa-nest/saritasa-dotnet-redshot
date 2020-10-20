@@ -33,10 +33,10 @@ namespace RedShot.Shortcut
         /// <summary>
         /// Get mapped shortcuts.
         /// </summary>
-        internal static IEnumerable<IShortcut> GetMappedShortcuts()
+        internal static IEnumerable<Shortcuts.Shortcut> GetMappedShortcuts()
         {
             var shortcutsTypes = GetShortcutsTypes()
-                .Select(t => (IShortcut)Activator.CreateInstance(t))
+                .Select(t => (Shortcuts.Shortcut)Activator.CreateInstance(t))
                 .ToList();
             var shortcutMaps = GetShortcutMaps().ToList();
 
@@ -60,7 +60,7 @@ namespace RedShot.Shortcut
         {
             return Assembly.GetExecutingAssembly()
                 .GetTypes()
-                .Where(t => typeof(IShortcut).IsAssignableFrom(t) && !t.IsInterface);
+                .Where(t => typeof(Shortcuts.Shortcut).IsAssignableFrom(t) && !t.IsAbstract);
         }
 
         private static IEnumerable<ShortcutMap> GetShortcutMaps()

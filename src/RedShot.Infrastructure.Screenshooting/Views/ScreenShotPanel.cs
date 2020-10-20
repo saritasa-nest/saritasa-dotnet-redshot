@@ -8,12 +8,12 @@ namespace RedShot.Infrastructure.Screenshooting.Views
     /// <summary>
     /// Painting panel for editor view.
     /// </summary>
-    public class ScreenShotPanel : Form
+    internal class ScreenShotPanel : Form
     {
         /// <summary>
         /// Button for enabling painting mode.
         /// </summary>
-        public ImageButton EnablePaintingModeButton { get; }
+        public ImageButton FinishSelectionButton { get; }
 
         /// <summary>
         /// Initializes painting panel view.
@@ -30,7 +30,7 @@ namespace RedShot.Infrastructure.Screenshooting.Views
 
             var paintImage = Icons.Paint;
 
-            EnablePaintingModeButton = new ImageButton(buttonSize, paintImage, scaleImageSize: imageSize)
+            FinishSelectionButton = new ImageButton(buttonSize, paintImage, scaleImageSize: imageSize)
             {
                 ToolTip = "Open image editor"
             };
@@ -41,7 +41,7 @@ namespace RedShot.Infrastructure.Screenshooting.Views
                 Orientation = Orientation.Horizontal,
                 Items =
                 {
-                    EnablePaintingModeButton,
+                    FinishSelectionButton,
                 }
             };
         }

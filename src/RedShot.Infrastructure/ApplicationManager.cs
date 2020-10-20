@@ -16,9 +16,8 @@ namespace RedShot.Infrastructure
         private static TrayIcon trayIcon;
 
         /// <summary>
-        /// Gives tray icon form.
+        /// Get tray icon form.
         /// </summary>
-        /// <returns>Form.</returns>
         public static Form GetTrayApp()
         {
             try
@@ -35,15 +34,23 @@ namespace RedShot.Infrastructure
         }
 
         /// <summary>
-        /// Runs screen shot editor.
+        /// Run screen shooting view.
         /// </summary>
         public static void RunScreenShooting()
         {
-            ScreenshotManager.RunScreenShotting();
+            ScreenshotManager.TakeScreenShot(false);
         }
 
         /// <summary>
-        /// Runs recording.
+        /// Run screen shot editor.
+        /// </summary>
+        public static void RunPainting()
+        {
+            ScreenshotManager.TakeScreenShot(true);
+        }
+
+        /// <summary>
+        /// Run recording.
         /// </summary>
         public static void RunRecording()
         {

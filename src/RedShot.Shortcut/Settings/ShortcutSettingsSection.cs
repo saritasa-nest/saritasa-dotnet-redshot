@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Eto.Forms;
+using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Settings.Sections;
 using RedShot.Shortcut.Mapping;
-using RedShot.Shortcut.Shortcuts;
 
 namespace RedShot.Shortcut.Settings
 {
     /// <summary>
     /// Shortcut settings section.
     /// </summary>
-    public class ShortcutSettingsSection : ISettingsSection
+    public class ShortcutSettingsSection : IValidatableSection
     {
-        private readonly List<IShortcut> shortcuts;
+        private readonly List<Shortcuts.Shortcut> shortcuts;
 
         /// <inheritdoc/>
         public string Name => "Shortcuts";
@@ -46,6 +46,20 @@ namespace RedShot.Shortcut.Settings
         {
             var shortcutMaps = ShortcutMappingHelper.GetShortcutMaps(shortcuts);
             ShortcutManager.SaveShortcutMapsInConfiguration(shortcutMaps);
+        }
+
+        /// <inheritdoc/>
+        public ValidationResult Validate()
+        {
+            var distincted = shortcuts.Distinct(new ShortcutEqualityComparer());
+            if (distincted.Count() != shortcuts.Count)
+            {
+                return new ValidationResult(false, "Multiple shortcuts cannot contain the same keys");
+            }
+            else
+            {
+                return new ValidationResult(true);
+            }
         }
     }
 }
