@@ -1,6 +1,6 @@
-﻿using RedShot.Infrastructure.Recording.Ffmpeg;
+﻿using System.Text;
+using RedShot.Infrastructure.Recording.Ffmpeg;
 using RedShot.Infrastructure.Recording.Ffmpeg.Encoding;
-using System.Text;
 
 namespace RedShot.Infrastructure.Recording
 {

@@ -5,13 +5,8 @@ using Eto.Forms.Controls.SkiaSharp;
 using RedShot.Infrastructure;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Initialization;
-#if _WINDOWS
-using Eto.WinForms.Forms;
-#elif _UNIX
-using System.Runtime.InteropServices;
-#endif
 
-namespace RedShot.Application
+namespace RedShot.Application.MacOS
 {
     /// <summary>
     /// Main class.
@@ -40,13 +35,12 @@ namespace RedShot.Application
 
             AppInitializer.Initialize();
 
-            var app = new Eto.Forms.Application(Eto.Platform.Detect);
+            var app = new Eto.Forms.Application(Eto.Platforms.Mac64);
             app.UnhandledException += InstanceOnUnhandledException;
             app.Initialized += AppInitialized;
             AppDomain.CurrentDomain.UnhandledException += DomainUnhandledException;
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
-            AddControl();
-            AddStyles();
+            Eto.Platform.Detect.Add<ISKControl>(() => new Eto.Forms.Controls.SkiaSharp.Mac.SKControlHandler());
             app.Run(ApplicationManager.GetTray());
         }
 
@@ -59,25 +53,6 @@ namespace RedShot.Application
         {
             Shortcut.ShortcutManager.UnbindShortcuts();
             ConfigurationManager.Save();
-        }
-
-        private static void AddControl()
-        {
-#if _WINDOWS
-            Eto.Platform.Detect.Add<ISKControl>(() => new Eto.Forms.Controls.SkiaSharp.WinForms.SKControlHandler());
-#elif _UNIX
-            Eto.Platform.Detect.Add<ISKControl>(() => new Eto.Forms.Controls.SkiaSharp.GTK.SKControlHandler());
-#else
-            throw new NotImplementedException();
-#endif
-        }
-
-        private static void AddStyles()
-        {
-#if _WINDOWS
-            Eto.Style.Add<NotificationHandler>("FailedNotification", h => h.NotificationIcon = NotificationIcon.Error);
-            Eto.Style.Add<NotificationHandler>("SucceedNotification", h => h.NotificationIcon = NotificationIcon.Info);
-#endif
         }
 
         private static void InstanceOnUnhandledException(object sender, Eto.UnhandledExceptionEventArgs e)

@@ -28,7 +28,6 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextInp
             this.textPaintingAction = textPaintingAction;
             Title = "Text input dialog";
             InitializeComponents();
-            this.Closed += OnClosed;
             this.Shown += TextInputView_Shown;
         }
 
@@ -37,8 +36,9 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextInp
             Location = ScreenHelper.GetCenterLocation(Size);
         }
 
-        private void OnClosed(object sender, EventArgs e)
+        protected override void OnClosed(EventArgs e)
         {
+            base.OnClosed(e);
             if (saveText == false)
             {
                 var action = new TextInputAction(string.Empty, textFontPicker.Value, textColorPicker.Value);

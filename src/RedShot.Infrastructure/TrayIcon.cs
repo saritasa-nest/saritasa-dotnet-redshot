@@ -69,7 +69,7 @@ namespace RedShot.Infrastructure
             {
                 Text = "Exit",
                 Shortcut = Keys.Control | Keys.F4,
-                Command = new Command((e, o) => Exit())
+                Command = new Command((e, o) => Close())
             });
 
             Tray = new TrayIndicator
@@ -80,9 +80,7 @@ namespace RedShot.Infrastructure
             };
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
         protected override void OnShown(EventArgs e)
         {
             Visible = false;
@@ -90,18 +88,17 @@ namespace RedShot.Infrastructure
             Tray.Visible = true;
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
         protected override void OnUnLoad(EventArgs e)
         {
             base.OnUnLoad(e);
             Tray.Hide();
         }
 
-        private void Exit()
+        /// <inheritdoc/>
+        protected override void OnClosed(EventArgs e)
         {
-            this.Close();
+            base.OnClosed(e);
             Application.Instance.Quit();
         }
     }

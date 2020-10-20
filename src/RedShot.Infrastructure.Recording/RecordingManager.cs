@@ -1,13 +1,14 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Linq;
 using Eto.Drawing;
+using Eto.Forms;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Recording.Recorders.Linux;
 using RedShot.Recording.Recorders.Windows;
 using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.RecordingRedShot.Views;
 using RedShot.Infrastructure.Recording.Views;
+using RedShot.Infrastructure.Recording.Recorders.MacOs;
 
 namespace RedShot.Infrastructure.Recording
 {
@@ -31,9 +32,9 @@ namespace RedShot.Infrastructure.Recording
         /// </summary>
         static RecordingManager()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                RecordingService = new LinuxRecordingService();
+                RecordingService = new MacOsRecordingService();
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -41,7 +42,7 @@ namespace RedShot.Infrastructure.Recording
             }
             else
             {
-                throw new NotSupportedException("Recording on this OS is not supported!");
+                RecordingService = new LinuxRecordingService();
             }
         }
 
@@ -50,6 +51,16 @@ namespace RedShot.Infrastructure.Recording
         /// </summary>
         public static void RecordRegion(Rectangle region)
         {
+            if (region.Width % 2 != 0)
+            {
+                region.Width--;
+            }
+
+            if (region.Height % 2 != 0)
+            {
+                region.Height--;
+            }
+
             var recorder = RecordingService.GetRecorder();
 
             recordingView = new RecordingView(recorder, region);
@@ -65,7 +76,14 @@ namespace RedShot.Infrastructure.Recording
         {
             if (!RecordingService.CheckFFmpeg())
             {
-                RecordingService.InstallFFmpeg();
+                try
+                {
+                    RecordingService.InstallFFmpeg();
+                }
+                catch
+                {
+                    MessageBox.Show("An error occurred when FFmpeg was installing!");
+                }
                 return false;
             }
             else
@@ -75,7 +93,7 @@ namespace RedShot.Infrastructure.Recording
         }
 
         /// <summary>
-        /// Tries to start recording; checks FFmpeg binaries before starting recorder.
+        /// Try to start recording; checks FFmpeg binaries before starting recorder.
         /// </summary>
         public static void InitiateRecording()
         {
@@ -90,7 +108,7 @@ namespace RedShot.Infrastructure.Recording
         }
 
         /// <summary>
-        /// Opens recording selection view.
+        /// Open recording selection view.
         /// </summary>
         private static void OpenSelectionView()
         {

@@ -182,6 +182,9 @@
     <value>..\Images\Video.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="Arrow" type="System.Resources.ResXFileRef, System.Windows.Forms">
-     <value>..\Images\Arrow.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Images\Arrow.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Text" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Text.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

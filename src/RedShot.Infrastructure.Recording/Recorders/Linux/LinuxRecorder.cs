@@ -20,16 +20,6 @@ namespace RedShot.Recording.Recorders.Linux
         /// <inheritdoc/>
         protected override string GetDeviceArgs(Rectangle captureArea)
         {
-            if (captureArea.Width % 2 != 0)
-            {
-                captureArea.Width--;
-            }
-
-            if (captureArea.Height % 2 != 0)
-            {
-                captureArea.Height--;
-            }
-
             var args = new StringBuilder();
 
             if (options.UseGdigrab || options.VideoDevice == null)
