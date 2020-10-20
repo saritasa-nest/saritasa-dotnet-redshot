@@ -283,6 +283,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 #if _WINDOWS
             StartScreenSelecting();
 #endif
+            BringToFront();
         }
 
         private void StartScreenSelecting()

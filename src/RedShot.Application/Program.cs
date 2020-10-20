@@ -44,10 +44,10 @@ namespace RedShot.Application
             app.UnhandledException += InstanceOnUnhandledException;
             app.Initialized += AppInitialized;
             AppDomain.CurrentDomain.UnhandledException += DomainUnhandledException;
-            AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
+            AppDomain.CurrentDomain.ProcessExit += CurrentDomainProcessExit;
             AddControl();
             AddStyles();
-            app.Run(ApplicationManager.GetTray());
+            app.Run(ApplicationManager.GetTrayApp());
         }
 
         private static void AppInitialized(object sender, EventArgs e)
@@ -55,7 +55,7 @@ namespace RedShot.Application
             Shortcut.ShortcutManager.BindShortcuts();
         }
 
-        private static void CurrentDomain_ProcessExit(object sender, EventArgs e)
+        private static void CurrentDomainProcessExit(object sender, EventArgs e)
         {
             Shortcut.ShortcutManager.UnbindShortcuts();
             ConfigurationManager.Save();

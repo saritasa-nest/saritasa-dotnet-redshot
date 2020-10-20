@@ -39,9 +39,9 @@ namespace RedShot.Application.MacOS
             app.UnhandledException += InstanceOnUnhandledException;
             app.Initialized += AppInitialized;
             AppDomain.CurrentDomain.UnhandledException += DomainUnhandledException;
-            AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
+            AppDomain.CurrentDomain.ProcessExit += CurrentDomainProcessExit;
             Eto.Platform.Detect.Add<ISKControl>(() => new Eto.Forms.Controls.SkiaSharp.Mac.SKControlHandler());
-            app.Run(ApplicationManager.GetTray());
+            app.Run(ApplicationManager.GetTrayApp());
         }
 
         private static void AppInitialized(object sender, EventArgs e)
@@ -49,7 +49,7 @@ namespace RedShot.Application.MacOS
             Shortcut.ShortcutManager.BindShortcuts();
         }
 
-        private static void CurrentDomain_ProcessExit(object sender, EventArgs e)
+        private static void CurrentDomainProcessExit(object sender, EventArgs e)
         {
             Shortcut.ShortcutManager.UnbindShortcuts();
             ConfigurationManager.Save();

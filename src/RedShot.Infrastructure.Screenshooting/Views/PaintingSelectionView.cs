@@ -1,5 +1,8 @@
 ﻿namespace RedShot.Infrastructure.Screenshooting.Views
 {
+    /// <summary>
+    /// Painting selection view.
+    /// </summary>
     internal class PaintingSelectionView : ScreenShotSelectionView
     {
         /// <summary>

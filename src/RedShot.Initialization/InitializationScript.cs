@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using RedShot.Shortcut;
+using RedShot.Shortcut.Settings;
 using RedShot.Infrastructure.Formatting;
 using RedShot.Infrastructure.Formatting.Settings;
 using RedShot.Infrastructure.Recording;
@@ -8,13 +10,11 @@ using RedShot.Infrastructure.Uploading;
 using RedShot.Infrastructure.Uploading.Settings;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings;
-using RedShot.Shortcut;
-using RedShot.Shortcut.Settings;
 
 namespace RedShot.Initialization
 {
     /// <summary>
-    /// Class which contains all configuration options and settings of the app.
+    /// Class which contains all configuration options and settings of the application.
     /// </summary>
     internal static class InitializationScript
     {

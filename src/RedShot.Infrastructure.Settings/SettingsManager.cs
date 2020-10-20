@@ -25,7 +25,7 @@ namespace RedShot.Infrastructure.Settings
         public static List<Type> SettingsSections { get; }
 
         /// <summary>
-        /// Open settings of the app.
+        /// Open settings of the application.
         /// </summary>
         public static void OpenSettings()
         {

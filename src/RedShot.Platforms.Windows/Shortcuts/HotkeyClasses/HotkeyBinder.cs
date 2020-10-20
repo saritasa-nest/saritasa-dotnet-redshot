@@ -83,17 +83,11 @@ namespace RedShot.Platforms.Windows.Shortcuts.HotkeyClasses
 
         private void RegisterHotkey(Hotkey hotkeyCombo)
         {
-            bool successful =
                 NativeMethods.RegisterHotKey(
                     hotkeyWindow.Handle,
                     hotkeyCombo.GetHashCode(),
                     (uint)hotkeyCombo.Modifier,
                     (uint)hotkeyCombo.Key);
-
-            if (!successful)
-            {
-                throw new Win32Exception(Marshal.GetLastWin32Error());
-            }
         }
 
         /// <summary>

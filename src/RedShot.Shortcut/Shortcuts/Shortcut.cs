@@ -13,7 +13,7 @@ namespace RedShot.Shortcut.Shortcuts
         public abstract string Name { get; }
 
         /// <summary>
-        /// Shortcut hotkeys.
+        /// Shortcut hot keys.
         /// </summary>
         public Keys Keys { get; set; }
 

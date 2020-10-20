@@ -15,12 +15,12 @@ namespace RedShot.Platforms.Windows.Shortcuts.HotkeyClasses
         {
             if (container.ContainsKey(hotkey))
             {
-                throw new HotkeyAlreadyBoundException(
-                    "This hotkey cannot be bound because it has been previously bound either by this " +
-                    "application or another running application.");
+                container[hotkey] = callback;
             }
-
-            container.Add(hotkey, callback);
+            else
+            {
+                container.Add(hotkey, callback);
+            }
         }
 
         internal void Remove(Hotkey hotkey)
