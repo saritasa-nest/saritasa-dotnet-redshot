@@ -36,8 +36,8 @@ namespace RedShot.Infrastructure.Screenshooting.Views
         protected override void FinishSelection()
         {
             var screenshot = GetScreenShot();
-            ScreenshotManager.UploadScreenShot(screenshot);
             Close();
+            ScreenshotManager.UploadScreenShot(screenshot);
         }
     }
 }
