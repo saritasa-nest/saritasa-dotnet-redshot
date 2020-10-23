@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Eto.Forms;
+using System.Collections.Generic;
 
 namespace RedShot.Shortcut.Settings
 {
@@ -10,7 +11,14 @@ namespace RedShot.Shortcut.Settings
         /// <inheritdoc/>
         public bool Equals(Shortcuts.Shortcut x, Shortcuts.Shortcut y)
         {
-            return x.Keys == y.Keys;
+            if (x.Keys == Keys.None || y.Keys == Keys.None)
+            {
+                return false;
+            }
+            else
+            {
+                return x.Keys == y.Keys;
+            }
         }
 
         /// <inheritdoc/>
