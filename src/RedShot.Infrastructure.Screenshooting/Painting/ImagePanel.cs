@@ -21,11 +21,6 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
     /// </summary>
     internal class ImagePanel : Panel
     {
-        /// <summary>
-        /// Invokes if the user has added new changes to their picture.
-        /// </summary>
-        public event EventHandler ImageChanged;
-
         internal TextInputView TextInputView { get; set; }
 
         private readonly SKBitmap image;
@@ -56,6 +51,21 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             paintingState = PaintingState.None;
 
             Shown += ImagePanel_Shown;
+        }
+
+        /// <summary>
+        /// Get image hash.
+        /// </summary>
+        public int GetImageHash()
+        {
+            int hash = this.GetHashCode();
+
+            foreach (var action in paintingActions)
+            {
+                hash = HashCode.Combine(hash, action);
+            }
+
+            return hash;
         }
 
         /// <summary>
@@ -189,7 +199,6 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
 
         private void StartPaintingAction(Point startPoint)
         {
-            ImageChanged?.Invoke(this, EventArgs.Empty);
             TextInputView?.Close();
             currentAction = PaintingActionsService.MapFromState(paintingState, skPaint.Clone(), image);
             currentAction.AddStartPoint(startPoint);
