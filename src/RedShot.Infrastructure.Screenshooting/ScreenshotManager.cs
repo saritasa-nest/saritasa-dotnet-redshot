@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Eto.Drawing;
+using Eto.Forms;
 using RedShot.Infrastructure.Formatting;
 using RedShot.Infrastructure.Screenshooting.Painting;
 using RedShot.Infrastructure.Screenshooting.Views;
@@ -14,7 +15,7 @@ namespace RedShot.Infrastructure.Screenshooting
     public static class ScreenshotManager
     {
         private static PaintingView paintingView;
-        private static ScreenShotSelectionView selectionView;
+        private static Form selectionView;
 
         private static readonly string imagesFolder;
 

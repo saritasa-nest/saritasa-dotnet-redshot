@@ -792,6 +792,14 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 #region Selection processing
 
         /// <summary>
+        /// Get screen shot.
+        /// </summary>
+        protected Bitmap GetScreenShot()
+        {
+            return etoScreenImage.Clone(GetSelectionRegion());
+        }
+
+        /// <summary>
         /// Returns rectangle with location regarding screen shot image coordinates.
         /// </summary>
         protected Rectangle GetSelectionRegion()

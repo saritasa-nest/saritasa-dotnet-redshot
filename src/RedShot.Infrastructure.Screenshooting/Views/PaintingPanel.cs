@@ -1,4 +1,4 @@
-using Eto.Forms;
+﻿using Eto.Forms;
 using Eto.Drawing;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Resources;
@@ -6,19 +6,19 @@ using RedShot.Resources;
 namespace RedShot.Infrastructure.Screenshooting.Views
 {
     /// <summary>
-    /// Screen shot panel.
+    /// Painting panel for painting selection view.
     /// </summary>
-    internal class ScreenShotPanel : Form
+    internal class PaintingPanel : Form
     {
         /// <summary>
-        /// Button for start uploading.
+        /// Button for enabling painting mode.
         /// </summary>
         public ImageButton FinishSelectionButton { get; }
 
         /// <summary>
-        /// Initializes selection panel view.
+        /// Initializes painting panel view.
         /// </summary>
-        public ScreenShotPanel()
+        public PaintingPanel()
         {
             ShowInTaskbar = false;
             WindowStyle = WindowStyle.None;
@@ -28,11 +28,11 @@ namespace RedShot.Infrastructure.Screenshooting.Views
             var buttonSize = new Size(80, 50);
             var imageSize = new Size(40, 40);
 
-            var uploadImage = Icons.Upload;
+            var paintImage = Icons.Paint;
 
-            FinishSelectionButton = new ImageButton(buttonSize, uploadImage, scaleImageSize: imageSize)
+            FinishSelectionButton = new ImageButton(buttonSize, paintImage, scaleImageSize: imageSize)
             {
-                ToolTip = "Upload screenshot"
+                ToolTip = "Open image editor"
             };
 
             Content = new StackLayout

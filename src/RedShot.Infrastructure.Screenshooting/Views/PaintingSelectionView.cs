@@ -1,22 +1,26 @@
-﻿namespace RedShot.Infrastructure.Screenshooting.Views
+﻿using RedShot.Infrastructure.Common.Forms.SelectionForm;
+
+namespace RedShot.Infrastructure.Screenshooting.Views
 {
     /// <summary>
     /// Painting selection view.
     /// </summary>
-    internal class PaintingSelectionView : ScreenShotSelectionView
+    internal class PaintingSelectionView : SelectionFormBase<PaintingPanel>
     {
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
         protected override string TopMessage { get; set; } = "Please select a region to paint";
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
+        protected override void InitializeSelectionManageForm()
+        {
+            base.InitializeSelectionManageForm();
+            selectionManageForm.FinishSelectionButton.Clicked += (o, e) => FinishSelection();
+        }
+
+        /// <inheritdoc/>
         protected override void FinishSelection()
         {
-            var screenshot = GetScreenShot();
-            ScreenshotManager.RunPaintingView(screenshot);
+            ScreenshotManager.RunPaintingView(GetScreenShot());
             Close();
         }
     }
