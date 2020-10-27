@@ -75,13 +75,11 @@ namespace RedShot.Infrastructure.Recording.Settings
             {
                 Size = new Size(180, 21),
             };
-            videoCodec.DataStore = EnumDescription<FFmpegVideoCodec>.GetEnumDescriptions(typeof(FFmpegVideoCodec));
 
             audioCodec = new ComboBox()
             {
                 Size = new Size(180, 21),
             };
-            audioCodec.DataStore = EnumDescription<FFmpegAudioCodec>.GetEnumDescriptions(typeof(FFmpegAudioCodec));
 
             setDefaultButton = new DefaultButton("Set default", 100, 30);
             setDefaultButton.Clicked += SetDefaultButton_Clicked;

@@ -82,41 +82,9 @@ namespace RedShot.Infrastructure.Recording.Settings
             optionalAudioDevices.SelectedValueBinding.BindDataContext((FFmpegOptions o) => o.OptionalAudioDevice);
             optionalAudioDevices.Bind(d => d.Enabled, ffmpegOptions, o => o.UseAudio);
 
-            audioCodec.SelectedValueBinding.Convert(
-                l =>
-                {
-                    if (l == null)
-                    {
-                        return FFmpegAudioCodec.Libvoaacenc;
-                    }
-                    else
-                    {
-                        var des = (EnumDescription<FFmpegAudioCodec>)l;
-                        return des.EnumValue;
-                    }
-                },
-                v =>
-                {
-                    return audioCodec.DataStore.FirstOrDefault(o => ((EnumDescription<FFmpegAudioCodec>)o).EnumValue == v);
-                }).BindDataContext((FFmpegOptions o) => o.AudioCodec);
+            audioCodec.BindWithEnum<FFmpegAudioCodec>().BindDataContext((FFmpegOptions o) => o.AudioCodec);
 
-            videoCodec.SelectedValueBinding.Convert(
-                l =>
-                {
-                    if (l == null)
-                    {
-                        return FFmpegVideoCodec.Libx264;
-                    }
-                    else
-                    {
-                        var des = (EnumDescription<FFmpegVideoCodec>)l;
-                        return des.EnumValue;
-                    }
-                },
-                v =>
-                {
-                    return videoCodec.DataStore.FirstOrDefault(o => ((EnumDescription<FFmpegVideoCodec>)o).EnumValue == v);
-                }).BindDataContext((FFmpegOptions o) => o.VideoCodec);
+            videoCodec.BindWithEnum<FFmpegVideoCodec>().BindDataContext((FFmpegOptions o) => o.VideoCodec);
         }
 
         private void VideoCodecOptionsButton_Clicked(object sender, EventArgs e)

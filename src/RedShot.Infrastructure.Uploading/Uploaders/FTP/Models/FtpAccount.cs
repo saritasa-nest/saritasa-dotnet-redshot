@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Saritasa.Tools.Common.Utils;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
-using RedShot.Infrastructure.Common;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
 {
@@ -55,7 +55,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
             }
 
             var builder = new StringBuilder();
-            builder.Append($"{EnumDescription<BrowserProtocol>.GetDescriptionName(BrowserProtocol)}{HttpHomePath}/");
+            builder.Append($"{EnumUtils.GetDescription(BrowserProtocol)}{HttpHomePath}/");
 
             if (HttpHomePathAddExtension)
             {

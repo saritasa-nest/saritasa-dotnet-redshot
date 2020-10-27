@@ -23,6 +23,7 @@ namespace RedShot.Infrastructure.Screenshooting.Views
         protected override void FinishSelection()
         {
             var screenshot = GetScreenShot();
+            selectionManageForm.Minimize();
             Minimize();
             Close();
             ScreenshotManager.UploadScreenShot(screenshot);

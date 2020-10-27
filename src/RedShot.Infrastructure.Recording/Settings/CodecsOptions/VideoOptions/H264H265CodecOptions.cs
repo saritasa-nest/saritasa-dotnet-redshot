@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
-using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Recording.Ffmpeg;
 using RedShot.Infrastructure.Recording.Ffmpeg.Encoding;
@@ -79,24 +77,7 @@ namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
         {
             Content.DataContext = options;
 
-            x264Preset.DataStore = EnumDescription<FFmpegX264Preset>.GetEnumDescriptions(typeof(FFmpegX264Preset));
-            x264Preset.SelectedValueBinding.Convert(
-                l =>
-                {
-                    if (l == null)
-                    {
-                        return FFmpegX264Preset.Medium;
-                    }
-                    else
-                    {
-                        var des = (EnumDescription<FFmpegX264Preset>)l;
-                        return des.EnumValue;
-                    }
-                },
-                v =>
-                {
-                    return x264Preset.DataStore.FirstOrDefault(o => ((EnumDescription<FFmpegX264Preset>)o).EnumValue == v);
-                }).BindDataContext((FFmpegOptions o) => o.X264Preset);
+            x264Preset.BindWithEnum<FFmpegX264Preset>().BindDataContext((FFmpegOptions o) => o.X264Preset);
 
             x264Quality.ValueBinding.Convert(f => (int)f, t => t).BindDataContext((FFmpegOptions o) => o.X264Crf);
         }

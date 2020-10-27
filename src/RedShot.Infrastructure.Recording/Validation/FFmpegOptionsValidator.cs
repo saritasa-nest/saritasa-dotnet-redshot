@@ -1,6 +1,7 @@
 ﻿using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Recording.Ffmpeg;
 using RedShot.Infrastructure.Recording.Ffmpeg.Encoding;
+using Saritasa.Tools.Common.Utils;
 
 namespace RedShot.Infrastructure.Recording.Validation
 {
@@ -43,8 +44,8 @@ namespace RedShot.Infrastructure.Recording.Validation
 
         private static string GetIncompatibleCodecMessage(FFmpegOptions options)
         {
-            return $"You can't use {EnumDescription<FFmpegAudioCodec>.GetDescriptionName(options.AudioCodec)} audio codec with " +
-                            $"{EnumDescription<FFmpegVideoCodec>.GetDescriptionName(options.VideoCodec)} video codec";
+            return $"You can't use {EnumUtils.GetDescription(options.AudioCodec)} audio codec with " +
+                            $"{EnumUtils.GetDescription(options.VideoCodec)} video codec";
         }
     }
 }

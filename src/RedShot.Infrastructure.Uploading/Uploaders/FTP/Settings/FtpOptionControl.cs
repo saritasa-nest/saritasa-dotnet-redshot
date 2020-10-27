@@ -178,24 +178,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             homePathTextBox.Bind(t => t.Text, selectedAccount, account => account.HttpHomePath).Changed += FtpOptionControlChanged;
 
             browserTypeComboBox.DataContext = selectedAccount;
-            browserTypeComboBox.DataStore = EnumDescription<BrowserProtocol>.GetEnumDescriptions(typeof(BrowserProtocol));
-            browserTypeComboBox.SelectedValueBinding.Convert(
-                l =>
-                {
-                    if (l == null)
-                    {
-                        return BrowserProtocol.Http;
-                    }
-                    else
-                    {
-                        var des = (EnumDescription<BrowserProtocol>)l;
-                        return des.EnumValue;
-                    }
-                },
-                v =>
-                {
-                    return browserTypeComboBox.DataStore.FirstOrDefault(o => ((EnumDescription<BrowserProtocol>)o).EnumValue == v);
-                }).BindDataContext((FtpAccount o) => o.BrowserProtocol).Changed += FtpOptionControlChanged;
+            browserTypeComboBox.BindWithEnum<BrowserProtocol>().BindDataContext((FtpAccount o) => o.BrowserProtocol).Changed += FtpOptionControlChanged;
         }
 
         private void FtpOptionControlChanged(object sender, EventArgs e)
