@@ -15,22 +15,12 @@ namespace RedShot.Infrastructure.Uploading
     /// </summary>
     public static class UploadingManager
     {
+        public static IFile LastFile { get; private set; }
+
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private static UploaderChoosingForm uploaderChoosingForm;
-        private static IFile lastFile;
 
         public static event EventHandler UploadStarted;
-
-        /// <summary>
-        /// Runs uploading the latest file, if it exists.
-        /// </summary>
-        public static void UploadLastFile()
-        {
-            if (lastFile != null)
-            {
-                RunUploading(lastFile);
-            }
-        }
 
         /// <summary>
         /// Run uploading panel.
@@ -39,7 +29,7 @@ namespace RedShot.Infrastructure.Uploading
         {
             file.FileName = Formatting.FormatManager.GetFormattedName();
 
-            lastFile = file;
+            LastFile = file;
             UploadStarted?.Invoke(null, EventArgs.Empty);
 
             var configuration = GetUploadingConfiguration();

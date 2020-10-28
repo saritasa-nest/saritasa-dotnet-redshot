@@ -2,7 +2,6 @@
 using Eto.Forms;
 using Eto.Drawing;
 using RedShot.Infrastructure.Settings;
-using RedShot.Infrastructure.Uploading;
 
 namespace RedShot.Infrastructure
 {
@@ -52,7 +51,7 @@ namespace RedShot.Infrastructure
                 Text = "Upload last file",
                 ToolTip = "Upload last created file",
                 Visible = false,
-                Command = new Command((e, o) => UploadingManager.UploadLastFile())
+                Command = new Command((e, o) => ApplicationManager.UploadLastFile())
             };
 
             menu.Items.Add(UploadLastFile);

@@ -46,7 +46,7 @@ namespace RedShot.Infrastructure.Screenshooting
         /// <summary>
         /// Run image editor.
         /// </summary>
-        internal static void RunPaintingView(Bitmap bitmap)
+        public static void RunPaintingView(Bitmap bitmap)
         {
             paintingView = new PaintingView(bitmap);
             paintingView.Show();

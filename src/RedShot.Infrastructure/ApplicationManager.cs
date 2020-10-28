@@ -1,4 +1,5 @@
 ﻿using System;
+using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Recording;
 using RedShot.Infrastructure.Screenshooting;
@@ -55,6 +56,26 @@ namespace RedShot.Infrastructure
         public static void RunRecording()
         {
             RecordingManager.InitiateRecording();
+        }
+
+        /// <summary>
+        /// Upload last file.
+        /// </summary>
+        public static void UploadLastFile()
+        {
+            var lastFile = UploadingManager.LastFile;
+            if (lastFile != null)
+            {
+                if (lastFile.FileType == Abstractions.Uploading.FileType.Image)
+                {
+                    var image = new Bitmap(lastFile.FilePath);
+                    ScreenshotManager.RunPaintingView(image);
+                }
+                else
+                {
+                    UploadingManager.RunUploading(lastFile);
+                }
+            }
         }
 
         private static void UploadingManagerUploadStarted(object sender, EventArgs e)
