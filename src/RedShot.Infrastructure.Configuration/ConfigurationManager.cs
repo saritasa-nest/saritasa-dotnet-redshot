@@ -106,23 +106,39 @@ namespace RedShot.Infrastructure.Configuration
 
             foreach (var type in types)
             {
-                if (settingsFile.ContainsKey(type.Name) && settingsFile[type.Name] is JObject section)
+                var configuration = GetConfiguration(settingsFile, type);
+                settingsMap.Add(type, configuration);
+            }
+
+            logger.Debug("The configuration has been loaded.");
+        }
+
+        private static IConfigurationOption GetConfiguration(JObject settings, Type configurationType)
+        {
+            if (settings.ContainsKey(configurationType.Name) && settings[configurationType.Name] is JObject section)
+            {
+                object configurationObject;
+                try
                 {
-                    var configurationObject = section.ToObject(type);
+                    configurationObject = section.ToObject(configurationType);
 
                     if (configurationObject is IEncryptable encryptable)
                     {
                         configurationObject = encryptable.Decrypt(encryptionService);
                     }
-
-                    settingsMap.Add(type, configurationObject as IConfigurationOption);
+                    return configurationObject as IConfigurationOption;
                 }
-                else
+                catch (JsonSerializationException ex)
                 {
-                    settingsMap.Add(type, (IConfigurationOption)Activator.CreateInstance(type));
+                    logger.Error(ex, "Could not restore configuration for {settingName}. Removing from the settings file.", configurationType.Name);
+                    // This can happen if setting does no longer exist
+                    // Just remove the setting
+                    settings.Remove(configurationType.Name);
                 }
             }
-            logger.Debug("The configuration has been loaded.");
+
+            // The configuration was not found or there was an error parsing it from the config.
+            return (IConfigurationOption)Activator.CreateInstance(configurationType);
         }
 
         private static bool TryGetConfigString(out string conf)
