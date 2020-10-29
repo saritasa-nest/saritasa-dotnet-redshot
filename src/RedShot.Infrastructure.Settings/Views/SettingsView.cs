@@ -33,6 +33,7 @@ namespace RedShot.Infrastructure.Settings.Views
             Resizable = false;
             Shown += SettingsView_Shown;
             MinimumSize = new Size(400, 400);
+            Maximizable = false;
 
             InitializeComponents();
             this.Closing += SettingsView_Closing;

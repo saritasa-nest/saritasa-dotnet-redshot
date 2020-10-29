@@ -31,27 +31,31 @@ namespace RedShot.Infrastructure.Common.Forms
             Title = "RedShot question";
             InitializeComponents();
 
-            Content = new StackLayout()
+            Content = new TableLayout
             {
-                Orientation = Orientation.Vertical,
-                HorizontalContentAlignment = HorizontalAlignment.Center,
-                Width = 300,
-                Padding = new Padding(10, 30),
-                Spacing = 15,
-                Items =
+                Padding = 15,
+                Spacing = new Size(5, 5),
+                Rows =
                 {
-                    questionLabel,
-                    new StackLayout()
+                    new TableRow(new TableCell(new StackLayout(questionLabel))),
+                    new TableRow(new StackLayout
                     {
-                        Orientation = Orientation.Horizontal,
-                        VerticalContentAlignment = VerticalAlignment.Center,
-                        Spacing = 15,
                         Items =
                         {
-                            yesButton,
-                            noButton
-                        }
-                    }
+                            new StackLayout()
+                            {
+                                Orientation = Orientation.Horizontal,
+                                Padding = new Padding(0, 20, 0, 0),
+                                Spacing = 5,
+                                Items =
+                                {
+                                    yesButton,
+                                    noButton
+                                }
+                            }
+                        },
+                        HorizontalContentAlignment = HorizontalAlignment.Right
+                    })
                 }
             };
 
@@ -64,6 +68,7 @@ namespace RedShot.Infrastructure.Common.Forms
         private void YesNoDialogShown(object sender, System.EventArgs e)
         {
             Location = ScreenHelper.GetCenterLocation(Size);
+            Size = new Size(400, 135);
         }
 
         private void NoButtonClicked(object sender, System.EventArgs e)
@@ -80,8 +85,8 @@ namespace RedShot.Infrastructure.Common.Forms
 
         private void InitializeComponents()
         {
-            yesButton = new DefaultButton("Yes", 80, 40);
-            noButton = new DefaultButton("No", 80, 40);
+            yesButton = new DefaultButton("Yes", 70, 23);
+            noButton = new DefaultButton("No", 70, 23);
             questionLabel = new Label();
         }
     }
