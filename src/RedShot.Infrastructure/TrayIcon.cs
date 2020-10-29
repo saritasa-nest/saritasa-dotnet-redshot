@@ -30,15 +30,15 @@ namespace RedShot.Infrastructure
 
             menu.Items.Add(new ButtonMenuItem()
             {
-                Text = "Record",
-                ToolTip = "Open view for video recording",
-                Command = new Command((e, o) => ApplicationManager.RunRecording())
-            });
-            menu.Items.Add(new ButtonMenuItem()
-            {
                 Text = "Capture",
                 ToolTip = "Take a screenshot",
                 Command = new Command((e, o) => ApplicationManager.RunScreenShooting())
+            });
+            menu.Items.Add(new ButtonMenuItem()
+            {
+                Text = "Record",
+                ToolTip = "Open view for video recording",
+                Command = new Command((e, o) => ApplicationManager.RunRecording())
             });
 
             UploadLastFile = new ButtonMenuItem()
