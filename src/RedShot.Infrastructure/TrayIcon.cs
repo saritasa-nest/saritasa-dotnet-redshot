@@ -37,14 +37,8 @@ namespace RedShot.Infrastructure
             menu.Items.Add(new ButtonMenuItem()
             {
                 Text = "Capture",
-                ToolTip = "Open view for screen shooting",
+                ToolTip = "Take a screenshot",
                 Command = new Command((e, o) => ApplicationManager.RunScreenShooting())
-            });
-            menu.Items.Add(new ButtonMenuItem()
-            {
-                Text = "Capture with painting",
-                ToolTip = "Open view for painting captured area",
-                Command = new Command((e, o) => ApplicationManager.RunPainting())
             });
 
             UploadLastFile = new ButtonMenuItem()

@@ -22,11 +22,8 @@ namespace RedShot.Infrastructure.Screenshooting.Views
         /// <inheritdoc/>
         protected override void FinishSelection()
         {
-            var screenshot = GetScreenShot();
-            selectionManageForm.Minimize();
-            Minimize();
+            ScreenshotManager.RunPaintingView(GetScreenShot());
             Close();
-            ScreenshotManager.UploadScreenShot(screenshot);
         }
     }
 }
