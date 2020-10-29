@@ -46,18 +46,14 @@ namespace RedShot.Infrastructure.Settings.Views
                 return;
             }
 
-            var dialog = new YesNoDialog()
-            {
-                Message = "Do you want to close the settings without saving it?",
-                Size = new Size(400, 200)
-            };
+            const string message = "Do you want to close the settings without saving it?";
+            const string title = "ResShot question";
+            var dialogResult = MessageBox.Show(message, title, MessageBoxButtons.YesNo,
+                MessageBoxType.Question);
 
-            using (dialog)
+            if (dialogResult != DialogResult.Yes)
             {
-                if (dialog.ShowModal() != DialogResult.Yes)
-                {
-                    e.Cancel = true;
-                }
+                e.Cancel = true;
             }
         }
 

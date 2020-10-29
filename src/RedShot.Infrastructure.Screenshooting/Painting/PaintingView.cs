@@ -48,17 +48,14 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
                 return;
             }
 
-            var dialog = new YesNoDialog()
+            const string message = "Do you want to close the editor without uploading the picture?";
+            const string title = "RedShot question";
+            var dialogResult = MessageBox.Show(message, title, MessageBoxButtons.YesNo,
+                MessageBoxType.Question);
+
+            if (dialogResult != DialogResult.Yes)
             {
-                Message = "Do you want to close the editor without uploading the picture?",
-                Size = new Size(400, 200)
-            };
-            using (dialog)
-            {
-                if (dialog.ShowModal() != DialogResult.Yes)
-                {
-                    e.Cancel = true;
-                }
+                e.Cancel = true;
             }
         }
 
