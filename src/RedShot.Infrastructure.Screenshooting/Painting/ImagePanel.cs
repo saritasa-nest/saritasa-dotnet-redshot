@@ -81,9 +81,9 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         }
 
         /// <summary>
-        /// Gives painting image.
+        /// Get painting image.
         /// </summary>
-        public Bitmap ScreenShot()
+        public Bitmap GetPaintingImage()
         {
             var skInfo = new SKImageInfo(image.Width, image.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
             using var surface = SKSurface.Create(skInfo);
@@ -130,7 +130,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         {
             switch (paintingState)
             {
-                case PaintingState.Points:
+                case PaintingState.Brush:
                     Cursor = FormsHelper.GetPointerCursor(skPaint.Color,
                         (int)skPaint.StrokeWidth > 3 ? (int)skPaint.StrokeWidth : 4);
                     break;
@@ -200,7 +200,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         private void StartPaintingAction(Point startPoint)
         {
             TextInputView?.Close();
-            currentAction = PaintingActionsService.MapFromState(paintingState, skPaint.Clone(), image);
+            currentAction = PaintingActionsMappingService.MapFromState(paintingState, skPaint.Clone(), image);
             currentAction.AddStartPoint(startPoint);
             painting = true;
 

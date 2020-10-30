@@ -16,7 +16,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
     /// </summary>
     internal sealed class SftpUploader : BaseFtpUploader, IDisposable
     {
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly FtpAccount account;
         private bool disposed;
         private SftpClient client;
@@ -47,12 +47,12 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             {
                 if (UploadStream(file.GetStream(), path, true))
                 {
-                    return new BaseUploadingResponse(true);
+                    return base.Upload(file);
                 }
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "Error occurred while SFTP client was uploading data");
+                logger.Error(ex, "Error occurred while SFTP client was uploading data");
             }
             finally
             {
@@ -76,7 +76,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
                 }
                 catch (Exception e)
                 {
-                    Logger.Error(e, "Error while uploading was stopping");
+                    logger.Error(e, "Error while uploading was stopping");
                 }
             }
         }
@@ -204,13 +204,13 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
                 }
                 catch (SftpPathNotFoundException) when (autoCreateDirectory)
                 {
-                    Logger.Info($"Directory not exist, path:{remotePath}");
+                    logger.Info($"Directory not exist, path:{remotePath}");
                     CreateDirectory(UrlHelper.GetDirectoryPath(remotePath), true);
                     return UploadStream(stream, remotePath);
                 }
                 catch (NullReferenceException)
                 {
-                    Logger.Warn("Error occurred by disconnect while uploading");
+                    logger.Warn("Error occurred by disconnect while uploading");
                 }
             }
 
@@ -231,7 +231,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
                 catch (Exception e)
                 {
                     client = null;
-                    Logger.Error(e, "Error in disposing FTP client");
+                    logger.Error(e, "Error in disposing FTP client");
                 }
 
                 disposed = true;

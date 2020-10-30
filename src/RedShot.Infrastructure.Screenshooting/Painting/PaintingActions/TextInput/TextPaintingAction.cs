@@ -42,7 +42,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextInp
 
             for (var i = 0; i < lines.Length; i++)
             {
-                var point = new SKPoint(startPoint.X, startPoint.Y + i * textInputAction.TextFont.Size);
+                var point = new SKPoint(startPoint.X, startPoint.Y + 5 + i * textInputAction.TextFont.Size);
                 surface.Canvas.DrawText(lines[i], point, paint);
             }
         }

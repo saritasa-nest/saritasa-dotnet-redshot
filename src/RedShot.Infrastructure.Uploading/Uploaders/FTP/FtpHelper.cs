@@ -1,5 +1,8 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using RedShot.Infrastructure.Abstractions;
+using RedShot.Infrastructure.Configuration;
+using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
 {

@@ -5,6 +5,7 @@ using Eto.Forms.Controls.SkiaSharp;
 using RedShot.Infrastructure;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Initialization;
+using System.Globalization;
 #if _WINDOWS
 using Eto.WinForms.Forms;
 #elif _UNIX
@@ -30,6 +31,9 @@ namespace RedShot.Application
             using var mutex = new System.Threading.Mutex(false, ApplicationId);
             if (mutex.WaitOne(0, false))
             {
+                CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+                CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
+
                 StartApplication();
             }
         }

@@ -1,5 +1,4 @@
 ﻿using Eto.Drawing;
-using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
 using RedShot.Infrastructure.Common.Notifying;
 using RedShot.Resources;
@@ -9,7 +8,7 @@ namespace RedShot.Infrastructure.Uploaders.Clipboard
     /// <summary>
     /// Clipboard uploading service.
     /// </summary>
-    internal class ClipboardUploadingService : IUploadingService
+    public class ClipboardUploadingService : IUploadingService
     {
         /// <inheritdoc/>
         public string Name => "Clipboard";
@@ -33,11 +32,13 @@ namespace RedShot.Infrastructure.Uploaders.Clipboard
         /// <inheritdoc/>
         public IUploader GetUploader()
         {
-            return new ClipboardUploader();
+            var uploader = new ClipboardUploader();
+            uploader.UploadingFinished += ClipboardUploaderUploadingFinished;
+
+            return uploader;
         }
 
-        /// <inheritdoc/>
-        public void OnUploaded(IFile file)
+        private void ClipboardUploaderUploadingFinished(object sender, UploadingFinishedEventArgs e)
         {
             NotifyHelper.Notify("The file has been saved in clipboard.", "RedShot", NotifyStatus.Success);
         }

@@ -3,7 +3,7 @@
     internal enum PaintingState
     {
         None,
-        Points,
+        Brush,
         Rectangle,
         Erase,
         Arrow,

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using Eto.Drawing;
 using Eto.Forms;
+using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Formatting;
 using RedShot.Infrastructure.Screenshooting.Painting;
 using RedShot.Infrastructure.Screenshooting.Views;
@@ -57,12 +59,22 @@ namespace RedShot.Infrastructure.Screenshooting
         /// </summary>
         internal static void UploadScreenShot(Bitmap image)
         {
-            var imageName = FormatManager.GetFormattedName();
-            var baseName = $"RedShot-Image-{DateTime.Now:yyyy-MM-ddTHH-mm-ss}";
-            var path = Path.Combine(imagesFolder, $"{baseName}.png");
+            var file = GetFileFromBitmap(image);
+            UploadingManager.RunUploading(file);
+        }
 
+        /// <summary>
+        /// Get file from bitmap.
+        /// </summary>
+        internal static IFile GetFileFromBitmap(Bitmap image)
+        {
+            var imageName = FormatManager.GetFormattedName();
+            var stringDate = DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss", CultureInfo.InvariantCulture);
+            var baseName = string.Format("RedShot-Image-{0}", stringDate);
+            var path = Path.Combine(imagesFolder, $"{baseName}.png");
             image.Save(path, ImageFormat.Png);
-            UploadingManager.RunUploading(new ImageFile(image, path, imageName));
+
+            return new ImageFile(image, path, imageName);
         }
     }
 }

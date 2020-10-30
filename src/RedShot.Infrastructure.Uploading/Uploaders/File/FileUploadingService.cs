@@ -9,7 +9,7 @@ namespace RedShot.Infrastructure.Uploaders.File
     /// <summary>
     /// File uploading service.
     /// </summary>
-    internal class FileUploadingService : IUploadingService
+    public class FileUploadingService : IUploadingService
     {
         /// <inheritdoc />
         public string Name => "File";
@@ -35,13 +35,15 @@ namespace RedShot.Infrastructure.Uploaders.File
         /// <inheritdoc />
         public IUploader GetUploader()
         {
-            return new FileUploader();
+            var uploader = new FileUploader();
+            uploader.UploadingFinished += FileUploaderUploadingFinished;
+
+            return uploader;
         }
 
-        /// <inheritdoc />
-        public void OnUploaded(IFile file)
+        private void FileUploaderUploadingFinished(object sender, UploadingFinishedEventArgs e)
         {
-            NotifyHelper.Notify("The file has been saved.", "RedShot", NotifyStatus.Success);
+            NotifyHelper.Notify($"The {e.UploadingFile.FileName} file has been saved.", "RedShot", NotifyStatus.Success);
         }
     }
 }

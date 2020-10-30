@@ -1,13 +1,18 @@
-﻿using RedShot.Infrastructure.Abstractions;
+﻿using System;
+using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
+using RedShot.Infrastructure.Basics;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
 {
     /// <summary>
     /// Base upload functions.
     /// </summary>
-    internal abstract class BaseFtpUploader : IUploader
+    public abstract class BaseFtpUploader : IUploader
     {
+        /// <inheritdoc/>
+        public event EventHandler<UploadingFinishedEventArgs> UploadingFinished;
+
         /// <summary>
         /// Uploading flag.
         /// </summary>
@@ -31,7 +36,11 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// <summary>
         /// Upload file to destination resource.
         /// </summary>
-        public abstract IUploadingResponse Upload(IFile file);
+        public virtual IUploadingResponse Upload(IFile file)
+        {
+            UploadingFinished?.Invoke(this, new UploadingFinishedEventArgs() { UploadingFile = file });
+            return new BaseUploadingResponse(true);
+        }
 
         /// <summary>
         /// Connect to FTP server.

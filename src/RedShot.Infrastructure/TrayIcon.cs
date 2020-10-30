@@ -3,6 +3,8 @@ using Eto.Forms;
 using Eto.Drawing;
 using RedShot.Infrastructure.Settings;
 using RedShot.Infrastructure.Uploading;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace RedShot.Infrastructure
 {
@@ -99,7 +101,7 @@ namespace RedShot.Infrastructure
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
-            Application.Instance.Quit();
+            Application.Instance.Dispose();
         }
     }
 }

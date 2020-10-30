@@ -49,5 +49,7 @@ namespace RedShot.Resources
         public static Bitmap Video => new Bitmap(Properties.Resources.Video);
 
         public static Bitmap Text => new Bitmap(Properties.Resources.Text);
+
+        public static Bitmap DownArrow => new Bitmap(Properties.Resources.DownArrow);
     }
 }
