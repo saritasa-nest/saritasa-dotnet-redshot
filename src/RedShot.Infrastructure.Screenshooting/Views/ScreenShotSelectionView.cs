@@ -10,14 +10,7 @@ namespace RedShot.Infrastructure.Screenshooting.Views
     internal class ScreenShotSelectionView : SelectionFormBase<ScreenShotPanel>
     {
         /// <inheritdoc/>
-        protected override string TopMessage { get; set; } = "Please select a region to capture";
-
-        /// <inheritdoc/>
-        protected override void InitializeSelectionManageForm()
-        {
-            base.InitializeSelectionManageForm();
-            selectionManageForm.FinishSelectionButton.Clicked += (o, e) => FinishSelection();
-        }
+        protected override string TopMessage { get; set; } = "Select the screenshot area";
 
         /// <inheritdoc/>
         protected override void FinishSelection()

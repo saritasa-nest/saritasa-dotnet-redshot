@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Eto.Drawing;
 using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
@@ -71,11 +70,6 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         protected bool capturing;
 
         /// <summary>
-        /// State when user has selected region.
-        /// </summary>
-        protected bool captured;
-
-        /// <summary>
         /// State when user is selecting region.
         /// </summary>
         protected bool screenSelecting;
@@ -98,23 +92,9 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 #endregion Fields
 
 #region Styles
-        private Cursor capturedCursor;
-        private Stopwatch penTimer;
+        private DateTime dialogOpenDate;
         private readonly float[] dash = new float[] { 5, 5 };
 #endregion Styles
-
-#region Moving fields
-        private bool moving;
-        private float relativeX;
-        private float relativeY;
-#endregion Moving fields
-
-#region Resizing fields
-        private bool resizing;
-        private ResizePart resizePart;
-        private LineF oppositeBorder;
-        private PointF oppositeAngle;
-#endregion Resizing fields
 
 #region Initialization
 
@@ -141,7 +121,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             WindowState = WindowState.Maximized;
             WindowStyle = WindowStyle.None;
 
-            penTimer = Stopwatch.StartNew();
+            dialogOpenDate = DateTime.Now;
 
             renderTimer = new UITimer();
             renderTimer.Elapsed += RenderFrame;
@@ -154,9 +134,6 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             UnLoad += EditorViewDrawingSkiaSharpUnLoad;
 
             InitializeSelectionManageForm();
-
-            var capturedIcon = Icons.Pointer;
-            capturedCursor = FormsHelper.GetCursor(capturedIcon, new Size(20, 20), new Point(3, 3));
 
             SetPlatformOptions();
         }
@@ -214,10 +191,6 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
                     selectionRectangle = EtoDrawingHelper.CreateRectangle(startLocation, endLocation);
                     skcontrol.Execute((surface) => PaintRegion(surface.Canvas));
                 }
-                else if (captured)
-                {
-                    skcontrol.Execute((surface) => PaintRegion(surface.Canvas));
-                }
                 else
                 {
                     skcontrol.Execute((surface) => PaintClearImage(surface.Canvas));
@@ -227,39 +200,6 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 #endregion Initialization
 
 #region PointerFunctions
-
-        private void SetMousePointer(PointF location)
-        {
-            if (CheckOnResizing(location))
-            {
-                switch (resizePart)
-                {
-                    case ResizePart.Angle:
-                        Cursor = Cursors.Crosshair;
-                        break;
-
-                    case ResizePart.HorizontalBorder:
-                        Cursor = Cursors.HorizontalSplit;
-                        break;
-
-                    case ResizePart.VerticalBorder:
-                        Cursor = Cursors.VerticalSplit;
-                        break;
-                }
-            }
-            else if (CheckOnMoving(location))
-            {
-                Cursor = Cursors.Move;
-            }
-            else if (captured)
-            {
-                Cursor = capturedCursor;
-            }
-            else
-            {
-                SetDefaultPointer();
-            }
-        }
 
         private void SetDefaultPointer()
         {
@@ -313,21 +253,6 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             {
                 endLocation = e.Location;
             }
-            else if (captured)
-            {
-                if (moving)
-                {
-                    MoveSelectionArea(e.Location);
-                }
-                else if (resizing)
-                {
-                    ResizeSelectionArea(e.Location);
-                }
-                else
-                {
-                    SetMousePointer(e.Location);
-                }
-            }
         }
 
         private void EditorViewMouseDown(object sender, MouseEventArgs e)
@@ -339,72 +264,24 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
                     screenSelecting = false;
                 }
 
-                if (capturing)
-                {
-                    endLocation = e.Location;
-                    capturing = false;
-
-                    captured = true;
-                    ShowSelectionManageForm();
-                    return;
-                }
-
-                if (captured)
-                {
-                    if (CheckOnResizing(e.Location))
-                    {
-                        resizing = true;
-                    }
-                    else if (CheckOnMoving(e.Location))
-                    {
-                        moving = true;
-                    }
-                }
-                else
-                {
-                    startLocation = e.Location;
-                    endLocation = e.Location;
-                    capturing = true;
-                }
-
-                HideSelectionManageForm();
-            }
-            else if (e.Buttons == MouseButtons.Alternate)
-            {
-                SetSelectionSize();
-                if (capturing)
-                {
-                    capturing = false;
-                    screenSelecting = true;
-                }
-                else if (captured)
-                {
-                    captured = false;
-                    moving = false;
-                    resizing = false;
-                    HideSelectionManageForm();
-                    SetDefaultPointer();
-                    screenSelecting = true;
-                }
-                else
-                {
-                    Close();
-                }
+                startLocation = e.Location;
+                endLocation = e.Location;
+                capturing = true;
             }
         }
 
         private void EditorViewDrawingSkiaSharpMouseUp(object sender, MouseEventArgs e)
         {
+            if (e.Buttons == MouseButtons.Alternate)
+            {
+                Close();
+                return;
+            }
+
             if (e.Buttons == MouseButtons.Primary)
             {
-                moving = false;
-                resizing = false;
-                SetDefaultPointer();
-
-                if (captured)
-                {
-                    ShowSelectionManageForm();
-                }
+                endLocation = e.Location;
+                FinishSelection();
             }
         }
 
@@ -420,10 +297,6 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             {
                 case Keys.Escape:
                     Close();
-                    break;
-
-                case Keys.Enter:
-                    FinishSelection();
                     break;
             }
         }
@@ -574,13 +447,15 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
                 FilterQuality = SKFilterQuality.High
             };
 
+            // Emulate moving dash
+            var movingDashEffect = SKPathEffect.CreateDash(dash, (float)(DateTime.Now - dialogOpenDate).TotalSeconds * -20);
             var rectPaintDash = new SKPaint
             {
                 IsAntialias = false,
                 Style = SKPaintStyle.Stroke,
                 Color = dashColor,
                 FilterQuality = SKFilterQuality.High,
-                PathEffect = SKPathEffect.CreateDash(dash, (float)penTimer.Elapsed.TotalSeconds * -20)
+                PathEffect = movingDashEffect
             };
 
             canvas.DrawRect(rect, rectPaint);
@@ -588,177 +463,6 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         }
 
 #endregion SkiaSharpCommands
-
-#region Moving & Resizing
-
-#region Checking
-
-        /// <summary>
-        /// Checks whether user can move selected area.
-        /// </summary>
-        private bool CheckOnMoving(PointF mouseLocation)
-        {
-            if (mouseLocation.X >= selectionRectangle.X && mouseLocation.X <= selectionRectangle.X + selectionRectangle.Width)
-            {
-                if (mouseLocation.Y >= selectionRectangle.Y && mouseLocation.Y <= selectionRectangle.Y + selectionRectangle.Height)
-                {
-                    relativeX = mouseLocation.X - selectionRectangle.X;
-                    relativeY = mouseLocation.Y - selectionRectangle.Y;
-
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Checks whether user can resize selected area.
-        /// </summary>
-        private bool CheckOnResizing(PointF mouseLocation)
-        {
-            if (ResizeHelper.ApproximatelyEquals(selectionRectangle.Y, mouseLocation.Y))
-            {
-                if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X, mouseLocation.X))
-                {
-                    resizePart = ResizePart.Angle;
-                    oppositeAngle = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y + selectionRectangle.Height);
-                }
-                else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X + selectionRectangle.Width, mouseLocation.X))
-                {
-                    resizePart = ResizePart.Angle;
-                    oppositeAngle = new PointF(selectionRectangle.X, selectionRectangle.Y + selectionRectangle.Height);
-                }
-                else if (mouseLocation.X > selectionRectangle.X && mouseLocation.X < selectionRectangle.X + selectionRectangle.Width)
-                {
-                    resizePart = ResizePart.HorizontalBorder;
-
-                    var start = new PointF(selectionRectangle.X, selectionRectangle.Y + selectionRectangle.Height);
-                    var end = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y + selectionRectangle.Height);
-                    oppositeBorder = new LineF(start, end);
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.Y + selectionRectangle.Height, mouseLocation.Y))
-            {
-                if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X, mouseLocation.X))
-                {
-                    resizePart = ResizePart.Angle;
-                    oppositeAngle = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y);
-                }
-                else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X + selectionRectangle.Width, mouseLocation.X))
-                {
-                    resizePart = ResizePart.Angle;
-                    oppositeAngle = new PointF(selectionRectangle.X, selectionRectangle.Y);
-                }
-                else if (mouseLocation.X > selectionRectangle.X && mouseLocation.X < selectionRectangle.X + selectionRectangle.Width)
-                {
-                    resizePart = ResizePart.HorizontalBorder;
-
-                    var start = new PointF(selectionRectangle.X, selectionRectangle.Y);
-                    var end = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y);
-                    oppositeBorder = new LineF(start, end);
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X, mouseLocation.X))
-            {
-                if (mouseLocation.Y > selectionRectangle.Y && mouseLocation.Y < selectionRectangle.Y + Height)
-                {
-                    resizePart = ResizePart.VerticalBorder;
-
-                    var start = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y);
-                    var end = new PointF(selectionRectangle.X + selectionRectangle.Width, selectionRectangle.Y + selectionRectangle.Height);
-                    oppositeBorder = new LineF(start, end);
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else if (ResizeHelper.ApproximatelyEquals(selectionRectangle.X + selectionRectangle.Width, mouseLocation.X))
-            {
-                if (mouseLocation.Y > selectionRectangle.Y && mouseLocation.Y < selectionRectangle.Y + Height)
-                {
-                    resizePart = ResizePart.VerticalBorder;
-
-                    var start = new PointF(selectionRectangle.X, selectionRectangle.Y);
-                    var end = new PointF(selectionRectangle.X, selectionRectangle.Y + selectionRectangle.Height);
-                    oppositeBorder = new LineF(start, end);
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-#endregion Checking
-
-        /// <summary>
-        /// Moves selection area.
-        /// </summary>
-        private void MoveSelectionArea(PointF location)
-        {
-            var newXcoord = location.X - relativeX;
-            var newYcoord = location.Y - relativeY;
-
-            if (newXcoord >= 0 && newYcoord >= 0)
-            {
-                if (newXcoord + selectionRectangle.Width < Size.Width)
-                {
-                    selectionRectangle.X = newXcoord;
-                }
-                else
-                {
-                    selectionRectangle.X = Size.Width - selectionRectangle.Width;
-                }
-
-                if (newYcoord + selectionRectangle.Height <= Size.Height)
-                {
-                    selectionRectangle.Y = newYcoord;
-                }
-                else
-                {
-                    selectionRectangle.Y = Size.Height - selectionRectangle.Height;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Resizes selection area.
-        /// </summary>
-        private void ResizeSelectionArea(PointF location)
-        {
-            if (resizePart == ResizePart.Angle)
-            {
-                selectionRectangle = EtoDrawingHelper.CreateRectangle(location, oppositeAngle);
-            }
-            else if (resizePart == ResizePart.HorizontalBorder)
-            {
-                var point = new PointF(oppositeBorder.StartPoint.X, location.Y);
-                selectionRectangle = EtoDrawingHelper.CreateRectangle(point, oppositeBorder.EndPoint);
-            }
-            else if (resizePart == ResizePart.VerticalBorder)
-            {
-                var point = new PointF(location.X, oppositeBorder.StartPoint.Y);
-                selectionRectangle = EtoDrawingHelper.CreateRectangle(point, oppositeBorder.EndPoint);
-            }
-        }
-
-#endregion Moving & Resizing
 
 #region Selection manage form
 
@@ -773,17 +477,6 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             selectionManageForm.Location = selectionManageFormLocation;
             selectionManageForm.KeyDown += EditorViewKeyDown;
             selectionManageForm.Show();
-            selectionManageForm.Visible = false;
-        }
-
-        private void ShowSelectionManageForm()
-        {
-            selectionManageForm.Visible = true;
-            selectionManageForm.Location = selectionManageFormLocation;
-        }
-
-        private void HideSelectionManageForm()
-        {
             selectionManageForm.Visible = false;
         }
 
