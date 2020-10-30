@@ -32,7 +32,7 @@ namespace RedShot.Infrastructure.Settings.Views
             this.settingsSections = settingsSections;
             Resizable = false;
             Shown += SettingsView_Shown;
-            MinimumSize = new Size(400, 400);
+            Maximizable = false;
 
             InitializeComponents();
             this.Closing += SettingsView_Closing;
@@ -45,18 +45,14 @@ namespace RedShot.Infrastructure.Settings.Views
                 return;
             }
 
-            var dialog = new YesNoDialog()
-            {
-                Message = "Do you want to close the settings without saving it?",
-                Size = new Size(400, 200)
-            };
+            const string message = "Do you want to close the settings without saving it?";
+            const string title = "ResShot Question";
+            var dialogResult = MessageBox.Show(message, title, MessageBoxButtons.YesNo,
+                MessageBoxType.Question);
 
-            using (dialog)
+            if (dialogResult != DialogResult.Yes)
             {
-                if (dialog.ShowModal() != DialogResult.Yes)
-                {
-                    e.Cancel = true;
-                }
+                e.Cancel = true;
             }
         }
 
@@ -119,7 +115,7 @@ namespace RedShot.Infrastructure.Settings.Views
             var listBox = new ListBox()
             {
                 DataStore = settingsSections,
-                Width = 180
+                Width = 170
             };
 
             listBox.ItemTextBinding = new DelegateBinding<ISettingsSection, string>(r => r.Name);
@@ -140,7 +136,7 @@ namespace RedShot.Infrastructure.Settings.Views
         {
             contentPanel = new Scrollable()
             {
-                Size = new Size(800, 500)
+                Size = new Size(500, 400),
             };
 
             var splitter = new Splitter
@@ -148,8 +144,6 @@ namespace RedShot.Infrastructure.Settings.Views
                 Position = 180,
                 FixedPanel = SplitterFixedPanel.Panel2,
                 Panel1 = settingsListPanel,
-                Panel1MinimumSize = 180,
-                Panel2MinimumSize = 800,
                 Panel2 = contentPanel
             };
 
@@ -157,7 +151,7 @@ namespace RedShot.Infrastructure.Settings.Views
             {
                 Orientation = Orientation.Vertical,
                 HorizontalContentAlignment = HorizontalAlignment.Right,
-                Padding = 10,
+                Padding = 5,
                 Items =
                 {
                     splitter,

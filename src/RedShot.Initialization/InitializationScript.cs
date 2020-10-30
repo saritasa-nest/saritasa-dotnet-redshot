@@ -7,7 +7,6 @@ using RedShot.Infrastructure.Formatting.Settings;
 using RedShot.Infrastructure.Recording;
 using RedShot.Infrastructure.Recording.Settings;
 using RedShot.Infrastructure.Uploading;
-using RedShot.Infrastructure.Uploading.Settings;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings;
 
@@ -34,8 +33,7 @@ namespace RedShot.Initialization
                 typeof(FtpSettingsSection),
                 typeof(RecordingSettingsSection),
                 typeof(FormatSettingsSection),
-                typeof(ShortcutSettingsSection),
-                typeof(UploadingSettingsSection)
+                typeof(ShortcutSettingsSection)
             };
         }
 

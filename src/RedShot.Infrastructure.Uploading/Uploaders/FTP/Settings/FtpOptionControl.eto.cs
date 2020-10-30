@@ -31,7 +31,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
         private Control GetPrimaryAccountSelectionFields()
         {
-            return FormsHelper.GetBaseStack("Primary account:", primaryAccountSelectionComboBox, nameWidth: 100, padding: 10);
+            return FormsHelper.GetBaseStack("Primary account:", primaryAccountSelectionComboBox, nameWidth: 100,
+                padding: 10, controlWidth: 325);
         }
 
         private void InitializeFileds()
@@ -41,10 +42,13 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             isActive = new CheckBox();
             addExtensionCheckBox = new CheckBox();
             previewLinkLabel = new Label();
-            browserTypeComboBox = new ComboBox();
+            browserTypeComboBox = new ComboBox
+            {
+                Size = new Size(75, 21)
+            };
             homePathTextBox = new TextBox()
             {
-                Size = defaultSize
+                Size = new Size(220, 21)
             };
 
             testButton = new DefaultButton("Test connection", 100, 25);
@@ -124,22 +128,22 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
             addButton = new Button()
             {
-                Text = "Add",
-                Size = new Size(100, 30)
+                Image = Resources.Icons.Add,
+                Size = new Size(26, 26)
             };
             addButton.Click += AddButtonClick;
 
             delButton = new Button()
             {
-                Text = "Delete",
-                Size = new Size(100, 30),
+                Image = Resources.Icons.Remove,
+                Size = new Size(26, 26)
             };
             delButton.Click += DelButtonClick;
 
             copyButton = new Button()
             {
-                Text = "Copy",
-                Size = new Size(100, 30),
+                Image = Resources.Icons.Copy,
+                Size = new Size(26, 26)
             };
             copyButton.Click += CopyButtonClick;
 
@@ -180,9 +184,9 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                         testButton
                     }
                 },
+                Size = new Size(435, 550),
                 Text = "Account",
-                MinimumSize = new Size(700, 400),
-                Padding = 20
+                Padding = 10
             };
         }
 
@@ -319,7 +323,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 Items =
                 {
                     pathControl,
-                    FormsHelper.GetBaseStack("Add extension to the URL path", addExtensionCheckBox),
+                    FormsHelper.GetBaseStack("Add extension to the URL path", addExtensionCheckBox, nameWidth: 150),
                     FormsHelper.GetBaseStack("URL preview:", previewLinkLabel, controlWidth: 300)
                 }
             };

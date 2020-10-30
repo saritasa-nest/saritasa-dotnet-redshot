@@ -47,7 +47,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
             Content = new StackLayout()
             {
                 Orientation = Orientation.Vertical,
-                HorizontalContentAlignment = HorizontalAlignment.Left,
+                HorizontalContentAlignment = HorizontalAlignment.Stretch,
                 Padding = 20,
                 Spacing = 5,
                 Items =

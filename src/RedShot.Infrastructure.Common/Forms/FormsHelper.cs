@@ -86,7 +86,7 @@ namespace RedShot.Infrastructure.Common.Forms
         /// <summary>
         /// Gives base stack (Label + control) in horizontal orientation.
         /// </summary>
-        public static StackLayout GetBaseStack(string name, Control control, int nameWidth = 200, int controlWidth = 300, int padding = 5)
+        public static StackLayout GetBaseStack(string name, Control control, int nameWidth = 100, int controlWidth = 300, int padding = 5)
         {
             return new StackLayout
             {
@@ -110,7 +110,7 @@ namespace RedShot.Infrastructure.Common.Forms
                     },
                     new StackLayout()
                     {
-                        HorizontalContentAlignment = HorizontalAlignment.Left,
+                        HorizontalContentAlignment = HorizontalAlignment.Stretch,
                         VerticalContentAlignment = VerticalAlignment.Center,
                         Width = controlWidth,
                         Items =

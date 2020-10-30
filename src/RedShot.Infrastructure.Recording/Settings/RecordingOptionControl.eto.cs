@@ -89,52 +89,45 @@ namespace RedShot.Infrastructure.Recording.Settings
             Content = new StackLayout()
             {
                 Orientation = Orientation.Vertical,
-                HorizontalContentAlignment = HorizontalAlignment.Left,
+                HorizontalContentAlignment = HorizontalAlignment.Stretch,
                 Padding = 10,
                 Spacing = 10,
                 Items =
                 {
-                    new StackLayout()
+                    new GroupBox()
                     {
-                        Orientation = Orientation.Horizontal,
-                        HorizontalContentAlignment = HorizontalAlignment.Center,
-                        Spacing = 15,
-                        Items =
-                        {
-                            new GroupBox()
-                            {
-                                Text = "General",
-                                Size = new Size(250, 230),
-                                Content = GetDefaultOptionControl(),
-                            },
-                            new GroupBox()
-                            {
-                                Text = "Encoding",
-                                Size = new Size(300, 230),
-                                Content = GetEncodingSelectionControl(),
-                            }
-                        }
+                        Text = "General",
+                        Content = GetDefaultOptionControl(),
+                    },
+                    new GroupBox()
+                    {
+                        Text = "Encoding",
+                        Content = GetEncodingSelectionControl(),
                     },
                     new GroupBox()
                     {
                         Text = "Recording devices",
-                        Size = new Size(300, 250),
                         Content = GetDeviceSelectionControl()
                     },
                     new StackLayout()
                     {
-                        Orientation = Orientation.Horizontal,
-                        VerticalContentAlignment = VerticalAlignment.Center,
+                        Orientation = Orientation.Vertical,
                         Spacing = 10,
                         Items =
                         {
-                            setDefaultButton,
-                            FormsHelper.GetVoidRectangle(40, 10),
-                            new Label()
+                            new StackLayout
                             {
-                                Text = "Custom FFmpeg arguments:"
+                                Orientation = Orientation.Horizontal,
+                                Items =
+                                {
+                                    new Label()
+                                    {
+                                        Text = "Custom FFmpeg arguments:"
+                                    },
+                                    userArgs
+                                }
                             },
-                            userArgs
+                            setDefaultButton
                         }
                     }
                 }
@@ -195,7 +188,7 @@ namespace RedShot.Infrastructure.Recording.Settings
             return new StackLayout()
             {
                 Orientation = Orientation.Vertical,
-                Padding = 20,
+                Padding = 5,
                 Spacing = 5,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
                 Items =
@@ -228,14 +221,13 @@ namespace RedShot.Infrastructure.Recording.Settings
             return new StackLayout()
             {
                 Orientation = Orientation.Vertical,
-                Padding = 20,
+                Padding = 10,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
-                Spacing = 10,
+                Spacing = 5,
                 Items =
                     {
                         videoLabel,
                         GetVideoCodecField(),
-                        FormsHelper.GetVoidBox(10),
                         audioLabel,
                         GetAudioCodecField()
                     }
@@ -248,7 +240,7 @@ namespace RedShot.Infrastructure.Recording.Settings
             {
                 Orientation = Orientation.Horizontal,
                 VerticalContentAlignment = VerticalAlignment.Center,
-                Spacing = 10,
+                Spacing = 5,
                 Items =
                 {
                     videoCodec,
@@ -263,7 +255,7 @@ namespace RedShot.Infrastructure.Recording.Settings
             {
                 Orientation = Orientation.Horizontal,
                 VerticalContentAlignment = VerticalAlignment.Center,
-                Spacing = 10,
+                Spacing = 5,
                 Items =
                 {
                     audioCodec,
@@ -280,7 +272,7 @@ namespace RedShot.Infrastructure.Recording.Settings
                 Orientation = Orientation.Vertical,
                 Padding = 20,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
-                Spacing = 15,
+                Spacing = 5,
                 Items =
                     {
                         FormsHelper.GetBaseStack("FPS:", fps, 100, 150),

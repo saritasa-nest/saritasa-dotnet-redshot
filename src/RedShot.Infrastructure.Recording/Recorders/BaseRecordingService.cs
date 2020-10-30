@@ -51,16 +51,12 @@ namespace RedShot.Infrastructure.Recording.Recorders
                 throw new Exception("FFmpeg is installed already!");
             }
 
-            using (var yesNoDialog = new YesNoDialog())
+            const string message = "FFmpeg is not installed. Do you want to automatically install it?";
+            const string title = "FFmpeg Installing";
+            var yesNoDialogResult = MessageBox.Show(message, title, MessageBoxButtons.YesNo, MessageBoxType.Warning);
+            if (yesNoDialogResult != DialogResult.Yes)
             {
-                yesNoDialog.Size = new Size(400, 200);
-                yesNoDialog.Message = "FFmpeg is not installed. Do you want to automatically install it?";
-                yesNoDialog.Title = "FFmpeg installing";
-
-                if (yesNoDialog.ShowModal() != DialogResult.Yes)
-                {
-                    return;
-                }
+                return;
             }
 
             var downloader = new Downloader();
