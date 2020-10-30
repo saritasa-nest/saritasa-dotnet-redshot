@@ -48,8 +48,8 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
                 return;
             }
 
-            const string message = "Do you want to close the editor without uploading the picture?";
-            const string title = "RedShot question";
+            const string message = "Do you want to close the editor without uploading the image?";
+            const string title = "RedShot Question";
             var dialogResult = MessageBox.Show(message, title, MessageBoxButtons.YesNo,
                 MessageBoxType.Question);
 

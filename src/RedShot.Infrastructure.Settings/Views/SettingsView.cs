@@ -46,7 +46,7 @@ namespace RedShot.Infrastructure.Settings.Views
             }
 
             const string message = "Do you want to close the settings without saving it?";
-            const string title = "ResShot question";
+            const string title = "ResShot Question";
             var dialogResult = MessageBox.Show(message, title, MessageBoxButtons.YesNo,
                 MessageBoxType.Question);
 

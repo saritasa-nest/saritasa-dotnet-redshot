@@ -52,7 +52,7 @@ namespace RedShot.Infrastructure.Recording.Recorders
             }
 
             const string message = "FFmpeg is not installed. Do you want to automatically install it?";
-            const string title = "FFmpeg installing";
+            const string title = "FFmpeg Installing";
             var yesNoDialogResult = MessageBox.Show(message, title, MessageBoxButtons.YesNo, MessageBoxType.Warning);
             if (yesNoDialogResult != DialogResult.Yes)
             {
