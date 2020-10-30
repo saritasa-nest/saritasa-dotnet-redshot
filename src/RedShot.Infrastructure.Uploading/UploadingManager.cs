@@ -15,6 +15,9 @@ namespace RedShot.Infrastructure.Uploading
     /// </summary>
     public static class UploadingManager
     {
+        /// <summary>
+        /// Last uploaded file.
+        /// </summary>
         public static IFile LastFile { get; private set; }
 
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
