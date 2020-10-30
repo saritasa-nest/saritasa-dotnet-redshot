@@ -175,12 +175,10 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             imagePanel.ChangePaint(paint);
         }
 
-        private void PaintingPanelDrawSizeChanged(object sender, DataEventArgs<double> e)
+        private void PaintingPanelDrawSizeChanged(object sender, DataEventArgs<float> e)
         {
-            var size = (float)e.Value;
-
-            paint.StrokeWidth = size;
-            paint.TextSize = size;
+            paint.StrokeWidth = e.Value;
+            paint.TextSize = e.Value;
 
             imagePanel.ChangePaint(paint);
         }

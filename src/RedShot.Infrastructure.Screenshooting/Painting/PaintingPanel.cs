@@ -27,7 +27,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         /// Draw size changed event.
         /// Invokes when draw size was changed.
         /// </summary>
-        public event EventHandler<DataEventArgs<double>> DrawSizeChanged;
+        public event EventHandler<DataEventArgs<float>> DrawSizeChanged;
 
         /// <summary>
         /// Draw size changed event.
@@ -94,7 +94,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
                 Value = 3
             };
 
-            drawSizeStepper.ValueChanged += DrawSizeStepper_ValueChanged;
+            drawSizeStepper.ValueChanged += DrawSizeStepperValueChanged;
 
             colorPicker = new ColorPicker()
             {
@@ -104,7 +104,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
                 ToolTip = "Pick a color for painting"
             };
 
-            colorPicker.ValueChanged += ColorPicker_ValueChanged;
+            colorPicker.ValueChanged += ColorPickerValueChanged;
 
             var buttonSize = new Size(60, 30);
             var imageSize = new Size(20, 20);
@@ -173,14 +173,14 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             };
         }
 
-        private void ColorPicker_ValueChanged(object sender, EventArgs e)
+        private void ColorPickerValueChanged(object sender, EventArgs e)
         {
             ColorChanged?.Invoke(this, new DataEventArgs<Color>(colorPicker.Value));
         }
 
-        private void DrawSizeStepper_ValueChanged(object sender, EventArgs e)
+        private void DrawSizeStepperValueChanged(object sender, EventArgs e)
         {
-            DrawSizeChanged?.Invoke(this, new DataEventArgs<double>(drawSizeStepper.Value));
+            DrawSizeChanged?.Invoke(this, new DataEventArgs<float>((float)drawSizeStepper.Value));
         }
     }
 }
