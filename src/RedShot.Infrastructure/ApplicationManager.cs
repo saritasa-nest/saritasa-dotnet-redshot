@@ -1,4 +1,7 @@
 ﻿using System;
+using System.CodeDom;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Recording;
@@ -13,6 +16,8 @@ namespace RedShot.Infrastructure
     /// </summary>
     public static class ApplicationManager
     {
+        private const string RedShotEmail = "redshot@saritasa.com";
+
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private static TrayIcon trayIcon;
 
@@ -76,6 +81,32 @@ namespace RedShot.Infrastructure
                     UploadingManager.RunUploading(lastFile);
                 }
             }
+        }
+
+        /// <summary>
+        /// Send feedback to specified email.
+        /// </summary>
+        public static void SendFeedBack()
+        {
+            Task.Run(() =>
+            {
+                using var mailingProcess = new Process();
+                try
+                {
+                    var url = $"mailto:{RedShotEmail}";
+
+                    mailingProcess.StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = url,
+                        UseShellExecute = true
+                    };
+                    mailingProcess.Start();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($"Failed to open SendFeedBack form: {e.Message}", "Send feedback error", MessageBoxButtons.OK, MessageBoxType.Error);
+                }
+            });
         }
 
         private static void UploadingManagerUploadStarted(object sender, EventArgs e)
