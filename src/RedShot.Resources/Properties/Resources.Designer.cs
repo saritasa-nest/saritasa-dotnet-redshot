@@ -59,9 +59,9 @@ namespace RedShot.Resources.Properties {
                 resourceCulture = value;
             }
         }
-        
+
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.Byte[].
+        ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] Add {
             get {
@@ -99,9 +99,9 @@ namespace RedShot.Resources.Properties {
                 return ((byte[])(obj));
             }
         }
-        
+
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.Byte[].
+        ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] Copy {
             get {
@@ -259,9 +259,9 @@ namespace RedShot.Resources.Properties {
                 return ((byte[])(obj));
             }
         }
-        
+
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.Byte[].
+        ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] Remove {
             get {

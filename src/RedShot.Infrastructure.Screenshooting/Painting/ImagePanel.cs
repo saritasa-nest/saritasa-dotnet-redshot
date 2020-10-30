@@ -272,7 +272,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
 
         private void InitializeComponents()
         {
-            var eraseImage = Icons.ErasePointer;
+            var eraseImage = Icons.EraserPointer;
             eraseCursor = FormsHelper.GetCursor(eraseImage, new Size(20, 20), new Point(5, 5));
 
             renderTimer = new UITimer()
