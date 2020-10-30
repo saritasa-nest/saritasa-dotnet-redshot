@@ -11,9 +11,12 @@ namespace RedShot.Infrastructure.Formatting
     {
         private string pattern;
 
+        /// <summary>
+        /// Initializes <see cref="FormatConfigurationOption"/> object.
+        /// </summary>
         public FormatConfigurationOption()
         {
-            Pattern = "%[RedShot-]%date";
+            Pattern = "%date%rnd";
         }
 
         /// <inheritdoc />
