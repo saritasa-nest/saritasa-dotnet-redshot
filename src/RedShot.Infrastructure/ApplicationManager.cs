@@ -1,7 +1,5 @@
 ﻿using System;
-using System.CodeDom;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Recording;
@@ -88,24 +86,12 @@ namespace RedShot.Infrastructure
         /// </summary>
         public static void SendFeedBack()
         {
-            Task.Run(() =>
-            {
-                using var mailingProcess = new Process();
-                try
-                {
-                    var url = $"mailto:{RedShotEmail}";
+            var url = $"mailto:{RedShotEmail}";
 
-                    mailingProcess.StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = url,
-                        UseShellExecute = true
-                    };
-                    mailingProcess.Start();
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show($"Failed to open SendFeedBack form: {e.Message}", "Send feedback error", MessageBoxButtons.OK, MessageBoxType.Error);
-                }
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true
             });
         }
 
