@@ -58,10 +58,7 @@ namespace RedShot.Shortcut.Settings
                 return;
             }
 
-            if (!Keys.HasFlag(e.KeyData))
-            {
-                Keys = e.KeyData;
-            }
+            Keys = e.KeyData;
         }
 
         /// <inheritdoc/>
@@ -72,7 +69,7 @@ namespace RedShot.Shortcut.Settings
 
         private void RenderText()
         {
-            Text = Keys.ToShortcutString();
+            Text = KeysParser.GetShortcutString(Keys);
         }
     }
 }

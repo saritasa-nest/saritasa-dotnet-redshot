@@ -108,19 +108,25 @@ namespace RedShot.Infrastructure.Configuration
             {
                 if (settingsFile.ContainsKey(type.Name) && settingsFile[type.Name] is JObject section)
                 {
-                    var configurationObject = section.ToObject(type);
-
-                    if (configurationObject is IEncryptable encryptable)
+                    try
                     {
-                        configurationObject = encryptable.Decrypt(encryptionService);
-                    }
+                        var configurationObject = section.ToObject(type);
 
-                    settingsMap.Add(type, configurationObject as IConfigurationOption);
+                        if (configurationObject is IEncryptable encryptable)
+                        {
+                            configurationObject = encryptable.Decrypt(encryptionService);
+                        }
+
+                        settingsMap.Add(type, configurationObject as IConfigurationOption);
+                        continue;
+                    }
+                    catch (JsonSerializationException e)
+                    {
+                        logger.Error(e);
+                    }
                 }
-                else
-                {
-                    settingsMap.Add(type, (IConfigurationOption)Activator.CreateInstance(type));
-                }
+
+                settingsMap.Add(type, (IConfigurationOption)Activator.CreateInstance(type));
             }
             logger.Debug("The configuration has been loaded.");
         }

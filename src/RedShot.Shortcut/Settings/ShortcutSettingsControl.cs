@@ -2,6 +2,7 @@
 using Eto.Forms;
 using System.Collections.Generic;
 using RedShot.Infrastructure.Common.Forms;
+using RedShot.Resources;
 
 namespace RedShot.Shortcut.Settings
 {
@@ -10,12 +11,12 @@ namespace RedShot.Shortcut.Settings
     /// </summary>
     internal class ShortcutSettingsControl : Panel
     {
-        private readonly List<Shortcuts.Shortcut> shortcuts;
+        private readonly IEnumerable<Shortcuts.Shortcut> shortcuts;
 
         /// <summary>
         /// Create the control.
         /// </summary>
-        public ShortcutSettingsControl(List<Shortcuts.Shortcut> shortcuts)
+        public ShortcutSettingsControl(IEnumerable<Shortcuts.Shortcut> shortcuts)
         {
             this.shortcuts = shortcuts;
             InitializeComponents();
@@ -23,22 +24,25 @@ namespace RedShot.Shortcut.Settings
 
         private void InitializeComponents()
         {
-            var stackLayout = new StackLayout()
+            var layout = new TableLayout()
             {
-                Padding = 30,
-                Spacing = 15
+                Padding = new Padding(30, 40, 0, 0),
+                Spacing = new Size(15, 20)
             };
 
-            shortcuts.ForEach((s) => stackLayout.Items.Add(GetShortcutStack(s)));
+            foreach (var shortcut in shortcuts)
+            {
+                layout.Rows.Add(new TableRow(new TableCell(GetShortcutStack(shortcut))));
+            }
 
 #if _UNIX
-            stackLayout.Items.Add(new Label()
+            layout.Rows.Add(new TableRow(new TableCell(new Label()
             {
                 TextColor = Colors.Red,
                 Text = "Shortcuts are not supported on this platform!"
-            });
+            })));
 #endif
-            Content = stackLayout;
+            Content = layout;
         }
 
         private Control GetShortcutStack(Shortcuts.Shortcut shortcut)
@@ -53,7 +57,32 @@ namespace RedShot.Shortcut.Settings
                 shortcut.Keys = shortcutTextBox.Keys;
             };
 
-            return FormsHelper.GetBaseStack(shortcut.Name, shortcutTextBox);
+            var clearButton = new ImageButton(new Size(26, 24), Icons.Close, scaleImageSize: new Size(13, 12));
+            clearButton.Clicked += (o, e) => shortcutTextBox.Reset();
+
+            return new StackLayout()
+            {
+                Orientation = Orientation.Vertical,
+                Items =
+                {
+                    new Label()
+                    {
+                        Text = shortcut.Name
+                    },
+                    new StackLayout()
+                    {
+                        Spacing = 10,
+                        Padding = new Padding(3, 3, 0, 0),
+                        Orientation = Orientation.Horizontal,
+                        VerticalContentAlignment = VerticalAlignment.Center,
+                        Items =
+                        {
+                            shortcutTextBox,
+                            clearButton
+                        }
+                    }
+                }
+            };
         }
     }
 }
