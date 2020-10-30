@@ -26,7 +26,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextInp
         public TextInputView(IPaintingAction textPaintingAction)
         {
             this.textPaintingAction = textPaintingAction;
-            Title = "Enter text";
+            Title = "Enter Text";
             InitializeComponents();
             this.Shown += TextInputView_Shown;
 

@@ -38,6 +38,9 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             return null;
         }
 
+        /// <summary>
+        /// Get either FTP or SFTP uploader by specified FTP account.
+        /// </summary>
         public BaseFtpUploader GetUploader(FtpAccount customAccount)
         {
             account = customAccount;

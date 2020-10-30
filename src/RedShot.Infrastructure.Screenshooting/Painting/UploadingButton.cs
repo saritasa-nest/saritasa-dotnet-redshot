@@ -56,13 +56,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
                 Menu = GetUploadButtonContextMenu()
             });
 
-            Content = new StackLayout
-            {
-                Items =
-                {
-                    uploadButton
-                }
-            };
+            Content = uploadButton;
         }
 
         private void DefaultButtonClick(object sender, EventArgs e)
@@ -116,16 +110,6 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             menu.Items.Add(fileItem);
 
             return menu;
-        }
-    }
-
-    internal class CustomButtonSelectedItem : SegmentedItem
-    {
-        public event EventHandler Clicked;
-
-        public CustomButtonSelectedItem()
-        {
-            
         }
     }
 }
