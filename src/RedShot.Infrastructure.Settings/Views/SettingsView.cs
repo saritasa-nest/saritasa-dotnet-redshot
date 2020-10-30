@@ -32,7 +32,6 @@ namespace RedShot.Infrastructure.Settings.Views
             this.settingsSections = settingsSections;
             Resizable = false;
             Shown += SettingsView_Shown;
-            MinimumSize = new Size(400, 400);
             Maximizable = false;
 
             InitializeComponents();
@@ -116,7 +115,7 @@ namespace RedShot.Infrastructure.Settings.Views
             var listBox = new ListBox()
             {
                 DataStore = settingsSections,
-                Width = 180
+                Width = 170
             };
 
             listBox.ItemTextBinding = new DelegateBinding<ISettingsSection, string>(r => r.Name);
@@ -137,7 +136,7 @@ namespace RedShot.Infrastructure.Settings.Views
         {
             contentPanel = new Scrollable()
             {
-                Size = new Size(800, 500)
+                Size = new Size(500, 400),
             };
 
             var splitter = new Splitter
@@ -145,8 +144,6 @@ namespace RedShot.Infrastructure.Settings.Views
                 Position = 180,
                 FixedPanel = SplitterFixedPanel.Panel2,
                 Panel1 = settingsListPanel,
-                Panel1MinimumSize = 180,
-                Panel2MinimumSize = 800,
                 Panel2 = contentPanel
             };
 
@@ -154,7 +151,7 @@ namespace RedShot.Infrastructure.Settings.Views
             {
                 Orientation = Orientation.Vertical,
                 HorizontalContentAlignment = HorizontalAlignment.Right,
-                Padding = 10,
+                Padding = 5,
                 Items =
                 {
                     splitter,

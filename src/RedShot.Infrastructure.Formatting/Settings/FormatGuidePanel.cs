@@ -89,13 +89,13 @@ namespace RedShot.Infrastructure.Formatting.Settings
                     new StackLayout()
                     {
                         Orientation = Orientation.Vertical,
-                        HorizontalContentAlignment = HorizontalAlignment.Left,
+                        HorizontalContentAlignment = HorizontalAlignment.Stretch,
                         Spacing = 10,
                         Items =
                         {
-                            FormsHelper.GetBaseStack("Name:", nameLabel, 80, 250),
-                            FormsHelper.GetBaseStack("Pattern:", patternLabel, 80, 250),
-                            FormsHelper.GetBaseStack("Example:", exampleLabel, 80, 250),
+                            FormsHelper.GetBaseStack("Name:", nameLabel, 80, 100),
+                            FormsHelper.GetBaseStack("Pattern:", patternLabel, 80, 100),
+                            FormsHelper.GetBaseStack("Example:", exampleLabel, 80, 100),
                         }
                     }
                 }
