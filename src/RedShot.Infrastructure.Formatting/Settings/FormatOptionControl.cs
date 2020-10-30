@@ -47,16 +47,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
                     {
                         Text = "Pattern"
                     },
-                    new StackLayout()
-                    {
-                        Orientation = Orientation.Horizontal,
-                        VerticalContentAlignment = VerticalAlignment.Center,
-                        Spacing = 10,
-                        Items =
-                        {
-                            patternTextBox
-                        }
-                    },
+                    patternTextBox,
                     new StackLayout()
                     {
                         Orientation = Orientation.Horizontal,

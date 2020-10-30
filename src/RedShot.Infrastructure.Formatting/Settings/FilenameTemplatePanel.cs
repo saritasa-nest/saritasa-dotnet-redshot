@@ -61,17 +61,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
             };
             addButton.Clicked += AddButtonClicked;
 
-            Content = new StackLayout()
-            {
-                Orientation = Orientation.Vertical,
-                HorizontalContentAlignment = HorizontalAlignment.Left,
-                Padding = 15,
-                Spacing = 15,
-                Items =
-                {
-                    GetGuideFormatsStack()
-                }
-            };
+            Content = GetFilenameTemplateStack();
         }
 
         private void FormatsListBoxSelectedValueChanged(object sender, EventArgs e)
@@ -84,13 +74,14 @@ namespace RedShot.Infrastructure.Formatting.Settings
             }
         }
 
-        private Control GetGuideFormatsStack()
+        private Control GetFilenameTemplateStack()
         {
             return new StackLayout()
             {
                 Orientation = Orientation.Horizontal,
                 VerticalContentAlignment = VerticalAlignment.Center,
                 Spacing = 15,
+                Padding = 15,
                 Items =
                 {
                     formatsListBox,
