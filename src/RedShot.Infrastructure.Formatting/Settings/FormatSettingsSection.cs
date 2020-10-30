@@ -22,7 +22,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
         }
 
         /// <inheritdoc />
-        public string Name => "Format name";
+        public string Name => "General";
 
         /// <inheritdoc />
         public Control GetControl()

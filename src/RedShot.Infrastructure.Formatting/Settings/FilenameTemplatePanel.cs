@@ -8,22 +8,25 @@ using RedShot.Infrastructure.Formatting.Formatters;
 namespace RedShot.Infrastructure.Formatting.Settings
 {
     /// <summary>
-    /// Format guide dialog.
-    /// Guides how an user can format file link.
+    /// Filename template dialog. Allows to design a filename template.
     /// </summary>
-    public class FormatGuidePanel : Panel
+    public class FilenameTemplatePanel : Panel
     {
         private readonly IEnumerable<IFormatItem> formatItems;
+        private readonly Action<string> addPattern;
         private ListBox formatsListBox;
         private Label exampleLabel;
         private Label patternLabel;
         private Label nameLabel;
+        private DefaultButton addButton;
 
         /// <summary>
-        /// Initializes format guide dialog.
+        /// Initializes <see cref="FilenameTemplatePanel"/> object.
         /// </summary>
-        public FormatGuidePanel()
+        /// <param name="addPattern">Action that add new pattern to filename template textbox.</param>
+        public FilenameTemplatePanel(Action<string> addPattern)
         {
+            this.addPattern = addPattern;
             formatItems = FormatManager.FormatItems;
             InitializeComponents();
         }
@@ -52,6 +55,12 @@ namespace RedShot.Infrastructure.Formatting.Settings
             };
             formatsListBox.SelectedValueChanged += FormatsListBoxSelectedValueChanged;
 
+            addButton = new DefaultButton("Add", 60, 25)
+            {
+                ToolTip = "Add format item"
+            };
+            addButton.Clicked += AddButtonClicked;
+
             Content = new StackLayout()
             {
                 Orientation = Orientation.Vertical,
@@ -60,8 +69,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
                 Spacing = 15,
                 Items =
                 {
-                    GetGuideFormatsStack(),
-                    GetUsersTextFormatGuide()
+                    GetGuideFormatsStack()
                 }
             };
         }
@@ -93,34 +101,23 @@ namespace RedShot.Infrastructure.Formatting.Settings
                         Spacing = 10,
                         Items =
                         {
-                            FormsHelper.GetBaseStack("Name:", nameLabel, 80, 100),
                             FormsHelper.GetBaseStack("Pattern:", patternLabel, 80, 100),
                             FormsHelper.GetBaseStack("Example:", exampleLabel, 80, 100),
+                            addButton
                         }
                     }
                 }
             };
         }
 
-        private Control GetUsersTextFormatGuide()
+        private void AddButtonClicked(object sender, EventArgs e)
         {
-            return new StackLayout()
-            {
-                Orientation = Orientation.Horizontal,
-                VerticalContentAlignment = VerticalAlignment.Center,
-                Spacing = 10,
-                Items =
-                {
-                    new Label()
-                    {
-                        Text = "If you want to insert your own text:"
-                    },
-                    new Label()
-                    {
-                        Text = "%[your_text]"
-                    }
-                }
-            };
+            var selectedPattern = (IFormatItem) formatsListBox.SelectedValue;
+            var fullPattern = GetFullPattern(selectedPattern.Pattern);
+            addPattern(fullPattern);
         }
+
+        private string GetFullPattern(string pattern) =>
+            $"{FormatManager.FormatTag}{pattern}";
     }
 }
