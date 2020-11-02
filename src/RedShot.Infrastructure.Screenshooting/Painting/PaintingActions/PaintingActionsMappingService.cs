@@ -7,7 +7,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions
     /// <summary>
     /// Painting action services.
     /// </summary>
-    internal static class PaintingActionsService
+    internal static class PaintingActionsMappingService
     {
         /// <summary>
         /// Maps PaintingState and IPaintingAction.
@@ -16,7 +16,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions
         {
             return state switch
             {
-                PaintingState.Points => new PointPaintingAction(paint),
+                PaintingState.Brush => new BrushPaintingAction(paint),
                 PaintingState.Rectangle => new RectanglePaintingAction(paint),
                 PaintingState.Erase => new ErasePaintingAction(paint, bitmap),
                 PaintingState.Arrow => new ArrowPaintingAction(paint),

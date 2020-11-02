@@ -59,7 +59,7 @@ namespace RedShot.Resources.Properties {
                 resourceCulture = value;
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
@@ -99,13 +99,23 @@ namespace RedShot.Resources.Properties {
                 return ((byte[])(obj));
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] Copy {
             get {
                 object obj = ResourceManager.GetObject("Copy", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] DownArrow {
+            get {
+                object obj = ResourceManager.GetObject("DownArrow", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -259,7 +269,7 @@ namespace RedShot.Resources.Properties {
                 return ((byte[])(obj));
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>

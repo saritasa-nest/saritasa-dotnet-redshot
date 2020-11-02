@@ -13,6 +13,9 @@ namespace RedShot.Infrastructure.Uploaders.File
     /// </summary>
     internal sealed class FileUploader : IUploader
     {
+        /// <inheritdoc/>
+        public event EventHandler<UploadingFinishedEventArgs> UploadingFinished;
+
         /// <inheritdoc />
         public IUploadingResponse Upload(IFile file)
         {
@@ -22,8 +25,8 @@ namespace RedShot.Infrastructure.Uploaders.File
 
                 if (file.FileType == FileType.Image)
                 {
-                    dialog.FileName = $"{file.FileName}.bmp";
-                    dialog.Filters.Add(new FileFilter("Bmp format", ".bmp"));
+                    dialog.FileName = $"{file.FileName}.png";
+                    dialog.Filters.Add(new FileFilter("Jpeg format", ".jpeg"));
                     dialog.Filters.Add(new FileFilter("Png format", ".png"));
 
                     if (dialog.ShowDialog(new Form()) == DialogResult.Ok)
@@ -33,16 +36,17 @@ namespace RedShot.Infrastructure.Uploaders.File
                         switch (dialog.CurrentFilterIndex)
                         {
                             case 0:
-                                image.Save(dialog.FileName, ImageFormat.Bitmap);
+                                image.Save(dialog.FileName, ImageFormat.Jpeg);
                                 break;
                             case 1:
                                 image.Save(dialog.FileName, ImageFormat.Png);
                                 break;
                             default:
-                                image.Save(Path.Combine(dialog.Directory.ToString(), $"{DateTime.Now.ToFileTime()}.bmp"), ImageFormat.Bitmap);
+                                image.Save(Path.Combine(dialog.Directory.ToString(), $"{file.FileName}.png"), ImageFormat.Png);
                                 break;
                         }
 
+                        UploadingFinished?.Invoke(this, UploadingFinishedEventArgs.CreateNew(file));
                         return new BaseUploadingResponse(true);
                     }
                 }
@@ -56,6 +60,8 @@ namespace RedShot.Infrastructure.Uploaders.File
                     if (dialog.ShowDialog(new Form()) == DialogResult.Ok)
                     {
                         System.IO.File.Copy(file.FilePath, dialog.FileName);
+
+                        UploadingFinished?.Invoke(this, UploadingFinishedEventArgs.CreateNew(file));
                         return new BaseUploadingResponse(true);
                     }
                 }

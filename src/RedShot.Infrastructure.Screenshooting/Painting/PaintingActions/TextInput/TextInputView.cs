@@ -26,9 +26,12 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextInp
         public TextInputView(IPaintingAction textPaintingAction)
         {
             this.textPaintingAction = textPaintingAction;
-            Title = "Text input dialog";
+            Title = "Enter Text";
             InitializeComponents();
             this.Shown += TextInputView_Shown;
+
+            this.Resizable = false;
+            this.Maximizable = false;
         }
 
         private void TextInputView_Shown(object sender, EventArgs e)

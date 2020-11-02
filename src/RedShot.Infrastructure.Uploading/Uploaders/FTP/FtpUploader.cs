@@ -98,7 +98,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             {
                 if (UploadData(file.GetStream(), path))
                 {
-                    return new BaseUploadingResponse(true);
+                    return base.Upload(file);
                 }
                 else
                 {

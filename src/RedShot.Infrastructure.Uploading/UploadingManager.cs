@@ -25,15 +25,11 @@ namespace RedShot.Infrastructure.Uploading
 
         public static event EventHandler UploadStarted;
 
-        /// <summary>
         /// Run uploading panel.
         /// </summary>
         public static void RunUploading(IFile file)
         {
-            file.FileName = Formatting.FormatManager.GetFormattedName();
-
-            LastFile = file;
-            UploadStarted?.Invoke(null, EventArgs.Empty);
+            ProcessFile(file);
 
             var configuration = GetUploadingConfiguration();
             if (configuration.AutoUpload)
@@ -45,6 +41,14 @@ namespace RedShot.Infrastructure.Uploading
             {
                 RunManualUpload(file);
             }
+        }
+
+        private static void ProcessFile(IFile file)
+        {
+            file.FileName = Formatting.FormatManager.GetFormattedName();
+
+            LastFile = file;
+            UploadStarted?.Invoke(null, EventArgs.Empty);
         }
 
         private static void RunManualUpload(IFile file)
@@ -67,7 +71,7 @@ namespace RedShot.Infrastructure.Uploading
 
             foreach (var uploadingService in uploadingServices)
             {
-                Upload(uploadingService, file);
+                Upload(uploadingService.GetUploader(), file);
             }
         }
 
@@ -103,9 +107,9 @@ namespace RedShot.Infrastructure.Uploading
         /// <summary>
         /// Uploads file with specified uploader.
         /// </summary>
-        internal static void Upload(IUploadingService service, IFile file)
+        public static void Upload(IUploader uploader, IFile file)
         {
-            var uploader = service.GetUploader();
+            ProcessFile(file);
 
             if (uploader == null || file == null)
             {
@@ -121,7 +125,6 @@ namespace RedShot.Infrastructure.Uploading
                 if (response.IsSuccess)
                 {
                     logger.Trace($"{file.FileType} has been uploaded", response);
-                    service.OnUploaded(file);
                 }
                 else
                 {

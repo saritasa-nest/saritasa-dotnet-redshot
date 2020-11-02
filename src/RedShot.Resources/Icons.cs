@@ -136,5 +136,10 @@ namespace RedShot.Resources
         /// The copy icon.
         /// </summary>
         public static Bitmap Copy => new Bitmap(Properties.Resources.Copy);
+
+        /// <summary>
+        /// Down Arrow.
+        /// </summary>
+        public static Bitmap DownArrow => new Bitmap(Properties.Resources.DownArrow);
     }
 }

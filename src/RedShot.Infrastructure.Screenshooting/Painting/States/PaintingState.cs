@@ -1,9 +1,12 @@
 ﻿namespace RedShot.Infrastructure.Screenshooting.Painting.States
 {
+    /// <summary>
+    /// Painting state.
+    /// </summary>
     internal enum PaintingState
     {
         None,
-        Points,
+        Brush,
         Rectangle,
         Erase,
         Arrow,

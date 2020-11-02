@@ -10,7 +10,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions
     /// Points painting action.
     /// Paints polygon via points list.
     /// </summary>
-    internal class PointPaintingAction : IPaintingAction
+    internal class BrushPaintingAction : IPaintingAction
     {
         private readonly HashSet<Point> points;
         private readonly SKPaint paint;
@@ -18,7 +18,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions
         /// <summary>
         /// Inits values for this action.
         /// </summary>
-        public PointPaintingAction(SKPaint paint)
+        public BrushPaintingAction(SKPaint paint)
         {
             points = new HashSet<Point>();
             this.paint = paint;

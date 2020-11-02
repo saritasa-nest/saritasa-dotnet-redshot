@@ -8,9 +8,15 @@ using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
 {
-    internal static class FtpAccountManager
+    /// <summary>
+    /// FTP accounts manager.
+    /// </summary>
+    public static class FtpAccountManager
     {
-        public static FtpAccount GetFtpAccount()
+        /// <summary>
+        /// Get default account.
+        /// </summary>
+        public static FtpAccount GetDefaultFtpAccount()
         {
             var config = GetConfiguration();
 
@@ -22,6 +28,15 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             {
                 return GetFtpAccountManualy();
             }
+        }
+
+        /// <summary>
+        /// Get FTP accounts.
+        /// </summary>
+        public static IEnumerable<FtpAccount> GetFtpAccounts()
+        {
+            var config = GetConfiguration();
+            return config.FtpAccounts;
         }
 
         private static FtpAccount GetFtpAccountManualy()

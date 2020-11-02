@@ -1,7 +1,6 @@
 ﻿using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Abstractions.Uploading;
-using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Common.Notifying;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 using RedShot.Resources;
@@ -11,7 +10,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
     /// <summary>
     /// Manages FTP uploading.
     /// </summary>
-    internal class FtpUploadingService : IUploadingService
+    public class FtpUploadingService : IUploadingService
     {
         private FtpAccount account;
 
@@ -29,7 +28,22 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// </summary>
         public IUploader GetUploader()
         {
-            account = FtpAccountManager.GetFtpAccount();
+            account = FtpAccountManager.GetDefaultFtpAccount();
+
+            if (account != null)
+            {
+                return GetFtpUploader(account);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get either FTP or SFTP uploader by specified FTP account.
+        /// </summary>
+        public BaseFtpUploader GetUploader(FtpAccount customAccount)
+        {
+            account = customAccount;
 
             if (account != null)
             {
@@ -44,31 +58,34 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// </summary>
         internal BaseFtpUploader GetFtpUploader(FtpAccount account)
         {
+            BaseFtpUploader ftpUploader;
             if (account.Protocol == FtpProtocol.FTP || account.Protocol == FtpProtocol.FTPS)
             {
-                return new FtpUploader(account);
+                ftpUploader = new FtpUploader(account);
             }
             else
             {
-                return new SftpUploader(account);
+                ftpUploader = new SftpUploader(account);
             }
+
+            ftpUploader.UploadingFinished += FtpUploaderUploadingFinished;
+            return ftpUploader;
+        }
+
+        private void FtpUploaderUploadingFinished(object sender, UploadingFinishedEventArgs e)
+        {
+            var link = account.GetFormatLink(FtpHelper.GetFullFileName(e.UploadingFile));
+
+            Clipboard.Instance.Clear();
+            Clipboard.Instance.Text = link;
+
+            NotifyHelper.Notify("File uploaded to FTP server.\n\nFile link saved to clipboard.", "RedShot", NotifyStatus.Success);
         }
 
         /// <inheritdoc />
         public bool CheckOnSupporting(FileType fileType)
         {
             return true;
-        }
-
-        /// <inheritdoc />
-        public void OnUploaded(IFile file)
-        {
-            var link = account.GetFormatLink(FtpHelper.GetFullFileName(file));
-
-            Clipboard.Instance.Clear();
-            Clipboard.Instance.Text = link;
-
-            NotifyHelper.Notify("The file has been uploaded to your FTP server.\n\nRedShot saved the link to the file to the clipboard.", "RedShot", NotifyStatus.Success);
         }
     }
 }

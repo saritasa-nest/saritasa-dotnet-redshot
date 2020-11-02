@@ -1,6 +1,7 @@
 ﻿using System;
 using Eto.Drawing;
 using Eto.Forms;
+using Prism.Events;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Screenshooting.Painting.States;
 using RedShot.Resources;
@@ -20,24 +21,24 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         /// State changed event.
         /// Invokes when painting state changes.
         /// </summary>
-        public event EventHandler<PaintingState> StateChanged;
+        public event EventHandler<DataEventArgs<PaintingState>> StateChanged;
 
         /// <summary>
         /// Draw size changed event.
         /// Invokes when draw size was changed.
         /// </summary>
-        public event EventHandler<double> DrawSizeChanged;
+        public event EventHandler<DataEventArgs<float>> DrawSizeChanged;
 
         /// <summary>
         /// Draw size changed event.
         /// Invokes when draw size was changed.
         /// </summary>
-        public event EventHandler<Color> ColorChanged;
+        public event EventHandler<DataEventArgs<Color>> ColorChanged;
 
         /// <summary>
         /// Button for enabling painting line action.
         /// </summary>
-        public ImageButton PointsEnableButton { get; private set; }
+        public ImageButton BrushEnableButton { get; private set; }
 
         /// <summary>
         /// Button for enabling painting rectangle action.
@@ -62,7 +63,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         /// <summary>
         /// Button for save drawing image.
         /// </summary>
-        public ImageButton SaveImageButton { get; private set; }
+        public UploadingButton UploadImageButton { get; private set; }
 
         /// <summary>
         /// Button for moving back.
@@ -89,10 +90,11 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
                 Increment = 1,
                 Width = 60,
                 Height = 30,
-                ToolTip = "Size of painting line"
+                ToolTip = "Size of painting line",
+                Value = 3
             };
 
-            drawSizeStepper.ValueChanged += DrawSizeStepper_ValueChanged;
+            drawSizeStepper.ValueChanged += DrawSizeStepperValueChanged;
 
             colorPicker = new ColorPicker()
             {
@@ -102,51 +104,48 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
                 ToolTip = "Pick a color for painting"
             };
 
-            colorPicker.ValueChanged += ColorPicker_ValueChanged;
+            colorPicker.ValueChanged += ColorPickerValueChanged;
 
             var buttonSize = new Size(60, 30);
             var imageSize = new Size(20, 20);
 
-            PointsEnableButton = new ImageButton(buttonSize, Icons.PaintBrush, scaleImageSize: imageSize)
+            BrushEnableButton = new ImageButton(buttonSize, Icons.PaintBrush, scaleImageSize: imageSize)
             {
-                ToolTip = "Paint a line of any shape"
+                ToolTip = "Brush"
             };
 
-            RectangleEnableButton = new ImageButton(buttonSize, Icons.Rectangle, scaleImageSize: imageSize)
+            RectangleEnableButton = new ImageButton(buttonSize, Icons.Rectangle, scaleImageSize: new Size(23, 20))
             {
-                ToolTip = "Paint a rectangle"
+                ToolTip = "Rectangle"
             };
 
-            SaveImageButton = new ImageButton(buttonSize, Icons.Upload, scaleImageSize: imageSize)
-            {
-                ToolTip = "Upload the picture"
-            };
+            UploadImageButton = new UploadingButton();
 
             PaintBackButton = new ImageButton(buttonSize, Icons.Back, scaleImageSize: imageSize)
             {
-                ToolTip = "Take a step back"
+                ToolTip = "Undo"
             };
 
             EraseEnableButton = new ImageButton(buttonSize, Icons.EraseIcon, scaleImageSize: imageSize)
             {
-                ToolTip = "Erase paintings from the picture"
+                ToolTip = "Eraser"
             };
 
             ArrowEnableButton = new ImageButton(buttonSize, Icons.Arrow, scaleImageSize: imageSize)
             {
-                ToolTip = "Paint an arrow"
+                ToolTip = "Arrow"
             };
 
             TextEnableButton = new ImageButton(buttonSize, Icons.Text, scaleImageSize: imageSize)
             {
-                ToolTip = "Write text"
+                ToolTip = "Enter text"
             };
 
-            TextEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, PaintingState.Text);
-            PointsEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, PaintingState.Points);
-            RectangleEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, PaintingState.Rectangle);
-            EraseEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, PaintingState.Erase);
-            ArrowEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, PaintingState.Arrow);
+            TextEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, new DataEventArgs<PaintingState>(PaintingState.Text));
+            BrushEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, new DataEventArgs<PaintingState>(PaintingState.Brush));
+            RectangleEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, new DataEventArgs<PaintingState>(PaintingState.Rectangle));
+            EraseEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, new DataEventArgs<PaintingState>(PaintingState.Erase));
+            ArrowEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, new DataEventArgs<PaintingState>(PaintingState.Arrow));
         }
 
         private StackLayout GetContent()
@@ -163,25 +162,25 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
                     colorPicker,
                     drawSizeStepper,
                     TextEnableButton,
-                    PointsEnableButton,
+                    BrushEnableButton,
                     RectangleEnableButton,
                     ArrowEnableButton,
                     EraseEnableButton,
                     FormsHelper.GetVoidBox(10),
                     PaintBackButton,
-                    SaveImageButton
+                    UploadImageButton
                 }
             };
         }
 
-        private void ColorPicker_ValueChanged(object sender, EventArgs e)
+        private void ColorPickerValueChanged(object sender, EventArgs e)
         {
-            ColorChanged?.Invoke(this, colorPicker.Value);
+            ColorChanged?.Invoke(this, new DataEventArgs<Color>(colorPicker.Value));
         }
 
-        private void DrawSizeStepper_ValueChanged(object sender, EventArgs e)
+        private void DrawSizeStepperValueChanged(object sender, EventArgs e)
         {
-            DrawSizeChanged?.Invoke(this, drawSizeStepper.Value);
+            DrawSizeChanged?.Invoke(this, new DataEventArgs<float>((float)drawSizeStepper.Value));
         }
     }
 }
