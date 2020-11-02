@@ -63,6 +63,13 @@ namespace RedShot.Infrastructure
                 Command = new Command((e, o) => SettingsManager.OpenSettings())
             });
 
+            menu.Items.Add(new SeparatorMenuItem());
+            menu.Items.Add(new ButtonMenuItem()
+            {
+                Text = "Exit",
+                Command = new Command((e, o) => Close())
+            });
+
             Tray = new TrayIndicator
             {
                 Menu = menu,
