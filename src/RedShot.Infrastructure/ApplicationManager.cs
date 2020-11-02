@@ -85,7 +85,7 @@ namespace RedShot.Infrastructure
         /// </summary>
         public static void SendFeedBack()
         {
-            var email = ConfigurationManager.AppSettings.GetSection("Email").Value;
+            var email = ConfigurationManager.AppSettings.Email;
             var url = $"mailto:{email}";
 
             Process.Start(new ProcessStartInfo

@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Common.Encryption;
-using RedShot.Infrastructure.Configuration.AppSettings;
+using RedShot.Infrastructure.Configuration.Settings;
 
 namespace RedShot.Infrastructure.Configuration
 {
@@ -25,7 +24,7 @@ namespace RedShot.Infrastructure.Configuration
         /// <summary>
         /// Application settings.
         /// </summary>
-        public static IConfigurationRoot AppSettings { get; }
+        public static AppSettings AppSettings { get; }
 
         private const string DefaultFolderName = "RedShot";
         private const string ConfigName = "config.json";

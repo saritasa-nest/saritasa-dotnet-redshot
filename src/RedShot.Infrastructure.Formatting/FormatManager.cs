@@ -27,7 +27,7 @@ namespace RedShot.Infrastructure.Formatting
 
         static FormatManager()
         {
-            FormatTag = ConfigurationManager.AppSettings.GetSection("FormatFileNameTag").Value;
+            FormatTag = ConfigurationManager.AppSettings.FormatFileNameTag;
 
             FormatItems = Assembly
                 .GetExecutingAssembly().GetTypes()

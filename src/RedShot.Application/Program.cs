@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Reflection;
+using System.IO;
+using Microsoft.Extensions.Configuration;
 using NLog.Extensions.Logging;
 using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
@@ -19,8 +21,9 @@ namespace RedShot.Application
     /// </summary>
     internal class Program
     {
+        private const string RedShotBinaryFolderVariable = "NLOG__VARIABLES__RedShotBinaryFolder";
         private const string ApplicationId = "RedShot-01e8516a-42a1-4fde-87ff-71e6e5b32b28";
-        private static NLog.Logger logger;
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// Runs the application.
@@ -31,22 +34,24 @@ namespace RedShot.Application
             using var mutex = new System.Threading.Mutex(false, ApplicationId);
             if (mutex.WaitOne(0, false))
             {
-                ConfigureLogging();
                 StartApplication();
             }
         }
 
         private static void StartApplication()
         {
+            ConfigureLogging();
             logger.Debug("The RedShot application was started!");
 
             AppInitializer.Initialize();
 
-            var app = new Eto.Forms.Application(Eto.Platform.Detect);
-            app.UnhandledException += InstanceOnUnhandledException;
-            app.Initialized += AppInitialized;
-            AppDomain.CurrentDomain.UnhandledException += DomainUnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += (o, e) => ShowException(e.ExceptionObject as Exception);
             AppDomain.CurrentDomain.ProcessExit += CurrentDomainProcessExit;
+
+            var app = new Eto.Forms.Application(Eto.Platform.Detect);
+            app.UnhandledException += (o, e) => ShowException(e.ExceptionObject as Exception);
+            app.Initialized += AppInitialized;
+
             AddAreaControl();
             AddStyles();
             app.Run(ApplicationManager.GetTrayApp());
@@ -54,9 +59,18 @@ namespace RedShot.Application
 
         private static void ConfigureLogging()
         {
-            var nlogSection = ConfigurationManager.AppSettings.GetSection("NLog");
+            var applicationFolder = Directory.GetCurrentDirectory();
+
+            Environment.SetEnvironmentVariable(RedShotBinaryFolderVariable, applicationFolder);
+            var jsonStream = new MemoryStream(Properties.Resources.NLogConfiguration);
+
+            var root = new ConfigurationBuilder()
+                .AddEnvironmentVariables()
+                .AddJsonStream(jsonStream)
+                .Build();
+
+            var nlogSection = root.GetSection("NLog");
             NLog.LogManager.Configuration = new NLogLoggingConfiguration(nlogSection);
-            logger = NLog.LogManager.GetCurrentClassLogger();
         }
 
         private static void AppInitialized(object sender, EventArgs e)
@@ -89,16 +103,6 @@ namespace RedShot.Application
 #endif
         }
 
-        private static void InstanceOnUnhandledException(object sender, Eto.UnhandledExceptionEventArgs e)
-        {
-            ShowException(e.ExceptionObject as Exception);
-        }
-
-        private static void DomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            ShowException(e.ExceptionObject as Exception);
-        }
-
         /// <summary>
         /// Show exception in message box.
         /// </summary>
@@ -121,7 +125,7 @@ namespace RedShot.Application
 
             logger.Fatal(ex);
 
-            Eto.Forms.Application.Instance.Quit();
+            Eto.Forms.Application.Instance.Dispose();
         }
     }
 }

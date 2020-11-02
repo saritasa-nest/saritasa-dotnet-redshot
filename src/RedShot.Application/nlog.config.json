@@ -1,4 +1,4 @@
-{
+﻿{
   "NLog": {
     "targets": {
       "allfile": {
@@ -31,8 +31,5 @@
         "writeTo": "allfile"
       }
     ]
-  },
-  "Email": "redshot@saritasa.com",
-  "FfmpegWindowsDownloadPath": "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2020-10-11-12-31/ffmpeg-N-99531-g2be3eb7f77-win64-gpl.zip",
-  "FormatFileNameTag": "%"
+  }
 }
