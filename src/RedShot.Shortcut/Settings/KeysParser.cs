@@ -6,14 +6,44 @@ namespace RedShot.Shortcut.Settings
     /// <summary>
     /// Keys parser.
     /// </summary>
-    public static class KeysParser
+    public class KeysParser
     {
-        private static readonly IEnumerable<string> ValuesToRemove;
-        private static readonly IDictionary<string, string> BracketReplaceValues;
-
-        static KeysParser()
+        /// <summary>
+        /// Get shortcut string.
+        /// </summary>
+        public string GetShortcutString(Keys keys)
         {
-            ValuesToRemove = new List<string>
+            var shortcutString = keys.ToShortcutString();
+
+            shortcutString = FixValues(shortcutString);
+            shortcutString = FixBrackets(shortcutString);
+
+            return shortcutString;
+        }
+
+        private string FixBrackets(string shortcutString)
+        {
+            var bracketReplaceValues = new Dictionary<string, string>
+            {
+                { "[", "]" },
+                { "]", "[" },
+            };
+
+            foreach (var keyValue in bracketReplaceValues)
+            {
+                if (shortcutString.Contains(keyValue.Key))
+                {
+                    shortcutString = shortcutString.Replace(keyValue.Key, keyValue.Value);
+                    break;
+                }
+            }
+
+            return shortcutString;
+        }
+
+        private string FixValues(string shortcutString)
+        {
+            var valuesToRemove = new List<string>
             {
                 "LeftAlt",
                 "LeftShift",
@@ -21,33 +51,10 @@ namespace RedShot.Shortcut.Settings
                 "LeftApplication"
             };
 
-            BracketReplaceValues = new Dictionary<string, string>
-            {
-                { "[", "]" },
-                { "]", "[" },
-            };
-        }
-
-        /// <summary>
-        /// Get shortcut string.
-        /// </summary>
-        public static string GetShortcutString(Keys keys)
-        {
-            var shortcutString = keys.ToShortcutString();
-
-            foreach (var value in ValuesToRemove)
+            foreach (var value in valuesToRemove)
             {
                 shortcutString = shortcutString.Replace("+" + value, string.Empty);
                 shortcutString = shortcutString.Replace(value, string.Empty);
-            }
-
-            foreach (var keyValue in BracketReplaceValues)
-            {
-                if (shortcutString.Contains(keyValue.Key))
-                {
-                    shortcutString = shortcutString.Replace(keyValue.Key, keyValue.Value);
-                    break;
-                }
             }
 
             return shortcutString;

@@ -3,14 +3,15 @@
 namespace RedShot.Shortcut.Settings
 {
     /// <summary>
-    /// Shortcut textbox.
+    /// Shortcut text box.
     /// </summary>
     internal class ShortcutTextBox : TextBox
     {
         private Keys keys;
+        private readonly KeysParser keysParser;
 
         /// <summary>
-        /// Hotkeys.
+        /// Hot keys.
         /// </summary>
         public Keys Keys
         {
@@ -28,12 +29,12 @@ namespace RedShot.Shortcut.Settings
         }
 
         /// <summary>
-        /// Create the text box.
+        /// Constructor.
         /// </summary>
         public ShortcutTextBox()
         {
             Text = "None";
-
+            keysParser = new KeysParser();
 #if _WINDOWS
             RedShot.Platforms.Windows.WindowsNativeHelper.HideCaret(this.ControlObject);
 #endif
@@ -75,7 +76,7 @@ namespace RedShot.Shortcut.Settings
 
         private void RenderText()
         {
-            Text = KeysParser.GetShortcutString(Keys);
+            Text = keysParser.GetShortcutString(Keys);
         }
     }
 }
