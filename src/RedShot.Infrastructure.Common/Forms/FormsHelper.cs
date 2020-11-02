@@ -121,5 +121,21 @@ namespace RedShot.Infrastructure.Common.Forms
                 }
             };
         }
+
+        public static StackLayout CreateFieldStack(string name, Control control, int padding = 5) =>
+            new StackLayout
+            {
+                Orientation = Orientation.Vertical,
+                Spacing = 5,
+                Padding = padding,
+                Items =
+                {
+                    new Label()
+                    {
+                        Text = name,
+                    },
+                    control
+                }
+            };
     }
 }
