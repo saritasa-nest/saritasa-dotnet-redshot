@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using NLog.Extensions.Logging;
 using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
 using RedShot.Infrastructure;
@@ -19,7 +20,7 @@ namespace RedShot.Application
     internal class Program
     {
         private const string ApplicationId = "RedShot-01e8516a-42a1-4fde-87ff-71e6e5b32b28";
-        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private static NLog.Logger logger;
 
         /// <summary>
         /// Runs the application.
@@ -30,6 +31,7 @@ namespace RedShot.Application
             using var mutex = new System.Threading.Mutex(false, ApplicationId);
             if (mutex.WaitOne(0, false))
             {
+                ConfigureLogging();
                 StartApplication();
             }
         }
@@ -48,6 +50,13 @@ namespace RedShot.Application
             AddAreaControl();
             AddStyles();
             app.Run(ApplicationManager.GetTrayApp());
+        }
+
+        private static void ConfigureLogging()
+        {
+            var nlogSection = ConfigurationManager.AppSettings.GetSection("NLog");
+            NLog.LogManager.Configuration = new NLogLoggingConfiguration(nlogSection);
+            logger = NLog.LogManager.GetCurrentClassLogger();
         }
 
         private static void AppInitialized(object sender, EventArgs e)

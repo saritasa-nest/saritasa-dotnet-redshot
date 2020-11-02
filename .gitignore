@@ -120,6 +120,7 @@ docs/_build
 docs/conf.py
 build/lib
 build/content
+build/
 *.lock.json
 
 # do not include secret files

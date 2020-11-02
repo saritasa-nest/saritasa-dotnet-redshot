@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Common.Encryption;
+using RedShot.Infrastructure.Configuration.AppSettings;
 
 namespace RedShot.Infrastructure.Configuration
 {
@@ -20,6 +22,11 @@ namespace RedShot.Infrastructure.Configuration
         /// </summary>
         public static List<Type> ConfigurationOptions { get; }
 
+        /// <summary>
+        /// Application settings.
+        /// </summary>
+        public static IConfigurationRoot AppSettings { get; }
+
         private const string DefaultFolderName = "RedShot";
         private const string ConfigName = "config.json";
         private static readonly NLog.Logger logger;
@@ -28,6 +35,8 @@ namespace RedShot.Infrastructure.Configuration
 
         static ConfigurationManager()
         {
+            AppSettings = AppSettingsFactory.GetAppSettings();
+
             ConfigurationOptions = new List<Type>();
             encryptionService = new Base64Encrypter();
             logger = NLog.LogManager.GetCurrentClassLogger();

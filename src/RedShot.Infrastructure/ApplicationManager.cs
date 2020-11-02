@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Eto.Drawing;
 using Eto.Forms;
+using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Recording;
 using RedShot.Infrastructure.Screenshooting;
 using RedShot.Infrastructure.Uploading;
@@ -14,8 +15,6 @@ namespace RedShot.Infrastructure
     /// </summary>
     public static class ApplicationManager
     {
-        private const string RedShotEmail = "redshot@saritasa.com";
-
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private static TrayIcon trayIcon;
 
@@ -86,7 +85,8 @@ namespace RedShot.Infrastructure
         /// </summary>
         public static void SendFeedBack()
         {
-            var url = $"mailto:{RedShotEmail}";
+            var email = ConfigurationManager.AppSettings.GetSection("Email").Value;
+            var url = $"mailto:{email}";
 
             Process.Start(new ProcessStartInfo
             {
