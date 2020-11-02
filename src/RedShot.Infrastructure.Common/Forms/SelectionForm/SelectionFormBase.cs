@@ -199,15 +199,6 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         }
 #endregion Initialization
 
-#region PointerFunctions
-
-        private void SetDefaultPointer()
-        {
-            Cursor = Cursors.Arrow;
-        }
-
-        #endregion PointerFunctions
-
 #region Window events
         private void EditorViewShown(object sender, EventArgs e)
         {
