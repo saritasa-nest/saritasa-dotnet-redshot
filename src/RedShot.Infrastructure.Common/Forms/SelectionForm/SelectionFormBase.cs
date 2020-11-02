@@ -188,7 +188,6 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             {
                 if (capturing)
                 {
-                    selectionRectangle = EtoDrawingHelper.CreateRectangle(startLocation, endLocation);
                     skcontrol.Execute((surface) => PaintRegion(surface.Canvas));
                 }
                 else
@@ -242,7 +241,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             }
             else if (capturing)
             {
-                endLocation = e.Location;
+                UpdateSelectedArea(e.Location);
             }
         }
 
@@ -255,8 +254,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
                     screenSelecting = false;
                 }
 
-                startLocation = e.Location;
-                endLocation = e.Location;
+                UpdateSelectedArea(e.Location, e.Location);
                 capturing = true;
             }
         }
@@ -271,7 +269,15 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 
             if (e.Buttons == MouseButtons.Primary)
             {
-                endLocation = e.Location;
+                UpdateSelectedArea(e.Location);
+                var selectionArea = selectionRectangle.Size.Width * selectionRectangle.Size.Height;
+                if (selectionArea <= 1)
+                {
+                    // User most likely missclicked, just restart the selection process
+                    capturing = false;
+                    return;
+                }
+
                 FinishSelection();
             }
         }
@@ -498,6 +504,16 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             }
 
             return (Rectangle)selectionRectangle;
+        }
+
+        private void UpdateSelectedArea(PointF endLocation, PointF? startLocation = null)
+        {
+            if (startLocation.HasValue)
+            {
+                this.startLocation = startLocation.Value;
+            }
+            this.endLocation = endLocation;
+            selectionRectangle = EtoDrawingHelper.CreateRectangle(this.startLocation, this.endLocation);
         }
 
         /// <summary>
