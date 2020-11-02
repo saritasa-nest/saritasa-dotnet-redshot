@@ -25,7 +25,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         private Button delButton;
         private Button copyButton;
         private ComboBox accounts;
-        private TextBox name;
         private ComboBox ftpProtocol;
         private TextBox host;
         private NumericStepper port;
@@ -46,7 +45,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         private DefaultButton testButton;
         private readonly List<FtpAccount> ftpAccounts;
         private readonly FtpConfiguration ftpConfiguration;
-        private ComboBox primaryAccountSelectionComboBox;
 
         /// <summary>
         /// Initializes FTP option dialog.
@@ -70,32 +68,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             accounts.DataStore = bindingList;
             accounts.SelectedValueChanged += FtpOptionControlChanged;
             accounts.ItemKeyBinding = new DelegateBinding<FtpAccount, string>(a => a.Name);
-
-            primaryAccountSelectionComboBox.DataStore = bindingList;
-            primaryAccountSelectionComboBox.DataContext = ftpConfiguration;
-            primaryAccountSelectionComboBox.SelectedValueBinding.Convert(
-                l =>
-                {
-                    if (l == null)
-                    {
-                        return default;
-                    }
-                    else
-                    {
-                        return ((FtpAccount)l).Id;
-                    }
-                },
-                guid =>
-                {
-                    if (FtpAccountManager.TryGetAccountByGuid(guid, ftpAccounts, out var ftpAccount))
-                    {
-                        return ftpAccount;
-                    }
-                    else
-                    {
-                        return ftpAccounts.FirstOrDefault();
-                    }
-                }).BindDataContext((FtpConfiguration o) => o.PrimaryAccountGuid);
         }
 
         private void TestButtonClicked(object sender, EventArgs e)
@@ -156,7 +128,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
             accountFields.Unbind();
 
-            name.Bind(t => t.Text, selectedAccount, account => account.Name);
             ftpProtocol.DataContext = selectedAccount;
             ftpProtocol.SelectedValueBinding.Convert(l => Enum.Parse(typeof(FtpProtocol), (string)l), v => v?.ToString() ?? FtpProtocol.FTP.ToString())
                 .BindDataContext((FtpAccount m) => m.Protocol);

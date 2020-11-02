@@ -22,17 +22,10 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 Spacing = 10,
                 Items =
                 {
-                    GetPrimaryAccountSelectionFields(),
                     GetAccountsPanel(),
                     accountFields,
                 }
             };
-        }
-
-        private Control GetPrimaryAccountSelectionFields()
-        {
-            return FormsHelper.GetBaseStack("Primary account:", primaryAccountSelectionComboBox, nameWidth: 100,
-                padding: 10, controlWidth: 325);
         }
 
         private void InitializeFileds()
@@ -54,10 +47,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             testButton = new DefaultButton("Test connection", 100, 25);
             testButton.Clicked += TestButtonClicked;
 
-            name = new TextBox()
-            {
-                Size = defaultSize,
-            };
             host = new TextBox()
             {
                 Size = defaultSize
@@ -117,11 +106,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             };
 
             accounts = new ComboBox()
-            {
-                Size = new Size(250, 21)
-            };
-
-            primaryAccountSelectionComboBox = new ComboBox()
             {
                 Size = new Size(250, 21)
             };
@@ -220,13 +204,11 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 Spacing = 5,
                 Items =
                 {
-                    FormsHelper.GetBaseStack("Name", name),
-                    FormsHelper.GetBaseStack("FTP Protocol", ftpProtocol),
+                    FormsHelper.GetBaseStack("Protocol", ftpProtocol),
                     GetAdressBoxes(),
                     FormsHelper.GetBaseStack("Username", username),
                     FormsHelper.GetBaseStack("Password", password),
-                    FormsHelper.GetBaseStack("IsActive", isActive),
-                    FormsHelper.GetBaseStack("SubFolderPath", subFolderPath),
+                    FormsHelper.GetBaseStack("Directory", subFolderPath),
                     GetLinkBoxes(),
                 }
             };
@@ -267,12 +249,12 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 {
                     new Label()
                     {
-                        Text = "Host:",
+                        Text = "Host",
                     },
                     host,
                     new Label()
                     {
-                        Text = "Port:",
+                        Text = "Port",
                     },
                     port
                 }
@@ -288,7 +270,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 VerticalContentAlignment = VerticalAlignment.Center,
                 Items =
                 {
-                    browserTypeComboBox,
                     homePathTextBox
                 }
             };
@@ -297,7 +278,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                pathControl = FormsHelper.GetBaseStack("URL path:", pathBoxes, controlWidth: 400);
+                pathControl = FormsHelper.GetBaseStack("URL path", pathBoxes, controlWidth: 400);
             }
             else
             {
@@ -309,7 +290,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                     {
                         new Label()
                         {
-                            Text = "URL path:"
+                            Text = "Base URL"
                         },
                         pathBoxes
                     }
@@ -323,8 +304,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 Items =
                 {
                     pathControl,
-                    FormsHelper.GetBaseStack("Add extension to the URL path", addExtensionCheckBox, nameWidth: 150),
-                    FormsHelper.GetBaseStack("URL preview:", previewLinkLabel, controlWidth: 300)
+                    FormsHelper.GetBaseStack("Append file extension", addExtensionCheckBox, nameWidth: 150),
+                    FormsHelper.GetBaseStack("URL preview", previewLinkLabel, controlWidth: 300)
                 }
             };
         }
@@ -403,7 +384,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                                     {
                                         new Label()
                                         {
-                                            Text = "Location of the key:",
+                                            Text = "RSA key",
                                         },
                                     }
                                 },
