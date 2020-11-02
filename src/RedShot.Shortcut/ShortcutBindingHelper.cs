@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Eto.Forms;
-using RedShot.Shortcut.Shortcuts;
 
 namespace RedShot.Shortcut
 {

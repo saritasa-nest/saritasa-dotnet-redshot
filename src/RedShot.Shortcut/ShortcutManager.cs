@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Shortcut.Mapping;
-using RedShot.Shortcut.Shortcuts;
 
 namespace RedShot.Shortcut
 {
