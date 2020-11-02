@@ -33,7 +33,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
         /// </summary>
         public FtpAccount()
         {
-            Name = "FTP account";
             Protocol = FtpProtocol.FTP;
             Host = "";
             Port = 21;
@@ -124,23 +123,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
         /// Unique Id of the account.
         /// </summary>
         public Guid Id { get; set; }
-
-        /// <summary>
-        /// Name of the account.
-        /// </summary>
-        public string Name
-        {
-            get { return name; }
-
-            set
-            {
-                if (name != value)
-                {
-                    name = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
 
         /// <summary>
         /// FTP protocol of the account.
@@ -366,7 +348,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
         /// </summary>
         public override string ToString()
         {
-            return $"{Name} | {Host}:{Port}";
+            return $"{Protocol} {Host}";
         }
 
         void OnPropertyChanged([CallerMemberName] string memberName = null)
