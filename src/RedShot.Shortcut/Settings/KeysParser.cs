@@ -38,6 +38,7 @@ namespace RedShot.Shortcut.Settings
             foreach (var value in ValuesToRemove)
             {
                 shortcutString = shortcutString.Replace("+" + value, string.Empty);
+                shortcutString = shortcutString.Replace(value, string.Empty);
             }
 
             foreach (var keyValue in BracketReplaceValues)

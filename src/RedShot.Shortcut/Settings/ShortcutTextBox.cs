@@ -52,6 +52,7 @@ namespace RedShot.Shortcut.Settings
         protected override void OnKeyDown(KeyEventArgs e)
         {
             e.Handled = true;
+
             if (e.Key == Keys.Backspace)
             {
                 Reset();
@@ -65,6 +66,11 @@ namespace RedShot.Shortcut.Settings
         protected override void OnKeyUp(KeyEventArgs e)
         {
             e.Handled = true;
+
+            if (e.Key == Keys.PrintScreen)
+            {
+                Keys = e.KeyData;
+            }
         }
 
         private void RenderText()
