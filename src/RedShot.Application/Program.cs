@@ -7,7 +7,8 @@ using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
 using RedShot.Infrastructure;
 using RedShot.Infrastructure.Configuration;
-using RedShot.Initialization;
+using RedShot.Infrastructure.Configuration.Models;
+using RedShot.Infrastructure.Settings;
 #if _WINDOWS
 using Eto.WinForms.Forms;
 #elif _UNIX
@@ -40,10 +41,11 @@ namespace RedShot.Application
 
         private static void StartApplication()
         {
-            ConfigureLogging();
-            logger.Debug("The RedShot application was started!");
+            var config = GetConfiguration();
+            ConfigureLogging(config);
+            ConfigureApplication(config);
 
-            AppInitializer.Initialize();
+            logger.Debug("The RedShot application was started!");
 
             AppDomain.CurrentDomain.UnhandledException += (o, e) => ShowException(e.ExceptionObject as Exception);
             AppDomain.CurrentDomain.ProcessExit += CurrentDomainProcessExit;
@@ -57,20 +59,17 @@ namespace RedShot.Application
             app.Run(ApplicationManager.GetTrayApp());
         }
 
-        private static void ConfigureLogging()
+        private static void ConfigureLogging(IConfiguration configuration)
         {
-            var applicationFolder = Directory.GetCurrentDirectory();
-
-            Environment.SetEnvironmentVariable(RedShotBinaryFolderVariable, applicationFolder);
-            var jsonStream = new MemoryStream(Properties.Resources.NLogConfiguration);
-
-            var root = new ConfigurationBuilder()
-                .AddEnvironmentVariables()
-                .AddJsonStream(jsonStream)
-                .Build();
-
-            var nlogSection = root.GetSection("NLog");
+            var nlogSection = configuration.GetSection("NLog");
             NLog.LogManager.Configuration = new NLogLoggingConfiguration(nlogSection);
+        }
+
+        private static void ConfigureApplication(IConfiguration configuration)
+        {
+            var appSettings = configuration.GetSection("AppSettings").Get<AppSettings>();
+            ConfigurationManager.Initialize(appSettings, InitializationScript.ConfigurationOptions);
+            SettingsManager.Initialize(InitializationScript.SettingsOptions);
         }
 
         private static void AppInitialized(object sender, EventArgs e)
@@ -101,6 +100,20 @@ namespace RedShot.Application
             Eto.Style.Add<NotificationHandler>("FailedNotification", h => h.NotificationIcon = NotificationIcon.Error);
             Eto.Style.Add<NotificationHandler>("SucceedNotification", h => h.NotificationIcon = NotificationIcon.Info);
 #endif
+        }
+
+        private static IConfiguration GetConfiguration()
+        {
+            var applicationFolder = Directory.GetCurrentDirectory();
+            Environment.SetEnvironmentVariable(RedShotBinaryFolderVariable, applicationFolder);
+            var nlogConfig = new MemoryStream(Properties.Resources.NLogConfiguration);
+            var appConfig = new MemoryStream(Properties.Resources.AppConfiguration);
+
+            return new ConfigurationBuilder()
+                .AddEnvironmentVariables()
+                .AddJsonStream(nlogConfig)
+                .AddJsonStream(appConfig)
+                .Build();
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿namespace RedShot.Infrastructure.Configuration.Settings
+﻿namespace RedShot.Infrastructure.Configuration.Models
 {
     /// <summary>
     /// Application settings model.

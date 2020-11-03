@@ -63,6 +63,16 @@ namespace RedShot.Application.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] AppConfiguration {
+            get {
+                object obj = ResourceManager.GetObject("AppConfiguration", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] NLogConfiguration {
             get {
                 object obj = ResourceManager.GetObject("NLogConfiguration", resourceCulture);

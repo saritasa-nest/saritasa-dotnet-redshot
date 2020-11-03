@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Common.Encryption;
-using RedShot.Infrastructure.Configuration.Settings;
+using RedShot.Infrastructure.Configuration.Models;
 
 namespace RedShot.Infrastructure.Configuration
 {
@@ -19,27 +19,31 @@ namespace RedShot.Infrastructure.Configuration
         /// Configuration options.
         /// Must implement IConfigurationOption interface.
         /// </summary>
-        public static List<Type> ConfigurationOptions { get; }
+        public static IEnumerable<Type> ConfigurationOptions { get; private set; }
 
         /// <summary>
         /// Application settings.
         /// </summary>
-        public static AppSettings AppSettings { get; }
+        public static AppSettings AppSettings { get; private set; }
 
         private const string DefaultFolderName = "RedShot";
         private const string ConfigName = "config.json";
-        private static readonly NLog.Logger logger;
-        private static readonly Dictionary<Type, IConfigurationOption> settingsMap;
-        private static readonly IEncryptionService encryptionService;
+        private static NLog.Logger logger;
+        private static Dictionary<Type, IConfigurationOption> settingsMap;
+        private static IEncryptionService encryptionService;
 
-        static ConfigurationManager()
+        /// <summary>
+        /// Initialize configuration manager.
+        /// </summary>
+        public static void Initialize(AppSettings appSettings, IEnumerable<Type> configurationOptions)
         {
-            AppSettings = AppSettingsFactory.GetAppSettings();
-
-            ConfigurationOptions = new List<Type>();
+            AppSettings = appSettings;
+            ConfigurationOptions = configurationOptions;
             encryptionService = new Base64Encrypter();
             logger = NLog.LogManager.GetCurrentClassLogger();
             settingsMap = new Dictionary<Type, IConfigurationOption>();
+
+            Load();
         }
 
         /// <summary>
@@ -101,7 +105,7 @@ namespace RedShot.Infrastructure.Configuration
         /// <summary>
         /// Loads data from the file.
         /// </summary>
-        public static void Load()
+        private static void Load()
         {
             var types = ConfigurationOptions.Where(type => typeof(IConfigurationOption).IsAssignableFrom(type) && !type.IsInterface);
 
