@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Text;
+using Eto;
 using Eto.Forms;
 
 namespace RedShot.Shortcut.Settings
@@ -6,58 +8,108 @@ namespace RedShot.Shortcut.Settings
     /// <summary>
     /// Keys parser.
     /// </summary>
-    public class KeysParser
+    internal class KeysParser
     {
+        private static readonly List<Keys> notToUseKeys = new List<Keys>
+        {
+            Keys.LeftShift,
+            Keys.RightShift,
+            Keys.LeftControl,
+            Keys.RightControl,
+            Keys.LeftAlt,
+            Keys.RightAlt,
+            Keys.LeftApplication,
+            Keys.RightApplication
+        };
+
+        private static readonly Dictionary<Keys, string> keymap = new Dictionary<Keys, string>
+        {
+            { Keys.D0, "0" },
+            { Keys.D1, "1" },
+            { Keys.D2, "2" },
+            { Keys.D3, "3" },
+            { Keys.D4, "4" },
+            { Keys.D5, "5" },
+            { Keys.D6, "6" },
+            { Keys.D7, "7" },
+            { Keys.D8, "8" },
+            { Keys.D9, "9" },
+            { Keys.Minus, "-" },
+            { Keys.Equal, "=" },
+            { Keys.Grave, "`" },
+            { Keys.Divide, "/" },
+            { Keys.Decimal, "." },
+            { Keys.Backslash, "\\" },
+            { Keys.KeypadEqual, "=" },
+            { Keys.Multiply, "*" },
+            { Keys.Add, "+" },
+            { Keys.Subtract, "-" },
+            { Keys.Tab, "\x21E5" },
+            { Keys.Enter, "\x23ce" },
+            { Keys.Delete, EtoEnvironment.Platform.IsMac ? "\x232b" : "Del" },
+            { Keys.Escape, EtoEnvironment.Platform.IsMac ? "\x238b" : "Esc" },
+            { Keys.Semicolon, ";" },
+            { Keys.Quote, "'" },
+            { Keys.Comma, "," },
+            { Keys.Period, "." },
+            { Keys.Slash, "/" },
+            { Keys.RightBracket, "]" },
+            { Keys.LeftBracket, "[" }
+        };
+
         /// <summary>
-        /// Get shortcut string.
+        /// Converts the specified key to a shortcut string such as Ctrl+Alt+Z.
         /// </summary>
-        public string GetShortcutString(Keys keys)
+        /// <param name="keys">Keys to convert.</param>
+        /// <param name="separator">Separator between each modifier and key.</param>
+        /// <returns>A human-readable string representing the key combination including modifiers.</returns>
+        public string GetShortcutString(Keys keys, string separator = "+")
         {
-            var shortcutString = keys.ToShortcutString();
+            var sb = new StringBuilder();
 
-            shortcutString = FixValues(shortcutString);
-            shortcutString = FixBrackets(shortcutString);
-
-            return shortcutString;
-        }
-
-        private string FixBrackets(string shortcutString)
-        {
-            var bracketReplaceValues = new Dictionary<string, string>
+            if (keys.HasFlag(Keys.Application))
             {
-                { "[", "]" },
-                { "]", "[" },
-            };
-
-            foreach (var keyValue in bracketReplaceValues)
+                AppendSeparator(sb, separator,
+                    EtoEnvironment.Platform.IsMac ? "\x2318" :
+                    EtoEnvironment.Platform.IsWindows ? "Win" :
+                    "App");
+            }
+            if (keys.HasFlag(Keys.Control))
             {
-                if (shortcutString.Contains(keyValue.Key))
+                AppendSeparator(sb, separator, EtoEnvironment.Platform.IsMac ? "^" : "Ctrl");
+            }
+            if (keys.HasFlag(Keys.Shift))
+            {
+                AppendSeparator(sb, separator, EtoEnvironment.Platform.IsMac ? "\x21e7" : "Shift");
+            }
+            if (keys.HasFlag(Keys.Alt))
+            {
+                AppendSeparator(sb, separator, EtoEnvironment.Platform.IsMac ? "\x2325" : "Alt");
+            }
+
+            var mainKey = keys & Keys.KeyMask;
+            if (keymap.TryGetValue(mainKey, out string value))
+            {
+                AppendSeparator(sb, separator, value);
+            }
+            else
+            {
+                if (!notToUseKeys.Contains(mainKey))
                 {
-                    shortcutString = shortcutString.Replace(keyValue.Key, keyValue.Value);
-                    break;
+                    AppendSeparator(sb, separator, mainKey.ToString());
                 }
             }
 
-            return shortcutString;
+            return sb.ToString();
         }
 
-        private string FixValues(string shortcutString)
+        private void AppendSeparator(StringBuilder sb, string separator, string value)
         {
-            var valuesToRemove = new List<string>
+            if (sb.Length > 0)
             {
-                "LeftAlt",
-                "LeftShift",
-                "LeftControl",
-                "LeftApplication"
-            };
-
-            foreach (var value in valuesToRemove)
-            {
-                shortcutString = shortcutString.Replace("+" + value, string.Empty);
-                shortcutString = shortcutString.Replace(value, string.Empty);
+                sb.Append(separator);
             }
-
-            return shortcutString;
+            sb.Append(value);
         }
     }
 }

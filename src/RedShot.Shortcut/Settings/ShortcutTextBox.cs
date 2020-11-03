@@ -68,7 +68,7 @@ namespace RedShot.Shortcut.Settings
         {
             e.Handled = true;
 
-            if (e.Key == Keys.PrintScreen)
+            if (e.KeyData.HasFlag(Keys.PrintScreen))
             {
                 Keys = e.KeyData;
             }
