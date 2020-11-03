@@ -14,13 +14,13 @@ using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings;
 namespace RedShot.Application
 {
     /// <summary>
-    /// Class which contains all configuration options and settings of the application.
+    /// Class which contains all options and settings types of the application.
     /// </summary>
-    internal static class InitializationScript
+    internal class ApplicationTypes
     {
-        static InitializationScript()
+        public ApplicationTypes()
         {
-            ConfigurationOptions = new List<Type>()
+            ConfigurationOptionsTypes = new List<Type>()
             {
                 typeof(FtpConfiguration),
                 typeof(FFmpegConfiguration),
@@ -29,7 +29,7 @@ namespace RedShot.Application
                 typeof(UploadingConfiguration)
             };
 
-            SettingsOptions = new List<Type>()
+            SettingsOptionsTypes = new List<Type>()
             {
                 typeof(FtpSettingsSection),
                 typeof(RecordingSettingsSection),
@@ -43,12 +43,12 @@ namespace RedShot.Application
         /// List of configuration options of the application.
         /// They should implement IConfigurationOption interface.
         /// </summary>
-        public static IEnumerable<Type> ConfigurationOptions { get; private set; }
+        public IEnumerable<Type> ConfigurationOptionsTypes { get; }
 
         /// <summary>
         /// List of setting options of the application.
         /// They should implement ISettingOption interface.
         /// </summary>
-        public static IEnumerable<Type> SettingsOptions { get; private set; }
+        public IEnumerable<Type> SettingsOptionsTypes { get; }
     }
 }

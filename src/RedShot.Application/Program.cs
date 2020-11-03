@@ -67,9 +67,10 @@ namespace RedShot.Application
 
         private static void ConfigureApplication(IConfiguration configuration)
         {
+            var applicationTypes = new ApplicationTypes();
             var appSettings = configuration.GetSection("AppSettings").Get<AppSettings>();
-            ConfigurationManager.Initialize(appSettings, InitializationScript.ConfigurationOptions);
-            SettingsManager.Initialize(InitializationScript.SettingsOptions);
+            ConfigurationManager.Initialize(appSettings, applicationTypes.ConfigurationOptionsTypes);
+            SettingsManager.Initialize(applicationTypes.SettingsOptionsTypes);
         }
 
         private static void AppInitialized(object sender, EventArgs e)
