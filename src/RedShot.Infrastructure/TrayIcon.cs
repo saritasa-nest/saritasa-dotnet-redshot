@@ -69,7 +69,6 @@ namespace RedShot.Infrastructure
             menu.Items.Add(new ButtonMenuItem()
             {
                 Text = "Exit",
-                Shortcut = Keys.Control | Keys.F4,
                 Command = new Command((e, o) => Close())
             });
 
