@@ -6,9 +6,9 @@ using RedShot.Infrastructure.Settings.Sections;
 namespace RedShot.Infrastructure.Formatting.Settings
 {
     /// <summary>
-    /// Format settings option.
+    /// General settings option.
     /// </summary>
-    public class FormatSettingsSection : IValidatableSection
+    public class GeneralSettingsSection : IValidatableSection
     {
         private Control formatOptionControl;
         private readonly FormatConfigurationOption configurationOption;
@@ -16,13 +16,13 @@ namespace RedShot.Infrastructure.Formatting.Settings
         /// <summary>
         /// Initialize.
         /// </summary>
-        public FormatSettingsSection()
+        public GeneralSettingsSection()
         {
             configurationOption = ConfigurationManager.GetSection<FormatConfigurationOption>();
         }
 
         /// <inheritdoc />
-        public string Name => "Format name";
+        public string Name => "General";
 
         /// <inheritdoc />
         public Control GetControl()

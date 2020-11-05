@@ -30,9 +30,9 @@ namespace RedShot.Initialization
 
             SettingsOptions = new List<Type>()
             {
+                typeof(GeneralSettingsSection),
                 typeof(FtpSettingsSection),
                 typeof(RecordingSettingsSection),
-                typeof(FormatSettingsSection),
                 typeof(ShortcutSettingsSection)
             };
         }

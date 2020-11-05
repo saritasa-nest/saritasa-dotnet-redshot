@@ -13,8 +13,6 @@ namespace RedShot.Infrastructure.Formatting.Settings
         private readonly FormatConfigurationOption configurationOption;
         private TextBox patternTextBox;
         private Label exampleLabel;
-        private DefaultButton addButton;
-        private ContextMenu formatItemsMenu;
 
         /// <summary>
         /// Initializes format settings option dialog.
@@ -27,7 +25,6 @@ namespace RedShot.Infrastructure.Formatting.Settings
 
         private void InitializeComponents()
         {
-            formatItemsMenu = GetFormatItemsMenu();
             exampleLabel = new Label();
             SetFormatExample(configurationOption.Pattern);
 
@@ -37,12 +34,6 @@ namespace RedShot.Infrastructure.Formatting.Settings
                 Text = configurationOption.Pattern
             };
             patternTextBox.TextChanging += PatternTextBoxOnTextChanging;
-
-            addButton = new DefaultButton("Add", 60, 25)
-            {
-                ToolTip = "Add format item"
-            };
-            addButton.Clicked += AddButtonClicked;
 
             Content = new StackLayout()
             {
@@ -56,17 +47,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
                     {
                         Text = "Pattern"
                     },
-                    new StackLayout()
-                    {
-                        Orientation = Orientation.Horizontal,
-                        VerticalContentAlignment = VerticalAlignment.Center,
-                        Spacing = 10,
-                        Items =
-                        {
-                            patternTextBox,
-                            addButton
-                        }
-                    },
+                    patternTextBox,
                     new StackLayout()
                     {
                         Orientation = Orientation.Horizontal,
@@ -84,54 +65,11 @@ namespace RedShot.Infrastructure.Formatting.Settings
                     FormsHelper.GetVoidBox(20),
                     new GroupBox()
                     {
-                        Text = "Guide",
-                        Content = new FormatGuidePanel()
+                        Text = "File name template",
+                        Content = new FilenameTemplatePanel(pattern => patternTextBox.Text += pattern)
                     }
                 }
             };
-        }
-
-        private void AddButtonClicked(object sender, EventArgs e)
-        {
-            var location = new Point(addButton.Location.X + addButton.Width, addButton.Location.Y);
-            formatItemsMenu.Show((Control)sender, location);
-        }
-
-        private ContextMenu GetFormatItemsMenu()
-        {
-            var formatItemsMenu = new ContextMenu();
-
-            foreach (var formatItem in FormatManager.FormatItems)
-            {
-                formatItemsMenu.Items.Add(GetFormatItemButton(formatItem.Name, formatItem.Pattern));
-            }
-
-            formatItemsMenu.Items.AddSeparator();
-
-            formatItemsMenu.Items.Add(GetFormatItemButton("Custom text", "[your_text]"));
-
-            return formatItemsMenu;
-        }
-
-        private ButtonMenuItem GetFormatItemButton(string name, string pattern)
-        {
-            var fullPattern = GetFullPattern(pattern);
-
-            var button = new ButtonMenuItem()
-            {
-                Text = $"{name}"
-            };
-            button.Click += (o, e) =>
-            {
-                patternTextBox.Text += fullPattern;
-            };
-
-            return button;
-        }
-
-        private string GetFullPattern(string pattern)
-        {
-            return $"{FormatManager.FormatTag}{pattern}";
         }
 
         private void PatternTextBoxOnTextChanging(object sender, TextChangingEventArgs e)
