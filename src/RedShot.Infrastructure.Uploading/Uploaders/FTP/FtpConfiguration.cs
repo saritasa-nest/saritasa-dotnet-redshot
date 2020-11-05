@@ -20,6 +20,11 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         public Guid PrimaryAccountGuid { get; set; }
 
         /// <summary>
+        /// Default FTP account.
+        /// </summary>
+        public FtpAccount DefaultFtpAccount { get; set; }
+
+        /// <summary>
         /// List of FTP accounts.
         /// </summary>
         public List<FtpAccount> FtpAccounts { get; private set; } = new List<FtpAccount>();

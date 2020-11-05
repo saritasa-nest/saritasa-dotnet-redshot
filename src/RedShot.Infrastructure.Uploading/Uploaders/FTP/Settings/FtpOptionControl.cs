@@ -43,7 +43,13 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         private Control accountFields;
         private ObservableCollection<FtpAccount> bindingList;
         private DefaultButton testButton;
+        private CheckBox defaultProtocolCheckBox;
+        private CheckBox defaultHostCheckBox;
+        private CheckBox defaultUserCheckBox;
+        private CheckBox defaultDirectoryCheckBox;
+        private CheckBox defaultBaseUrlCheckBox;
         private readonly List<FtpAccount> ftpAccounts;
+        private readonly FtpAccount defaultFtpAccount;
         private readonly FtpConfiguration ftpConfiguration;
 
         /// <summary>
@@ -53,6 +59,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         {
             this.ftpConfiguration = ftpConfiguration;
             ftpAccounts = ftpConfiguration.FtpAccounts;
+            defaultFtpAccount = ftpConfiguration.DefaultFtpAccount;
 
             InitializeComponents();
             InitializeAccountsBinding();
@@ -152,6 +159,50 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             browserTypeComboBox.BindWithEnum<BrowserProtocol>().BindDataContext((FtpAccount o) => o.BrowserProtocol).Changed += FtpOptionControlChanged;
         }
 
+        /// <inheritdoc/>
+        protected override void OnUnLoad(EventArgs e)
+        {
+            base.OnUnLoad(e);
+            ftpConfiguration.DefaultFtpAccount = CreateNewDefaultFtpAccount();
+        }
+
+        private FtpAccount CreateNewDefaultFtpAccount()
+        {
+            var newDefaultAccount = defaultFtpAccount.Clone();
+
+            if (defaultProtocolCheckBox.Checked != null && defaultProtocolCheckBox.Checked.Value)
+            {
+                if (Enum.TryParse<FtpProtocol>(ftpProtocol.Text, out var protocol))
+                {
+                    newDefaultAccount.Protocol = protocol;
+                }
+            }
+
+            if (defaultHostCheckBox.Checked != null && defaultHostCheckBox.Checked.Value)
+            {
+                newDefaultAccount.Host = host.Text;
+                newDefaultAccount.Port = (int)port.Value;
+            }
+
+            if (defaultUserCheckBox.Checked != null && defaultUserCheckBox.Checked.Value)
+            {
+                newDefaultAccount.Username = username.Text;
+                newDefaultAccount.Password = password.Text;
+            }
+
+            if (defaultBaseUrlCheckBox.Checked != null && defaultBaseUrlCheckBox.Checked.Value)
+            {
+                newDefaultAccount.HttpHomePath = homePathTextBox.Text;
+            }
+
+            if (defaultDirectoryCheckBox.Checked != null && defaultDirectoryCheckBox.Checked.Value)
+            {
+                newDefaultAccount.SubFolderPath = subFolderPath.Text;
+            }
+
+            return newDefaultAccount;
+        }
+
         private void FtpOptionControlChanged(object sender, EventArgs e)
         {
             UpdatePreview();
@@ -208,7 +259,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
         private void AddButtonClick(object sender, EventArgs e)
         {
-            CreateNewAccount();
+            CreateNewAccount(defaultFtpAccount);
         }
 
         private void CreateNewAccount(FtpAccount account = null)
