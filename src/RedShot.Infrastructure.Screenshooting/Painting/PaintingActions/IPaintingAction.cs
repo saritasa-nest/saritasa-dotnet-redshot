@@ -1,5 +1,4 @@
 ﻿using Eto.Drawing;
-using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.UserInputActions;
 using SkiaSharp;
 
 namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions
@@ -9,16 +8,6 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions
     /// </summary>
     internal interface IPaintingAction
     {
-        /// <summary>
-        /// Painting action type.
-        /// </summary>
-        PaintingActionType PaintingActionType { get; }
-
-        /// <summary>
-        /// Input user action.
-        /// </summary>
-        void InputUserAction(IInputAction inputAction);
-
         /// <summary>
         /// Paints visual object.
         /// </summary>

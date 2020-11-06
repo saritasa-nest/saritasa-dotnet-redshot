@@ -1,22 +1,21 @@
 ﻿using Eto.Drawing;
 using SkiaSharp;
 using RedShot.Infrastructure.Common;
-using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.UserInputActions;
 
-namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions
+namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.MouseActions
 {
     /// <summary>
     /// Rectangle painting action.
     /// Paints rectangle via first and last points.
     /// </summary>
-    internal class RectanglePaintingAction : IPaintingAction
+    internal class RectanglePaintingAction : IMousePaintingAction
     {
         private Point startPoint;
         private Point endPoint;
         private readonly SKPaint paint;
 
         /// <summary>
-        /// Inits values for this action.
+        /// Initializes rectangle painting action.
         /// </summary>
         public RectanglePaintingAction(SKPaint paint)
         {
@@ -24,15 +23,9 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions
         }
 
         /// <inheritdoc />
-        public PaintingActionType PaintingActionType => PaintingActionType.MousePainting;
-
-        /// <inheritdoc />
-        public void InputUserAction(IInputAction inputAction)
+        public void InputMouseAction(Point mouseLocation)
         {
-            if (inputAction is MouseInputAction mouseAction)
-            {
-                endPoint = mouseAction.MouseLocation;
-            }
+            endPoint = mouseLocation;
         }
 
         /// <inheritdoc />

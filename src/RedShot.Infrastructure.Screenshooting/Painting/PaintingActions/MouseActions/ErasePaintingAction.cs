@@ -1,22 +1,21 @@
 ﻿using System.Collections.Generic;
 using Eto.Drawing;
 using SkiaSharp;
-using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.UserInputActions;
 
-namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions
+namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.MouseActions
 {
     /// <summary>
     /// Erase painting action.
     /// Erases points.
     /// </summary>
-    internal class ErasePaintingAction : IPaintingAction
+    internal class ErasePaintingAction : IMousePaintingAction
     {
         private readonly HashSet<Point> erasingPoints;
         private readonly SKBitmap bitmap;
         private readonly SKPaint paint;
 
         /// <summary>
-        /// Inits values for this action.
+        /// Initializes erase painting action.
         /// </summary>
         public ErasePaintingAction(SKPaint paint, SKBitmap bitmap)
         {
@@ -26,15 +25,9 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions
         }
 
         /// <inheritdoc />
-        public PaintingActionType PaintingActionType => PaintingActionType.MousePainting;
-
-        /// <inheritdoc />
-        public void InputUserAction(IInputAction inputAction)
+        public void InputMouseAction(Point mouseLocation)
         {
-            if (inputAction is MouseInputAction mouseAction)
-            {
-                erasingPoints.Add(mouseAction.MouseLocation);
-            }
+            erasingPoints.Add(mouseLocation);
         }
 
         /// <inheritdoc />

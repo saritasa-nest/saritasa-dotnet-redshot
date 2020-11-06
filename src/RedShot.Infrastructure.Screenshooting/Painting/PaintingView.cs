@@ -39,7 +39,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         public PaintingView(Bitmap image)
         {
             Icon = new Icon(1, Icons.RedCircle);
-            Title = "Image editor";
+            Title = "Image Editor";
             MinimumSize = new Size(500, paintingPanelWidth);
             Resizable = false;
             this.image = image;
@@ -66,7 +66,6 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
-            imagePanel.TextInputView?.Close();
 
             if (uploadedImageHash == imagePanel.GetImageHash())
             {
@@ -130,13 +129,13 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         private void PaintingPanelUploadToFtpSelected(object sender, DataEventArgs<FtpAccount> e)
         {
             var uploadingService = new FtpUploadingService();
-            UploadImage(uploadingService.GetUploader(e.Value));
+            UploadWithBlockingButton(uploadingService.GetUploader(e.Value));
         }
 
         private void PaintingPanelUploadToFileSelected(object sender, EventArgs e)
         {
             var uploadingService = new FileUploadingService();
-            UploadImage(uploadingService.GetUploader());
+            UploadWithBlockingButton(uploadingService.GetUploader());
         }
 
         private void PaintingPanelUploadToClipboardSelected(object sender, EventArgs e)
@@ -150,17 +149,22 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             UploadImage(uploadingService.GetUploader());
         }
 
+        private void UploadWithBlockingButton(IUploader uploader)
+        {
+            paintingPanel.UploadImageButton.Enabled = false;
+            UploadImage(uploader);
+            paintingPanel.UploadImageButton.Enabled = true;
+        }
+
         private void UploadImage(IUploader uploader)
         {
             var newImageHash = imagePanel.GetImageHash();
-
             if (uploadedImageHash != newImageHash)
             {
                 uploadedImageHash = newImageHash;
                 var file = ScreenshotManager.GetFileFromBitmap(imagePanel.GetPaintingImage());
                 imageFile = file;
             }
-
             UploadingManager.Upload(uploader, imageFile);
         }
 

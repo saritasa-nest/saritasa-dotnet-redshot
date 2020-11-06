@@ -56,14 +56,7 @@ namespace RedShot.Infrastructure.Common.Forms
             }
 
             baseButton.Click += Btn_Click;
-
-            Content = new StackLayout
-            {
-                Items =
-                {
-                    baseButton
-                }
-            };
+            Content = baseButton;
         }
 
         private void Btn_Click(object sender, EventArgs e)

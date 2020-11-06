@@ -138,14 +138,20 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
 
             TextEnableButton = new ImageButton(buttonSize, Icons.Text, scaleImageSize: imageSize)
             {
-                ToolTip = "Enter text"
+                ToolTip = "Text"
             };
 
-            TextEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, new DataEventArgs<PaintingState>(PaintingState.Text));
+            TextEnableButton.Clicked += TextEnableButtonClicked;
             BrushEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, new DataEventArgs<PaintingState>(PaintingState.Brush));
             RectangleEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, new DataEventArgs<PaintingState>(PaintingState.Rectangle));
             EraseEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, new DataEventArgs<PaintingState>(PaintingState.Erase));
             ArrowEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, new DataEventArgs<PaintingState>(PaintingState.Arrow));
+        }
+
+        private void TextEnableButtonClicked(object sender, EventArgs e)
+        {
+            this.Focus();
+            StateChanged?.Invoke(this, new DataEventArgs<PaintingState>(PaintingState.Text));
         }
 
         private StackLayout GetContent()

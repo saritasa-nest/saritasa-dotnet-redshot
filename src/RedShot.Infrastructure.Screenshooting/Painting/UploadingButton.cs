@@ -38,7 +38,8 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             var uploadButton = new SegmentedButton
             {
                 Size = size,
-                SelectionMode = SegmentedSelectionMode.Single
+                SelectionMode = SegmentedSelectionMode.Single,
+                ToolTip = "Upload"
             };
 
             var defaultButton = new ButtonSegmentedItem()

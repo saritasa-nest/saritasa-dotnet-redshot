@@ -1,22 +1,21 @@
 ﻿using System;
 using Eto.Drawing;
 using SkiaSharp;
-using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.UserInputActions;
 
-namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions
+namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.MouseActions
 {
     /// <summary>
     /// Arrow painting action.
     /// Paints arrow by two points.
     /// </summary>
-    internal class ArrowPaintingAction : IPaintingAction
+    internal class ArrowPaintingAction : IMousePaintingAction
     {
         private readonly SKPaint paint;
         private Point? lastPoint;
         private Point? startPoint;
 
         /// <summary>
-        /// Inits values for this action.
+        /// Initializes arrow painting action.
         /// </summary>
         public ArrowPaintingAction(SKPaint paint)
         {
@@ -24,17 +23,11 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions
         }
 
         /// <inheritdoc />
-        public PaintingActionType PaintingActionType => PaintingActionType.MousePainting;
-
-        /// <inheritdoc />
-        public void InputUserAction(IInputAction inputAction)
+        public void InputMouseAction(Point mouseLocation)
         {
-            if (inputAction is MouseInputAction mouseAction)
+            if (startPoint.HasValue)
             {
-                if (startPoint.HasValue)
-                {
-                    lastPoint = mouseAction.MouseLocation;
-                }
+                lastPoint = mouseLocation;
             }
         }
 
