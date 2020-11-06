@@ -17,7 +17,7 @@ namespace RedShot.Infrastructure.Screenshooting
     public static class ScreenshotManager
     {
         private static PaintingView paintingView;
-        private static Form selectionView;
+        private static Form screenshotView;
 
         private static readonly string imagesFolder;
 
@@ -29,20 +29,12 @@ namespace RedShot.Infrastructure.Screenshooting
         /// <summary>
         /// Run screen shot selection view.
         /// </summary>
-        public static void TakeScreenShot(bool paintAfter = true)
+        public static void TakeScreenShot()
         {
-            selectionView?.Close();
+            screenshotView?.Close();
 
-            if (paintAfter)
-            {
-                selectionView = new PaintingSelectionView();
-            }
-            else
-            {
-                selectionView = new ScreenShotSelectionView();
-            }
-
-            selectionView.Show();
+            screenshotView = new ScreenShotSelectionView();
+            screenshotView.Show();
         }
 
         /// <summary>

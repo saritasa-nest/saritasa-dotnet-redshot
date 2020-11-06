@@ -39,15 +39,7 @@ namespace RedShot.Infrastructure
         /// </summary>
         public static void RunScreenShooting()
         {
-            ScreenshotManager.TakeScreenShot(false);
-        }
-
-        /// <summary>
-        /// Run screen shot editor.
-        /// </summary>
-        public static void RunPainting()
-        {
-            ScreenshotManager.TakeScreenShot(true);
+            ScreenshotManager.TakeScreenShot();
         }
 
         /// <summary>
