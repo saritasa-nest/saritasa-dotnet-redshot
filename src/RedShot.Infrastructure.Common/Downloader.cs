@@ -14,6 +14,7 @@ namespace RedShot.Infrastructure.Common
         private readonly string downloadDirectory;
         private WebClient webClient;
         private bool disposed;
+        private string title;
 
         /// <summary>
         /// Download progress changed event.
@@ -28,8 +29,9 @@ namespace RedShot.Infrastructure.Common
         /// <summary>
         /// Initializes downloader.
         /// </summary>
-        public Downloader()
+        public Downloader(string title)
         {
+            this.title = title;
             webClient = new WebClient();
             webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
             webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
@@ -38,20 +40,13 @@ namespace RedShot.Infrastructure.Common
             downloadDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory, Guid.NewGuid().ToString())).FullName;
         }
 
-        private void RunForm(string fileName)
-        {
-            var form = new DownloadForm(this, fileName);
-            form.Show();
-        }
-
         /// <summary>
         /// Download data asynchronously.
         /// </summary>
         /// <param name="callback">A delegate that will be invoked after data is downloaded.</param>
         public void DownloadAsync(string url, string fileName, Action<string> callback)
         {
-            RunForm(fileName);
-
+            RunForm();
             var path = Path.Combine(downloadDirectory, fileName);
 
             webClient.DownloadFileAsync(new Uri(url), path);
@@ -79,6 +74,16 @@ namespace RedShot.Infrastructure.Common
         private void WebClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             DownloadProgressChanged?.Invoke(sender, e);
+        }
+
+        private void RunForm()
+        {
+            var form = new DownloadForm(this)
+            {
+                Title = title
+            };
+
+            form.Show();
         }
 
         /// <summary>

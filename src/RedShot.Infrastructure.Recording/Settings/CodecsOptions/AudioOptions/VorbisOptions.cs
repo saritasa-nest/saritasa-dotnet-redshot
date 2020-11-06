@@ -4,14 +4,18 @@ using RedShot.Infrastructure.Recording.Ffmpeg;
 namespace RedShot.Recording.Settings.CodecsOptions.AudioOptions
 {
     /// <summary>
-    /// Vorbis options view.
+    /// Vorbis options dialog.
     /// </summary>
-    internal class VorbisOptions : AudioCodecOptionsBase<NumericStepper>
+    internal class VorbisOptions : CodecOptionsBase
     {
-        private static readonly string about = "Range is 0–10, where 10 is highest quality. 5–7 is a good range to try.";
+        private const string About = "Range is 0–10, where 10 is highest quality. 5–7 is a good range to try.";
 
-        /// <inheritdoc/>
-        public VorbisOptions(FFmpegOptions options) : base(options, "Vorbis options", about)
+        private NumericStepper codecQuality;
+
+        /// <summary>
+        /// Initializes Vorbis options dialog.
+        /// </summary>
+        public VorbisOptions(FFmpegOptions options) : base(options, "Vorbis options", About)
         {
         }
 
@@ -25,7 +29,7 @@ namespace RedShot.Recording.Settings.CodecsOptions.AudioOptions
                 Increment = 1
             };
 
-            base.InitializeComponents();
+            AddQualityRow("Quality", codecQuality);
         }
 
         /// <inheritdoc/>

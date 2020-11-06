@@ -23,17 +23,14 @@ namespace RedShot.Infrastructure.Recording.Settings
         }
 
         /// <inheritdoc/>
-        public string Name => "FFmpeg recording options";
+        public string Name => "Recording";
 
         /// <inheritdoc/>
         public Control GetControl()
         {
             if (recordingOptionControl == null)
             {
-                if (RecordingManager.CheckInstallFfmpeg())
-                {
-                    recordingOptionControl = new RecordingOptionControl(RecordingManager.RecordingService.GetRecordingDevices(), ffmpegConfiguration.Options);
-                }
+                recordingOptionControl = new RecordingOptionControl(ffmpegConfiguration.Options);
             }
 
             return recordingOptionControl;

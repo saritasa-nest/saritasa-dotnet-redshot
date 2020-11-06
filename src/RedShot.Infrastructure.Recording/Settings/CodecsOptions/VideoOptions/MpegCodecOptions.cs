@@ -1,36 +1,27 @@
 ﻿using System;
 using Eto.Forms;
-using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Recording.Ffmpeg;
 
 namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
 {
     /// <summary>
-    /// MPEG-4 options view.
+    /// MPEG-4 options dialog.
     /// </summary>
-    internal class MpegCodecOptions : Dialog
+    internal class MpegCodecOptions : CodecOptionsBase
     {
-        private readonly FFmpegOptions options;
+        private const string About = "The range of the quality level is 1–31, where 1 is highest quality/largest filesize and 31 is the lowest quality/smallest filesize";
         private NumericStepper mpeg4Quality;
-        private DefaultButton qualityAbout;
-        private DefaultButton okButton;
 
         /// <summary>
-        /// Initializes MPEG-4 options view.
+        /// Initializes MPEG-4 options dialog.
         /// </summary>
-        public MpegCodecOptions(FFmpegOptions options)
+        public MpegCodecOptions(FFmpegOptions options) : base(options, "MPEG-4 options", About)
         {
-            Title = "MPEG-4 options";
-            this.options = options;
-            InitializeComponents();
-            Bind();
         }
 
-        private void InitializeComponents()
+        /// <inheritdoc/>
+        protected override void InitializeComponents()
         {
-            okButton = new DefaultButton("OK", 70, 30);
-            okButton.Clicked += (o, e) => Close();
-
             mpeg4Quality = new NumericStepper()
             {
                 Height = 21,
@@ -39,22 +30,7 @@ namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
                 Increment = 1
             };
 
-            qualityAbout = new DefaultButton("About", 60, 25);
-            qualityAbout.Clicked += QualityAbout_Clicked;
-
-            Content = new StackLayout()
-            {
-                Orientation = Orientation.Vertical,
-                Padding = 20,
-                HorizontalContentAlignment = HorizontalAlignment.Center,
-                Spacing = 10,
-                Items =
-                {
-                    FormsHelper.GetBaseStack("Quality:", GetQualityField(), 50, 250),
-                    FormsHelper.GetVoidBox(10),
-                    okButton,
-                }
-            };
+            AddQualityRow("Quality", mpeg4Quality);
         }
 
         private void QualityAbout_Clicked(object sender, EventArgs e)
@@ -62,26 +38,12 @@ namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
             MessageBox.Show("The range of the quality level is 1–31, where 1 is highest quality/largest filesize and 31 is the lowest quality/smallest filesize", MessageBoxType.Information);
         }
 
-        private void Bind()
+        /// <inheritdoc/>
+        protected override void Bind()
         {
             Content.DataContext = options;
 
             mpeg4Quality.ValueBinding.Convert(f => (int)f, t => t).BindDataContext((FFmpegOptions o) => o.XviDQscale);
-        }
-
-        private Control GetQualityField()
-        {
-            return new StackLayout()
-            {
-                Orientation = Orientation.Horizontal,
-                VerticalContentAlignment = VerticalAlignment.Center,
-                Spacing = 10,
-                Items =
-                {
-                    mpeg4Quality,
-                    qualityAbout
-                }
-            };
         }
     }
 }

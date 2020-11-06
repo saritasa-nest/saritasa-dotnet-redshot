@@ -2,11 +2,9 @@
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.Common;
-using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Common.Notifying;
 
 namespace RedShot.Infrastructure.Recording.Recorders
@@ -59,7 +57,7 @@ namespace RedShot.Infrastructure.Recording.Recorders
                 return;
             }
 
-            var downloader = new Downloader();
+            var downloader = new Downloader("Downloading FFmpeg");
             downloader.DownloadAsync(BinariesUrl, "ffmpeg.zip", (path) =>
             {
                 try
