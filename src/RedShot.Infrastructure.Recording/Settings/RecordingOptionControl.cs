@@ -13,7 +13,7 @@ namespace RedShot.Infrastructure.Recording.Settings
     /// </summary>
     internal partial class RecordingOptionControl : Panel
     {
-        private FFmpegOptions ffmpegOptions;
+        private FFmpegConfiguration ffmpegConfiguration;
         private ComboBox videoCodec;
         private Button videoCodecOptionsButton;
         private ComboBox audioCodec;
@@ -27,9 +27,9 @@ namespace RedShot.Infrastructure.Recording.Settings
         /// <summary>
         /// Initializes recording option dialog.
         /// </summary>
-        public RecordingOptionControl(FFmpegOptions ffmpegOptions)
+        public RecordingOptionControl(FFmpegConfiguration ffmpegConfiguration)
         {
-            this.ffmpegOptions = ffmpegOptions;
+            this.ffmpegConfiguration = ffmpegConfiguration;
 
             InitializeComponents();
         }
@@ -37,13 +37,13 @@ namespace RedShot.Infrastructure.Recording.Settings
         private void SetDefaultButton_Clicked(object sender, EventArgs e)
         {
             Content.Unbind();
-            ffmpegOptions = new FFmpegOptions();
+            ffmpegConfiguration.Options = new FFmpegOptions();
             BindOptions();
         }
 
         private void BindOptions()
         {
-            Content.DataContext = ffmpegOptions;
+            Content.DataContext = ffmpegConfiguration.Options;
 
             fps.ValueBinding.Convert(f => (int)f, t => t).BindDataContext((FFmpegOptions o) => o.Fps);
             userArgs.TextBinding.BindDataContext((FFmpegOptions o) => o.UserArgs);
@@ -59,19 +59,19 @@ namespace RedShot.Infrastructure.Recording.Settings
         private void VideoCodecOptionsButtonClicked(object sender, EventArgs e)
         {
             Dialog options;
-            switch (ffmpegOptions.VideoCodec)
+            switch (ffmpegConfiguration.Options.VideoCodec)
             {
                 case FFmpegVideoCodec.Libx264:
                 case FFmpegVideoCodec.Libx265:
-                    options = new H264H265CodecOptions(ffmpegOptions);
+                    options = new H264H265CodecOptions(ffmpegConfiguration.Options);
                     break;
 
                 case FFmpegVideoCodec.Libvpx_vp9:
-                    options = new Vp9CodecOptions(ffmpegOptions);
+                    options = new Vp9CodecOptions(ffmpegConfiguration.Options);
                     break;
 
                 case FFmpegVideoCodec.Libxvid:
-                    options = new MpegCodecOptions(ffmpegOptions);
+                    options = new MpegCodecOptions(ffmpegConfiguration.Options);
                     break;
 
                 default:
@@ -84,22 +84,22 @@ namespace RedShot.Infrastructure.Recording.Settings
         private void AudioCodecOptionsButtonClicked(object sender, EventArgs e)
         {
             Dialog options;
-            switch (ffmpegOptions.AudioCodec)
+            switch (ffmpegConfiguration.Options.AudioCodec)
             {
                 case FFmpegAudioCodec.Libvoaacenc:
-                    options = new AacOptions(ffmpegOptions);
+                    options = new AacOptions(ffmpegConfiguration.Options);
                     break;
 
                 case FFmpegAudioCodec.Libopus:
-                    options = new OpusOptions(ffmpegOptions);
+                    options = new OpusOptions(ffmpegConfiguration.Options);
                     break;
 
                 case FFmpegAudioCodec.Libvorbis:
-                    options = new VorbisOptions(ffmpegOptions);
+                    options = new VorbisOptions(ffmpegConfiguration.Options);
                     break;
 
                 case FFmpegAudioCodec.Libmp3lame:
-                    options = new Mp3Options(ffmpegOptions);
+                    options = new Mp3Options(ffmpegConfiguration.Options);
                     break;
 
                 default:

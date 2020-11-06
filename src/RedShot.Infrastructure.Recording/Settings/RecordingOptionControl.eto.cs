@@ -69,7 +69,7 @@ namespace RedShot.Infrastructure.Recording.Settings
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 useGdigrab.Enabled = false;
-                ffmpegOptions.UseGdigrab = false;
+                ffmpegConfiguration.Options.UseGdigrab = false;
             }
 
             BindOptions();

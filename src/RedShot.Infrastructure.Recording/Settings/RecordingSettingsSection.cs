@@ -30,7 +30,7 @@ namespace RedShot.Infrastructure.Recording.Settings
         {
             if (recordingOptionControl == null)
             {
-                recordingOptionControl = new RecordingOptionControl(ffmpegConfiguration.Options);
+                recordingOptionControl = new RecordingOptionControl(ffmpegConfiguration);
             }
 
             return recordingOptionControl;
