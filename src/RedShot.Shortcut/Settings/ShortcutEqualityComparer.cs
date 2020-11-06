@@ -1,5 +1,5 @@
-﻿using Eto.Forms;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Eto.Forms;
 
 namespace RedShot.Shortcut.Settings
 {
