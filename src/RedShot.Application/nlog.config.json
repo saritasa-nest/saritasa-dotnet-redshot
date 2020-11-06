@@ -1,0 +1,35 @@
+﻿{
+  "NLog": {
+    "targets": {
+      "allfile": {
+        "type": "File",
+        "fileName": "${RedShotBinaryFolder}/logs/${date:format=yyyy-MM-dd\\:HH-mm-ss:cached=true}.log"
+      },
+      "ffmpegDebug": {
+        "type": "File",
+        "fileName": "${RedShotBinaryFolder}/logs/ffmpeg-${date:format=yyyy-MM-dd\\:HH-mm-ss:cached=true}.log"
+      },
+      "CLIdebug": {
+        "type": "File",
+        "fileName": "${RedShotBinaryFolder}/logs/cli-${date:format=yyyy-MM-dd\\:HH-mm-ss:cached=true}.log"
+      }
+    },
+    "rules": [
+      {
+        "logger": "CLIdebug",
+        "minLevel": "Trace",
+        "writeTo": "CLIdebug"
+      },
+      {
+        "logger": "Ffmpeg",
+        "minLevel": "Trace",
+        "writeTo": "ffmpegDebug"
+      },
+      {
+        "logger": "*",
+        "minLevel": "Trace",
+        "writeTo": "allfile"
+      }
+    ]
+  }
+}

@@ -18,7 +18,7 @@ namespace RedShot.Infrastructure.Formatting
         /// <summary>
         /// Format Tag.
         /// </summary>
-        public const string FormatTag = "%";
+        public static string FormatTag { get; }
 
         private static readonly string regexPattern = @$"{FormatTag}(\w+)|{FormatTag}\[(\w|-|_)+\]";
         private static readonly string usersTextPattern = @"^\[(\w|-|_)+\]$";
@@ -27,6 +27,8 @@ namespace RedShot.Infrastructure.Formatting
 
         static FormatManager()
         {
+            FormatTag = ConfigurationManager.AppSettings.FormatFileNameTag;
+
             FormatItems = Assembly
                 .GetExecutingAssembly().GetTypes()
                 .Where(type => typeof(IFormatItem).IsAssignableFrom(type) && !type.IsInterface)

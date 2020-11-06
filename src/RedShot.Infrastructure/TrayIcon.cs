@@ -55,6 +55,12 @@ namespace RedShot.Infrastructure
             menu.Items.Add(new SeparatorMenuItem());
             menu.Items.Add(new ButtonMenuItem()
             {
+                Text = "Send feedback",
+                Command = new Command((e, o) => ApplicationManager.SendFeedBack())
+            });
+
+            menu.Items.Add(new ButtonMenuItem()
+            {
                 Text = "Settings",
                 Command = new Command((e, o) => SettingsManager.OpenSettings())
             });

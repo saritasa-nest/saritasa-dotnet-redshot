@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using Eto.Drawing;
 using Eto.Forms;
+using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Recording;
 using RedShot.Infrastructure.Screenshooting;
 using RedShot.Infrastructure.Uploading;
@@ -68,6 +70,21 @@ namespace RedShot.Infrastructure
                     UploadingManager.RunUploading(lastFile);
                 }
             }
+        }
+
+        /// <summary>
+        /// Send feedback to specified email.
+        /// </summary>
+        public static void SendFeedBack()
+        {
+            var email = ConfigurationManager.AppSettings.Email;
+            var url = $"mailto:{email}";
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true
+            });
         }
 
         private static void UploadingManagerUploadStarted(object sender, EventArgs e)

@@ -48,9 +48,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Shortcut", "RedShot
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Infrastructure.Screenshooting", "RedShot.Infrastructure.Screenshooting\RedShot.Infrastructure.Screenshooting.csproj", "{1DB751C4-7EB3-4E78-ABE9-827DEB3161B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedShot.Initialization", "RedShot.Initialization\RedShot.Initialization.csproj", "{A6C7DDD1-C341-4FCE-AE0B-BB4EF33E9C39}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedShot.Application.MacOS", "RedShot.Application.MacOS\RedShot.Application.MacOS.csproj", "{F453C75B-BBAE-4EF6-B60B-BC166EE59B5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedShot.Application.MacOS", "RedShot.Application.MacOS\RedShot.Application.MacOS.csproj", "{F453C75B-BBAE-4EF6-B60B-BC166EE59B5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -332,22 +330,6 @@ Global
 		{1DB751C4-7EB3-4E78-ABE9-827DEB3161B2}.Release|Mac64.Build.0 = Release|Any CPU
 		{1DB751C4-7EB3-4E78-ABE9-827DEB3161B2}.Release|Windows.ActiveCfg = Release|Any CPU
 		{1DB751C4-7EB3-4E78-ABE9-827DEB3161B2}.Release|Windows.Build.0 = Release|Any CPU
-		{A6C7DDD1-C341-4FCE-AE0B-BB4EF33E9C39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A6C7DDD1-C341-4FCE-AE0B-BB4EF33E9C39}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A6C7DDD1-C341-4FCE-AE0B-BB4EF33E9C39}.Debug|Linux.ActiveCfg = Debug|Any CPU
-		{A6C7DDD1-C341-4FCE-AE0B-BB4EF33E9C39}.Debug|Linux.Build.0 = Debug|Any CPU
-		{A6C7DDD1-C341-4FCE-AE0B-BB4EF33E9C39}.Debug|Mac64.ActiveCfg = Debug|Any CPU
-		{A6C7DDD1-C341-4FCE-AE0B-BB4EF33E9C39}.Debug|Mac64.Build.0 = Debug|Any CPU
-		{A6C7DDD1-C341-4FCE-AE0B-BB4EF33E9C39}.Debug|Windows.ActiveCfg = Debug|Any CPU
-		{A6C7DDD1-C341-4FCE-AE0B-BB4EF33E9C39}.Debug|Windows.Build.0 = Debug|Any CPU
-		{A6C7DDD1-C341-4FCE-AE0B-BB4EF33E9C39}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A6C7DDD1-C341-4FCE-AE0B-BB4EF33E9C39}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A6C7DDD1-C341-4FCE-AE0B-BB4EF33E9C39}.Release|Linux.ActiveCfg = Release|Any CPU
-		{A6C7DDD1-C341-4FCE-AE0B-BB4EF33E9C39}.Release|Linux.Build.0 = Release|Any CPU
-		{A6C7DDD1-C341-4FCE-AE0B-BB4EF33E9C39}.Release|Mac64.ActiveCfg = Release|Any CPU
-		{A6C7DDD1-C341-4FCE-AE0B-BB4EF33E9C39}.Release|Mac64.Build.0 = Release|Any CPU
-		{A6C7DDD1-C341-4FCE-AE0B-BB4EF33E9C39}.Release|Windows.ActiveCfg = Release|Any CPU
-		{A6C7DDD1-C341-4FCE-AE0B-BB4EF33E9C39}.Release|Windows.Build.0 = Release|Any CPU
 		{F453C75B-BBAE-4EF6-B60B-BC166EE59B5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F453C75B-BBAE-4EF6-B60B-BC166EE59B5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F453C75B-BBAE-4EF6-B60B-BC166EE59B5E}.Debug|Linux.ActiveCfg = Debug|Any CPU

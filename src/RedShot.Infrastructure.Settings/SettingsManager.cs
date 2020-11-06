@@ -13,16 +13,19 @@ namespace RedShot.Infrastructure.Settings
     {
         private static SettingsView settingsView;
 
-        static SettingsManager()
-        {
-            SettingsSections = new List<Type>();
-        }
-
         /// <summary>
         /// Settings options.
         /// Must implement ISettingsOption interface.
         /// </summary>
-        public static List<Type> SettingsSections { get; }
+        internal static IEnumerable<Type> SettingsSections { get; private set; }
+
+        /// <summary>
+        /// Initialize.
+        /// </summary>
+        public static void Initialize(IEnumerable<Type> settingsSections)
+        {
+            SettingsSections = settingsSections;
+        }
 
         /// <summary>
         /// Open settings of the application.
