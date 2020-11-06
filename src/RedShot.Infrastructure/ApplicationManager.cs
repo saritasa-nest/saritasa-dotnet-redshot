@@ -62,7 +62,7 @@ namespace RedShot.Infrastructure
             {
                 if (lastFile.FileType == Abstractions.Uploading.FileType.Image)
                 {
-                    var image = new Bitmap(lastFile.FilePath);
+                    var image = new Bitmap(lastFile.GetStream());
                     ScreenshotManager.RunPaintingView(image);
                 }
                 else

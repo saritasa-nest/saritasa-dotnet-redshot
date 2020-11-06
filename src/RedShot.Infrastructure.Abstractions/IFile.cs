@@ -14,7 +14,7 @@ namespace RedShot.Infrastructure.Abstractions
         /// </summary>
         public Stream GetStream()
         {
-            return File.Open(FilePath, FileMode.Open);
+            return File.Open(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
         }
 
         /// <summary>
