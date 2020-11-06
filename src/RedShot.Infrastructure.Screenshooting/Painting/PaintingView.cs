@@ -5,7 +5,6 @@ using Eto.Drawing;
 using Eto.Forms;
 using Prism.Events;
 using RedShot.Infrastructure.Common;
-using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Screenshooting.Painting.States;
 using RedShot.Resources;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
@@ -13,6 +12,8 @@ using RedShot.Infrastructure.Uploading.Uploaders.Ftp;
 using RedShot.Infrastructure.Uploading;
 using RedShot.Infrastructure.Uploaders.Clipboard;
 using RedShot.Infrastructure.Uploaders.File;
+using RedShot.Infrastructure.Abstractions.Uploading;
+using RedShot.Infrastructure.Abstractions;
 
 namespace RedShot.Infrastructure.Screenshooting.Painting
 {
@@ -30,6 +31,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         private ImagePanel imagePanel;
         private SKPaint paint;
         private int uploadedImageHash;
+        private IFile imageFile;
 
         /// <summary>
         /// Initializes painting view via image.
@@ -104,35 +106,6 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             SetDefaultOptions(imagePanel);
         }
 
-        private void PaintingPanelUploadToFtpSelected(object sender, DataEventArgs<FtpAccount> e)
-        {
-            var uploader = new FtpUploadingService();
-            var file = ScreenshotManager.GetFileFromBitmap(imagePanel.GetPaintingImage());
-
-            UploadingManager.Upload(uploader.GetUploader(e.Value), file);
-        }
-
-        private void PaintingPanelUploadToFileSelected(object sender, EventArgs e)
-        {
-            var uploader = new FileUploadingService();
-            var file = ScreenshotManager.GetFileFromBitmap(imagePanel.GetPaintingImage());
-
-            UploadingManager.Upload(uploader.GetUploader(), file);
-        }
-
-        private void PaintingPanelUploadToClipboardSelected(object sender, EventArgs e)
-        {
-            UploadImageToClipboard();
-        }
-
-        private void UploadImageToClipboard()
-        {
-            var uploader = new ClipboardUploadingService();
-            var file = ScreenshotManager.GetFileFromBitmap(imagePanel.GetPaintingImage());
-
-            UploadingManager.Upload(uploader.GetUploader(), file);
-        }
-
         private void SetDefaultOptions(ImagePanel imagePanel)
         {
             paint = new SKPaint
@@ -154,11 +127,41 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             imagePanel.PaintBack();
         }
 
-        private void SaveImageButtonClicked(object sender, EventArgs e)
+        private void PaintingPanelUploadToFtpSelected(object sender, DataEventArgs<FtpAccount> e)
         {
-            var bitmap = imagePanel.GetPaintingImage();
-            ScreenshotManager.UploadScreenShot(bitmap);
-            uploadedImageHash = imagePanel.GetImageHash();
+            var uploadingService = new FtpUploadingService();
+            UploadImage(uploadingService.GetUploader(e.Value));
+        }
+
+        private void PaintingPanelUploadToFileSelected(object sender, EventArgs e)
+        {
+            var uploadingService = new FileUploadingService();
+            UploadImage(uploadingService.GetUploader());
+        }
+
+        private void PaintingPanelUploadToClipboardSelected(object sender, EventArgs e)
+        {
+            UploadImageToClipboard();
+        }
+
+        private void UploadImageToClipboard()
+        {
+            var uploadingService = new ClipboardUploadingService();
+            UploadImage(uploadingService.GetUploader());
+        }
+
+        private void UploadImage(IUploader uploader)
+        {
+            var newImageHash = imagePanel.GetImageHash();
+
+            if (uploadedImageHash != newImageHash)
+            {
+                uploadedImageHash = newImageHash;
+                var file = ScreenshotManager.GetFileFromBitmap(imagePanel.GetPaintingImage());
+                imageFile = file;
+            }
+
+            UploadingManager.Upload(uploader, imageFile);
         }
 
         private void PaintingPanelStateChanged(object sender, DataEventArgs<PaintingState> e)
