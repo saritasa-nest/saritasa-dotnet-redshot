@@ -18,6 +18,9 @@ namespace RedShot.Application
     /// </summary>
     internal class ApplicationTypes
     {
+        /// <summary>
+        /// Create application types.
+        /// </summary>
         public ApplicationTypes()
         {
             ConfigurationOptionsTypes = new List<Type>()

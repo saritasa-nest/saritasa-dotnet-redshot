@@ -19,6 +19,9 @@ namespace RedShot.Infrastructure.Settings
         /// </summary>
         internal static IEnumerable<Type> SettingsSections { get; private set; }
 
+        /// <summary>
+        /// Initialize.
+        /// </summary>
         public static void Initialize(IEnumerable<Type> settingsSections)
         {
             SettingsSections = settingsSections;
