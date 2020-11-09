@@ -43,7 +43,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
             Id = Guid.NewGuid();
             HttpHomePath = "";
             HttpHomePathAddExtension = false;
-            BrowserProtocol = BrowserProtocol.Http;
         }
 
         public string GetFormatLink(string fileName)
@@ -54,7 +53,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
             }
 
             var builder = new StringBuilder();
-            builder.Append($"{EnumUtils.GetDescription(BrowserProtocol)}{HttpHomePath}/");
+            builder.Append($"{HttpHomePath}/");
 
             if (HttpHomePathAddExtension)
             {
@@ -66,23 +65,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
             }
 
             return builder.ToString();
-        }
-
-        /// <summary>
-        /// Browser protocol.
-        /// </summary>
-        public BrowserProtocol BrowserProtocol
-        {
-            get { return browserProtocol; }
-
-            set
-            {
-                if (browserProtocol != value)
-                {
-                    browserProtocol = value;
-                    OnPropertyChanged();
-                }
-            }
         }
 
         /// <summary>

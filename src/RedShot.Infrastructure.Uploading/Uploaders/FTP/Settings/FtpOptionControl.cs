@@ -20,7 +20,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
         private CheckBox addExtensionCheckBox;
         private Label previewLinkLabel;
-        private TextBox browserTypeTextBox;
         private TextBox homePathTextBox;
         private Button addButton;
         private Button delButton;
@@ -155,17 +154,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
             addExtensionCheckBox.Bind(t => t.Checked, selectedAccount, account => account.HttpHomePathAddExtension).Changed += FtpOptionControlChanged;
             homePathTextBox.Bind(t => t.Text, selectedAccount, account => account.HttpHomePath).Changed += FtpOptionControlChanged;
-
-            browserTypeTextBox.Bind(t => t.Text, selectedAccount, ac => ac.BrowserProtocol.ToString().ToLower())
-                .Changed += (sender, args) =>
-            {
-                var text = FirstLetterToUpper(browserTypeTextBox.Text);
-                if (Enum.TryParse<BrowserProtocol>(text, out var browserProtocol))
-                {
-                    selectedAccount.BrowserProtocol = browserProtocol;
-                    UpdatePreview();
-                }
-            };
         }
 
         /// <inheritdoc/>
@@ -291,19 +279,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
             bindingList.Add(newAccount);
             accounts.SelectedIndex = accounts.DataStore.Count() - 1;
-        }
-
-        private string FirstLetterToUpper(string str)
-        {
-            if (browserTypeTextBox.Text.Length < 1)
-            {
-                return str;
-            }
-            var text = new StringBuilder(browserTypeTextBox.Text);
-            var firstLetter = text[0];
-            return text.Remove(0, 1)
-                .Insert(0, firstLetter.ToString().ToUpper())
-                .ToString();
         }
     }
 }

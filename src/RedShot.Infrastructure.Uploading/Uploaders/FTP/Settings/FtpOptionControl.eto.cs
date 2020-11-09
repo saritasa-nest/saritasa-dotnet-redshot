@@ -35,10 +35,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
             addExtensionCheckBox = new CheckBox();
             previewLinkLabel = new Label();
-            browserTypeTextBox = new TextBox()
-            {
-                Size = new Size(75, 21)
-            };
             homePathTextBox = new TextBox()
             {
                 Size = defaultLongSize
@@ -354,7 +350,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 VerticalContentAlignment = VerticalAlignment.Center,
                 Items =
                 {
-                    browserTypeTextBox,
                     homePathTextBox,
                     defaultBaseUrlCheckBox
                 }
