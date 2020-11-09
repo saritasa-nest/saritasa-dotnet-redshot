@@ -59,7 +59,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         {
             this.ftpConfiguration = ftpConfiguration;
             ftpAccounts = ftpConfiguration.FtpAccounts;
-            defaultFtpAccount = ftpConfiguration.DefaultFtpAccount ?? new FtpAccount();
+            defaultFtpAccount = ftpConfiguration.DefaultFtpAccount ?? new FtpAccount { HttpHomePathAddExtension = true };
 
             InitializeComponents();
             InitializeAccountsBinding();
