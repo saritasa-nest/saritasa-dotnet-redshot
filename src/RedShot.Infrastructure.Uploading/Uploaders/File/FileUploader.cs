@@ -25,9 +25,9 @@ namespace RedShot.Infrastructure.Uploaders.File
 
                 if (file.FileType == FileType.Image)
                 {
-                    dialog.FileName = $"{file.FileName}.png";
-                    dialog.Filters.Add(new FileFilter("Jpeg format", ".jpeg"));
+                    dialog.FileName = $"{file.FileName}";
                     dialog.Filters.Add(new FileFilter("Png format", ".png"));
+                    dialog.Filters.Add(new FileFilter("Jpeg format", ".jpeg"));
 
                     if (dialog.ShowDialog(new Form()) == DialogResult.Ok)
                     {

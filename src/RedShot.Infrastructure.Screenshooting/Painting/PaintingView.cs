@@ -45,13 +45,12 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             this.image = image;
             InitializeComponents();
             Content = GetContent();
-
-            this.Shown += PaintingViewShown;
-            this.KeyUp += PaintingViewKeyUp;
         }
 
-        private void PaintingViewKeyUp(object sender, KeyEventArgs e)
+        /// <inheritdoc/>
+        protected override void OnKeyUp(KeyEventArgs e)
         {
+            base.OnKeyUp(e);
             if (e.KeyData == UndoShortcut)
             {
                 imagePanel.PaintBack();
@@ -60,6 +59,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             {
                 UploadImageToClipboard();
             }
+            e.Handled = true;
         }
 
         /// <inheritdoc/>
@@ -83,9 +83,12 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             }
         }
 
-        private void PaintingViewShown(object sender, EventArgs e)
+        /// <inheritdoc/>
+        protected override void OnShown(EventArgs e)
         {
+            base.OnShown(e);
             Location = ScreenHelper.GetCenterLocation(Size);
+            paintingPanel.BrushEnableButton.Focus();
         }
 
         private void InitializeComponents()
@@ -129,7 +132,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         private void PaintingPanelUploadToFtpSelected(object sender, DataEventArgs<FtpAccount> e)
         {
             var uploadingService = new FtpUploadingService();
-            UploadWithBlockingButton(uploadingService.GetUploader(e.Value));
+            UploadWithBlockingButton(uploadingService.GetFtpUploader(e.Value));
         }
 
         private void PaintingPanelUploadToFileSelected(object sender, EventArgs e)

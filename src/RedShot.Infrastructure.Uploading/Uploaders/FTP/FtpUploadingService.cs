@@ -28,36 +28,30 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// </summary>
         public IUploader GetUploader()
         {
-            account = FtpAccountManager.GetDefaultFtpAccount();
+            var account = FtpAccountManager.GetPrimaryFtpAccount();
 
-            if (account != null)
+            if (account == null)
             {
-                return GetFtpUploader(account);
+                account = FtpAccountManager.GetFtpAccountManually();
             }
 
-            return null;
+            return GetFtpUploader(account);
         }
 
         /// <summary>
         /// Get either FTP or SFTP uploader by specified FTP account.
         /// </summary>
-        public BaseFtpUploader GetUploader(FtpAccount customAccount)
+        public BaseFtpUploader GetFtpUploader(FtpAccount account)
         {
-            account = customAccount;
-
-            if (account != null)
+            if (account == null)
             {
-                return GetFtpUploader(account);
+                return null;
+            }
+            else
+            {
+                this.account = account;
             }
 
-            return null;
-        }
-
-        /// <summary>
-        /// Get FTP uploader.
-        /// </summary>
-        internal BaseFtpUploader GetFtpUploader(FtpAccount account)
-        {
             BaseFtpUploader ftpUploader;
             if (account.Protocol == FtpProtocol.FTP || account.Protocol == FtpProtocol.FTPS)
             {

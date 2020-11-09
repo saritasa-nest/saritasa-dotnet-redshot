@@ -13,6 +13,8 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
     /// </summary>
     internal class UploadingButton : Panel
     {
+        private FtpAccount primaryAccount;
+
         /// <summary>
         /// Upload screen shot to FTP server event.
         /// </summary>
@@ -34,22 +36,15 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         public UploadingButton()
         {
             var size = new Size(90, 30);
+            primaryAccount = FtpAccountManager.GetPrimaryFtpAccount();
 
             var uploadButton = new SegmentedButton
             {
                 Size = size,
-                SelectionMode = SegmentedSelectionMode.Single,
-                ToolTip = "Upload"
+                SelectionMode = SegmentedSelectionMode.Single
             };
 
-            var defaultButton = new ButtonSegmentedItem()
-            {
-                Width = Convert.ToInt32(60),
-                Image = new Bitmap(Icons.Upload, 20, 22, ImageInterpolation.High),
-            };
-            defaultButton.Click += DefaultButtonClick;
-            uploadButton.Items.Add(defaultButton);
-
+            uploadButton.Items.Add(GetPrimaryUploadButton());
             uploadButton.Items.Add(new MenuSegmentedItem
             {
                 Width = 30,
@@ -60,19 +55,30 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             Content = uploadButton;
         }
 
-        private void DefaultButtonClick(object sender, EventArgs e)
+        private ButtonSegmentedItem GetPrimaryUploadButton()
         {
-            // Fix double clicking.
-            if (sender is ButtonSegmentedItem button)
+            var primaryUploadButton = new ButtonSegmentedItem()
             {
-                button.Selected = false;
+                Width = Convert.ToInt32(60),
+                Image = new Bitmap(Icons.Upload, 20, 22, ImageInterpolation.High),
+                ToolTip = "Upload"
+            };
+
+            if (primaryAccount == null)
+            {
+                primaryUploadButton.Enabled = false;
+            }
+            else
+            {
+                primaryUploadButton.Click += (o, e) =>
+                {
+                    primaryUploadButton.Selected = false;
+
+                    UploadToFtpSelected?.Invoke(this, new DataEventArgs<FtpAccount>(primaryAccount));
+                };
             }
 
-            var account = FtpAccountManager.GetDefaultFtpAccount();
-            if (account != null)
-            {
-                UploadToFtpSelected?.Invoke(this, new DataEventArgs<FtpAccount>(account));
-            }
+            return primaryUploadButton;
         }
 
         private ContextMenu GetUploadButtonContextMenu()
@@ -107,8 +113,8 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             };
             fileItem.Click += (sender, e) => UploadToFileSelected?.Invoke(this, EventArgs.Empty);
 
-            menu.Items.Add(clipboardItem);
             menu.Items.Add(fileItem);
+            menu.Items.Add(clipboardItem);
 
             return menu;
         }

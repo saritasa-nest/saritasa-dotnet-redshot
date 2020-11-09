@@ -1,20 +1,17 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
 using Eto.Forms;
 using Eto.Drawing;
 using RedShot.Infrastructure.Settings;
+using RedShot.Infrastructure.Abstractions;
 
 namespace RedShot.Infrastructure
 {
     /// <summary>
     /// Tray icon for the application.
     /// </summary>
-    public class TrayIcon : Form
+    public class TrayIcon : Form, ITrayForm
     {
-        /// <summary>
-        /// Tray view.
-        /// </summary>
+        /// <inheritdoc/>
         public TrayIndicator Tray { get; }
 
         /// <summary>
