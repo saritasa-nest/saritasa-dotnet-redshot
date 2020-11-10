@@ -8,7 +8,7 @@ namespace RedShot.Shortcut.Settings
     internal class ShortcutTextBox : TextBox
     {
         private Keys keys;
-        private readonly KeysParser keysParser;
+        private readonly ShortcutKeysHelper keysHelper;
 
         /// <summary>
         /// Hot keys.
@@ -34,7 +34,7 @@ namespace RedShot.Shortcut.Settings
         public ShortcutTextBox()
         {
             Text = "None";
-            keysParser = new KeysParser();
+            keysHelper = new ShortcutKeysHelper();
 #if _WINDOWS
             RedShot.Platforms.Windows.WindowsNativeHelper.HideCaret(this.ControlObject);
 #endif
@@ -68,15 +68,26 @@ namespace RedShot.Shortcut.Settings
         {
             e.Handled = true;
 
-            if (e.KeyData.HasFlag(Keys.PrintScreen))
+            if (e.KeyData.HasFlag(Keys.PrintScreen) && ValidateShortcutKeys(e.KeyData))
             {
                 Keys = e.KeyData;
+            }
+            else if (!ValidateShortcutKeys(Keys))
+            {
+                Reset();
             }
         }
 
         private void RenderText()
         {
-            Text = keysParser.GetShortcutString(Keys);
+            Text = keysHelper.GetShortcutString(Keys);
+        }
+
+        private bool ValidateShortcutKeys(Keys keyData)
+        {
+            var modifiers = keyData & Keys.ModifierMask;
+
+            return modifiers != Keys.None && keysHelper.TryGetMainKey(keyData, out var _);
         }
     }
 }

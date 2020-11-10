@@ -3,6 +3,7 @@ using Eto.Forms;
 using System.Collections.Generic;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Resources;
+using System.Linq;
 
 namespace RedShot.Shortcut.Settings
 {
@@ -26,7 +27,7 @@ namespace RedShot.Shortcut.Settings
         {
             var layout = new TableLayout()
             {
-                Padding = new Padding(30, 40, 0, 0),
+                Padding = new Padding(20, 20, 0, 0),
                 Spacing = new Size(15, 20)
             };
 
@@ -57,7 +58,11 @@ namespace RedShot.Shortcut.Settings
                 shortcut.Keys = shortcutTextBox.Keys;
             };
 
-            var clearButton = new ImageButton(new Size(26, 24), Icons.Close, scaleImageSize: new Size(13, 12));
+            var clearButton = new ImageButton(new Size(26, 24), Icons.Close, scaleImageSize: new Size(13, 12))
+            {
+                ToolTip = "Clear"
+            };
+
             clearButton.Clicked += (o, e) => shortcutTextBox.Reset();
 
             return new StackLayout()

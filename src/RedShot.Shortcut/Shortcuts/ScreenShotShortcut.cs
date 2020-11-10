@@ -8,7 +8,7 @@ namespace RedShot.Shortcut.Shortcuts
     internal sealed class ScreenShotShortcut : Shortcut
     {
         /// <inheritdoc/>
-        public override string Name => "Take screen shot";
+        public override string Name => "Take screenshot";
 
         /// <inheritdoc/>
         public override void OnPressedAction()

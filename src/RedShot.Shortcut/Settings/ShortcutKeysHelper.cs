@@ -8,7 +8,7 @@ namespace RedShot.Shortcut.Settings
     /// <summary>
     /// Keys parser.
     /// </summary>
-    internal class KeysParser
+    internal class ShortcutKeysHelper
     {
         private static readonly List<Keys> notToUseKeys = new List<Keys>
         {
@@ -87,20 +87,29 @@ namespace RedShot.Shortcut.Settings
                 AppendSeparator(sb, separator, EtoEnvironment.Platform.IsMac ? "\x2325" : "Alt");
             }
 
-            var mainKey = keys & Keys.KeyMask;
-            if (keymap.TryGetValue(mainKey, out string value))
+            if (TryGetMainKey(keys, out Keys mainKey))
             {
-                AppendSeparator(sb, separator, value);
-            }
-            else
-            {
-                if (!notToUseKeys.Contains(mainKey))
+                if (keymap.TryGetValue(mainKey, out string value))
+                {
+                    AppendSeparator(sb, separator, value);
+                }
+                else
                 {
                     AppendSeparator(sb, separator, mainKey.ToString());
                 }
             }
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Try to get the main key.
+        /// </summary>
+        public bool TryGetMainKey(Keys keyData, out Keys mainKey)
+        {
+            mainKey = keyData & Keys.KeyMask;
+
+            return !notToUseKeys.Contains(mainKey) && mainKey != Keys.None;
         }
 
         private void AppendSeparator(StringBuilder sb, string separator, string value)
