@@ -49,14 +49,15 @@ namespace RedShot.Infrastructure.Common.Forms
         {
             progressBar = new ProgressBar()
             {
-                Width = 250,
-                Height = 20,
+                Width = 350,
+                Height = 30,
                 MinValue = 0,
                 MaxValue = 100
             };
 
-            Padding = 10;
-            Height = 80;
+            Padding = 20;
+            Size = new Size(390, 100);
+
             Content = progressBar;
         }
     }

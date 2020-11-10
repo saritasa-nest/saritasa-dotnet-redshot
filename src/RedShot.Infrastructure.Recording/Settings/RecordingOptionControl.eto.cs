@@ -49,13 +49,16 @@ namespace RedShot.Infrastructure.Recording.Settings
                 ReadOnly = true
             };
 
-            setDefaultButton = new DefaultButton("Default", 100, 30);
-            setDefaultButton.Clicked += SetDefaultButton_Clicked;
+            setDefaultButton = new Button()
+            {
+                Text = "Default"
+            };
+            setDefaultButton.Click += SetDefaultButtonClicked;
 
             Content = new TableLayout()
             {
-                Padding = 15,
-                Spacing = new Size(0, 15),
+                Padding = new Padding(20, 20, 0, 0),
+                Spacing = new Size(0, 20),
                 Rows =
                 {
                     GetVideoOptionsRow(),

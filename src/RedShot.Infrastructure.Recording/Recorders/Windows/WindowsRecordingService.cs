@@ -18,7 +18,7 @@ namespace RedShot.Recording.Recorders.Windows
         protected override string FfmpegBinaryName => "ffmpeg.exe";
 
         /// <inheritdoc />
-        protected override string BinariesUrl => "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2020-10-27-12-34/ffmpeg-N-99756-g8b1bb4f38e-win64-gpl.zip";
+        protected override string BinariesUrl => "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip";
 
         /// <inheritdoc />
         public override IRecorder GetRecorder()

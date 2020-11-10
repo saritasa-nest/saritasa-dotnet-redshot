@@ -18,7 +18,7 @@ namespace RedShot.Infrastructure.Recording.Settings
         private Button videoCodecOptionsButton;
         private ComboBox audioCodec;
         private Button audioCodecOptionsButton;
-        private DefaultButton setDefaultButton;
+        private Button setDefaultButton;
         private NumericStepper fps;
         private TextBox userArgs;
         private CheckBox showCursor;
@@ -34,7 +34,7 @@ namespace RedShot.Infrastructure.Recording.Settings
             InitializeComponents();
         }
 
-        private void SetDefaultButton_Clicked(object sender, EventArgs e)
+        private void SetDefaultButtonClicked(object sender, EventArgs e)
         {
             Content.Unbind();
             ffmpegConfiguration.Options = new FFmpegOptions();
