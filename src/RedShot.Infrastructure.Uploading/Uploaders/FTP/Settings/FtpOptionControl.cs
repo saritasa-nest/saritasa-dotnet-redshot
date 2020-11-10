@@ -47,6 +47,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         private CheckBox defaultHostCheckBox;
         private CheckBox defaultUserCheckBox;
         private CheckBox defaultDirectoryCheckBox;
+        private CheckBox defaultFtpsConfigurationCheckBox;
+        private CheckBox defaultSftpConfigurationCheckBox;
         private CheckBox defaultBaseUrlCheckBox;
         private readonly List<FtpAccount> ftpAccounts;
         private readonly FtpAccount defaultFtpAccount;
@@ -197,6 +199,18 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             if (defaultDirectoryCheckBox.Checked != null && defaultDirectoryCheckBox.Checked.Value)
             {
                 newDefaultAccount.SubFolderPath = subFolderPath.Text;
+            }
+
+            if (defaultFtpsConfigurationCheckBox.Checked != null && defaultFtpsConfigurationCheckBox.Checked.Value)
+            {
+                newDefaultAccount.FTPSEncryption = Enum.Parse<FtpsEncryption>(ftpsEncryption.Text);
+                newDefaultAccount.FTPSCertificateLocation = ftpsCertificateLocation.Text;
+            }
+
+            if (defaultSftpConfigurationCheckBox.Checked != null && defaultSftpConfigurationCheckBox.Checked.Value)
+            {
+                newDefaultAccount.Passphrase = passphrase.Text;
+                newDefaultAccount.Keypath = keypath.Text;
             }
 
             return newDefaultAccount;

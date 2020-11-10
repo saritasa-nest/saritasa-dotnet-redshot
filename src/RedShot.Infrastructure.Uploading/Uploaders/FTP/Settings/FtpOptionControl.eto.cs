@@ -128,6 +128,16 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 ToolTip = setDefault
             };
 
+            defaultFtpsConfigurationCheckBox = new CheckBox
+            {
+                Text = "Set as default"
+            };
+
+            defaultSftpConfigurationCheckBox = new CheckBox
+            {
+                Text = "Set as default"
+            };
+
             addButton = new Button()
             {
                 Image = Resources.Icons.Add,
@@ -183,7 +193,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                         testButton
                     }
                 },
-                Size = new Size(435, 550),
+                Size = new Size(435, 650),
                 Text = "Account",
                 Padding = 10
             };
@@ -191,7 +201,12 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
         private void FtpProtocolSelectedValueChanged(object sender, EventArgs e)
         {
-            switch (Enum.Parse(typeof(FtpProtocol), (string) ftpProtocol.SelectedValue))
+            if (ftpProtocol.SelectedValue == null)
+            {
+                return;
+            }
+
+            switch (Enum.Parse(typeof(FtpProtocol), (string)ftpProtocol.SelectedValue))
             {
                 case FtpProtocol.FTP:
                     ftpsBoxes.Visible = false;
@@ -392,21 +407,24 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 Width = 550,
                 Content = new StackLayout
                 {
+                    Spacing = 5,
+                    Padding = 5,
                     Orientation = Orientation.Vertical,
                     Items =
                     {
-                        FormsHelper.CreateFieldStack("Encryption", ftpsEncryption),
+                        FormsHelper.CreateFieldStack("Encryption", ftpsEncryption, 0),
                         FormsHelper.CreateFieldStack("Location of the certificate", new StackLayout()
                         {
+                            Spacing = 5,
                             HorizontalContentAlignment = HorizontalAlignment.Left,
                             Orientation = Orientation.Horizontal,
-                            Spacing = 5,
                             Items =
                             {
                                 ftpsCertificateLocation,
                                 ftpsCertificateLocationButton
                             }
-                        }),
+                        }, 0),
+                        defaultFtpsConfigurationCheckBox
                     }
                 }
             };
@@ -419,7 +437,9 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 Text = "SFTP",
                 Content = new StackLayout
                 {
+                    Padding = 5,
                     Width = 550,
+                    Spacing = 5,
                     Orientation = Orientation.Vertical,
                     Items =
                     {
@@ -432,18 +452,19 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                                 FormsHelper.CreateFieldStack("RSA Key",
                                 new StackLayout()
                                 {
+                                    Spacing = 5,
                                     HorizontalContentAlignment = HorizontalAlignment.Left,
                                     Orientation = Orientation.Horizontal,
-                                    Spacing = 10,
                                     Items =
                                     {
                                         keypath,
                                         keyPathButton
                                     }
-                                })
+                                }, 0),
                             }
                         },
-                        FormsHelper.CreateFieldStack("Pass phrase", passphrase)
+                        FormsHelper.CreateFieldStack("Pass phrase", passphrase, 0),
+                        defaultSftpConfigurationCheckBox
                     }
                 }
             };
