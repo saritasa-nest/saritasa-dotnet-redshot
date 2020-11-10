@@ -117,16 +117,16 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
         private void RefreshAccountFields()
         {
-            BindBoxes();
-
             if (accounts.SelectedValue == null)
             {
-                accountFields.Enabled = false;
+                DisableAccountFields();
             }
             else
             {
-                accountFields.Enabled = true;
+                EnableAccountFields();
             }
+
+            BindBoxes();
         }
 
         private void BindBoxes()
@@ -136,7 +136,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             accountFields.Unbind();
 
             ftpProtocol.DataContext = selectedAccount;
-            ftpProtocol.SelectedValueBinding.Convert(l => Enum.Parse(typeof(FtpProtocol), (string)l), v => v?.ToString() ?? FtpProtocol.FTP.ToString())
+            ftpProtocol.SelectedValueBinding.Convert(l => l != null ? Enum.Parse(typeof(FtpProtocol), (string) l) : null,
+                v => v?.ToString() ?? FtpProtocol.FTP.ToString())
                 .BindDataContext((FtpAccount m) => m.Protocol);
             host.Bind(t => t.Text, selectedAccount, account => account.Host);
             port.DataContext = selectedAccount;
@@ -146,7 +147,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             isActive.Bind(t => t.Checked, selectedAccount, account => account.IsActive);
             subFolderPath.Bind(t => t.Text, selectedAccount, account => account.SubFolderPath);
             ftpsEncryption.DataContext = selectedAccount;
-            ftpsEncryption.SelectedValueBinding.Convert(l => Enum.Parse(typeof(FtpsEncryption), (string)l), v => v?.ToString() ?? FtpsEncryption.Explicit.ToString())
+            ftpsEncryption.SelectedValueBinding.Convert(l => l != null ? Enum.Parse(typeof(FtpsEncryption), (string)l) : null,
+                    v => v?.ToString() ?? FtpsEncryption.Explicit.ToString())
                 .BindDataContext((FtpAccount m) => m.FTPSEncryption);
             ftpsCertificateLocation.Bind(t => t.Text, selectedAccount, account => account.FTPSCertificateLocation);
             keypath.Bind(t => t.Text, selectedAccount, account => account.Keypath);
@@ -279,6 +281,22 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
             bindingList.Add(newAccount);
             accounts.SelectedIndex = accounts.DataStore.Count() - 1;
+        }
+
+        private void EnableAccountFields()
+        {
+            accountFields.Enabled = true;
+            ftpProtocol.DataStore = Enum.GetValues(typeof(FtpProtocol)).Cast<FtpProtocol>()
+                .Select(p => p.ToString());
+            ftpsEncryption.DataStore = Enum.GetValues(typeof(FtpsEncryption)).Cast<FtpsEncryption>()
+                .Select(p => p.ToString());
+        }
+
+        private void DisableAccountFields()
+        {
+            accountFields.Enabled = false;
+            ftpProtocol.DataStore = Enumerable.Empty<string>();
+            ftpsEncryption.DataStore = Enumerable.Empty<string>();
         }
     }
 }

@@ -89,15 +89,11 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
             ftpProtocol = new ComboBox()
             {
-                DataStore = Enum.GetValues(typeof(FtpProtocol)).Cast<FtpProtocol>()
-                    .Select(p => p.ToString()),
-                Size = defaultSize,
+                Size = defaultSize
             };
 
             ftpsEncryption = new ComboBox()
             {
-                DataStore = Enum.GetValues(typeof(FtpsEncryption)).Cast<FtpsEncryption>()
-                    .Select(p => p.ToString()),
                 Size = defaultSize
             };
 
@@ -166,9 +162,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
             sftpBoxes = GetSftpBoxes();
             sftpBoxes.Visible = false;
-
-            ftpsEncryption.SelectedIndex = 0;
-            ftpProtocol.SelectedIndex = 0;
 
             accountFields = GetAccountFieldsControl();
             accountFields.Enabled = false;
