@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Runtime.InteropServices;
 using Eto.Drawing;
 using Eto.Forms;
@@ -58,7 +57,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 Size = defaultSize,
             };
 
-            subFolderPath = new TextBox()
+            directoryPath = new TextBox()
             {
                 Size = defaultLongSize,
             };
@@ -309,7 +308,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             return new GroupBox()
             {
                 Text = "FTPS",
-                Width = 550,
                 Content = new StackLayout
                 {
                     Spacing = 5,
@@ -342,7 +340,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 Content = new StackLayout
                 {
                     Padding = 5,
-                    Width = 550,
                     Spacing = 5,
                     Orientation = Orientation.Vertical,
                     Items =
