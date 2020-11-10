@@ -49,20 +49,18 @@ namespace RedShot.Infrastructure
                 Visible = false,
                 Command = new Command((e, o) => ApplicationManager.UploadLastFile())
             };
-
             menu.Items.Add(UploadLastFile);
 
             menu.Items.Add(new SeparatorMenuItem());
             menu.Items.Add(new ButtonMenuItem()
             {
-                Text = "Send feedback",
-                Command = new Command((e, o) => ApplicationManager.SendFeedBack())
-            });
-
-            menu.Items.Add(new ButtonMenuItem()
-            {
                 Text = "Settings",
                 Command = new Command((e, o) => SettingsManager.OpenSettings())
+            });
+            menu.Items.Add(new ButtonMenuItem()
+            {
+                Text = "Send feedback",
+                Command = new Command((e, o) => ApplicationManager.SendFeedBack())
             });
 
             menu.Items.Add(new SeparatorMenuItem());
