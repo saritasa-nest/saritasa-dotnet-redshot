@@ -44,8 +44,8 @@ namespace RedShot.Infrastructure
 
             UploadLastFile = new ButtonMenuItem()
             {
-                Text = "Upload last file",
-                ToolTip = "Upload last created file",
+                Text = "Open last file",
+                ToolTip = "Open last created file",
                 Visible = false,
                 Command = new Command((e, o) => ApplicationManager.UploadLastFile())
             };
