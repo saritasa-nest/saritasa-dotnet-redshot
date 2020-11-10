@@ -19,7 +19,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
         private string username;
         private string password;
         private bool isActive;
-        private string subFolderPath;
+        private string directory;
         private FtpsEncryption ftpsEncryption;
         private string ftpsCertificateLocation;
         private string keypath;
@@ -37,7 +37,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
             Host = "";
             Port = 21;
             IsActive = false;
-            SubFolderPath = "";
+            Directory = "";
             FTPSEncryption = FtpsEncryption.Explicit;
             FTPSCertificateLocation = "";
             Id = Guid.NewGuid();
@@ -209,17 +209,17 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
         }
 
         /// <summary>
-        /// Sub folder path on FTP server.
+        /// Directory path on FTP server.
         /// </summary>
-        public string SubFolderPath
+        public string Directory
         {
-            get { return subFolderPath; }
+            get { return directory; }
 
             set
             {
-                if (subFolderPath != value)
+                if (directory != value)
                 {
-                    subFolderPath = value;
+                    directory = value;
                     OnPropertyChanged();
                 }
             }
