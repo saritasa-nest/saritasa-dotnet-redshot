@@ -97,45 +97,14 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 Size = defaultSize
             };
 
+            defaultAccountCheckBox = new CheckBox
+            {
+                Text = "Set as default"
+            };
+
             accounts = new ComboBox()
             {
                 Size = new Size(250, 21)
-            };
-
-            const string setDefault = "Set as default";
-            defaultProtocolCheckBox = new CheckBox
-            {
-                ToolTip = setDefault
-            };
-
-            defaultHostCheckBox = new CheckBox
-            {
-                ToolTip = setDefault
-            };
-
-            defaultUserCheckBox = new CheckBox
-            {
-                ToolTip = setDefault
-            };
-
-            defaultDirectoryCheckBox = new CheckBox
-            {
-                ToolTip = setDefault
-            };
-
-            defaultBaseUrlCheckBox = new CheckBox
-            {
-                ToolTip = setDefault
-            };
-
-            defaultFtpsConfigurationCheckBox = new CheckBox
-            {
-                Text = "Set as default"
-            };
-
-            defaultSftpConfigurationCheckBox = new CheckBox
-            {
-                Text = "Set as default"
             };
 
             addButton = new Button()
@@ -190,6 +159,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                         BaseAccountBoxes(),
                         ftpsBoxes,
                         sftpBoxes,
+                        defaultAccountCheckBox,
                         testButton
                     }
                 },
@@ -227,30 +197,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
         private StackLayout BaseAccountBoxes()
         {
-            var protocolFields = new StackLayout
-            {
-                Orientation = Orientation.Horizontal,
-                VerticalContentAlignment = VerticalAlignment.Center,
-                Spacing = 5,
-                Items =
-                {
-                    ftpProtocol,
-                    defaultProtocolCheckBox
-                }
-            };
-
-            var directoryFields = new StackLayout
-            {
-                Orientation = Orientation.Horizontal,
-                VerticalContentAlignment = VerticalAlignment.Center,
-                Spacing = 5,
-                Items =
-                {
-                    subFolderPath,
-                    defaultDirectoryCheckBox
-                }
-            };
-
             return new StackLayout
             {
                 Orientation = Orientation.Vertical,
@@ -258,10 +204,10 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 Spacing = 5,
                 Items =
                 {
-                    FormsHelper.CreateFieldStack("Protocol", protocolFields),
+                    FormsHelper.CreateFieldStack("Protocol", ftpProtocol),
                     GetAddressBoxes(),
                     CreateAuthenticationFields(),
-                    FormsHelper.CreateFieldStack("Directory", directoryFields),
+                    FormsHelper.CreateFieldStack("Directory", directoryPath),
                     GetLinkBoxes(),
                 }
             };
@@ -269,20 +215,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
         private StackLayout CreateAuthenticationFields()
         {
-            // This is only necessary for correct default user data checkbox alignment.
-            // And I'm not sure this is a good solution.
-            var passwordStack = new StackLayout
-            {
-                Orientation = Orientation.Horizontal,
-                Spacing = 5,
-                VerticalContentAlignment = VerticalAlignment.Center,
-                Items =
-                {
-                    password,
-                    defaultUserCheckBox
-                }
-            };
-
             return new StackLayout
             {
                 Orientation = Orientation.Horizontal,
@@ -291,8 +223,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 Items =
                 {
                     FormsHelper.CreateFieldStack("Username", username),
-                    FormsHelper.CreateFieldStack("Password", passwordStack),
-                    defaultUserCheckBox
+                    FormsHelper.CreateFieldStack("Password", password),
                 }
             };
         }
@@ -322,20 +253,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
         private StackLayout GetAddressBoxes()
         {
-            // This is only necessary for correct default host checkbox alignment.
-            // And I'm not sure this is a good solution.
-            var portStack = new StackLayout
-            {
-                Orientation = Orientation.Horizontal,
-                Spacing = 5,
-                VerticalContentAlignment = VerticalAlignment.Center,
-                Items =
-                {
-                    port,
-                    defaultHostCheckBox
-                }
-            };
-
             return new StackLayout
             {
                 Orientation = Orientation.Horizontal,
@@ -344,30 +261,18 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 Items =
                 {
                     FormsHelper.CreateFieldStack("Host", host),
-                    FormsHelper.CreateFieldStack("Port", portStack),
+                    FormsHelper.CreateFieldStack("Port", port),
                 }
             };
         }
 
         private StackLayout GetLinkBoxes()
         {
-            var pathBoxes = new StackLayout()
-            {
-                Orientation = Orientation.Horizontal,
-                Spacing = 5,
-                VerticalContentAlignment = VerticalAlignment.Center,
-                Items =
-                {
-                    homePathTextBox,
-                    defaultBaseUrlCheckBox
-                }
-            };
-
             Control pathControl;
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                pathControl = FormsHelper.CreateFieldStack("Base URL", pathBoxes);
+                pathControl = FormsHelper.CreateFieldStack("Base URL", homePathTextBox);
             }
             else
             {
@@ -381,7 +286,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                         {
                             Text = "Base URL"
                         },
-                        pathBoxes
+                        directoryPath
                     }
                 };
             }
@@ -423,8 +328,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                                 ftpsCertificateLocation,
                                 ftpsCertificateLocationButton
                             }
-                        }, 0),
-                        defaultFtpsConfigurationCheckBox
+                        }, 0)
                     }
                 }
             };
@@ -463,8 +367,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                                 }, 0),
                             }
                         },
-                        FormsHelper.CreateFieldStack("Pass phrase", passphrase, 0),
-                        defaultSftpConfigurationCheckBox
+                        FormsHelper.CreateFieldStack("Pass phrase", passphrase, 0)
                     }
                 }
             };

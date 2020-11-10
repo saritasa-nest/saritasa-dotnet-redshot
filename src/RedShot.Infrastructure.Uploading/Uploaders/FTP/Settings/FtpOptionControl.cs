@@ -41,17 +41,10 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         private Control ftpsBoxes;
         private Control sftpBoxes;
         private Control accountFields;
+        private CheckBox defaultAccountCheckBox;
         private ObservableCollection<FtpAccount> bindingList;
         private DefaultButton testButton;
-        private CheckBox defaultProtocolCheckBox;
-        private CheckBox defaultHostCheckBox;
-        private CheckBox defaultUserCheckBox;
-        private CheckBox defaultDirectoryCheckBox;
-        private CheckBox defaultFtpsConfigurationCheckBox;
-        private CheckBox defaultSftpConfigurationCheckBox;
-        private CheckBox defaultBaseUrlCheckBox;
         private readonly List<FtpAccount> ftpAccounts;
-        private readonly FtpAccount defaultFtpAccount;
         private readonly FtpConfiguration ftpConfiguration;
 
         /// <summary>
@@ -61,7 +54,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         {
             this.ftpConfiguration = ftpConfiguration;
             ftpAccounts = ftpConfiguration.FtpAccounts;
-            defaultFtpAccount = ftpConfiguration.DefaultFtpAccount ?? new FtpAccount { HttpHomePathAddExtension = true };
 
             InitializeComponents();
             InitializeAccountsBinding();
@@ -158,62 +150,22 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
             addExtensionCheckBox.Bind(t => t.Checked, selectedAccount, account => account.HttpHomePathAddExtension).Changed += FtpOptionControlChanged;
             homePathTextBox.Bind(t => t.Text, selectedAccount, account => account.HttpHomePath).Changed += FtpOptionControlChanged;
+
+            defaultAccountCheckBox.DataContext = ftpConfiguration;
+            defaultAccountCheckBox.CheckedBinding.Convert(DefaultAccountUpdated,
+                v => selectedAccount.Id == v)
+                .BindDataContext((FtpConfiguration c) => c.PrimaryAccountGuid);
         }
 
-        /// <inheritdoc/>
-        protected override void OnUnLoad(EventArgs e)
+        private Guid DefaultAccountUpdated(bool? isChecked)
         {
-            base.OnUnLoad(e);
-            ftpConfiguration.DefaultFtpAccount = CreateNewDefaultFtpAccount();
-        }
-
-        private FtpAccount CreateNewDefaultFtpAccount()
-        {
-            var newDefaultAccount = defaultFtpAccount.Clone();
-
-            if (defaultProtocolCheckBox.Checked != null && defaultProtocolCheckBox.Checked.Value)
+            if (!isChecked.HasValue || !isChecked.Value)
             {
-                if (Enum.TryParse<FtpProtocol>(ftpProtocol.Text, out var protocol))
-                {
-                    newDefaultAccount.Protocol = protocol;
-                }
+                return default;
             }
 
-            if (defaultHostCheckBox.Checked != null && defaultHostCheckBox.Checked.Value)
-            {
-                newDefaultAccount.Host = host.Text;
-                newDefaultAccount.Port = (int)port.Value;
-            }
-
-            if (defaultUserCheckBox.Checked != null && defaultUserCheckBox.Checked.Value)
-            {
-                newDefaultAccount.Username = username.Text;
-                newDefaultAccount.Password = password.Text;
-            }
-
-            if (defaultBaseUrlCheckBox.Checked != null && defaultBaseUrlCheckBox.Checked.Value)
-            {
-                newDefaultAccount.HttpHomePath = homePathTextBox.Text;
-            }
-
-            if (defaultDirectoryCheckBox.Checked != null && defaultDirectoryCheckBox.Checked.Value)
-            {
-                newDefaultAccount.SubFolderPath = subFolderPath.Text;
-            }
-
-            if (defaultFtpsConfigurationCheckBox.Checked != null && defaultFtpsConfigurationCheckBox.Checked.Value)
-            {
-                newDefaultAccount.FTPSEncryption = Enum.Parse<FtpsEncryption>(ftpsEncryption.Text);
-                newDefaultAccount.FTPSCertificateLocation = ftpsCertificateLocation.Text;
-            }
-
-            if (defaultSftpConfigurationCheckBox.Checked != null && defaultSftpConfigurationCheckBox.Checked.Value)
-            {
-                newDefaultAccount.Passphrase = passphrase.Text;
-                newDefaultAccount.Keypath = keypath.Text;
-            }
-
-            return newDefaultAccount;
+            var selectedAccount = (FtpAccount)accounts.SelectedValue;
+            return selectedAccount.Id;
         }
 
         private void FtpOptionControlChanged(object sender, EventArgs e)
@@ -277,7 +229,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
         private void AddButtonClick(object sender, EventArgs e)
         {
-            CreateNewAccount(defaultFtpAccount);
+            CreateNewAccount();
         }
 
         private void CreateNewAccount(FtpAccount account = null)
@@ -290,7 +242,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             }
             else
             {
-                newAccount = new FtpAccount();
+                newAccount = new FtpAccount {HttpHomePathAddExtension = true};
             }
 
             bindingList.Add(newAccount);
