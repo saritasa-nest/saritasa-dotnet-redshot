@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Common.Forms;
@@ -27,7 +28,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
         public FilenameTemplatePanel(Action<string> addPattern)
         {
             this.addPattern = addPattern;
-            formatItems = FormatManager.FormatItems;
+            formatItems = MoveCustomItemToEnd(FormatManager.FormatItems);
             InitializeComponents();
         }
 
@@ -110,5 +111,13 @@ namespace RedShot.Infrastructure.Formatting.Settings
 
         private string GetFullPattern(string pattern) =>
             $"{FormatManager.FormatTag}{pattern}";
+
+        private IEnumerable<IFormatItem> MoveCustomItemToEnd(IEnumerable<IFormatItem> formatItems)
+        {
+            var formatItemsList = formatItems.ToList();
+            var customItem = formatItemsList.First(it => it is CustomFormatItem);
+            formatItemsList.Remove(customItem);
+            return formatItemsList.Append(customItem);
+        }
     }
 }
