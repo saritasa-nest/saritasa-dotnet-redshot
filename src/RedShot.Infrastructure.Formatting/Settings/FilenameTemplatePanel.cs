@@ -79,9 +79,9 @@ namespace RedShot.Infrastructure.Formatting.Settings
             return new StackLayout()
             {
                 Orientation = Orientation.Horizontal,
-                VerticalContentAlignment = VerticalAlignment.Center,
+                VerticalContentAlignment = VerticalAlignment.Top,
                 Spacing = 15,
-                Padding = 15,
+                Padding = 10,
                 Items =
                 {
                     formatsListBox,
@@ -89,11 +89,11 @@ namespace RedShot.Infrastructure.Formatting.Settings
                     {
                         Orientation = Orientation.Vertical,
                         HorizontalContentAlignment = HorizontalAlignment.Stretch,
-                        Spacing = 10,
+                        Spacing = 5,
                         Items =
                         {
-                            FormsHelper.GetBaseStack("Pattern:", patternLabel, 80, 100),
-                            FormsHelper.GetBaseStack("Example:", exampleLabel, 80, 100),
+                            FormsHelper.GetBaseStack("Pattern:", patternLabel, 40, 100, 2),
+                            FormsHelper.GetBaseStack("Example:", exampleLabel, 47, 220, 2),
                             addButton
                         }
                     }

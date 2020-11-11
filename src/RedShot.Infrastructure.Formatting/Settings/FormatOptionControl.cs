@@ -35,38 +35,52 @@ namespace RedShot.Infrastructure.Formatting.Settings
             };
             patternTextBox.TextChanging += PatternTextBoxOnTextChanging;
 
-            Content = new StackLayout()
+            // External stack layout is needed to add padding. Padding doesn't work for GroupBox.
+            Content = new StackLayout
             {
-                Orientation = Orientation.Vertical,
+                Padding = 5,
                 HorizontalContentAlignment = HorizontalAlignment.Stretch,
-                Padding = 20,
-                Spacing = 5,
                 Items =
                 {
-                    new Label()
-                    {
-                        Text = "Pattern"
-                    },
-                    patternTextBox,
-                    new StackLayout()
-                    {
-                        Orientation = Orientation.Horizontal,
-                        VerticalContentAlignment = VerticalAlignment.Center,
-                        Spacing = 5,
-                        Items =
-                        {
-                            new Label()
-                            {
-                                Text = "Example:"
-                            },
-                            exampleLabel
-                        }
-                    },
-                    FormsHelper.GetVoidBox(20),
                     new GroupBox()
                     {
                         Text = "File name template",
-                        Content = new FilenameTemplatePanel(pattern => patternTextBox.Text += pattern)
+                        Content = new StackLayout
+                        {
+                            Items =
+                            {
+                                new StackLayout()
+                                {
+                                    Orientation = Orientation.Vertical,
+                                    HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                                    Padding = 10,
+                                    Spacing = 5,
+                                    Items =
+                                    {
+                                        new Label()
+                                        {
+                                            Text = "Pattern"
+                                        },
+                                        patternTextBox,
+                                        new StackLayout()
+                                        {
+                                            Orientation = Orientation.Horizontal,
+                                            VerticalContentAlignment = VerticalAlignment.Center,
+                                            Spacing = 5,
+                                            Items =
+                                            {
+                                                new Label()
+                                                {
+                                                    Text = "Example:"
+                                                },
+                                                exampleLabel
+                                            }
+                                        },
+                                    }
+                                },
+                                new FilenameTemplatePanel(pattern => patternTextBox.Text += pattern)
+                            }
+                        }
                     }
                 }
             };
