@@ -61,6 +61,8 @@ namespace RedShot.Infrastructure.Formatting.Settings
                 ToolTip = "Add format item"
             };
             addButton.Clicked += AddButtonClicked;
+            formatsListBox.SelectedValueBinding.Convert(sv => sv != null)
+                .Bind(addButton, b => b.Enabled, DualBindingMode.OneWayToSource);
 
             Content = GetFilenameTemplateStack();
         }
