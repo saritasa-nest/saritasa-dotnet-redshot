@@ -65,6 +65,11 @@ namespace RedShot.Shortcut.Settings
         /// <returns>A human-readable string representing the key combination including modifiers.</returns>
         public string GetShortcutString(Keys keys, string separator = "+")
         {
+            if (keys == Keys.None)
+            {
+                return "None";
+            }
+
             var sb = new StringBuilder();
 
             if (keys.HasFlag(Keys.Application))

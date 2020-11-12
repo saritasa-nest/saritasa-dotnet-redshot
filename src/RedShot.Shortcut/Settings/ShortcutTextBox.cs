@@ -1,4 +1,5 @@
-﻿using Eto.Forms;
+﻿using System;
+using Eto.Forms;
 
 namespace RedShot.Shortcut.Settings
 {
@@ -11,6 +12,11 @@ namespace RedShot.Shortcut.Settings
         private readonly ShortcutKeysHelper keysHelper;
 
         /// <summary>
+        /// Keys changing event.
+        /// </summary>
+        public event EventHandler KeysChanging;
+
+        /// <summary>
         /// Hot keys.
         /// </summary>
         public Keys Keys
@@ -19,11 +25,11 @@ namespace RedShot.Shortcut.Settings
 
             set
             {
-                keys = value;
-
-                if (keys != Keys.None)
+                if (keys != value)
                 {
+                    keys = value;
                     RenderText();
+                    KeysChanging?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
@@ -33,8 +39,8 @@ namespace RedShot.Shortcut.Settings
         /// </summary>
         public ShortcutTextBox()
         {
-            Text = "None";
             keysHelper = new ShortcutKeysHelper();
+            Reset();
 #if _WINDOWS
             RedShot.Platforms.Windows.WindowsNativeHelper.HideCaret(this.ControlObject);
 #endif

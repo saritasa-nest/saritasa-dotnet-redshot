@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Resources;
 using System.Linq;
+using RedShot.Shortcut.Shortcuts;
 
 namespace RedShot.Shortcut.Settings
 {
@@ -19,8 +20,18 @@ namespace RedShot.Shortcut.Settings
         /// </summary>
         public ShortcutSettingsControl(IEnumerable<Shortcuts.Shortcut> shortcuts)
         {
-            this.shortcuts = shortcuts;
+            this.shortcuts = GetOrderedShortcuts(shortcuts.ToList());
             InitializeComponents();
+        }
+
+        private IEnumerable<Shortcuts.Shortcut> GetOrderedShortcuts(IEnumerable<Shortcuts.Shortcut> shortcuts)
+        {
+            var screenshotShortcut = shortcuts.First(s => s is ScreenShotShortcut);
+            var ordered = new List<Shortcuts.Shortcut>();
+            ordered.Add(screenshotShortcut);
+            ordered.AddRange(shortcuts.Where(s => s != screenshotShortcut));
+
+            return ordered;
         }
 
         private void InitializeComponents()
@@ -53,9 +64,16 @@ namespace RedShot.Shortcut.Settings
                 Size = new Size(200, 22),
                 Keys = shortcut.Keys
             };
-            shortcutTextBox.TextChanging += (o, e) =>
+            shortcutTextBox.KeysChanging += (o, e) =>
             {
-                shortcut.Keys = shortcutTextBox.Keys;
+                if (shortcuts.Any(s => s.Keys == shortcutTextBox.Keys && shortcutTextBox.Keys != Keys.None))
+                {
+                    shortcutTextBox.Reset();
+                }
+                else
+                {
+                    shortcut.Keys = shortcutTextBox.Keys;
+                }
             };
 
             var clearButton = new ImageButton(new Size(26, 24), Icons.Close, scaleImageSize: new Size(13, 12))
