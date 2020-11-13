@@ -21,7 +21,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         }
 
         /// <inheritdoc />
-        public string Name => "FTP / FTPS / SFTP";
+        public string Name => "Accounts";
 
         /// <inheritdoc />
         public Control GetControl()

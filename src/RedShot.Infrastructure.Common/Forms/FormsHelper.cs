@@ -121,5 +121,27 @@ namespace RedShot.Infrastructure.Common.Forms
                 }
             };
         }
+
+        /// <summary>
+        /// Creates field using "label above field" layout.
+        /// </summary>
+        /// <param name="name">Field name.</param>
+        /// <param name="control">Field control.</param>
+        /// <param name="padding">Field padding.</param>
+        public static StackLayout CreateFieldStack(string name, Control control, int padding = 5) =>
+            new StackLayout
+            {
+                Orientation = Orientation.Vertical,
+                Spacing = 5,
+                Padding = padding,
+                Items =
+                {
+                    new Label()
+                    {
+                        Text = name,
+                    },
+                    control
+                }
+            };
     }
 }

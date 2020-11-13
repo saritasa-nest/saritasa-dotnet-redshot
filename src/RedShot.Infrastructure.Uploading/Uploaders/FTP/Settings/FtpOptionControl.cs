@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Eto.Forms;
-using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Common.Notifying;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
@@ -19,20 +18,18 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
         private CheckBox addExtensionCheckBox;
         private Label previewLinkLabel;
-        private ComboBox browserTypeComboBox;
         private TextBox homePathTextBox;
         private Button addButton;
         private Button delButton;
         private Button copyButton;
         private ComboBox accounts;
-        private TextBox name;
         private ComboBox ftpProtocol;
         private TextBox host;
         private NumericStepper port;
         private TextBox username;
         private PasswordBox password;
         private CheckBox isActive;
-        private TextBox subFolderPath;
+        private TextBox directoryPath;
         private ComboBox ftpsEncryption;
         private TextBox ftpsCertificateLocation;
         private TextBox keypath;
@@ -42,11 +39,11 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         private Control ftpsBoxes;
         private Control sftpBoxes;
         private Control accountFields;
+        private CheckBox defaultAccountCheckBox;
         private ObservableCollection<FtpAccount> bindingList;
         private DefaultButton testButton;
         private readonly List<FtpAccount> ftpAccounts;
         private readonly FtpConfiguration ftpConfiguration;
-        private ComboBox primaryAccountSelectionComboBox;
 
         /// <summary>
         /// Initializes FTP option dialog.
@@ -69,33 +66,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             accounts.SelectedValueChanged += AccountsSelectedValueChanged;
             accounts.DataStore = bindingList;
             accounts.SelectedValueChanged += FtpOptionControlChanged;
-            accounts.ItemKeyBinding = new DelegateBinding<FtpAccount, string>(a => a.Name);
-
-            primaryAccountSelectionComboBox.DataStore = bindingList;
-            primaryAccountSelectionComboBox.DataContext = ftpConfiguration;
-            primaryAccountSelectionComboBox.SelectedValueBinding.Convert(
-                l =>
-                {
-                    if (l == null)
-                    {
-                        return default;
-                    }
-                    else
-                    {
-                        return ((FtpAccount)l).Id;
-                    }
-                },
-                guid =>
-                {
-                    if (FtpAccountManager.TryGetAccountByGuid(guid, ftpAccounts, out var ftpAccount))
-                    {
-                        return ftpAccount;
-                    }
-                    else
-                    {
-                        return ftpAccounts.FirstOrDefault();
-                    }
-                }).BindDataContext((FtpConfiguration o) => o.PrimaryAccountGuid);
+            accounts.ItemKeyBinding = new DelegateBinding<FtpAccount, string>(a => a.ToString());
         }
 
         private void TestButtonClicked(object sender, EventArgs e)
@@ -138,16 +109,16 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
         private void RefreshAccountFields()
         {
-            BindBoxes();
-
             if (accounts.SelectedValue == null)
             {
-                accountFields.Enabled = false;
+                DisableAccountFields();
             }
             else
             {
-                accountFields.Enabled = true;
+                EnableAccountFields();
             }
+
+            BindBoxes();
         }
 
         private void BindBoxes()
@@ -156,9 +127,9 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
             accountFields.Unbind();
 
-            name.Bind(t => t.Text, selectedAccount, account => account.Name);
             ftpProtocol.DataContext = selectedAccount;
-            ftpProtocol.SelectedValueBinding.Convert(l => Enum.Parse(typeof(FtpProtocol), (string)l), v => v?.ToString() ?? FtpProtocol.FTP.ToString())
+            ftpProtocol.SelectedValueBinding.Convert(l => l != null ? Enum.Parse(typeof(FtpProtocol), (string) l) : null,
+                v => v?.ToString() ?? FtpProtocol.FTP.ToString())
                 .BindDataContext((FtpAccount m) => m.Protocol);
             host.Bind(t => t.Text, selectedAccount, account => account.Host);
             port.DataContext = selectedAccount;
@@ -166,9 +137,10 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             username.Bind(t => t.Text, selectedAccount, account => account.Username);
             password.Bind(t => t.Text, selectedAccount, account => account.Password);
             isActive.Bind(t => t.Checked, selectedAccount, account => account.IsActive);
-            subFolderPath.Bind(t => t.Text, selectedAccount, account => account.SubFolderPath);
+            directoryPath.Bind(t => t.Text, selectedAccount, account => account.Directory);
             ftpsEncryption.DataContext = selectedAccount;
-            ftpsEncryption.SelectedValueBinding.Convert(l => Enum.Parse(typeof(FtpsEncryption), (string)l), v => v?.ToString() ?? FtpsEncryption.Explicit.ToString())
+            ftpsEncryption.SelectedValueBinding.Convert(l => l != null ? Enum.Parse(typeof(FtpsEncryption), (string)l) : null,
+                    v => v?.ToString() ?? FtpsEncryption.Explicit.ToString())
                 .BindDataContext((FtpAccount m) => m.FTPSEncryption);
             ftpsCertificateLocation.Bind(t => t.Text, selectedAccount, account => account.FTPSCertificateLocation);
             keypath.Bind(t => t.Text, selectedAccount, account => account.Keypath);
@@ -177,8 +149,21 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             addExtensionCheckBox.Bind(t => t.Checked, selectedAccount, account => account.HttpHomePathAddExtension).Changed += FtpOptionControlChanged;
             homePathTextBox.Bind(t => t.Text, selectedAccount, account => account.HttpHomePath).Changed += FtpOptionControlChanged;
 
-            browserTypeComboBox.DataContext = selectedAccount;
-            browserTypeComboBox.BindWithEnum<BrowserProtocol>().BindDataContext((FtpAccount o) => o.BrowserProtocol).Changed += FtpOptionControlChanged;
+            defaultAccountCheckBox.DataContext = ftpConfiguration;
+            defaultAccountCheckBox.CheckedBinding.Convert(DefaultAccountUpdated,
+                v => selectedAccount != null && selectedAccount.Id == v)
+                .BindDataContext((FtpConfiguration c) => c.PrimaryAccountGuid);
+        }
+
+        private Guid DefaultAccountUpdated(bool? isChecked)
+        {
+            if (!isChecked.HasValue || !isChecked.Value)
+            {
+                return default;
+            }
+
+            var selectedAccount = (FtpAccount)accounts.SelectedValue;
+            return selectedAccount.Id;
         }
 
         private void FtpOptionControlChanged(object sender, EventArgs e)
@@ -224,13 +209,18 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
         private void DelButtonClick(object sender, EventArgs e)
         {
-            if (accounts.DataStore.Count() > 0 && accounts.SelectedValue != null)
+            if (accounts.DataStore.Any() && accounts.SelectedValue != null)
             {
                 var acc = (FtpAccount)accounts.SelectedValue;
 
                 bindingList.Remove(acc);
 
                 accounts.SelectedIndex = -1;
+                if (bindingList.Count == 0)
+                {
+                    accounts.Text = string.Empty;
+                }
+
                 RefreshAccountFields();
             }
         }
@@ -250,11 +240,32 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             }
             else
             {
-                newAccount = new FtpAccount();
+                newAccount = new FtpAccount
+                {
+                    HttpHomePathAddExtension = true
+                };
             }
 
             bindingList.Add(newAccount);
-            accounts.SelectedValue = newAccount;
+            accounts.SelectedIndex = accounts.DataStore.Count() - 1;
+        }
+
+        private void EnableAccountFields()
+        {
+            accountFields.Enabled = true;
+            // This is necessary because simply disabling the ComboBox doesn't work for scrolling
+            ftpProtocol.DataStore = Enum.GetValues(typeof(FtpProtocol)).Cast<FtpProtocol>()
+                .Select(p => p.ToString());
+            ftpsEncryption.DataStore = Enum.GetValues(typeof(FtpsEncryption)).Cast<FtpsEncryption>()
+                .Select(p => p.ToString());
+        }
+
+        private void DisableAccountFields()
+        {
+            accountFields.Enabled = false;
+            // This is necessary because simply disabling the ComboBox doesn't work for scrolling
+            ftpProtocol.DataStore = Enumerable.Empty<string>();
+            ftpsEncryption.DataStore = Enumerable.Empty<string>();
         }
     }
 }

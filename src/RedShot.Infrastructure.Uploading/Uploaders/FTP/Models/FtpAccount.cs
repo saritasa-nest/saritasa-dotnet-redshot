@@ -19,7 +19,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
         private string username;
         private string password;
         private bool isActive;
-        private string subFolderPath;
+        private string directory;
         private FtpsEncryption ftpsEncryption;
         private string ftpsCertificateLocation;
         private string keypath;
@@ -33,18 +33,16 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
         /// </summary>
         public FtpAccount()
         {
-            Name = "FTP account";
             Protocol = FtpProtocol.FTP;
             Host = "";
             Port = 21;
             IsActive = false;
-            SubFolderPath = "";
+            Directory = "";
             FTPSEncryption = FtpsEncryption.Explicit;
             FTPSCertificateLocation = "";
             Id = Guid.NewGuid();
             HttpHomePath = "";
             HttpHomePathAddExtension = false;
-            BrowserProtocol = BrowserProtocol.Http;
         }
 
         public string GetFormatLink(string fileName)
@@ -55,7 +53,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
             }
 
             var builder = new StringBuilder();
-            builder.Append($"{EnumUtils.GetDescription(BrowserProtocol)}{HttpHomePath}/");
+            builder.Append($"{HttpHomePath}/");
 
             if (HttpHomePathAddExtension)
             {
@@ -67,23 +65,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
             }
 
             return builder.ToString();
-        }
-
-        /// <summary>
-        /// Browser protocol.
-        /// </summary>
-        public BrowserProtocol BrowserProtocol
-        {
-            get { return browserProtocol; }
-
-            set
-            {
-                if (browserProtocol != value)
-                {
-                    browserProtocol = value;
-                    OnPropertyChanged();
-                }
-            }
         }
 
         /// <summary>
@@ -124,23 +105,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
         /// Unique Id of the account.
         /// </summary>
         public Guid Id { get; set; }
-
-        /// <summary>
-        /// Name of the account.
-        /// </summary>
-        public string Name
-        {
-            get { return name; }
-
-            set
-            {
-                if (name != value)
-                {
-                    name = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
 
         /// <summary>
         /// FTP protocol of the account.
@@ -245,17 +209,17 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
         }
 
         /// <summary>
-        /// Sub folder path on FTP server.
+        /// Directory path on FTP server.
         /// </summary>
-        public string SubFolderPath
+        public string Directory
         {
-            get { return subFolderPath; }
+            get { return directory; }
 
             set
             {
-                if (subFolderPath != value)
+                if (directory != value)
                 {
-                    subFolderPath = value;
+                    directory = value;
                     OnPropertyChanged();
                 }
             }
@@ -366,7 +330,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
         /// </summary>
         public override string ToString()
         {
-            return $"{Name} | {Host}:{Port}";
+            return $"{Protocol} {Host}";
         }
 
         void OnPropertyChanged([CallerMemberName] string memberName = null)
