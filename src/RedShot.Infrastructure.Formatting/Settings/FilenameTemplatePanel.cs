@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Common.Forms;
@@ -27,7 +28,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
         public FilenameTemplatePanel(Action<string> addPattern)
         {
             this.addPattern = addPattern;
-            formatItems = FormatManager.FormatItems;
+            formatItems = MoveCustomItemToEnd(FormatManager.FormatItems);
             InitializeComponents();
         }
 
@@ -60,6 +61,8 @@ namespace RedShot.Infrastructure.Formatting.Settings
                 ToolTip = "Add format item"
             };
             addButton.Clicked += AddButtonClicked;
+            formatsListBox.SelectedValueBinding.Convert(sv => sv != null)
+                .Bind(addButton, b => b.Enabled, DualBindingMode.OneWayToSource);
 
             Content = GetFilenameTemplateStack();
         }
@@ -79,9 +82,9 @@ namespace RedShot.Infrastructure.Formatting.Settings
             return new StackLayout()
             {
                 Orientation = Orientation.Horizontal,
-                VerticalContentAlignment = VerticalAlignment.Center,
+                VerticalContentAlignment = VerticalAlignment.Top,
                 Spacing = 15,
-                Padding = 15,
+                Padding = 10,
                 Items =
                 {
                     formatsListBox,
@@ -89,11 +92,11 @@ namespace RedShot.Infrastructure.Formatting.Settings
                     {
                         Orientation = Orientation.Vertical,
                         HorizontalContentAlignment = HorizontalAlignment.Stretch,
-                        Spacing = 10,
+                        Spacing = 5,
                         Items =
                         {
-                            FormsHelper.GetBaseStack("Pattern:", patternLabel, 80, 100),
-                            FormsHelper.GetBaseStack("Example:", exampleLabel, 80, 100),
+                            FormsHelper.GetBaseStack("Pattern:", patternLabel, 40, 100, 2),
+                            FormsHelper.GetBaseStack("Example:", exampleLabel, 47, 220, 2),
                             addButton
                         }
                     }
@@ -110,5 +113,13 @@ namespace RedShot.Infrastructure.Formatting.Settings
 
         private string GetFullPattern(string pattern) =>
             $"{FormatManager.FormatTag}{pattern}";
+
+        private IEnumerable<IFormatItem> MoveCustomItemToEnd(IEnumerable<IFormatItem> formatItems)
+        {
+            var formatItemsList = formatItems.ToList();
+            var customItem = formatItemsList.First(it => it is CustomFormatItem);
+            formatItemsList.Remove(customItem);
+            return formatItemsList.Append(customItem);
+        }
     }
 }
