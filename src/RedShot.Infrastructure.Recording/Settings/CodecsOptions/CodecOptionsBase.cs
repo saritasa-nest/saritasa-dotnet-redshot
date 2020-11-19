@@ -11,6 +11,9 @@ namespace RedShot.Recording.Settings.CodecsOptions
     /// </summary>
     internal abstract class CodecOptionsBase : Dialog
     {
+        /// <summary>
+        /// Control layout.
+        /// </summary>
         protected TableLayout layout;
 
         /// <summary>
@@ -49,6 +52,35 @@ namespace RedShot.Recording.Settings.CodecsOptions
             Bind();
         }
 
+        /// <summary>
+        /// Initializes components.
+        /// </summary>
+        protected abstract void InitializeComponents();
+
+        /// <summary>
+        /// Add quality row option control.
+        /// </summary>
+        /// <param name="title">Name of the control.</param>
+        /// <param name="control">Option control.</param>
+        protected void AddQualityRow(string title, Control control)
+        {
+            var row = new TableRow(TableLayout.AutoSized(new Label { Text = title }, new Padding(0, 2)), control);
+            layout.Rows.Add(row);
+        }
+
+        /// <summary>
+        /// Handles quality about click event.
+        /// </summary>
+        protected virtual void QualityAboutClicked(object sender, EventArgs e)
+        {
+            MessageBox.Show(aboutMessage, "About", MessageBoxType.Information);
+        }
+
+        /// <summary>
+        /// Binds controls with data context.
+        /// </summary>
+        protected abstract void Bind();
+
         private void InitializeBaseComponents()
         {
             okButton = new DefaultButton("OK", 70, 25);
@@ -64,11 +96,6 @@ namespace RedShot.Recording.Settings.CodecsOptions
                 Width = 300
             };
         }
-
-        /// <summary>
-        /// Initializes components.
-        /// </summary>
-        protected abstract void InitializeComponents();
 
         private void AddButtons()
         {
@@ -99,24 +126,5 @@ namespace RedShot.Recording.Settings.CodecsOptions
 
             layout.Rows.Add(row);
         }
-
-        protected void AddQualityRow(string title, Control control)
-        {
-            var row = new TableRow(TableLayout.AutoSized(new Label { Text = title }, new Padding(0, 2)), control);
-            layout.Rows.Add(row);
-        }
-
-        /// <summary>
-        /// Handles quality about click event.
-        /// </summary>
-        protected virtual void QualityAboutClicked(object sender, EventArgs e)
-        {
-            MessageBox.Show(aboutMessage, "About", MessageBoxType.Information);
-        }
-
-        /// <summary>
-        /// Binds controls with data context.
-        /// </summary>
-        protected abstract void Bind();
     }
 }

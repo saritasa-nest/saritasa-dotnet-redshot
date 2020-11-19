@@ -57,7 +57,7 @@ namespace RedShot.Infrastructure.Recording.Recorders
                 return;
             }
 
-            var downloader = new Downloader("Downloading FFmpeg");
+            var downloader = new Downloader();
             downloader.DownloadAsync(BinariesUrl, "ffmpeg.zip", (path) =>
             {
                 try
@@ -73,7 +73,8 @@ namespace RedShot.Infrastructure.Recording.Recorders
                     logger.Error(e, $"{errorMessage}.");
                     MessageBox.Show($"{errorMessage}: {e.Message}", MessageBoxButtons.OK, MessageBoxType.Error);
                 }
-            });
+            },
+            "Downloading FFmpeg");
         }
 
         /// <summary>

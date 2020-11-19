@@ -8,7 +8,7 @@ namespace RedShot.Recording.Settings.CodecsOptions.AudioOptions
     /// </summary>
     internal class OpusOptions : CodecOptionsBase
     {
-        private const string About = "Set the bit rate in kilobits/s.";
+        private const string About = "Set the bit rate in kbit/s.";
         private TextBox bitrate;
 
         /// <summary>

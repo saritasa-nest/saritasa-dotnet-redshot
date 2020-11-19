@@ -37,23 +37,6 @@ namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
             AddQualityRow("Quality", vp9Quality);
         }
 
-        private Control GetBitrateFiled()
-        {
-            return new StackLayout()
-            {
-                Orientation = Orientation.Horizontal,
-                VerticalContentAlignment = VerticalAlignment.Center,
-                Items =
-                {
-                    vp9Bitrate,
-                    new Label()
-                    {
-                        Text = "K"
-                    }
-                }
-            };
-        }
-
         /// <inheritdoc/>
         protected override void Bind()
         {
@@ -77,6 +60,23 @@ namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
                 }).BindDataContext((FFmpegOptions o) => o.Vp9Bitrate);
 
             vp9Quality.ValueBinding.Convert(f => (int)f, t => t).BindDataContext((FFmpegOptions o) => o.Vp9Crf);
+        }
+
+        private Control GetBitrateFiled()
+        {
+            return new StackLayout()
+            {
+                Orientation = Orientation.Horizontal,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                Items =
+                {
+                    vp9Bitrate,
+                    new Label()
+                    {
+                        Text = "K"
+                    }
+                }
+            };
         }
     }
 }

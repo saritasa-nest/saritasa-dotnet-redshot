@@ -1,5 +1,4 @@
-﻿using System;
-using Eto.Forms;
+﻿using Eto.Forms;
 using RedShot.Infrastructure.Recording.Ffmpeg;
 
 namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
@@ -31,11 +30,6 @@ namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
             };
 
             AddQualityRow("Quality", mpeg4Quality);
-        }
-
-        private void QualityAbout_Clicked(object sender, EventArgs e)
-        {
-            MessageBox.Show("The range of the quality level is 1–31, where 1 is highest quality/largest filesize and 31 is the lowest quality/smallest filesize", MessageBoxType.Information);
         }
 
         /// <inheritdoc/>
