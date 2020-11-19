@@ -6,8 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
+using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Notifying;
-using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Uploading.Forms;
 
 namespace RedShot.Infrastructure.Uploading
@@ -21,7 +21,6 @@ namespace RedShot.Infrastructure.Uploading
         /// Last uploaded file.
         /// </summary>
         public static IFile LastFile { get; private set; }
-
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private static UploaderChoosingForm uploaderChoosingForm;
 
@@ -48,11 +47,6 @@ namespace RedShot.Infrastructure.Uploading
             uploaderChoosingForm?.Close();
             uploaderChoosingForm = new UploaderChoosingForm(file, GetUploadingServices(GetAllUploadingTypes()));
             uploaderChoosingForm.Show();
-        }
-
-        private static UploadingConfiguration GetUploadingConfiguration()
-        {
-            return ConfigurationManager.GetSection<UploadingConfiguration>();
         }
 
         /// <summary>
@@ -82,7 +76,7 @@ namespace RedShot.Infrastructure.Uploading
         /// <summary>
         /// Uploads file with specified uploader.
         /// </summary>
-        public static async Task UploadAsync(IUploader uploader, IFile file, CancellationToken cancellationToken)
+        public static async Task UploadAsync(IUploader uploader, IFile file, CancellationToken cancellationToken = default)
         {
             ProcessFile(file);
 

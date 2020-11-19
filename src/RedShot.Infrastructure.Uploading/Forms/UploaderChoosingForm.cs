@@ -20,6 +20,7 @@ namespace RedShot.Infrastructure.Uploading.Forms
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly IFile file;
         private readonly IEnumerable<IUploadingService> uploadingServices;
+        private readonly GlobalProperties globalProperties;
 
         /// <summary>
         /// Initializes uploader choosing form.
@@ -27,6 +28,7 @@ namespace RedShot.Infrastructure.Uploading.Forms
         public UploaderChoosingForm(IFile file, IEnumerable<IUploadingService> uploadingServices)
         {
             Title = $"{file.FileType} uploading";
+            globalProperties = new GlobalProperties();
             this.file = file;
             this.uploadingServices = uploadingServices;
             InitializeComponents();
@@ -82,7 +84,8 @@ namespace RedShot.Infrastructure.Uploading.Forms
 
             button.Clicked += async (o, e) =>
             {
-                await UploadingManager.UploadAsync(service.GetUploader(), file, default);
+                var cancellationToken = globalProperties.ApplicationCancellationToken;
+                await UploadingManager.UploadAsync(service.GetUploader(), file, cancellationToken);
             };
 
             button.Enabled = service.CheckOnSupporting(file.FileType);

@@ -29,6 +29,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
 
         private readonly int paintingPanelWidth = 60;
         private readonly Bitmap image;
+        private readonly GlobalProperties globalProperties;
         private PaintingPanel paintingPanel;
         private ImagePanel imagePanel;
         private SKPaint paint;
@@ -45,6 +46,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             MinimumSize = new Size(500, paintingPanelWidth);
             Resizable = false;
             this.image = image;
+            globalProperties = new GlobalProperties();
             InitializeComponents();
             Content = GetContent();
         }
@@ -59,7 +61,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             }
             else if (e.KeyData == CopyToClipboardShortcut)
             {
-                await UploadImageToClipboard();
+                await UploadImageToClipboardAsync();
             }
             e.Handled = true;
         }
@@ -134,44 +136,45 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         private async void PaintingPanelUploadToFtpSelected(object sender, DataEventArgs<FtpAccount> e)
         {
             var uploadingService = new FtpUploadingService();
-            await UploadWithBlockingButton(uploadingService.GetFtpUploader(e.Value));
+            await UploadWithBlockingButtonAsync(uploadingService.GetFtpUploader(e.Value));
         }
 
         private async void PaintingPanelUploadToFileSelected(object sender, EventArgs e)
         {
             var uploadingService = new FileUploadingService();
-            await UploadWithBlockingButton(uploadingService.GetUploader());
+            await UploadWithBlockingButtonAsync(uploadingService.GetUploader());
         }
 
         private async void PaintingPanelUploadToClipboardSelected(object sender, EventArgs e)
         {
-            await UploadImageToClipboard();
+            await UploadImageToClipboardAsync();
         }
 
-        private async Task UploadImageToClipboard()
+        private async Task UploadImageToClipboardAsync()
         {
             var uploadingService = new ClipboardUploadingService();
-            await UploadImage(uploadingService.GetUploader());
+            await UploadImageAsync(uploadingService.GetUploader());
         }
 
-        private async Task UploadWithBlockingButton(IUploader uploader)
+        private async Task UploadWithBlockingButtonAsync(IUploader uploader)
         {
             paintingPanel.UploadImageButton.Enabled = false;
-            await UploadImage(uploader);
+            await UploadImageAsync(uploader);
             paintingPanel.UploadImageButton.Enabled = true;
         }
 
-        private async Task UploadImage(IUploader uploader)
+        private async Task UploadImageAsync(IUploader uploader)
         {
+            var cancellationToken = globalProperties.ApplicationCancellationToken;
             var newImageHash = imagePanel.GetImageHash();
             if (uploadedImageHash != newImageHash)
             {
                 uploadedImageHash = newImageHash;
-                var file = await ImageFileHelper.GetFileFromBitmapAsync(imagePanel.GetPaintingImage(), default);
+                var file = await ImageFileHelper.GetFileFromBitmapAsync(imagePanel.GetPaintingImage(), cancellationToken);
                 imageFile = file;
             }
 
-            await UploadingManager.UploadAsync(uploader, imageFile, default);
+            await UploadingManager.UploadAsync(uploader, imageFile, cancellationToken);
         }
 
         private void PaintingPanelStateChanged(object sender, DataEventArgs<PaintingState> e)
