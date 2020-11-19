@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
 using RedShot.Infrastructure.Common.Notifying;
@@ -30,17 +32,7 @@ namespace RedShot.Infrastructure.Uploading
         public static void RunUploading(IFile file)
         {
             ProcessFile(file);
-
-            var configuration = GetUploadingConfiguration();
-            if (configuration.AutoUpload)
-            {
-                var uploadingServices = GetUploadingServices(configuration.UploadersTypes);
-                RunAutoUpload(uploadingServices, file);
-            }
-            else
-            {
-                RunManualUpload(file);
-            }
+            RunManualUpload(file);
         }
 
         private static void ProcessFile(IFile file)
@@ -56,23 +48,6 @@ namespace RedShot.Infrastructure.Uploading
             uploaderChoosingForm?.Close();
             uploaderChoosingForm = new UploaderChoosingForm(file, GetUploadingServices(GetAllUploadingTypes()));
             uploaderChoosingForm.Show();
-        }
-
-        private static void RunAutoUpload(IEnumerable<IUploadingService> uploadingServices, IFile file)
-        {
-            uploadingServices = uploadingServices.Where(u => u.CheckOnSupporting(file.FileType)).ToList();
-
-            if (uploadingServices.Count() == 0)
-            {
-                NotifyHelper.Notify("Auto-upload mode was enabled, but no uploader was selected", "RedShot", NotifyStatus.Failed);
-                RunManualUpload(file);
-                return;
-            }
-
-            foreach (var uploadingService in uploadingServices)
-            {
-                Upload(uploadingService.GetUploader(), file);
-            }
         }
 
         private static UploadingConfiguration GetUploadingConfiguration()
@@ -107,7 +82,7 @@ namespace RedShot.Infrastructure.Uploading
         /// <summary>
         /// Uploads file with specified uploader.
         /// </summary>
-        public static void Upload(IUploader uploader, IFile file)
+        public static async Task UploadAsync(IUploader uploader, IFile file, CancellationToken cancellationToken)
         {
             ProcessFile(file);
 
@@ -120,7 +95,7 @@ namespace RedShot.Infrastructure.Uploading
 
             try
             {
-                var response = uploader.Upload(file);
+                var response = await uploader.UploadAsync(file, cancellationToken);
 
                 if (response.IsSuccess)
                 {

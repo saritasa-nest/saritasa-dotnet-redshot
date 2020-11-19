@@ -5,6 +5,8 @@ using System.Net;
 using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentFTP;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
@@ -86,8 +88,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             }
         }
 
-        /// <inheritdoc cref="BaseUploader"/>
-        public override IUploadingResponse Upload(IFile file)
+        /// <inheritdoc />
+        public override async Task<IUploadingResponse> UploadAsync(IFile file, CancellationToken cancellationToken)
         {
             var subFolderPath = account.SubFolderPath;
             var fullFileName = FtpHelper.GetFullFileName(file);
@@ -96,9 +98,9 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             IsUploading = true;
             try
             {
-                if (UploadData(file.GetStream(), path))
+                if (await UploadDataAsync(file.GetStream(), path, cancellationToken))
                 {
-                    return base.Upload(file);
+                    return await base.UploadAsync(file, cancellationToken);
                 }
                 else
                 {
@@ -112,38 +114,28 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
                 // Probably directory not exist, try creating it.
                 if (e.CompletionCode == "550" || e.CompletionCode == "553")
                 {
-                    CreateMultiDirectory(UrlHelper.GetDirectoryPath(path));
-
-                    Upload(file);
+                    await CreateMultiDirectoryAsync(UrlHelper.GetDirectoryPath(path), cancellationToken);
+                    return await UploadAsync(file, cancellationToken);
                 }
 
                 return new BaseUploadingResponse(false, path, errors: new List<string>(1) { e.Message });
             }
             finally
             {
+                await DisconnectAsync(cancellationToken);
                 Dispose();
                 IsUploading = false;
-            }
-        }
-
-        /// <inheritdoc cref="BaseUploader"/>
-        public override void StopUpload()
-        {
-            if (IsUploading && !StopUploadRequested)
-            {
-                StopUploadRequested = true;
-                Disconnect();
             }
         }
 
         /// <summary>
         /// Connects to destination FTP server.
         /// </summary>
-        protected override bool Connect()
+        protected override async Task<bool> ConnectAsync(CancellationToken cancellationToken)
         {
             if (!client.IsConnected)
             {
-                client.Connect();
+                await client.ConnectAsync(cancellationToken);
             }
 
             return client.IsConnected;
@@ -152,31 +144,30 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// <summary>
         /// Disconnects from destination FTP server.
         /// </summary>
-        private void Disconnect()
+        private async Task DisconnectAsync(CancellationToken cancellationToken)
         {
             if (client != null)
             {
-                client.Disconnect();
+                await client.DisconnectAsync(cancellationToken);
             }
         }
 
-        private bool UploadData(Stream stream, string remotePath)
+        private async Task<bool> UploadDataAsync(Stream stream, string remotePath, CancellationToken cancellationToken)
         {
-            var result = client.Upload(stream, remotePath, FtpRemoteExists.Overwrite, true);
-
+            var result = await client.UploadAsync(stream, remotePath, FtpRemoteExists.Overwrite, true, null, cancellationToken);
             return result.IsSuccess();
         }
 
         /// <summary>
         /// Creates directory on remote FTP server.
         /// </summary>
-        private bool CreateDirectory(string remotePath)
+        private async Task<bool> CreateDirectoryAsync(string remotePath, CancellationToken cancellationToken)
         {
-            if (Connect())
+            if (await ConnectAsync(cancellationToken))
             {
                 try
                 {
-                    client.CreateDirectory(remotePath);
+                    await client.CreateDirectoryAsync(remotePath, cancellationToken);
                     return true;
                 }
                 catch (Exception ex)
@@ -191,13 +182,13 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// <summary>
         /// Creates directories if need.
         /// </summary>
-        private IEnumerable<string> CreateMultiDirectory(string remotePath)
+        private async Task<IEnumerable<string>> CreateMultiDirectoryAsync(string remotePath, CancellationToken cancellationToken)
         {
             var paths = UrlHelper.GetPaths(remotePath);
 
             foreach (string path in paths)
             {
-                CreateDirectory(path);
+                await CreateDirectoryAsync(path, cancellationToken);
             }
 
             return paths;

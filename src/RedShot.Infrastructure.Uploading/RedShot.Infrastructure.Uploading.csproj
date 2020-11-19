@@ -11,6 +11,7 @@
 	  <PackageReference Include="Eto.Forms" Version="2.5.6" />
 	  <PackageReference Include="FluentFTP" Version="32.4.7" />
 	  <PackageReference Include="NLog" Version="4.7.5" />
+	  <PackageReference Include="Saritasa.Tools.Domain" Version="0.8.2" />
 	  <PackageReference Include="SSH.NET" Version="2016.1.0" />
 	  <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
 	    <PrivateAssets>all</PrivateAssets>

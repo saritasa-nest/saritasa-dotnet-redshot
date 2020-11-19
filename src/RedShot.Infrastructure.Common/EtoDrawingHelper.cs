@@ -1,6 +1,8 @@
 ﻿using Eto.Drawing;
 using SkiaSharp;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace RedShot.Infrastructure.Common
 {
@@ -68,6 +70,15 @@ namespace RedShot.Infrastructure.Common
         public static Rectangle OffsetRectangle(this Rectangle rect, int i)
         {
             return new Rectangle(rect.X + i, rect.Y + i, rect.Width - i * 2, rect.Height - i * 2);
+        }
+
+        /// <summary>
+        /// Save bitmap image <see langword="async"/>.
+        /// </summary>
+        public static async Task SaveAsync(this Bitmap bitmap, string filePath, ImageFormat imageFormat, CancellationToken cancellationToken = default)
+        {
+            var bytes = bitmap.ToByteArray(imageFormat);
+            await File.WriteAllBytesAsync(filePath, bytes, cancellationToken);
         }
     }
 }

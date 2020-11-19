@@ -80,9 +80,9 @@ namespace RedShot.Infrastructure.Uploading.Forms
                 ToolTip = service.About
             };
 
-            button.Clicked += (o, e) =>
+            button.Clicked += async (o, e) =>
             {
-                UploadingManager.Upload(service.GetUploader(), file);
+                await UploadingManager.UploadAsync(service.GetUploader(), file, default);
             };
 
             button.Enabled = service.CheckOnSupporting(file.FileType);

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace RedShot.Infrastructure.Abstractions.Uploading
 {
@@ -15,6 +17,6 @@ namespace RedShot.Infrastructure.Abstractions.Uploading
         /// <summary>
         /// Uploads stream to some source.
         /// </summary>
-        IUploadingResponse Upload(IFile file);
+        Task<IUploadingResponse> UploadAsync(IFile file, CancellationToken cancellationToken);
     }
 }
