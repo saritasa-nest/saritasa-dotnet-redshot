@@ -12,9 +12,9 @@ namespace RedShot.Shortcut.Settings
         private readonly ShortcutKeysHelper keysHelper;
 
         /// <summary>
-        /// Keys changing event.
+        /// Keys changed event.
         /// </summary>
-        public event EventHandler KeysChanging;
+        public event EventHandler<ShortcutKeysChangedEventArgs> KeysChanged;
 
         /// <summary>
         /// Hot keys.
@@ -29,7 +29,6 @@ namespace RedShot.Shortcut.Settings
                 {
                     keys = value;
                     RenderText();
-                    KeysChanging?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
@@ -74,11 +73,17 @@ namespace RedShot.Shortcut.Settings
         {
             e.Handled = true;
 
-            if (e.KeyData.HasFlag(Keys.PrintScreen) && ValidateShortcutKeys(e.KeyData))
+            // Hack: to catch `PrintScreen` key.
+            if (e.KeyData.HasFlag(Keys.PrintScreen))
             {
                 Keys = e.KeyData;
             }
-            else if (!ValidateShortcutKeys(Keys))
+
+            if (ValidateShortcutKeys(Keys) || Keys == Keys.None)
+            {
+                KeysChanged?.Invoke(this, new ShortcutKeysChangedEventArgs(Keys));
+            }
+            else
             {
                 Reset();
             }

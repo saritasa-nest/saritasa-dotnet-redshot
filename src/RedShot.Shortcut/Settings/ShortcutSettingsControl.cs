@@ -64,15 +64,22 @@ namespace RedShot.Shortcut.Settings
                 Size = new Size(200, 22),
                 Keys = shortcut.Keys
             };
-            shortcutTextBox.KeysChanging += (o, e) =>
+            shortcutTextBox.KeysChanged += (o, e) =>
             {
-                if (shortcuts.Any(s => s.Keys == shortcutTextBox.Keys && shortcutTextBox.Keys != Keys.None))
+                if (e.Keys == Keys.None)
+                {
+                    shortcut.Keys = Keys.None;
+                    return;
+                }
+
+                // This logic prevent using shortcut keys for the second time.
+                if (shortcuts.Any(s => s.Keys == e.Keys && s != shortcut))
                 {
                     shortcutTextBox.Reset();
                 }
                 else
                 {
-                    shortcut.Keys = shortcutTextBox.Keys;
+                    shortcut.Keys = e.Keys;
                 }
             };
 
@@ -80,7 +87,6 @@ namespace RedShot.Shortcut.Settings
             {
                 ToolTip = "Clear"
             };
-
             clearButton.Clicked += (o, e) => shortcutTextBox.Reset();
 
             return new StackLayout()
