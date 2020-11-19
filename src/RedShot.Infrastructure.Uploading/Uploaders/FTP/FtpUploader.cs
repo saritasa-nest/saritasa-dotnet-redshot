@@ -21,7 +21,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
     /// </summary>
     internal sealed class FtpUploader : BaseFtpUploader, IDisposable
     {
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly FtpAccount account;
         private FtpClient client;
         private bool disposed;
@@ -96,9 +96,12 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             var path = UrlHelper.CombineUrl(subFolderPath, fullFileName);
 
             IsUploading = true;
+            Stream fileStream = null;
+
             try
             {
-                if (await UploadDataAsync(file.GetStream(), path, cancellationToken))
+                fileStream = file.GetStream();
+                if (await UploadDataAsync(fileStream, path, cancellationToken))
                 {
                     return await base.UploadAsync(file, cancellationToken);
                 }
@@ -109,7 +112,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             }
             catch (FtpCommandException e)
             {
-                Logger.Warn(e, "FTP command error");
+                logger.Warn(e, "FTP command error");
 
                 // Probably directory not exist, try creating it.
                 if (e.CompletionCode == "550" || e.CompletionCode == "553")
@@ -122,7 +125,11 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             }
             finally
             {
-                await DisconnectAsync(cancellationToken);
+                if (fileStream != null)
+                {
+                    await fileStream.DisposeAsync();
+                }
+                await DisconnectAsync();
                 Dispose();
                 IsUploading = false;
             }
@@ -144,11 +151,11 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// <summary>
         /// Disconnects from destination FTP server.
         /// </summary>
-        private async Task DisconnectAsync(CancellationToken cancellationToken)
+        private async Task DisconnectAsync()
         {
-            if (client != null)
+            if (client != null && client.IsConnected)
             {
-                await client.DisconnectAsync(cancellationToken);
+                await client.DisconnectAsync();
             }
         }
 
@@ -172,7 +179,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
                 }
                 catch (Exception ex)
                 {
-                    Logger.Warn(ex, "Error in creating directory on FTP server");
+                    logger.Warn(ex, "Error in creating directory on FTP server");
                 }
             }
 
@@ -182,16 +189,15 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// <summary>
         /// Creates directories if need.
         /// </summary>
-        private async Task<IEnumerable<string>> CreateMultiDirectoryAsync(string remotePath, CancellationToken cancellationToken)
+        private async Task CreateMultiDirectoryAsync(string remotePath, CancellationToken cancellationToken)
         {
             var paths = UrlHelper.GetPaths(remotePath);
 
-            foreach (string path in paths)
+            foreach (string directory in paths)
             {
-                await CreateDirectoryAsync(path, cancellationToken);
+                await CreateDirectoryAsync(directory, cancellationToken);
+                logger.Info("Directory {directory} was created on server {server}", directory, account.Host);
             }
-
-            return paths;
         }
 
         /// <summary>
@@ -208,7 +214,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
                 }
                 catch (Exception e)
                 {
-                    Logger.Error(e, "Error in disposing FTP client");
+                    logger.Error(e, "Error in disposing FTP client");
                 }
 
                 disposed = true;

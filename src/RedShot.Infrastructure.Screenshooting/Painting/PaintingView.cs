@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using SkiaSharp;
 using Eto.Drawing;
 using Eto.Forms;
@@ -14,7 +15,6 @@ using RedShot.Infrastructure.Uploaders.Clipboard;
 using RedShot.Infrastructure.Uploaders.File;
 using RedShot.Infrastructure.Abstractions.Uploading;
 using RedShot.Infrastructure.Abstractions;
-using System.Threading.Tasks;
 using RedShot.Infrastructure.Screenshooting.Support;
 
 namespace RedShot.Infrastructure.Screenshooting.Painting

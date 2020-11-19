@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Renci.SshNet;
 using Renci.SshNet.Common;
+using Saritasa.Tools.Domain.Exceptions;
 using RedShot.Infrastructure.Abstractions.Uploading;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Basics;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
-using System.Threading;
-using System.Threading.Tasks;
-using Saritasa.Tools.Domain.Exceptions;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
 {
@@ -22,8 +21,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly FtpAccount account;
         private bool disposed;
-        private SftpClient client;
-        private object lockObject = new object();
+        private volatile SftpClient client;
+        private readonly object lockObject = new object();
 
         /// <summary>
         /// Initializes SFTP uploader.
@@ -42,20 +41,26 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             var path = UrlHelper.CombineUrl(subFolderPath, fullFileName);
 
             IsUploading = true;
+            Stream fileStream = null;
 
             try
             {
-                if (await UploadStreamAsync(file.GetStream(), path, true, cancellationToken))
+                fileStream = file.GetStream();
+                if (await UploadStreamAsync(fileStream, path, true, cancellationToken))
                 {
                     return await base.UploadAsync(file, cancellationToken);
                 }
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Error occurred while SFTP client was uploading data");
+                logger.Error(ex, "An error occurred while SFTP client was uploading data");
             }
             finally
             {
+                if (fileStream != null)
+                {
+                    await fileStream.DisposeAsync();
+                }
                 await DisconnectAsync();
                 IsUploading = false;
             }
@@ -63,9 +68,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             return new BaseUploadingResponse(false);
         }
 
-        /// <summary>
-        /// Connects to destination FTP server.
-        /// </summary>
+        /// <inheritdoc/>
         protected override async Task<bool> ConnectAsync(CancellationToken cancellationToken)
         {
             if (!client.IsConnected)
@@ -101,8 +104,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
                 }
                 catch (SftpPathNotFoundException) when (autoCreateDirectory)
                 {
-                    logger.Info($"Directory not exist, path:{remotePath}");
-                    CreateDirectory(UrlHelper.GetDirectoryPath(remotePath), autoCreateDirectory);
+                    logger.Info("Directory not exist, path: {remotePath}", remotePath);
+                    await CreateDirectoryAsync(UrlHelper.GetDirectoryPath(remotePath), autoCreateDirectory, cancellationToken);
                     return await UploadStreamAsync(stream, remotePath, autoCreateDirectory, cancellationToken);
                 }
                 catch (NullReferenceException)
@@ -128,50 +131,57 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             });
         }
 
-        private bool DirectoryExists(string path)
+        private async Task<bool> DirectoryExistsAsync(string path, CancellationToken cancellationToken)
         {
-            if (ConnectAsync(default).GetAwaiter().GetResult())
+            if (await ConnectAsync(cancellationToken))
             {
-                return client.Exists(path);
+                return await Task.Factory.StartNew(() =>
+                {
+                    lock (lockObject)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        return client.Exists(path);
+                    }
+                });
             }
 
             return false;
         }
 
-        private void CreateDirectory(string path, bool createMultiDirectory = false)
+        private async Task CreateDirectoryAsync(string path, bool createMultiDirectory = false, CancellationToken cancellationToken = default)
         {
-            if (ConnectAsync(default).GetAwaiter().GetResult())
+            if (await ConnectAsync(cancellationToken))
             {
                 try
                 {
-                    client.CreateDirectory(path);
+                    await Task.Factory.StartNew(() =>
+                    {
+                        lock (lockObject)
+                        {
+                            cancellationToken.ThrowIfCancellationRequested();
+                            client.CreateDirectory(path);
+                        }
+                    });
                 }
                 catch (SftpPathNotFoundException) when (createMultiDirectory)
                 {
-                    CreateMultiDirectory(path);
-                }
-                catch (SftpPermissionDeniedException)
-                {
+                    await CreateMultiDirectoryAsync(path, cancellationToken);
                 }
             }
         }
 
-        private IEnumerable<string> CreateMultiDirectory(string path)
+        private async Task CreateMultiDirectoryAsync(string path, CancellationToken cancellationToken)
         {
-            var directoryList = new List<string>();
-
             var paths = UrlHelper.GetPaths(path);
 
             foreach (var directory in paths)
             {
-                if (!DirectoryExists(directory))
+                if (! await DirectoryExistsAsync(directory, cancellationToken))
                 {
-                    CreateDirectory(directory);
-                    directoryList.Add(directory);
+                    await CreateDirectoryAsync(directory, true, cancellationToken);
+                    logger.Info("Directory: {directory} was created on server: {server}", directory, account.Host);
                 }
             }
-
-            return directoryList;
         }
 
         private void InitializeClient()
