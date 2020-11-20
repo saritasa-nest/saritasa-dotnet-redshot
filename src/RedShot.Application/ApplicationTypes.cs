@@ -26,7 +26,7 @@ namespace RedShot.Application
             {
                 typeof(FtpConfiguration),
                 typeof(FFmpegConfiguration),
-                typeof(FormatConfigurationOption),
+                typeof(GeneralConfigurationOption),
                 typeof(ShortcutConfiguration),
                 typeof(UploadingConfiguration)
             };

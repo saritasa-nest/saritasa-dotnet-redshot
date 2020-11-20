@@ -11,14 +11,16 @@ namespace RedShot.Infrastructure.Formatting.Settings
     public class GeneralSettingsSection : IValidatableSection
     {
         private Control formatOptionControl;
-        private readonly FormatConfigurationOption configurationOption;
+        private readonly GeneralConfigurationOption configurationOption;
+        private readonly Autostart autostart;
 
         /// <summary>
         /// Initialize.
         /// </summary>
         public GeneralSettingsSection()
         {
-            configurationOption = ConfigurationManager.GetSection<FormatConfigurationOption>();
+            configurationOption = ConfigurationManager.GetSection<GeneralConfigurationOption>();
+            autostart = new Autostart(configurationOption);
         }
 
         /// <inheritdoc />
@@ -29,7 +31,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
         {
             if (formatOptionControl == null)
             {
-                formatOptionControl = new FormatOptionControl(configurationOption);
+                formatOptionControl = new GeneralOptionControl(configurationOption);
             }
 
             return formatOptionControl;
@@ -38,6 +40,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
         /// <inheritdoc />
         public void Save()
         {
+            autostart.LaunchAtSystemStart = configurationOption.LaunchAtSystemStart.Value;
             ConfigurationManager.SetSettingsValue(configurationOption);
             ConfigurationManager.Save();
         }
