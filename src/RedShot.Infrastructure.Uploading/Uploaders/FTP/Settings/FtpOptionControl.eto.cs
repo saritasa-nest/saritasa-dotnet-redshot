@@ -32,7 +32,10 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             var defaultSize = new Size(170, 21);
             var defaultLongSize = new Size(300, 21);
 
-            addExtensionCheckBox = new CheckBox();
+            addExtensionCheckBox = new CheckBox
+            {
+                Text = "Append file extension"
+            };
             previewLinkLabel = new Label();
             homePathTextBox = new TextBox()
             {
@@ -149,7 +152,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         }
 
         private Control GetAccountFieldsControl()
-        {    
+        {
             return new GroupBox()
             {
                 Content = new StackLayout()
@@ -293,19 +296,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 };
             }
 
-            var appendExtension = new StackLayout
-            {
-                Orientation = Orientation.Horizontal,
-                Items =
-                {
-                    addExtensionCheckBox,
-                    new Label
-                    {
-                        Text = "Append file extension",
-                    }
-                }
-            };
-
             return new StackLayout
             {
                 Orientation = Orientation.Vertical,
@@ -313,7 +303,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 Items =
                 {
                     pathControl,
-                    appendExtension,
+                    addExtensionCheckBox,
                     FormsHelper.GetBaseStack("URL preview", previewLinkLabel, controlWidth: 300)
                 }
             };
