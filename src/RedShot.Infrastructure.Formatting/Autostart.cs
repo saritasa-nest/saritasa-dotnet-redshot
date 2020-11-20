@@ -41,16 +41,20 @@ namespace RedShot.Infrastructure.Formatting
 
                 if (value)
                 {
-                    EnableAutostart();
+#if _WINDOWS
+                    EnableAutostartInWindows();
+#endif
                 }
                 else
                 {
-                    DisableAutostart();
+#if _WINDOWS
+                    DisableAutostartInWindows();
+#endif
                 }
             }
         }
 
-        private void EnableAutostart()
+        private void EnableAutostartInWindows()
         {
             var key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(RegistrySubKey, true);
             try
@@ -64,7 +68,7 @@ namespace RedShot.Infrastructure.Formatting
             }
         }
 
-        private void DisableAutostart()
+        private void DisableAutostartInWindows()
         {
             var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(RegistrySubKey, true);
 

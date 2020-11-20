@@ -89,6 +89,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
                             }
                         }
                     },
+#if _WINDOWS
                     new StackLayout
                     {
                         Padding = 10,
@@ -97,6 +98,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
                             launchAtSystemStartCheckBox
                         }
                     }
+#endif
                 }
             };
         }
