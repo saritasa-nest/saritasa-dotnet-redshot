@@ -18,7 +18,6 @@ namespace RedShot.Infrastructure.Formatting
         public GeneralConfigurationOption()
         {
             Pattern = "%date%rnd";
-            LaunchAtSystemStart = true;
         }
 
         /// <inheritdoc />

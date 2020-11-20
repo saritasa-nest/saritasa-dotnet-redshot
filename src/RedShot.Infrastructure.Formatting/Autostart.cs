@@ -13,7 +13,7 @@ namespace RedShot.Infrastructure.Formatting
         private const string RegistrySubKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run\";
         private const string RegistryNotFoundMessage = "Faild to enable autostart, registry subkey not found";
 
-        private bool previousAutostartOption;
+        private readonly bool? previousAutostartOption;
 
         private string ExecutablePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
             $"{AppDomain.CurrentDomain.FriendlyName}.exe");
@@ -24,7 +24,7 @@ namespace RedShot.Infrastructure.Formatting
         /// <param name="generalConfiguration">General configuration object.</param>
         public Autostart(GeneralConfigurationOption generalConfiguration)
         {
-            previousAutostartOption = generalConfiguration.LaunchAtSystemStart.Value;
+            previousAutostartOption = generalConfiguration.LaunchAtSystemStart;
         }
 
         /// <summary>
