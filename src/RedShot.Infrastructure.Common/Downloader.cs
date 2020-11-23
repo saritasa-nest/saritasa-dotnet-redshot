@@ -31,27 +31,28 @@ namespace RedShot.Infrastructure.Common
         public Downloader()
         {
             webClient = new WebClient();
-            webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
-            webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
+            webClient.DownloadFileCompleted += WebClientDownloadFileCompleted;
+            webClient.DownloadProgressChanged += WebClientDownloadProgressChanged;
 
             var tempDirectory = Path.GetTempPath();
             downloadDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory, Guid.NewGuid().ToString())).FullName;
         }
 
-        private void RunForm(string fileName)
-        {
-            var form = new DownloadForm(this, fileName);
-            form.Show();
-        }
-
         /// <summary>
         /// Download data asynchronously.
         /// </summary>
-        /// <param name="callback">A delegate that will be invoked after data is downloaded.</param>
-        public void DownloadAsync(string url, string fileName, Action<string> callback)
+        /// <param name="url">A URL to the file.</param>
+        /// <param name="fileName">File name.</param>
+        /// <param name="callback">A delegate that will be invoked after data is downloaded, returns file path as a parameter.</param>
+        /// <param name="downloadFormTitle">Download form title.</param>
+        public void DownloadAsync(string url, string fileName, Action<string> callback, string downloadFormTitle = null)
         {
-            RunForm(fileName);
+            if (string.IsNullOrWhiteSpace(downloadFormTitle))
+            {
+                downloadFormTitle = fileName;
+            }
 
+            RunForm(downloadFormTitle);
             var path = Path.Combine(downloadDirectory, fileName);
 
             webClient.DownloadFileAsync(new Uri(url), path);
@@ -71,14 +72,24 @@ namespace RedShot.Infrastructure.Common
             return path;
         }
 
-        private void WebClient_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        private void WebClientDownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             DownloadFileCompleted?.Invoke(sender, e);
         }
 
-        private void WebClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        private void WebClientDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             DownloadProgressChanged?.Invoke(sender, e);
+        }
+
+        private void RunForm(string title)
+        {
+            var form = new DownloadForm(this)
+            {
+                Title = title
+            };
+
+            form.Show();
         }
 
         /// <summary>

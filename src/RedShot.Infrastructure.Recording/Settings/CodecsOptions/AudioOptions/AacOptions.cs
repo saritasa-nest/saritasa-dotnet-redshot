@@ -4,15 +4,19 @@ using RedShot.Infrastructure.Recording.Ffmpeg;
 namespace RedShot.Recording.Settings.CodecsOptions.AudioOptions
 {
     /// <summary>
-    /// AAC options view.
+    /// AAC options dialog.
     /// </summary>
-    internal class AacOptions : AudioCodecOptionsBase<NumericStepper>
+    internal class AacOptions : CodecOptionsBase
     {
-        private static readonly string about = "The range of the quality is 0-9 where a lower value is a higher quality. " +
+        private const string About = "The range of the quality is 0-9 where a lower value is a higher quality. " +
             "0-3 will normally produce transparent results, 4 (default) should be close to perceptual transparency, and 6 produces an acceptable quality.";
 
-        /// <inheritdoc/>
-        public AacOptions(FFmpegOptions options) : base(options, "AAC options", about)
+        private NumericStepper codecQuality;
+
+        /// <summary>
+        /// Initializes AAC options dialog.
+        /// </summary>
+        public AacOptions(FFmpegOptions options) : base(options, "AAC options", About)
         {
         }
 
@@ -26,7 +30,7 @@ namespace RedShot.Recording.Settings.CodecsOptions.AudioOptions
                 Increment = 1
             };
 
-            base.InitializeComponents();
+            AddQualityRow("Quality", codecQuality);
         }
 
         /// <inheritdoc/>

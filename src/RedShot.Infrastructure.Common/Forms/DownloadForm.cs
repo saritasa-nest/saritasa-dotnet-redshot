@@ -12,18 +12,19 @@ namespace RedShot.Infrastructure.Common.Forms
     public class DownloadForm : Form
     {
         private ProgressBar progressBar;
-        private Label stateInfo;
 
         /// <summary>
         /// Initializes download form.
         /// </summary>
-        public DownloadForm(Downloader downloader, string title)
+        public DownloadForm(Downloader downloader)
         {
             Icon = new Icon(1, Icons.RedCircle);
-            Title = title;
             downloader.DownloadFileCompleted += Downloader_DownloadFileCompleted;
             downloader.DownloadProgressChanged += Downloader_DownloadProgressChanged;
             this.Shown += DownloadForm_Shown;
+
+            Maximizable = false;
+            Resizable = false;
 
             IntitializeComponents();
         }
@@ -36,14 +37,11 @@ namespace RedShot.Infrastructure.Common.Forms
         private void Downloader_DownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
         {
             progressBar.Value = e.ProgressPercentage;
-            stateInfo.Text = $"Kilobytes received: {e.BytesReceived / 1024} Kb / {e.TotalBytesToReceive/1024} Kb";
         }
 
         private void Downloader_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
             progressBar.Value = 100;
-            stateInfo.Text = "Finished!";
-            Task.Delay(1000).Wait();
             Close();
         }
 
@@ -51,29 +49,16 @@ namespace RedShot.Infrastructure.Common.Forms
         {
             progressBar = new ProgressBar()
             {
-                Width = 250,
-                Height = 20,
+                Width = 350,
+                Height = 30,
                 MinValue = 0,
                 MaxValue = 100
             };
 
-            stateInfo = new Label()
-            {
-                Height = 20
-            };
+            Padding = 20;
+            Size = new Size(390, 100);
 
-            Content = new StackLayout()
-            {
-                Orientation = Orientation.Vertical,
-                HorizontalContentAlignment = HorizontalAlignment.Left,
-                Padding = 10,
-                Spacing = 10,
-                Items =
-                {
-                    progressBar,
-                    stateInfo
-                }
-            };
+            Content = progressBar;
         }
     }
 }

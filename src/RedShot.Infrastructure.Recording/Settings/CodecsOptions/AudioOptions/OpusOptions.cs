@@ -4,28 +4,26 @@ using RedShot.Infrastructure.Recording.Ffmpeg;
 namespace RedShot.Recording.Settings.CodecsOptions.AudioOptions
 {
     /// <summary>
-    /// Opus options view.
+    /// Opus options dialog.
     /// </summary>
-    internal class OpusOptions : AudioCodecOptionsBase<Control>
+    internal class OpusOptions : CodecOptionsBase
     {
+        private const string About = "Set the bit rate in kbit/s.";
         private TextBox bitrate;
 
-        private static readonly string about = "Set the bit rate in kilobits/s.";
-
-        /// <inheritdoc/>
-        public OpusOptions(FFmpegOptions options) : base(options, "Opus options", about)
+        /// <summary>
+        /// Initializes Opus options dialog.
+        /// </summary>
+        public OpusOptions(FFmpegOptions options) : base(options, "Opus options", About)
         {
         }
 
         /// <inheritdoc/>
         protected override void InitializeComponents()
         {
-            bitrate = new TextBox()
-            {
-                Size = new Eto.Drawing.Size(70, 21)
-            };
+            bitrate = new TextBox();
 
-            codecQuality = new StackLayout()
+            var codecQuality = new StackLayout()
             {
                 Orientation = Orientation.Horizontal,
                 VerticalContentAlignment = VerticalAlignment.Center,
@@ -39,7 +37,7 @@ namespace RedShot.Recording.Settings.CodecsOptions.AudioOptions
                 }
             };
 
-            base.InitializeComponents();
+            AddQualityRow("Bitrate", codecQuality);
         }
 
         /// <inheritdoc/>

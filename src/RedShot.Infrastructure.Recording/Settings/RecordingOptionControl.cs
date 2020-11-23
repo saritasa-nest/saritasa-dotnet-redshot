@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Linq;
-using System.Runtime.InteropServices;
 using Eto.Forms;
-using RedShot.Infrastructure.Abstractions.Recording;
-using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Recording.Ffmpeg;
 using RedShot.Infrastructure.Recording.Ffmpeg.Encoding;
@@ -17,17 +13,12 @@ namespace RedShot.Infrastructure.Recording.Settings
     /// </summary>
     internal partial class RecordingOptionControl : Panel
     {
-        private readonly IRecordingDevices recordingDevices;
-        private FFmpegOptions ffmpegOptions;
-        private ComboBox videoDevices;
-        private ComboBox primaryAudioDevices;
-        private ComboBox optionalAudioDevices;
-        private CheckBox useAudio;
+        private FFmpegConfiguration ffmpegConfiguration;
         private ComboBox videoCodec;
-        private DefaultButton videoCodecOptionsButton;
+        private Button videoCodecOptionsButton;
         private ComboBox audioCodec;
-        private DefaultButton audioCodecOptionsButton;
-        private DefaultButton setDefaultButton;
+        private Button audioCodecOptionsButton;
+        private Button setDefaultButton;
         private NumericStepper fps;
         private TextBox userArgs;
         private CheckBox showCursor;
@@ -36,117 +27,86 @@ namespace RedShot.Infrastructure.Recording.Settings
         /// <summary>
         /// Initializes recording option dialog.
         /// </summary>
-        public RecordingOptionControl(IRecordingDevices recordingDevices, FFmpegOptions ffmpegOptions)
+        public RecordingOptionControl(FFmpegConfiguration ffmpegConfiguration)
         {
-            this.ffmpegOptions = ffmpegOptions;
-            this.recordingDevices = recordingDevices;
+            this.ffmpegConfiguration = ffmpegConfiguration;
 
             InitializeComponents();
         }
 
-        private void SetDefaultButton_Clicked(object sender, EventArgs e)
+        private void SetDefaultButtonClicked(object sender, EventArgs e)
         {
-            ffmpegOptions = new FFmpegOptions();
             Content.Unbind();
+            ffmpegConfiguration.Options = new FFmpegOptions();
             BindOptions();
         }
 
         private void BindOptions()
         {
-            Content.DataContext = ffmpegOptions;
+            Content.DataContext = ffmpegConfiguration.Options;
 
             fps.ValueBinding.Convert(f => (int)f, t => t).BindDataContext((FFmpegOptions o) => o.Fps);
             userArgs.TextBinding.BindDataContext((FFmpegOptions o) => o.UserArgs);
             var gdigrabBind = useGdigrab.CheckedBinding.BindDataContext((FFmpegOptions o) => o.UseGdigrab);
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                gdigrabBind.Changing += (o, e) =>
-                {
-                    if (e.Value is bool value)
-                    {
-                        videoDevices.Enabled = !value;
-                    }
-                };
-            }
-
             showCursor.CheckedBinding.BindDataContext((FFmpegOptions o) => o.DrawCursor);
-
-            useAudio.CheckedBinding.BindDataContext((FFmpegOptions o) => o.UseAudio);
-
-            videoDevices.SelectedValueBinding.BindDataContext((FFmpegOptions o) => o.VideoDevice);
-
-            primaryAudioDevices.SelectedValueBinding.BindDataContext((FFmpegOptions o) => o.PrimaryAudioDevice);
-            primaryAudioDevices.Bind(d => d.Enabled, ffmpegOptions, o => o.UseAudio);
-
-            optionalAudioDevices.SelectedValueBinding.BindDataContext((FFmpegOptions o) => o.OptionalAudioDevice);
-            optionalAudioDevices.Bind(d => d.Enabled, ffmpegOptions, o => o.UseAudio);
 
             audioCodec.BindWithEnum<FFmpegAudioCodec>().BindDataContext((FFmpegOptions o) => o.AudioCodec);
 
             videoCodec.BindWithEnum<FFmpegVideoCodec>().BindDataContext((FFmpegOptions o) => o.VideoCodec);
         }
 
-        private void VideoCodecOptionsButton_Clicked(object sender, EventArgs e)
+        private void VideoCodecOptionsButtonClicked(object sender, EventArgs e)
         {
-            switch (ffmpegOptions.VideoCodec)
+            Dialog options;
+            switch (ffmpegConfiguration.Options.VideoCodec)
             {
                 case FFmpegVideoCodec.Libx264:
                 case FFmpegVideoCodec.Libx265:
-                    using (var options = new H264H265CodecOptions(ffmpegOptions))
-                    {
-                        options.ShowModal(this);
-                    }
+                    options = new H264H265CodecOptions(ffmpegConfiguration.Options);
                     break;
 
                 case FFmpegVideoCodec.Libvpx_vp9:
-                    using (var options = new Vp9CodecOptions(ffmpegOptions))
-                    {
-                        options.ShowModal(this);
-                    }
+                    options = new Vp9CodecOptions(ffmpegConfiguration.Options);
                     break;
 
                 case FFmpegVideoCodec.Libxvid:
-                    using (var options = new MpegCodecOptions(ffmpegOptions))
-                    {
-                        options.ShowModal(this);
-                    }
+                    options = new MpegCodecOptions(ffmpegConfiguration.Options);
                     break;
+
+                default:
+                    return;
             }
+
+            options.ShowModal(this);
         }
 
-        private void AudioCodecOptionsButton_Clicked(object sender, EventArgs e)
+        private void AudioCodecOptionsButtonClicked(object sender, EventArgs e)
         {
-            switch (ffmpegOptions.AudioCodec)
+            Dialog options;
+            switch (ffmpegConfiguration.Options.AudioCodec)
             {
                 case FFmpegAudioCodec.Libvoaacenc:
-                    using (var options = new AacOptions(ffmpegOptions))
-                    {
-                        options.ShowModal(this);
-                    }
+                    options = new AacOptions(ffmpegConfiguration.Options);
                     break;
 
                 case FFmpegAudioCodec.Libopus:
-                    using (var options = new OpusOptions(ffmpegOptions))
-                    {
-                        options.ShowModal(this);
-                    }
+                    options = new OpusOptions(ffmpegConfiguration.Options);
                     break;
 
                 case FFmpegAudioCodec.Libvorbis:
-                    using (var options = new VorbisOptions(ffmpegOptions))
-                    {
-                        options.ShowModal(this);
-                    }
+                    options = new VorbisOptions(ffmpegConfiguration.Options);
                     break;
 
                 case FFmpegAudioCodec.Libmp3lame:
-                    using (var options = new Mp3Options(ffmpegOptions))
-                    {
-                        options.ShowModal(this);
-                    }
+                    options = new Mp3Options(ffmpegConfiguration.Options);
                     break;
+
+                default:
+                    return;
             }
+
+            options.ShowModal(this);
         }
     }
 }

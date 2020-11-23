@@ -4,14 +4,18 @@ using RedShot.Infrastructure.Recording.Ffmpeg;
 namespace RedShot.Recording.Settings.CodecsOptions.AudioOptions
 {
     /// <summary>
-    /// MP3 options view.
+    /// MP3 options dialog.
     /// </summary>
-    internal class Mp3Options : AudioCodecOptionsBase<NumericStepper>
+    internal class Mp3Options : CodecOptionsBase
     {
-        private static readonly string about = "The range of the quality is 1-5 where 1 is lowest quality and 5 is highest quality.";
+        private const string About = "The range of the quality is 1-5 where 1 is lowest quality and 5 is highest quality.";
 
-        /// <inheritdoc/>
-        public Mp3Options(FFmpegOptions options) : base(options, "Mp3 options", about)
+        private NumericStepper codecQuality;
+
+        /// <summary>
+        /// Initializes MP3 options dialog.
+        /// </summary>
+        public Mp3Options(FFmpegOptions options) : base(options, "Mp3 options", About)
         {
         }
 
@@ -25,7 +29,7 @@ namespace RedShot.Recording.Settings.CodecsOptions.AudioOptions
                 Increment = 1
             };
 
-            base.InitializeComponents();
+            AddQualityRow("Quality", codecQuality);
         }
 
         /// <inheritdoc/>

@@ -141,7 +141,7 @@ namespace RedShot.Infrastructure.Settings.Views
 
             var splitter = new Splitter
             {
-                Position = 180,
+                Position = 170,
                 FixedPanel = SplitterFixedPanel.Panel2,
                 Panel1 = settingsListPanel,
                 Panel2 = contentPanel

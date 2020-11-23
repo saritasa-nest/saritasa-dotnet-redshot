@@ -1,10 +1,7 @@
-﻿using System.Linq;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Eto.Drawing;
 using Eto.Forms;
-using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
-using RedShot.Infrastructure.Recording.Ffmpeg.Encoding;
 
 namespace RedShot.Infrastructure.Recording.Settings
 {
@@ -21,217 +18,64 @@ namespace RedShot.Infrastructure.Recording.Settings
 
             userArgs = new TextBox()
             {
-                Size = new Size(250, 21)
+                Width = 250
             };
 
             showCursor = new CheckBox();
 
             useGdigrab = new CheckBox();
 
-            videoCodecOptionsButton = new DefaultButton("Options", 60, 25);
-
-            videoCodecOptionsButton.Clicked += VideoCodecOptionsButton_Clicked;
-
-            audioCodecOptionsButton = new DefaultButton("Options", 60, 25);
-
-            audioCodecOptionsButton.Clicked += AudioCodecOptionsButton_Clicked;
-
-            useAudio = new CheckBox();
-
-            videoDevices = new ComboBox()
+            videoCodecOptionsButton = new Button
             {
-                Size = new Size(250, 21),
+                Text = "Options"
             };
-            videoDevices.DataStore = recordingDevices.VideoDevices;
+            videoCodecOptionsButton.Click += VideoCodecOptionsButtonClicked;
 
-            if (videoDevices.DataStore.Count() == 0)
+            audioCodecOptionsButton = new Button
             {
-                videoDevices.Enabled = false;
-            }
-
-            primaryAudioDevices = new ComboBox()
-            {
-                Size = new Size(250, 21),
+                Text = "Options"
             };
-            primaryAudioDevices.DataStore = recordingDevices.AudioDevices;
-
-            if (primaryAudioDevices.DataStore.Count() == 0)
-            {
-                primaryAudioDevices.Enabled = false;
-            }
-
-            optionalAudioDevices = new ComboBox()
-            {
-                Size = new Size(250, 21),
-            };
-            optionalAudioDevices.DataStore = recordingDevices.AudioDevices;
-
-            if (optionalAudioDevices.DataStore.Count() < 2)
-            {
-                optionalAudioDevices.Enabled = false;
-            }
+            audioCodecOptionsButton.Click += AudioCodecOptionsButtonClicked;
 
             videoCodec = new ComboBox()
             {
-                Size = new Size(180, 21),
+                Size = new Size(180, 19),
+                ReadOnly = true
             };
 
             audioCodec = new ComboBox()
             {
-                Size = new Size(180, 21),
+                Size = new Size(180, 19),
+                ReadOnly = true
             };
 
-            setDefaultButton = new DefaultButton("Set default", 100, 30);
-            setDefaultButton.Clicked += SetDefaultButton_Clicked;
-
-            var groupBoxSize = new Size(300, 230);
-
-            Content = new StackLayout()
+            setDefaultButton = new Button()
             {
-                Orientation = Orientation.Vertical,
-                HorizontalContentAlignment = HorizontalAlignment.Stretch,
-                Padding = 10,
-                Spacing = 10,
-                Items =
+                Text = "Default"
+            };
+            setDefaultButton.Click += SetDefaultButtonClicked;
+
+            Content = new TableLayout()
+            {
+                Padding = new Padding(20, 20, 0, 0),
+                Spacing = new Size(0, 20),
+                Rows =
                 {
-                    new GroupBox()
-                    {
-                        Text = "General",
-                        Content = GetDefaultOptionControl(),
-                    },
-                    new GroupBox()
-                    {
-                        Text = "Encoding",
-                        Content = GetEncodingSelectionControl(),
-                    },
-                    new GroupBox()
-                    {
-                        Text = "Recording devices",
-                        Content = GetDeviceSelectionControl()
-                    },
-                    new StackLayout()
-                    {
-                        Orientation = Orientation.Vertical,
-                        Spacing = 10,
-                        Items =
-                        {
-                            new StackLayout
-                            {
-                                Orientation = Orientation.Horizontal,
-                                Items =
-                                {
-                                    new Label()
-                                    {
-                                        Text = "Custom FFmpeg arguments:"
-                                    },
-                                    userArgs
-                                }
-                            },
-                            setDefaultButton
-                        }
-                    }
+                    GetVideoOptionsRow(),
+                    GetMiscellaneousOptionsRow(),
+                    GetAudioOptionsRow(),
+                    GetArgumentsOptionsRow(),
+                    TableLayout.AutoSized(setDefaultButton, new Padding(2, 0, 0, 0))
                 }
             };
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                if (ffmpegOptions.UseGdigrab)
-                {
-                    videoDevices.Enabled = false;
-                }
-            }
-            else
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 useGdigrab.Enabled = false;
-                ffmpegOptions.UseGdigrab = false;
+                ffmpegConfiguration.Options.UseGdigrab = false;
             }
 
             BindOptions();
-        }
-
-        private Control GetMicrophoneControl()
-        {
-            return new StackLayout()
-            {
-                Orientation = Orientation.Horizontal,
-                VerticalContentAlignment = VerticalAlignment.Center,
-                HorizontalContentAlignment = HorizontalAlignment.Left,
-                Spacing = 10,
-                Items =
-                {
-                    useAudio,
-                    new Label()
-                    {
-                        Text = "Use audio"
-                    }
-                }
-            };
-        }
-
-        private Control GetDeviceSelectionControl()
-        {
-            var videoLabel = new Label()
-            {
-                Text = "Video device"
-            };
-
-            var primaryAudioLabel = new Label()
-            {
-                Text = "Primary audio device"
-            };
-
-            var optionalAudioLabel = new Label()
-            {
-                Text = "Optional audio device"
-            };
-
-            return new StackLayout()
-            {
-                Orientation = Orientation.Vertical,
-                Padding = 5,
-                Spacing = 5,
-                HorizontalContentAlignment = HorizontalAlignment.Left,
-                Items =
-                    {
-                        videoLabel,
-                        videoDevices,
-                        FormsHelper.GetVoidBox(15),
-                        primaryAudioLabel,
-                        primaryAudioDevices,
-                        optionalAudioLabel,
-                        optionalAudioDevices,
-                        FormsHelper.GetVoidBox(10),
-                        GetMicrophoneControl()
-                    }
-            };
-        }
-
-        private Control GetEncodingSelectionControl()
-        {
-            var videoLabel = new Label()
-            {
-                Text = "Video encoding"
-            };
-
-            var audioLabel = new Label()
-            {
-                Text = "Audio encoding"
-            };
-
-            return new StackLayout()
-            {
-                Orientation = Orientation.Vertical,
-                Padding = 10,
-                HorizontalContentAlignment = HorizontalAlignment.Left,
-                Spacing = 5,
-                Items =
-                    {
-                        videoLabel,
-                        GetVideoCodecField(),
-                        audioLabel,
-                        GetAudioCodecField()
-                    }
-            };
         }
 
         private Control GetVideoCodecField()
@@ -239,7 +83,7 @@ namespace RedShot.Infrastructure.Recording.Settings
             return new StackLayout()
             {
                 Orientation = Orientation.Horizontal,
-                VerticalContentAlignment = VerticalAlignment.Center,
+                VerticalContentAlignment = VerticalAlignment.Stretch,
                 Spacing = 5,
                 Items =
                 {
@@ -254,7 +98,7 @@ namespace RedShot.Infrastructure.Recording.Settings
             return new StackLayout()
             {
                 Orientation = Orientation.Horizontal,
-                VerticalContentAlignment = VerticalAlignment.Center,
+                VerticalContentAlignment = VerticalAlignment.Stretch,
                 Spacing = 5,
                 Items =
                 {
@@ -264,21 +108,115 @@ namespace RedShot.Infrastructure.Recording.Settings
             };
         }
 
-        private Control GetDefaultOptionControl()
+        private TableRow GetVideoOptionsRow()
         {
+            var fpsLabel = new Label()
+            {
+                Text = "FPS"
+            };
+
+            var videoLabel = new Label()
+            {
+                Text = "Video encoding"
+            };
+
+            return new TableLayout()
+            {
+                Spacing = new Size(10, 5),
+                Rows =
+                {
+                    new TableRow()
+                    {
+                        Cells =
+                        {
+                            fpsLabel,
+                            videoLabel
+                        },
+                    },
+                    new TableRow()
+                    {
+                        Cells =
+                        {
+                            TableLayout.AutoSized(fps, new Padding(3, 0, 0, 0)),
+                            TableLayout.AutoSized(GetVideoCodecField(), new Padding(3, 0, 0, 0))
+                        }
+                    }
+                }
+            };
+        }
+
+        private TableRow GetMiscellaneousOptionsRow()
+        {
+            var recordCursorLabel = new Label()
+            {
+                Text = "Record cursor"
+            };
+
+            var useGdigrabLabel = new Label()
+            {
+                Text = "Use Gdigrab"
+            };
+
+            return new TableLayout()
+            {
+                Spacing = new Size(10, 5),
+                Rows =
+                {
+                    new TableRow()
+                    {
+                        Cells =
+                        {
+                            recordCursorLabel,
+                            showCursor
+                        }
+                    },
+                    new TableRow()
+                    {
+                        Cells =
+                        {
+                            useGdigrabLabel,
+                            useGdigrab
+                        }
+                    }
+                }
+            };
+        }
+
+        private TableRow GetAudioOptionsRow()
+        {
+            var audioLabel = new Label()
+            {
+                Text = "Audio encoding"
+            };
+
             return new StackLayout()
             {
-                Width = 300,
                 Orientation = Orientation.Vertical,
-                Padding = 20,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
                 Spacing = 5,
                 Items =
+                {
+                    audioLabel,
+                    TableLayout.AutoSized(GetAudioCodecField(), new Padding(3, 0, 0, 0)),
+                }
+            };
+        }
+
+        private TableRow GetArgumentsOptionsRow()
+        {
+            return new StackLayout
+            {
+                Orientation = Orientation.Vertical,
+                HorizontalContentAlignment = HorizontalAlignment.Left,
+                Spacing = 5,
+                Items =
+                {
+                    new Label()
                     {
-                        FormsHelper.GetBaseStack("FPS:", fps, 100, 150),
-                        FormsHelper.GetBaseStack("Show cursor:", showCursor, 100, 150),
-                        FormsHelper.GetBaseStack("Use Gdigrab:", useGdigrab, 100, 150),
-                    }
+                        Text = "Custom FFmpeg arguments:"
+                    },
+                    TableLayout.AutoSized(userArgs, new Padding(3, 0, 0, 0))
+                }
             };
         }
     }
