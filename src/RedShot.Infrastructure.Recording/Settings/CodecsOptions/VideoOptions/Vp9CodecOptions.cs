@@ -33,7 +33,7 @@ namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
                 Increment = 1
             };
 
-            AddQualityRow("Bitrate", GetBitrateFiled());
+            AddQualityRow("Bitrate", CreateBitrateQualityRow());
             AddQualityRow("Quality", vp9Quality);
         }
 
@@ -62,7 +62,7 @@ namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
             vp9Quality.ValueBinding.Convert(f => (int)f, t => t).BindDataContext((FFmpegOptions o) => o.Vp9Crf);
         }
 
-        private Control GetBitrateFiled()
+        private Control CreateBitrateQualityRow()
         {
             return new StackLayout()
             {
