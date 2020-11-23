@@ -21,6 +21,7 @@ namespace RedShot.Infrastructure.Uploading
         /// Last uploaded file.
         /// </summary>
         public static IFile LastFile { get; private set; }
+
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private static UploaderChoosingForm uploaderChoosingForm;
 
@@ -80,13 +81,6 @@ namespace RedShot.Infrastructure.Uploading
         {
             ProcessFile(file);
 
-            if (uploader == null || file == null)
-            {
-                logger.Warn($"Upload failed");
-                NotifyHelper.Notify($"Upload failed", "RedShot uploading", NotifyStatus.Failed);
-                return;
-            }
-
             try
             {
                 var response = await uploader.UploadAsync(file, cancellationToken);
@@ -98,13 +92,7 @@ namespace RedShot.Infrastructure.Uploading
                 else
                 {
                     logger.Warn($"{file.FileType} uploading was failed", response);
-
                     NotifyHelper.Notify($"{file.FileType} uploading failed", "RedShot uploading", NotifyStatus.Failed);
-                }
-
-                if (uploader is IDisposable disposable)
-                {
-                    disposable.Dispose();
                 }
             }
             catch (Exception ex)
@@ -122,6 +110,17 @@ namespace RedShot.Infrastructure.Uploading
 
                 logger.Error(ex, message);
                 NotifyHelper.Notify(message, "RedShot uploading", NotifyStatus.Failed);
+            }
+            finally
+            {
+                if (uploader is IAsyncDisposable asyncDisposable)
+                {
+                    await asyncDisposable.DisposeAsync();
+                }
+                else if (uploader is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
             }
         }
     }

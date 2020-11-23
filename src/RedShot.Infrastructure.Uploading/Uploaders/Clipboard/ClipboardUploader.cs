@@ -1,9 +1,9 @@
-﻿using RedShot.Infrastructure.Abstractions;
-using RedShot.Infrastructure.Abstractions.Uploading;
-using RedShot.Infrastructure.Basics;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using RedShot.Infrastructure.Abstractions;
+using RedShot.Infrastructure.Abstractions.Uploading;
+using RedShot.Infrastructure.Basics;
 
 namespace RedShot.Infrastructure.Uploaders.Clipboard
 {

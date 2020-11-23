@@ -16,11 +16,12 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
     /// <summary>
     /// SFTP uploader.
     /// </summary>
-    internal sealed class SftpUploader : BaseFtpUploader, IDisposable
+    internal sealed class SftpUploader : BaseFtpUploader, IDisposable, IAsyncDisposable
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly FtpAccount account;
         private bool disposed;
+        private bool isNeedToHandle;
         private volatile SftpClient client;
         private readonly object lockObject = new object();
 
@@ -30,6 +31,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         public SftpUploader(FtpAccount account)
         {
             this.account = account;
+            isNeedToHandle = true;
             InitializeClient();
         }
 
@@ -41,30 +43,12 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             var path = UrlHelper.CombineUrl(subFolderPath, fullFileName);
 
             IsUploading = true;
-            Stream fileStream = null;
-
-            try
+            await using var fileStream = file.GetStream();
+            if (await UploadStreamAsync(fileStream, path, true, cancellationToken))
             {
-                fileStream = file.GetStream();
-                if (await UploadStreamAsync(fileStream, path, true, cancellationToken))
-                {
-                    return await base.UploadAsync(file, cancellationToken);
-                }
+                return await base.UploadAsync(file, cancellationToken);
             }
-            catch (Exception ex)
-            {
-                logger.Error(ex, "An error occurred while SFTP client was uploading data");
-            }
-            finally
-            {
-                if (fileStream != null)
-                {
-                    await fileStream.DisposeAsync();
-                }
-                await DisconnectAsync();
-                IsUploading = false;
-            }
-
+            IsUploading = false;
             return new BaseUploadingResponse(false);
         }
 
@@ -94,23 +78,15 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             {
                 try
                 {
-                    var asyncResult = client.BeginUploadFile(stream, remotePath);
-                    await Task.Factory.FromAsync(asyncResult, (ar) =>
-                    {
-                        client.EndUploadFile(ar);
-                    });
-
+                    await Task.Factory.FromAsync(client.BeginUploadFile(stream, remotePath), client.EndUploadFile);
                     return true;
                 }
-                catch (SftpPathNotFoundException) when (autoCreateDirectory)
+                catch (SftpPathNotFoundException) when (isNeedToHandle)
                 {
+                    isNeedToHandle = false;
                     logger.Info("Directory not exist, path: {remotePath}", remotePath);
                     await CreateDirectoryAsync(UrlHelper.GetDirectoryPath(remotePath), autoCreateDirectory, cancellationToken);
-                    return await UploadStreamAsync(stream, remotePath, autoCreateDirectory, cancellationToken);
-                }
-                catch (NullReferenceException)
-                {
-                    logger.Warn("Error occurred by disconnect while uploading");
+                    return await UploadStreamAsync(stream, remotePath, true, cancellationToken);
                 }
             }
 
@@ -217,7 +193,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             }
             else
             {
-                throw new DomainException("The SFTP client was not initialized. You need ti input password or key for this FTP account!");
+                throw new DomainException("The SFTP client was not initialized. Password or RSA key is invalid.");
             }
         }
 
@@ -231,6 +207,26 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
                 client.Dispose();
                 client = null;
             }
+            disposed = true;
+        }
+
+        /// <inheritdoc/>
+        public async ValueTask DisposeAsync()
+        {
+            if (disposed)
+            {
+                throw new ObjectDisposedException(nameof(SftpUploader));
+            }
+
+            await Task.Factory.StartNew(() =>
+            {
+                lock (lockObject)
+                {
+                    client.Dispose();
+                    client = null;
+                }
+            });
+
             disposed = true;
         }
     }

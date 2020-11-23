@@ -19,12 +19,13 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
     /// <summary>
     /// FTP/FTPS uploader.
     /// </summary>
-    internal sealed class FtpUploader : BaseFtpUploader, IDisposable
+    internal sealed class FtpUploader : BaseFtpUploader, IDisposable, IAsyncDisposable
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly FtpAccount account;
         private FtpClient client;
         private bool disposed;
+        private bool isNeedToHandle;
 
         /// <summary>
         /// Initializes FTP/FTPS uploader.
@@ -32,6 +33,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         public FtpUploader(FtpAccount account)
         {
             this.account = account;
+            isNeedToHandle = true;
             InitializeFtpClient();
         }
 
@@ -105,23 +107,16 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
                 {
                     return await base.UploadAsync(file, cancellationToken);
                 }
-                else
-                {
-                    return new BaseUploadingResponse(false);
-                }
             }
-            catch (FtpCommandException e)
+            catch (FtpCommandException e) when (isNeedToHandle)
             {
-                logger.Warn(e, "FTP command error");
-
-                // Probably directory not exist, try creating it.
+                // Probably directory not exist, try to create it.
                 if (e.CompletionCode == "550" || e.CompletionCode == "553")
                 {
+                    isNeedToHandle = false;
                     await CreateMultiDirectoryAsync(UrlHelper.GetDirectoryPath(path), cancellationToken);
                     return await UploadAsync(file, cancellationToken);
                 }
-
-                return new BaseUploadingResponse(false, path, errors: new List<string>(1) { e.Message });
             }
             finally
             {
@@ -129,10 +124,10 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
                 {
                     await fileStream.DisposeAsync();
                 }
-                await DisconnectAsync();
-                Dispose();
-                IsUploading = false;
             }
+
+            IsUploading = false;
+            return new BaseUploadingResponse(false);
         }
 
         /// <summary>
@@ -219,6 +214,21 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
 
                 disposed = true;
             }
+        }
+
+        /// <inheritdoc/>
+        public async ValueTask DisposeAsync()
+        {
+            if (disposed)
+            {
+                throw new ObjectDisposedException(nameof(FtpUploader));
+            }
+
+            await DisconnectAsync();
+            client.Dispose();
+            client = null;
+
+            disposed = true;
         }
     }
 }

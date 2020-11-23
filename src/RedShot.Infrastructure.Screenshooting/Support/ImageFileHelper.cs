@@ -24,7 +24,7 @@ namespace RedShot.Infrastructure.Screenshooting.Support
             var imageName = FormatManager.GetFormattedName();
             var stringDate = DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss", CultureInfo.InvariantCulture);
             var baseName = string.Format("RedShot-Image-{0}", stringDate);
-            var path = Path.Combine(ScreenshootingConstants.ImagesFolder, $"{baseName}.png");
+            var path = Path.Combine(ScreenshootingProperties.ImagesFolder, $"{baseName}.png");
 
             await image.SaveAsync(path, ImageFormat.Png, cancellationToken);
             return new ImageFile(image, path, imageName);
