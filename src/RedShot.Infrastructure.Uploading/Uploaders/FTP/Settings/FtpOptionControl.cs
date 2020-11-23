@@ -163,7 +163,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             }
 
             var selectedAccount = (FtpAccount)accounts.SelectedValue;
-            return selectedAccount.Id;
+            return selectedAccount?.Id ?? default;
         }
 
         private void FtpOptionControlChanged(object sender, EventArgs e)
@@ -221,6 +221,11 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                     accounts.Text = string.Empty;
                 }
 
+                if (ftpAccounts.Count == 1)
+                {
+                    ftpConfiguration.PrimaryAccountGuid = ftpAccounts.First().Id;
+                }
+
                 RefreshAccountFields();
             }
         }
@@ -244,6 +249,11 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 {
                     HttpHomePathAddExtension = true
                 };
+            }
+
+            if (ftpAccounts.Count == 0)
+            {
+                ftpConfiguration.PrimaryAccountGuid = newAccount.Id;
             }
 
             bindingList.Add(newAccount);

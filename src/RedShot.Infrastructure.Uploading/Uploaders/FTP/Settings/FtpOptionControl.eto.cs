@@ -32,7 +32,10 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             var defaultSize = new Size(170, 21);
             var defaultLongSize = new Size(300, 21);
 
-            addExtensionCheckBox = new CheckBox();
+            addExtensionCheckBox = new CheckBox
+            {
+                Text = "Append file extension"
+            };
             previewLinkLabel = new Label();
             homePathTextBox = new TextBox()
             {
@@ -109,21 +112,24 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             addButton = new Button()
             {
                 Image = Resources.Icons.Add,
-                Size = new Size(26, 26)
+                Size = new Size(26, 26),
+                ToolTip = "Add account"
             };
             addButton.Click += AddButtonClick;
 
             delButton = new Button()
             {
                 Image = Resources.Icons.Remove,
-                Size = new Size(26, 26)
+                Size = new Size(26, 26),
+                ToolTip = "Remove account"
             };
             delButton.Click += DelButtonClick;
 
             copyButton = new Button()
             {
                 Image = Resources.Icons.Copy,
-                Size = new Size(26, 26)
+                Size = new Size(26, 26),
+                ToolTip = "Clone account"
             };
             copyButton.Click += CopyButtonClick;
 
@@ -153,6 +159,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 {
                     Orientation = Orientation.Vertical,
                     Spacing = 10,
+                    Width = 412,
                     Items =
                     {
                         BaseAccountBoxes(),
@@ -162,7 +169,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                         testButton
                     }
                 },
-                Size = new Size(435, 650),
                 Text = "Account",
                 Padding = 10
             };
@@ -297,7 +303,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 Items =
                 {
                     pathControl,
-                    FormsHelper.GetBaseStack("Append file extension", addExtensionCheckBox, nameWidth: 150),
+                    addExtensionCheckBox,
                     FormsHelper.GetBaseStack("URL preview", previewLinkLabel, controlWidth: 300)
                 }
             };
