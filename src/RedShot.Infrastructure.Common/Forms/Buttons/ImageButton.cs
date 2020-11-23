@@ -55,18 +55,18 @@ namespace RedShot.Infrastructure.Common.Forms
                 baseButton.Text = text;
             }
 
-            baseButton.Click += Btn_Click;
-
-            Content = new StackLayout
-            {
-                Items =
-                {
-                    baseButton
-                }
-            };
+            baseButton.Click += BaseButtonClick;
+            Content = baseButton;
         }
 
-        private void Btn_Click(object sender, EventArgs e)
+        /// <inheritdoc/>
+        public override void Focus()
+        {
+            base.Focus();
+            baseButton.Focus();
+        }
+
+        private void BaseButtonClick(object sender, EventArgs e)
         {
             Clicked?.Invoke(this, EventArgs.Empty);
         }

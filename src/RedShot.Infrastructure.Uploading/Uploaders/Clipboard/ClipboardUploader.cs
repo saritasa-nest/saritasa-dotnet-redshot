@@ -1,7 +1,9 @@
-﻿using RedShot.Infrastructure.Abstractions;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
 using RedShot.Infrastructure.Basics;
-using System;
 
 namespace RedShot.Infrastructure.Uploaders.Clipboard
 {
@@ -14,13 +16,13 @@ namespace RedShot.Infrastructure.Uploaders.Clipboard
         public event EventHandler<UploadingFinishedEventArgs> UploadingFinished;
 
         /// <inheritdoc/>
-        public IUploadingResponse Upload(IFile file)
+        public Task<IUploadingResponse> UploadAsync(IFile file, CancellationToken cancellationToken = default)
         {
             Eto.Forms.Clipboard.Instance.Clear();
             Eto.Forms.Clipboard.Instance.Image = file.GetFilePreview();
 
             UploadingFinished?.Invoke(this, UploadingFinishedEventArgs.CreateNew(file));
-            return new BaseUploadingResponse(true);
+            return Task.FromResult(new BaseUploadingResponse(true) as IUploadingResponse);
         }
     }
 }

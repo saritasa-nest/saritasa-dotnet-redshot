@@ -2,21 +2,20 @@
 using System.Linq;
 using Eto.Drawing;
 using SkiaSharp;
-using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.UserInputActions;
 
-namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions
+namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.MouseActions
 {
     /// <summary>
     /// Points painting action.
     /// Paints polygon via points list.
     /// </summary>
-    internal class BrushPaintingAction : IPaintingAction
+    internal class BrushPaintingAction : IMousePaintingAction
     {
         private readonly HashSet<Point> points;
         private readonly SKPaint paint;
 
         /// <summary>
-        /// Inits values for this action.
+        /// Initializes brush painting action.
         /// </summary>
         public BrushPaintingAction(SKPaint paint)
         {
@@ -25,15 +24,9 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions
         }
 
         /// <inheritdoc />
-        public PaintingActionType PaintingActionType => PaintingActionType.MousePainting;
-
-        /// <inheritdoc />
-        public void InputUserAction(IInputAction inputAction)
+        public void InputMouseAction(Point mouseLocation)
         {
-            if (inputAction is MouseInputAction mouseAction)
-            {
-                points.Add(mouseAction.MouseLocation);
-            }
+            points.Add(mouseLocation);
         }
 
         /// <inheritdoc />

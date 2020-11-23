@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
 using RedShot.Infrastructure.Basics;
@@ -24,37 +26,27 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         public int BufferSize { get; set; } = 8192;
 
         /// <summary>
-        /// Stop uploading requested flag.
-        /// </summary>
-        public bool StopUploadRequested { get; protected set; }
-
-        /// <summary>
-        /// Stop upload.
-        /// </summary>
-        public abstract void StopUpload();
-
-        /// <summary>
         /// Upload file to destination resource.
         /// </summary>
-        public virtual IUploadingResponse Upload(IFile file)
+        public virtual Task<IUploadingResponse> UploadAsync(IFile file, CancellationToken cancellationToken)
         {
             UploadingFinished?.Invoke(this, new UploadingFinishedEventArgs() { UploadingFile = file });
-            return new BaseUploadingResponse(true);
+            return Task.FromResult(new BaseUploadingResponse(true) as IUploadingResponse);
         }
 
         /// <summary>
         /// Connect to FTP server.
         /// </summary>
-        protected abstract bool Connect();
+        protected abstract Task<bool> ConnectAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Test connection.
         /// </summary>
-        public bool TestConnection()
+        public async Task<bool> TestConnectionAsync(CancellationToken cancellationToken = default)
         {
             try
             {
-                return Connect();
+                return await ConnectAsync(cancellationToken);
             }
             catch
             {

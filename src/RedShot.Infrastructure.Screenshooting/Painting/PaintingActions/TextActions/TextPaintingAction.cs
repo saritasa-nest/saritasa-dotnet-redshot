@@ -2,9 +2,8 @@
 using Eto.Drawing;
 using SkiaSharp;
 using RedShot.Infrastructure.Common;
-using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.UserInputActions;
 
-namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextInput
+namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextActions
 {
     /// <summary>
     /// Text painting action.
@@ -14,16 +13,12 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextInp
         private Point startPoint;
         private TextInputAction textInputAction;
 
-        /// <inheritdoc />
-        public PaintingActionType PaintingActionType => PaintingActionType.KeyboardPainting;
-
-        /// <inheritdoc />
-        public void InputUserAction(IInputAction inputAction)
+        /// <summary>
+        /// Input text action.
+        /// </summary>
+        public void InputTextAction(TextInputAction textAction)
         {
-            if (inputAction is TextInputAction textAction)
-            {
-                textInputAction = textAction;
-            }
+            textInputAction = textAction;
         }
 
         /// <inheritdoc />

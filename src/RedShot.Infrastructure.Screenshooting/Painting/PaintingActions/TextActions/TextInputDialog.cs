@@ -3,18 +3,14 @@ using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
-using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.UserInputActions;
 
-namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextInput
+namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextActions
 {
     /// <summary>
     /// Text input view.
     /// </summary>
-    internal class TextInputView : Form
+    internal class TextInputDialog : Dialog<TextDialogResult>
     {
-        private readonly IPaintingAction textPaintingAction;
-
-        private bool saveText;
         private ColorPicker textColorPicker;
         private FontPicker textFontPicker;
         private DefaultButton okButton;
@@ -23,30 +19,21 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextInp
         /// <summary>
         /// Initializes text input dialog.
         /// </summary>
-        public TextInputView(IPaintingAction textPaintingAction)
+        public TextInputDialog()
         {
-            this.textPaintingAction = textPaintingAction;
             Title = "Enter Text";
             InitializeComponents();
             this.Shown += TextInputView_Shown;
 
             this.Resizable = false;
             this.Maximizable = false;
+
+            Result = new TextDialogResult();
         }
 
         private void TextInputView_Shown(object sender, EventArgs e)
         {
             Location = ScreenHelper.GetCenterLocation(Size);
-        }
-
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-            if (saveText == false)
-            {
-                var action = new TextInputAction(string.Empty, textFontPicker.Value, textColorPicker.Value);
-                textPaintingAction.InputUserAction(action);
-            }
         }
 
         private void InitializeComponents()
@@ -73,7 +60,6 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextInp
                 Size = new Size(300, 200),
                 AllowDrop = true
             };
-            textArea.TextChanged += TextAreaOnTextChanged;
 
             Content = new StackLayout()
             {
@@ -101,15 +87,18 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextInp
             SetTextOptions();
         }
 
-        private void TextAreaOnTextChanged(object sender, EventArgs e)
-        {
-            var action = new TextInputAction(textArea.Text, textFontPicker.Value, textColorPicker.Value);
-            textPaintingAction.InputUserAction(action);
-        }
-
         private void OkButtonOnClicked(object sender, EventArgs e)
         {
-            saveText = true;
+            if (!string.IsNullOrWhiteSpace(textArea.Text))
+            {
+                var action = new TextInputAction(textArea.Text, textFontPicker.Value, textColorPicker.Value);
+                Result = new TextDialogResult()
+                {
+                    DialogResult = DialogResult.Ok,
+                    TextInputAction = action
+                };
+            }
+
             Close();
         }
 

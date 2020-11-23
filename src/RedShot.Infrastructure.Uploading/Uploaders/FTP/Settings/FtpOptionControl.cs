@@ -69,13 +69,13 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             accounts.ItemKeyBinding = new DelegateBinding<FtpAccount, string>(a => a.ToString());
         }
 
-        private void TestButtonClicked(object sender, EventArgs e)
+        private async void TestButtonClicked(object sender, EventArgs e)
         {
             if (SelectedAccount != null)
             {
                 var ftpManager = new FtpUploadingService();
                 var uploader = ftpManager.GetFtpUploader(SelectedAccount);
-                var result = uploader.TestConnection();
+                var result = await uploader.TestConnectionAsync();
 
                 if (result)
                 {

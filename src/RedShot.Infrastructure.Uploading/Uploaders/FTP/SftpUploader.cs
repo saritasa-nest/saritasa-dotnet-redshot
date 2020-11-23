@@ -1,8 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Renci.SshNet;
 using Renci.SshNet.Common;
+using Saritasa.Tools.Domain.Exceptions;
 using RedShot.Infrastructure.Abstractions.Uploading;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Common;
@@ -14,12 +16,14 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
     /// <summary>
     /// SFTP uploader.
     /// </summary>
-    internal sealed class SftpUploader : BaseFtpUploader, IDisposable
+    internal sealed class SftpUploader : BaseFtpUploader, IDisposable, IAsyncDisposable
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly FtpAccount account;
         private bool disposed;
-        private SftpClient client;
+        private bool isNeedToHandle;
+        private volatile SftpClient client;
+        private readonly object lockObject = new object();
 
         /// <summary>
         /// Initializes SFTP uploader.
@@ -27,194 +31,170 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         public SftpUploader(FtpAccount account)
         {
             this.account = account;
+            isNeedToHandle = true;
+            InitializeClient();
         }
 
-        /// <summary>
-        /// Connection flag.
-        /// </summary>
-        private bool IsConnected => client != null && client.IsConnected;
-
-        /// <inheritdoc cref="BaseUploader"/>.
-        public override IUploadingResponse Upload(IFile file)
+        /// <inheritdoc/>
+        public override async Task<IUploadingResponse> UploadAsync(IFile file, CancellationToken cancellationToken)
         {
             var subFolderPath = account.Directory;
             var fullFileName = FtpHelper.GetFullFileName(file);
             var path = UrlHelper.CombineUrl(subFolderPath, fullFileName);
 
             IsUploading = true;
-
-            try
+            await using var fileStream = file.GetStream();
+            if (await UploadStreamAsync(fileStream, path, true, cancellationToken))
             {
-                if (UploadStream(file.GetStream(), path, true))
-                {
-                    return base.Upload(file);
-                }
+                return await base.UploadAsync(file, cancellationToken);
             }
-            catch (Exception ex)
-            {
-                logger.Error(ex, "Error occurred while SFTP client was uploading data");
-            }
-            finally
-            {
-                Dispose();
-                IsUploading = false;
-            }
-
+            IsUploading = false;
             return new BaseUploadingResponse(false);
         }
 
-        /// <inheritdoc cref="BaseUploader"/>.
-        public override void StopUpload()
+        /// <inheritdoc/>
+        protected override async Task<bool> ConnectAsync(CancellationToken cancellationToken)
         {
-            if (IsUploading && !StopUploadRequested)
+            if (!client.IsConnected)
             {
-                StopUploadRequested = true;
+                await Task.Factory.StartNew(() =>
+                {
+                    lock (lockObject)
+                    {
+                        if (client != null && !client.IsConnected)
+                        {
+                            client.Connect();
+                        }
+                    }
+                });
+            }
 
+            return client.IsConnected;
+        }
+
+        private async Task<bool> UploadStreamAsync(Stream stream, string remotePath, bool autoCreateDirectory = false, CancellationToken cancellationToken = default)
+        {
+            if (await ConnectAsync(cancellationToken))
+            {
                 try
                 {
-                    Disconnect();
+                    await Task.Factory.FromAsync(client.BeginUploadFile(stream, remotePath), client.EndUploadFile);
+                    return true;
                 }
-                catch (Exception e)
+                catch (SftpPathNotFoundException) when (isNeedToHandle)
                 {
-                    logger.Error(e, "Error while uploading was stopping");
+                    isNeedToHandle = false;
+                    logger.Info("Directory not exist, path: {remotePath}", remotePath);
+                    await CreateDirectoryAsync(UrlHelper.GetDirectoryPath(remotePath), autoCreateDirectory, cancellationToken);
+                    return await UploadStreamAsync(stream, remotePath, true, cancellationToken);
                 }
-            }
-        }
-
-        /// <summary>
-        /// Connects to destination FTP server.
-        /// </summary>
-        protected override bool Connect()
-        {
-            if (client == null)
-            {
-                if (!string.IsNullOrEmpty(account.Keypath))
-                {
-                    if (!System.IO.File.Exists(account.Keypath))
-                    {
-                        throw new Exception("Key not found");
-                    }
-
-                    PrivateKeyFile keyFile;
-
-                    if (string.IsNullOrEmpty(account.Passphrase))
-                    {
-                        keyFile = new PrivateKeyFile(account.Keypath);
-                    }
-                    else
-                    {
-                        keyFile = new PrivateKeyFile(account.Keypath, account.Passphrase);
-                    }
-
-                    client = new SftpClient(account.Host, account.Port, account.Username, keyFile);
-                }
-                else if (!string.IsNullOrEmpty(account.Password))
-                {
-                    client = new SftpClient(account.Host, account.Port, account.Username, account.Password);
-                }
-
-                if (client != null)
-                {
-                    client.BufferSize = (uint)BufferSize;
-                }
-            }
-
-            if (client != null && !client.IsConnected)
-            {
-                client.Connect();
-            }
-
-            return IsConnected;
-        }
-
-        /// <summary>
-        /// Disconnects from destination FTP server.
-        /// </summary>
-        private void Disconnect()
-        {
-            if (client != null && client.IsConnected)
-            {
-                client.Disconnect();
-            }
-        }
-
-        /// <summary>
-        /// Checks if directory exists.
-        /// </summary>
-        private bool DirectoryExists(string path)
-        {
-            if (Connect())
-            {
-                return client.Exists(path);
             }
 
             return false;
         }
 
-        /// <summary>
-        /// Creates directory on remote SFTP server.
-        /// </summary>
-        private void CreateDirectory(string path, bool createMultiDirectory = false)
+        private async Task DisconnectAsync()
         {
-            if (Connect())
+            await Task.Factory.StartNew(() =>
+            {
+                lock (lockObject)
+                {
+                    if (client != null && client.IsConnected)
+                    {
+                        client.Disconnect();
+                    }
+                }
+            });
+        }
+
+        private async Task<bool> DirectoryExistsAsync(string path, CancellationToken cancellationToken)
+        {
+            if (await ConnectAsync(cancellationToken))
+            {
+                return await Task.Factory.StartNew(() =>
+                {
+                    lock (lockObject)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        return client.Exists(path);
+                    }
+                });
+            }
+
+            return false;
+        }
+
+        private async Task CreateDirectoryAsync(string path, bool createMultiDirectory = false, CancellationToken cancellationToken = default)
+        {
+            if (await ConnectAsync(cancellationToken))
             {
                 try
                 {
-                    client.CreateDirectory(path);
+                    await Task.Factory.StartNew(() =>
+                    {
+                        lock (lockObject)
+                        {
+                            cancellationToken.ThrowIfCancellationRequested();
+                            client.CreateDirectory(path);
+                        }
+                    });
                 }
                 catch (SftpPathNotFoundException) when (createMultiDirectory)
                 {
-                    CreateMultiDirectory(path);
-                }
-                catch (SftpPermissionDeniedException)
-                {
+                    await CreateMultiDirectoryAsync(path, cancellationToken);
                 }
             }
         }
 
-        /// <summary>
-        /// Creates directories if need.
-        /// </summary>
-        private List<string> CreateMultiDirectory(string path)
+        private async Task CreateMultiDirectoryAsync(string path, CancellationToken cancellationToken)
         {
-            var directoryList = new List<string>();
-
             var paths = UrlHelper.GetPaths(path);
 
             foreach (var directory in paths)
             {
-                if (!DirectoryExists(directory))
+                if (! await DirectoryExistsAsync(directory, cancellationToken))
                 {
-                    CreateDirectory(directory);
-                    directoryList.Add(directory);
+                    await CreateDirectoryAsync(directory, true, cancellationToken);
+                    logger.Info("Directory: {directory} was created on server: {server}", directory, account.Host);
                 }
             }
-
-            return directoryList;
         }
 
-        private bool UploadStream(Stream stream, string remotePath, bool autoCreateDirectory = false)
+        private void InitializeClient()
         {
-            if (Connect())
+            if (!string.IsNullOrEmpty(account.Keypath))
             {
-                try
+                if (!File.Exists(account.Keypath))
                 {
-                    client.UploadFile(stream, remotePath);
-                    return true;
+                    throw new Exception("Key not found");
                 }
-                catch (SftpPathNotFoundException) when (autoCreateDirectory)
+
+                PrivateKeyFile keyFile;
+
+                if (string.IsNullOrEmpty(account.Passphrase))
                 {
-                    logger.Info($"Directory not exist, path:{remotePath}");
-                    CreateDirectory(UrlHelper.GetDirectoryPath(remotePath), true);
-                    return UploadStream(stream, remotePath);
+                    keyFile = new PrivateKeyFile(account.Keypath);
                 }
-                catch (NullReferenceException)
+                else
                 {
-                    logger.Warn("Error occurred by disconnect while uploading");
+                    keyFile = new PrivateKeyFile(account.Keypath, account.Passphrase);
                 }
+
+                client = new SftpClient(account.Host, account.Port, account.Username, keyFile);
+            }
+            else if (!string.IsNullOrEmpty(account.Password))
+            {
+                client = new SftpClient(account.Host, account.Port, account.Username, account.Password);
             }
 
-            return false;
+            if (client != null)
+            {
+                client.BufferSize = (uint)BufferSize;
+            }
+            else
+            {
+                throw new DomainException("The SFTP client was not initialized. Password or RSA key is invalid.");
+            }
         }
 
         /// <summary>
@@ -222,20 +202,32 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// </summary>
         public void Dispose()
         {
-            if (disposed == false && client != null)
+            if (!disposed)
             {
-                try
+                client.Dispose();
+                client = null;
+            }
+            disposed = true;
+        }
+
+        /// <inheritdoc/>
+        public async ValueTask DisposeAsync()
+        {
+            if (disposed)
+            {
+                throw new ObjectDisposedException(nameof(SftpUploader));
+            }
+
+            await Task.Factory.StartNew(() =>
+            {
+                lock (lockObject)
                 {
                     client.Dispose();
-                }
-                catch (Exception e)
-                {
                     client = null;
-                    logger.Error(e, "Error in disposing FTP client");
                 }
+            });
 
-                disposed = true;
-            }
+            disposed = true;
         }
     }
 }

@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Abstractions.Uploading;
+using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Notifying;
-using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Uploading.Forms;
 
 namespace RedShot.Infrastructure.Uploading
@@ -30,17 +32,7 @@ namespace RedShot.Infrastructure.Uploading
         public static void RunUploading(IFile file)
         {
             ProcessFile(file);
-
-            var configuration = GetUploadingConfiguration();
-            if (configuration.AutoUpload)
-            {
-                var uploadingServices = GetUploadingServices(configuration.UploadersTypes);
-                RunAutoUpload(uploadingServices, file);
-            }
-            else
-            {
-                RunManualUpload(file);
-            }
+            RunManualUpload(file);
         }
 
         private static void ProcessFile(IFile file)
@@ -56,28 +48,6 @@ namespace RedShot.Infrastructure.Uploading
             uploaderChoosingForm?.Close();
             uploaderChoosingForm = new UploaderChoosingForm(file, GetUploadingServices(GetAllUploadingTypes()));
             uploaderChoosingForm.Show();
-        }
-
-        private static void RunAutoUpload(IEnumerable<IUploadingService> uploadingServices, IFile file)
-        {
-            uploadingServices = uploadingServices.Where(u => u.CheckOnSupporting(file.FileType)).ToList();
-
-            if (uploadingServices.Count() == 0)
-            {
-                NotifyHelper.Notify("Auto-upload mode was enabled, but no uploader was selected", "RedShot", NotifyStatus.Failed);
-                RunManualUpload(file);
-                return;
-            }
-
-            foreach (var uploadingService in uploadingServices)
-            {
-                Upload(uploadingService.GetUploader(), file);
-            }
-        }
-
-        private static UploadingConfiguration GetUploadingConfiguration()
-        {
-            return ConfigurationManager.GetSection<UploadingConfiguration>();
         }
 
         /// <summary>
@@ -107,20 +77,13 @@ namespace RedShot.Infrastructure.Uploading
         /// <summary>
         /// Uploads file with specified uploader.
         /// </summary>
-        public static void Upload(IUploader uploader, IFile file)
+        public static async Task UploadAsync(IUploader uploader, IFile file, CancellationToken cancellationToken = default)
         {
             ProcessFile(file);
 
-            if (uploader == null || file == null)
-            {
-                logger.Warn($"Upload failed");
-                NotifyHelper.Notify($"Upload failed", "RedShot uploading", NotifyStatus.Failed);
-                return;
-            }
-
             try
             {
-                var response = uploader.Upload(file);
+                var response = await uploader.UploadAsync(file, cancellationToken);
 
                 if (response.IsSuccess)
                 {
@@ -129,13 +92,7 @@ namespace RedShot.Infrastructure.Uploading
                 else
                 {
                     logger.Warn($"{file.FileType} uploading was failed", response);
-
                     NotifyHelper.Notify($"{file.FileType} uploading failed", "RedShot uploading", NotifyStatus.Failed);
-                }
-
-                if (uploader is IDisposable disposable)
-                {
-                    disposable.Dispose();
                 }
             }
             catch (Exception ex)
@@ -153,6 +110,17 @@ namespace RedShot.Infrastructure.Uploading
 
                 logger.Error(ex, message);
                 NotifyHelper.Notify(message, "RedShot uploading", NotifyStatus.Failed);
+            }
+            finally
+            {
+                if (uploader is IAsyncDisposable asyncDisposable)
+                {
+                    await asyncDisposable.DisposeAsync();
+                }
+                else if (uploader is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
             }
         }
     }

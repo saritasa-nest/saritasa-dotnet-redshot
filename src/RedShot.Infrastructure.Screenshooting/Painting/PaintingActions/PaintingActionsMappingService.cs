@@ -1,6 +1,7 @@
 ﻿using SkiaSharp;
-using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextInput;
 using RedShot.Infrastructure.Screenshooting.Painting.States;
+using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.MouseActions;
+using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextActions;
 
 namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions
 {

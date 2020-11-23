@@ -1,11 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using SkiaSharp;
 using Eto.Drawing;
 using Eto.Forms;
 using Prism.Events;
 using RedShot.Infrastructure.Common;
-using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Screenshooting.Painting.States;
 using RedShot.Resources;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
@@ -13,6 +13,9 @@ using RedShot.Infrastructure.Uploading.Uploaders.Ftp;
 using RedShot.Infrastructure.Uploading;
 using RedShot.Infrastructure.Uploaders.Clipboard;
 using RedShot.Infrastructure.Uploaders.File;
+using RedShot.Infrastructure.Abstractions.Uploading;
+using RedShot.Infrastructure.Abstractions;
+using RedShot.Infrastructure.Screenshooting.Support;
 
 namespace RedShot.Infrastructure.Screenshooting.Painting
 {
@@ -26,10 +29,12 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
 
         private readonly int paintingPanelWidth = 60;
         private readonly Bitmap image;
+        private readonly GlobalProperties globalProperties;
         private PaintingPanel paintingPanel;
         private ImagePanel imagePanel;
         private SKPaint paint;
         private int uploadedImageHash;
+        private IFile imageFile;
 
         /// <summary>
         /// Initializes painting view via image.
@@ -37,34 +42,34 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         public PaintingView(Bitmap image)
         {
             Icon = new Icon(1, Icons.RedCircle);
-            Title = "Image editor";
+            Title = "Image Editor";
             MinimumSize = new Size(500, paintingPanelWidth);
             Resizable = false;
             this.image = image;
+            globalProperties = new GlobalProperties();
             InitializeComponents();
             Content = GetContent();
-
-            this.Shown += PaintingViewShown;
-            this.KeyUp += PaintingViewKeyUp;
         }
 
-        private void PaintingViewKeyUp(object sender, KeyEventArgs e)
+        /// <inheritdoc/>
+        protected override async void OnKeyUp(KeyEventArgs e)
         {
+            base.OnKeyUp(e);
             if (e.KeyData == UndoShortcut)
             {
                 imagePanel.PaintBack();
             }
             else if (e.KeyData == CopyToClipboardShortcut)
             {
-                UploadImageToClipboard();
+                await UploadImageToClipboardAsync();
             }
+            e.Handled = true;
         }
 
         /// <inheritdoc/>
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
-            imagePanel.TextInputView?.Close();
 
             if (uploadedImageHash == imagePanel.GetImageHash())
             {
@@ -82,9 +87,12 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             }
         }
 
-        private void PaintingViewShown(object sender, EventArgs e)
+        /// <inheritdoc/>
+        protected override void OnShown(EventArgs e)
         {
+            base.OnShown(e);
             Location = ScreenHelper.GetCenterLocation(Size);
+            paintingPanel.BrushEnableButton.Focus();
         }
 
         private void InitializeComponents()
@@ -102,35 +110,6 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             paintingPanel.UploadImageButton.UploadToFtpSelected += PaintingPanelUploadToFtpSelected;
 
             SetDefaultOptions(imagePanel);
-        }
-
-        private void PaintingPanelUploadToFtpSelected(object sender, DataEventArgs<FtpAccount> e)
-        {
-            var uploader = new FtpUploadingService();
-            var file = ScreenshotManager.GetFileFromBitmap(imagePanel.GetPaintingImage());
-
-            UploadingManager.Upload(uploader.GetUploader(e.Value), file);
-        }
-
-        private void PaintingPanelUploadToFileSelected(object sender, EventArgs e)
-        {
-            var uploader = new FileUploadingService();
-            var file = ScreenshotManager.GetFileFromBitmap(imagePanel.GetPaintingImage());
-
-            UploadingManager.Upload(uploader.GetUploader(), file);
-        }
-
-        private void PaintingPanelUploadToClipboardSelected(object sender, EventArgs e)
-        {
-            UploadImageToClipboard();
-        }
-
-        private void UploadImageToClipboard()
-        {
-            var uploader = new ClipboardUploadingService();
-            var file = ScreenshotManager.GetFileFromBitmap(imagePanel.GetPaintingImage());
-
-            UploadingManager.Upload(uploader.GetUploader(), file);
         }
 
         private void SetDefaultOptions(ImagePanel imagePanel)
@@ -154,11 +133,48 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             imagePanel.PaintBack();
         }
 
-        private void SaveImageButtonClicked(object sender, EventArgs e)
+        private async void PaintingPanelUploadToFtpSelected(object sender, DataEventArgs<FtpAccount> e)
         {
-            var bitmap = imagePanel.GetPaintingImage();
-            ScreenshotManager.UploadScreenShot(bitmap);
-            uploadedImageHash = imagePanel.GetImageHash();
+            var uploadingService = new FtpUploadingService();
+            await UploadWithBlockingButtonAsync(uploadingService.GetFtpUploader(e.Value));
+        }
+
+        private async void PaintingPanelUploadToFileSelected(object sender, EventArgs e)
+        {
+            var uploadingService = new FileUploadingService();
+            await UploadWithBlockingButtonAsync(uploadingService.GetUploader());
+        }
+
+        private async void PaintingPanelUploadToClipboardSelected(object sender, EventArgs e)
+        {
+            await UploadImageToClipboardAsync();
+        }
+
+        private async Task UploadImageToClipboardAsync()
+        {
+            var uploadingService = new ClipboardUploadingService();
+            await UploadImageAsync(uploadingService.GetUploader());
+        }
+
+        private async Task UploadWithBlockingButtonAsync(IUploader uploader)
+        {
+            paintingPanel.UploadImageButton.Enabled = false;
+            await UploadImageAsync(uploader);
+            paintingPanel.UploadImageButton.Enabled = true;
+        }
+
+        private async Task UploadImageAsync(IUploader uploader)
+        {
+            var cancellationToken = globalProperties.ApplicationCancellationToken;
+            var newImageHash = imagePanel.GetImageHash();
+            if (uploadedImageHash != newImageHash)
+            {
+                uploadedImageHash = newImageHash;
+                var file = await ImageFileHelper.GetFileFromBitmapAsync(imagePanel.GetPaintingImage(), cancellationToken);
+                imageFile = file;
+            }
+
+            await UploadingManager.UploadAsync(uploader, imageFile, cancellationToken);
         }
 
         private void PaintingPanelStateChanged(object sender, DataEventArgs<PaintingState> e)

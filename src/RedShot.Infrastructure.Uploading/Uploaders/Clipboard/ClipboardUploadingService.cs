@@ -40,7 +40,7 @@ namespace RedShot.Infrastructure.Uploaders.Clipboard
 
         private void ClipboardUploaderUploadingFinished(object sender, UploadingFinishedEventArgs e)
         {
-            NotifyHelper.Notify("The file has been saved in clipboard.", "RedShot", NotifyStatus.Success);
+            NotifyHelper.Notify("Screenshot has been copied to clipboard.", "RedShot", NotifyStatus.Success);
         }
     }
 }

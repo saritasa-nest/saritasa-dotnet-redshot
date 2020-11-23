@@ -10,9 +10,9 @@ using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Resources;
 using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions;
-using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextInput;
 using RedShot.Infrastructure.Screenshooting.Painting.States;
-using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.UserInputActions;
+using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.MouseActions;
+using RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextActions;
 
 namespace RedShot.Infrastructure.Screenshooting.Painting
 {
@@ -21,8 +21,6 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
     /// </summary>
     internal class ImagePanel : Panel
     {
-        internal TextInputView TextInputView { get; set; }
-
         private readonly SKBitmap image;
         private SKControl skControl;
         private UITimer renderTimer;
@@ -34,7 +32,6 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         private bool painting;
         private SKPaint skPaint;
         private Cursor eraseCursor;
-        private bool textInputtingEnabled;
 
         /// <summary>
         /// Initializes image panel via Bitmap image.
@@ -49,8 +46,6 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             paintingActions = new List<IPaintingAction>();
             previousPaintingActions = new List<IPaintingAction>();
             paintingState = PaintingState.None;
-
-            Shown += ImagePanel_Shown;
         }
 
         /// <summary>
@@ -93,7 +88,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         }
 
         /// <summary>
-        /// Changes SkiaSharp paint (Pen).
+        /// Change SkiaSharp paint.
         /// </summary>
         public void ChangePaint(SKPaint paint)
         {
@@ -102,8 +97,8 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         }
 
         /// <summary>
-        /// Moves back.
-        /// Removes last painting action.
+        /// Move back.
+        /// Remove last painting action.
         /// </summary>
         public void PaintBack()
         {
@@ -117,13 +112,29 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             }
         }
 
-        private void ImagePanel_Shown(object sender, EventArgs e)
+        protected override void OnMouseDown(MouseEventArgs e)
         {
-            renderTimer.Start();
+            base.OnMouseDown(e);
 
-            this.MouseDown += ImagePanel_MouseDown;
-            this.MouseMove += ImagePanel_MouseMove;
-            this.MouseUp += ImagePanel_MouseUp;
+            if (e.Buttons == MouseButtons.Primary)
+            {
+                if (painting == false && paintingState != PaintingState.None)
+                {
+                    StartPaintingAction((Point)e.Location);
+                }
+            }
+            else if (e.Buttons == MouseButtons.Alternate)
+            {
+                PaintBack();
+            }
+
+            e.Handled = true;
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            renderTimer.Start();
         }
 
         private void ChangeMouseCursor()
@@ -150,69 +161,60 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             }
         }
 
-        private void ImagePanel_MouseUp(object sender, MouseEventArgs e)
+        protected override void OnMouseUp(MouseEventArgs e)
         {
+            base.OnMouseUp(e);
+
             if (e.Buttons == MouseButtons.Primary)
             {
-                if (painting && currentAction.PaintingActionType == PaintingActionType.MousePainting)
+                if (painting && currentAction is IMousePaintingAction)
                 {
-                    FinishPaintingAction();
+                    painting = false;
+                    paintingActions.Add(currentAction);
                 }
             }
+
+            e.Handled = true;
         }
 
-        private void FinishPaintingAction()
+        protected override void OnMouseMove(MouseEventArgs e)
         {
-            painting = false;
-            paintingActions.Add(currentAction);
-        }
+            base.OnMouseMove(e);
 
-        private void ImagePanel_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (painting)
+            if (painting && currentAction is IMousePaintingAction mouseAction)
             {
-                currentAction.InputUserAction(new MouseInputAction((Point)e.Location));
+                mouseAction.InputMouseAction((Point)e.Location);
             }
-        }
 
-        private void ImagePanel_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Buttons == MouseButtons.Primary)
-            {
-                if (textInputtingEnabled)
-                {
-                    TextInputView?.Close();
-                    textInputtingEnabled = false;
-                    FinishPaintingAction();
-                }
-
-                if (painting == false && paintingState != PaintingState.None)
-                {
-                    StartPaintingAction((Point)e.Location);
-                }
-            }
-            else if (e.Buttons == MouseButtons.Alternate)
-            {
-                PaintBack();
-            }
+            e.Handled = true;
         }
 
         private void StartPaintingAction(Point startPoint)
         {
-            TextInputView?.Close();
-            currentAction = PaintingActionsMappingService.MapFromState(paintingState, skPaint.Clone(), image);
-            currentAction.AddStartPoint(startPoint);
-            painting = true;
+            var action = PaintingActionsMappingService.MapFromState(paintingState, skPaint.Clone(), image);
+            action.AddStartPoint(startPoint);
 
-            if (currentAction.PaintingActionType == PaintingActionType.KeyboardPainting)
+            if (action is TextPaintingAction textAction)
             {
-                TextInputView = new TextInputView(currentAction);
-                textInputtingEnabled = true;
-                TextInputView.Show();
+                using var textDialog = new TextInputDialog();
+                var result = textDialog.ShowModal();
+
+                if (result.DialogResult == DialogResult.Ok)
+                {
+                    textAction.InputTextAction(result.TextInputAction);
+                    paintingActions.Add(textAction);
+                }
+                FindParent<Control>().Invalidate(true);
+                FindParent<Control>().Focus();
+            }
+            else
+            {
+                currentAction = action;
+                painting = true;
             }
         }
 
-        private void RenderTimer_Elapsed(object sender, EventArgs e)
+        private void RenderTimerElapsed(object sender, EventArgs e)
         {
             skControl.Execute((surface) => RenderImage(surface));
         }
@@ -279,7 +281,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             {
                 Interval = 0.01
             };
-            renderTimer.Elapsed += RenderTimer_Elapsed;
+            renderTimer.Elapsed += RenderTimerElapsed;
 
             skControl = new SKControl();
             Content = skControl;

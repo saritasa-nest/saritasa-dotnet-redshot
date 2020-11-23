@@ -14,9 +14,9 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
     public static class FtpAccountManager
     {
         /// <summary>
-        /// Get default account.
+        /// Get primary account.
         /// </summary>
-        public static FtpAccount GetDefaultFtpAccount()
+        public static FtpAccount GetPrimaryFtpAccount()
         {
             var config = GetConfiguration();
 
@@ -26,7 +26,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             }
             else
             {
-                return GetFtpAccountManualy();
+                return null;
             }
         }
 
@@ -39,7 +39,10 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             return config.FtpAccounts;
         }
 
-        private static FtpAccount GetFtpAccountManualy()
+        /// <summary>
+        /// Get FTP account manually.
+        /// </summary>
+        public static FtpAccount GetFtpAccountManually()
         {
             using (var form = new FtpAccountSelectionForm())
             {

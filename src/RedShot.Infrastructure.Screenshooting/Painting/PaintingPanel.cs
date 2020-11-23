@@ -138,7 +138,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
 
             TextEnableButton = new ImageButton(buttonSize, Icons.Text, scaleImageSize: imageSize)
             {
-                ToolTip = "Enter text"
+                ToolTip = "Text"
             };
 
             TextEnableButton.Clicked += (o, e) => StateChanged?.Invoke(this, new DataEventArgs<PaintingState>(PaintingState.Text));

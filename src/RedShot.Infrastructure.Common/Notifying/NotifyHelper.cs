@@ -1,6 +1,8 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Linq;
+using System.Runtime.InteropServices;
 using Eto.Drawing;
 using Eto.Forms;
+using RedShot.Infrastructure.Abstractions;
 using RedShot.Resources;
 
 namespace RedShot.Infrastructure.Common.Notifying
@@ -10,6 +12,8 @@ namespace RedShot.Infrastructure.Common.Notifying
     /// </summary>
     public static class NotifyHelper
     {
+        private static TrayIndicator tray = GetTrayIndicator();
+
         /// <summary>
         /// Runs notifier with specified data.
         /// </summary>
@@ -31,7 +35,13 @@ namespace RedShot.Infrastructure.Common.Notifying
                 notifyer.ContentImage = icon;
             }
 
-            notifyer.Show();
+            notifyer.Show(tray);
+        }
+
+        private static TrayIndicator GetTrayIndicator()
+        {
+            var form = (ITrayForm)Application.Instance.Windows.First(w => w is ITrayForm);
+            return form.Tray;
         }
 
         private static Bitmap GetIconForStatus(NotifyStatus status)
