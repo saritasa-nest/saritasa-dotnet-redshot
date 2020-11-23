@@ -1,4 +1,5 @@
-﻿using Eto.Forms;
+﻿using System;
+using Eto.Forms;
 
 namespace RedShot.Shortcut.Settings
 {
@@ -8,7 +9,12 @@ namespace RedShot.Shortcut.Settings
     internal class ShortcutTextBox : TextBox
     {
         private Keys keys;
-        private readonly KeysParser keysParser;
+        private readonly ShortcutKeysHelper keysHelper;
+
+        /// <summary>
+        /// Keys changed event.
+        /// </summary>
+        public event EventHandler<ShortcutKeysChangedEventArgs> KeysChanged;
 
         /// <summary>
         /// Hot keys.
@@ -19,10 +25,9 @@ namespace RedShot.Shortcut.Settings
 
             set
             {
-                keys = value;
-
-                if (keys != Keys.None)
+                if (keys != value)
                 {
+                    keys = value;
                     RenderText();
                 }
             }
@@ -33,8 +38,8 @@ namespace RedShot.Shortcut.Settings
         /// </summary>
         public ShortcutTextBox()
         {
-            Text = "None";
-            keysParser = new KeysParser();
+            keysHelper = new ShortcutKeysHelper();
+            Reset();
 #if _WINDOWS
             RedShot.Platforms.Windows.WindowsNativeHelper.HideCaret(this.ControlObject);
 #endif
@@ -68,15 +73,32 @@ namespace RedShot.Shortcut.Settings
         {
             e.Handled = true;
 
+            // Hack: to catch `PrintScreen` key.
             if (e.KeyData.HasFlag(Keys.PrintScreen))
             {
                 Keys = e.KeyData;
+            }
+
+            if (ValidateShortcutKeys(Keys) || Keys == Keys.None)
+            {
+                KeysChanged?.Invoke(this, new ShortcutKeysChangedEventArgs(Keys));
+            }
+            else
+            {
+                Reset();
             }
         }
 
         private void RenderText()
         {
-            Text = keysParser.GetShortcutString(Keys);
+            Text = keysHelper.GetShortcutString(Keys);
+        }
+
+        private bool ValidateShortcutKeys(Keys keyData)
+        {
+            var modifiers = keyData & Keys.ModifierMask;
+
+            return modifiers != Keys.None && keysHelper.TryGetMainKey(keyData, out var _);
         }
     }
 }

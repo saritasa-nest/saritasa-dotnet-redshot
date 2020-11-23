@@ -3,6 +3,8 @@ using Eto.Forms;
 using System.Collections.Generic;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Resources;
+using System.Linq;
+using RedShot.Shortcut.Shortcuts;
 
 namespace RedShot.Shortcut.Settings
 {
@@ -18,15 +20,25 @@ namespace RedShot.Shortcut.Settings
         /// </summary>
         public ShortcutSettingsControl(IEnumerable<Shortcuts.Shortcut> shortcuts)
         {
-            this.shortcuts = shortcuts;
+            this.shortcuts = GetOrderedShortcuts(shortcuts.ToList());
             InitializeComponents();
+        }
+
+        private IEnumerable<Shortcuts.Shortcut> GetOrderedShortcuts(IEnumerable<Shortcuts.Shortcut> shortcuts)
+        {
+            var screenshotShortcut = shortcuts.First(s => s is ScreenShotShortcut);
+            var ordered = new List<Shortcuts.Shortcut>();
+            ordered.Add(screenshotShortcut);
+            ordered.AddRange(shortcuts.Where(s => s != screenshotShortcut));
+
+            return ordered;
         }
 
         private void InitializeComponents()
         {
             var layout = new TableLayout()
             {
-                Padding = new Padding(30, 40, 0, 0),
+                Padding = new Padding(20, 20, 0, 0),
                 Spacing = new Size(15, 20)
             };
 
@@ -52,12 +64,29 @@ namespace RedShot.Shortcut.Settings
                 Size = new Size(200, 22),
                 Keys = shortcut.Keys
             };
-            shortcutTextBox.TextChanging += (o, e) =>
+            shortcutTextBox.KeysChanged += (o, e) =>
             {
-                shortcut.Keys = shortcutTextBox.Keys;
+                if (e.Keys == Keys.None)
+                {
+                    shortcut.Keys = Keys.None;
+                    return;
+                }
+
+                // This logic prevent using shortcut keys for the second time.
+                if (shortcuts.Any(s => s.Keys == e.Keys && s != shortcut))
+                {
+                    shortcutTextBox.Reset();
+                }
+                else
+                {
+                    shortcut.Keys = e.Keys;
+                }
             };
 
-            var clearButton = new ImageButton(new Size(26, 24), Icons.Close, scaleImageSize: new Size(13, 12));
+            var clearButton = new ImageButton(new Size(26, 24), Icons.Close, scaleImageSize: new Size(13, 12))
+            {
+                ToolTip = "Clear"
+            };
             clearButton.Clicked += (o, e) => shortcutTextBox.Reset();
 
             return new StackLayout()
