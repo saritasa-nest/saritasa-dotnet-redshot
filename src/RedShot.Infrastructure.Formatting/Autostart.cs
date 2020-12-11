@@ -10,7 +10,7 @@ namespace RedShot.Infrastructure.Formatting
     {
         private const string ProgramName = "RedShot";
         private const string RegistrySubKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run\";
-        private const string RegistryNotFoundMessage = "Failed to enable autostart. Registry subkey not found";
+        private const string RegistryNotFoundMessage = "Failed to enable autostart, registry subkey not found.";
 
         private string ExecutablePath => Path.Combine(Directory.GetCurrentDirectory(),
             $"{AppDomain.CurrentDomain.FriendlyName}.exe");
