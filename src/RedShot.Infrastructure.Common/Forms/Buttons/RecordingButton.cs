@@ -23,14 +23,14 @@ namespace RedShot.Infrastructure.Common.Forms
         private readonly Bitmap playIcon;
         private readonly Bitmap stopIcon;
         private Button button;
+        private Label countdownLabel;
 
         /// <summary>
         /// Initializes recording button.
         /// </summary>
-        public RecordingButton(int width, int height)
+        public RecordingButton(Size size)
         {
-            Width = width;
-            Height = height;
+            Size = size;
 
             playIcon = Icons.Play;
             stopIcon = Icons.Stop;
@@ -42,21 +42,26 @@ namespace RedShot.Infrastructure.Common.Forms
         {
             button = new Button
             {
-                Width = Width,
-                Height = Height
+                Size = Size
+            };
+
+            countdownLabel = new Label()
+            {
+                Font = new Font(FontFamilies.Sans, 14),
+                Size = Size.Scale(0.70),
+                TextColor = Colors.Red,
+                TextAlignment = TextAlignment.Center,
+                Visible = false
             };
 
             SetImage(playIcon);
 
-            button.Click += Btn_Click;
+            button.Click += ButtonClick;
 
-            Content = new StackLayout
-            {
-                Items =
-                {
-                    button
-                }
-            };
+            var content = new PixelLayout();
+            content.Add(button, Point.Empty);
+            content.Add(countdownLabel, new Point(Size.Scale(0.15)));
+            Content = content;
         }
 
         /// <summary>
@@ -64,6 +69,8 @@ namespace RedShot.Infrastructure.Common.Forms
         /// </summary>
         public void RevertState()
         {
+            countdownLabel.Visible = false;
+
             if (IsRecording)
             {
                 IsRecording = false;
@@ -78,15 +85,26 @@ namespace RedShot.Infrastructure.Common.Forms
             Invalidate(true);
         }
 
-        private void SetImage(Bitmap image)
+        /// <summary>
+        /// Set countdown second.
+        /// </summary>
+        /// <param name="second">Second.</param>
+        public void SetCountdownSecond(int second)
         {
-            button.Image = new Bitmap(image, Convert.ToInt32(Width * 0.6), Convert.ToInt32(Height * 0.6), ImageInterpolation.High);
+            countdownLabel.Visible = true;
+            countdownLabel.Text = second.ToString();
+            Invalidate(true);
         }
 
-        private void Btn_Click(object sender, EventArgs e)
+        private void SetImage(Bitmap image)
+        {
+            var scaledSize = Size.Scale(0.6);
+            button.Image = new Bitmap(image, scaledSize.Width, scaledSize.Height, ImageInterpolation.High);
+        }
+
+        private void ButtonClick(object sender, EventArgs e)
         {
             Clicked?.Invoke(sender, e);
-            RevertState();
         }
     }
 }

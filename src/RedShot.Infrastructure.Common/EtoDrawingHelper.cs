@@ -1,8 +1,9 @@
-﻿using Eto.Drawing;
-using SkiaSharp;
+﻿using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Eto.Drawing;
+using SkiaSharp;
 
 namespace RedShot.Infrastructure.Common
 {
@@ -79,6 +80,14 @@ namespace RedShot.Infrastructure.Common
         {
             var bytes = bitmap.ToByteArray(imageFormat);
             await File.WriteAllBytesAsync(filePath, bytes, cancellationToken);
+        }
+
+        /// <summary>
+        /// Scale size.
+        /// </summary>
+        public static Size Scale(this Size size, double scaleRate)
+        {
+            return new Size(Convert.ToInt32(size.Width * scaleRate), Convert.ToInt32(size.Height * scaleRate));
         }
     }
 }

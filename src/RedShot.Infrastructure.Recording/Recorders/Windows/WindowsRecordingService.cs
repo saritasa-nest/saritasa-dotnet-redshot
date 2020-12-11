@@ -19,6 +19,7 @@ namespace RedShot.Recording.Recorders.Windows
 
         /// <inheritdoc />
         protected override string BinariesUrl => ConfigurationManager.AppSettings.FfmpegWindowsDownloadPath;
+
         /// <inheritdoc />
         public override IRecorder GetRecorder()
         {
