@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 
 namespace RedShot.Infrastructure.Formatting
 {
@@ -11,11 +10,11 @@ namespace RedShot.Infrastructure.Formatting
     {
         private const string ProgramName = "RedShot";
         private const string RegistrySubKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run\";
-        private const string RegistryNotFoundMessage = "Faild to enable autostart, registry subkey not found";
+        private const string RegistryNotFoundMessage = "Failed to enable autostart. Registry subkey not found";
 
         private readonly bool? previousAutostartOption;
 
-        private string ExecutablePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+        private string ExecutablePath => Path.Combine(Directory.GetCurrentDirectory(),
             $"{AppDomain.CurrentDomain.FriendlyName}.exe");
 
         /// <summary>

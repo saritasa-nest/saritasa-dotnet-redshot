@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.IO;
+using System.Globalization;
 using Microsoft.Extensions.Configuration;
 using NLog.Extensions.Logging;
 using Eto.Forms;
@@ -9,9 +10,7 @@ using RedShot.Infrastructure;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Configuration.Models;
 using RedShot.Infrastructure.Settings;
-using System.Globalization;
 using RedShot.Infrastructure.Formatting;
-using RedShot.Infrastructure.Formatting.Settings;
 #if _WINDOWS
 using Eto.WinForms.Forms;
 #elif _UNIX
