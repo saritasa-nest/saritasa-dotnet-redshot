@@ -124,8 +124,8 @@ namespace RedShot.Infrastructure.Recording
                     process.ErrorDataReceived += CliErrorDataReceived;
                     process.OutputDataReceived += RecordingCheck;
                     process.ErrorDataReceived += RecordingCheck;
-
                     process.StartInfo = processInfo;
+
                     try
                     {
                         process.Start();
@@ -135,13 +135,14 @@ namespace RedShot.Infrastructure.Recording
                     }
                     finally
                     {
-                        IsRecording = false;
-                        logger.Trace("Recording finished!");
-
+                        process.Kill(true);
                         lock (lockObject)
                         {
                             IsProcessRunning = false;
                         }
+
+                        IsRecording = false;
+                        logger.Trace("Recording finished!");
                     }
                 }
             });
