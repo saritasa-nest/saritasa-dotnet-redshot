@@ -83,11 +83,10 @@ namespace RedShot.Application
         private static void ConfigureAutostart()
         {
             var general = ConfigurationManager.GetSection<GeneralConfigurationOption>();
-            if (general.LaunchAtSystemStart == null)
+            if (general.LaunchAtSystemStart)
             {
-                var autostart = new Autostart(general);
-                autostart.LaunchAtSystemStart = true;
-                ConfigurationManager.SetSettingsValue(general);
+                var autostart = new Autostart();
+                autostart.EnableAutostart();
             }
         }
 

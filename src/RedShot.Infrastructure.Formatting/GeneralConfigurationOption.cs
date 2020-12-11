@@ -1,6 +1,6 @@
-﻿using RedShot.Infrastructure.Abstractions;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using RedShot.Infrastructure.Abstractions;
 
 namespace RedShot.Infrastructure.Formatting
 {
@@ -10,14 +10,15 @@ namespace RedShot.Infrastructure.Formatting
     public class GeneralConfigurationOption : IConfigurationOption, INotifyPropertyChanged
     {
         private string pattern;
-        private bool? launchAtSystemStart;
+        private bool launchAtSystemStart;
 
         /// <summary>
         /// Initializes <see cref="GeneralConfigurationOption"/> object.
         /// </summary>
         public GeneralConfigurationOption()
         {
-            Pattern = "%date%rnd";
+            pattern = "%date%rnd";
+            launchAtSystemStart = true;
         }
 
         /// <inheritdoc />
@@ -43,7 +44,7 @@ namespace RedShot.Infrastructure.Formatting
         /// <summary>
         /// Whether to launch at system start.
         /// </summary>
-        public bool? LaunchAtSystemStart
+        public bool LaunchAtSystemStart
         {
             get => launchAtSystemStart;
             set

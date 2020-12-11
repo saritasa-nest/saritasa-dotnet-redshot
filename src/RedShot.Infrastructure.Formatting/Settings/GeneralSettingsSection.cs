@@ -20,7 +20,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
         public GeneralSettingsSection()
         {
             configurationOption = ConfigurationManager.GetSection<GeneralConfigurationOption>();
-            autostart = new Autostart(configurationOption);
+            autostart = new Autostart();
         }
 
         /// <inheritdoc />
@@ -40,7 +40,15 @@ namespace RedShot.Infrastructure.Formatting.Settings
         /// <inheritdoc />
         public void Save()
         {
-            autostart.LaunchAtSystemStart = configurationOption.LaunchAtSystemStart.Value;
+            if (configurationOption.LaunchAtSystemStart)
+            {
+                autostart.EnableAutostart();
+            }
+            else
+            {
+                autostart.DisableAutostart();
+            }
+
             ConfigurationManager.SetSettingsValue(configurationOption);
             ConfigurationManager.Save();
         }
