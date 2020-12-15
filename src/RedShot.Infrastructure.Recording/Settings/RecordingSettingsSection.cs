@@ -39,14 +39,14 @@ namespace RedShot.Infrastructure.Recording.Settings
         /// <inheritdoc/>
         public void Save()
         {
-            ConfigurationManager.SetSettingsValue(ffmpegConfiguration);
+            ConfigurationManager.SetSection(ffmpegConfiguration);
             ConfigurationManager.Save();
         }
 
         /// <inheritdoc/>
         public ValidationResult Validate()
         {
-            return FFmpegOptionsValidator.Validate(ffmpegConfiguration.Options);
+            return FFmpegOptionsValidator.Validate(ffmpegConfiguration.FFmpegOptions);
         }
     }
 }

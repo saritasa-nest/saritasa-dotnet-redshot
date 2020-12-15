@@ -1,8 +1,8 @@
 ﻿using System;
 using Eto.Drawing;
 using Eto.Forms;
-using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Recording.Abstractions;
 
 namespace RedShot.Infrastructure.Recording.Views
 {

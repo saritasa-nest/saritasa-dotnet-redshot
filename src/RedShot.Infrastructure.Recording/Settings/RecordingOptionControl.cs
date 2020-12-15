@@ -37,13 +37,13 @@ namespace RedShot.Infrastructure.Recording.Settings
         private void SetDefaultButtonClicked(object sender, EventArgs e)
         {
             Content.Unbind();
-            ffmpegConfiguration.Options = new FFmpegOptions();
+            ffmpegConfiguration.FFmpegOptions = new FFmpegOptions();
             BindOptions();
         }
 
         private void BindOptions()
         {
-            Content.DataContext = ffmpegConfiguration.Options;
+            Content.DataContext = ffmpegConfiguration.FFmpegOptions;
 
             fps.ValueBinding.Convert(f => (int)f, t => t).BindDataContext((FFmpegOptions o) => o.Fps);
             userArgs.TextBinding.BindDataContext((FFmpegOptions o) => o.UserArgs);
@@ -59,19 +59,19 @@ namespace RedShot.Infrastructure.Recording.Settings
         private void VideoCodecOptionsButtonClicked(object sender, EventArgs e)
         {
             Dialog options;
-            switch (ffmpegConfiguration.Options.VideoCodec)
+            switch (ffmpegConfiguration.FFmpegOptions.VideoCodec)
             {
                 case FFmpegVideoCodec.Libx264:
                 case FFmpegVideoCodec.Libx265:
-                    options = new H264H265CodecOptions(ffmpegConfiguration.Options);
+                    options = new H264H265CodecOptions(ffmpegConfiguration.FFmpegOptions);
                     break;
 
                 case FFmpegVideoCodec.Libvpx_vp9:
-                    options = new Vp9CodecOptions(ffmpegConfiguration.Options);
+                    options = new Vp9CodecOptions(ffmpegConfiguration.FFmpegOptions);
                     break;
 
                 case FFmpegVideoCodec.Libxvid:
-                    options = new MpegCodecOptions(ffmpegConfiguration.Options);
+                    options = new MpegCodecOptions(ffmpegConfiguration.FFmpegOptions);
                     break;
 
                 default:
@@ -84,22 +84,22 @@ namespace RedShot.Infrastructure.Recording.Settings
         private void AudioCodecOptionsButtonClicked(object sender, EventArgs e)
         {
             Dialog options;
-            switch (ffmpegConfiguration.Options.AudioCodec)
+            switch (ffmpegConfiguration.FFmpegOptions.AudioCodec)
             {
                 case FFmpegAudioCodec.Libvoaacenc:
-                    options = new AacOptions(ffmpegConfiguration.Options);
+                    options = new AacOptions(ffmpegConfiguration.FFmpegOptions);
                     break;
 
                 case FFmpegAudioCodec.Libopus:
-                    options = new OpusOptions(ffmpegConfiguration.Options);
+                    options = new OpusOptions(ffmpegConfiguration.FFmpegOptions);
                     break;
 
                 case FFmpegAudioCodec.Libvorbis:
-                    options = new VorbisOptions(ffmpegConfiguration.Options);
+                    options = new VorbisOptions(ffmpegConfiguration.FFmpegOptions);
                     break;
 
                 case FFmpegAudioCodec.Libmp3lame:
-                    options = new Mp3Options(ffmpegConfiguration.Options);
+                    options = new Mp3Options(ffmpegConfiguration.FFmpegOptions);
                     break;
 
                 default:

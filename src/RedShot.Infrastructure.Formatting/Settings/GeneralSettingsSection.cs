@@ -38,7 +38,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
         /// <inheritdoc />
         public void Save()
         {
-            ConfigurationManager.SetSettingsValue(configurationOption);
+            ConfigurationManager.SetSection(configurationOption);
             ConfigurationManager.Save();
         }
 

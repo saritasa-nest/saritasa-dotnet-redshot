@@ -1,4 +1,6 @@
-﻿namespace RedShot.Infrastructure.Abstractions.Recording
+﻿using RedShot.Infrastructure.Recording.Ffmpeg.Devices;
+
+namespace RedShot.Infrastructure.Recording.Abstractions
 {
     /// <summary>
     /// Abstraction for recording services.
@@ -24,6 +26,6 @@
         /// <summary>
         /// Gives recording devices (Audio, Video).
         /// </summary>
-        IRecordingDevices GetRecordingDevices();
+        RecordingDevices GetRecordingDevices();
     }
 }

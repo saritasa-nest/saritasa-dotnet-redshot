@@ -1,6 +1,7 @@
 ﻿using Eto.Drawing;
+using RedShot.Infrastructure.Abstractions;
 
-namespace RedShot.Infrastructure.Abstractions.Recording
+namespace RedShot.Infrastructure.Recording.Abstractions
 {
     /// <summary>
     /// Provides recorder.

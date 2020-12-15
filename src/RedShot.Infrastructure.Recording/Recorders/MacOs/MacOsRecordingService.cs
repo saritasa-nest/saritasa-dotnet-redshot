@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.Configuration;
+using RedShot.Infrastructure.Recording.Abstractions;
 using RedShot.Infrastructure.Recording.Ffmpeg.Devices;
 
 namespace RedShot.Infrastructure.Recording.Recorders.MacOs
@@ -25,20 +24,19 @@ namespace RedShot.Infrastructure.Recording.Recorders.MacOs
         {
             ThrowIfNotFoundFfmpegBinary();
 
-            var options = ConfigurationManager.GetSection<FFmpegConfiguration>().Options;
+            var configuration = ConfigurationManager.GetSection<FFmpegConfiguration>();
 
-            return new MacOsRecorder(options, GetFullFfmpegPath());
+            return new MacOsRecorder(configuration, GetFullFfmpegPath());
         }
 
         /// <inheritdoc />
-        public override IRecordingDevices GetRecordingDevices()
+        public override RecordingDevices GetRecordingDevices()
         {
             ThrowIfNotFoundFfmpegBinary();
 
             var cli = new FFmpegCliManager(GetFullFfmpegPath());
 
-            var videoDevices = new List<Device>();
-            var audioDevices = new List<Device>();
+            var recordingDevices = new RecordingDevices();
 
             cli.Run("-f avfoundation -list_devices true -i \"\"");
             cli.WaitForExit();
@@ -70,16 +68,16 @@ namespace RedShot.Infrastructure.Recording.Recorders.MacOs
 
                     if (isVideo)
                     {
-                        videoDevices.Add(new Device(deviceName, deviceIndex));
+                        recordingDevices.VideoDevices.Add(new Device(deviceName, deviceIndex));
                     }
                     else
                     {
-                        audioDevices.Add(new Device(deviceName, deviceIndex));
+                        recordingDevices.AudioDevices.Add(new Device(deviceName, deviceIndex));
                     }
                 }
             }
 
-            return new RecordingDevices(videoDevices, audioDevices);
+            return new RecordingDevices();
         }
     }
 }

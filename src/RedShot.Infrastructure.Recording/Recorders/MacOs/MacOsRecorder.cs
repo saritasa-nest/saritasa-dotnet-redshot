@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using Eto.Drawing;
-using RedShot.Infrastructure.Recording.Ffmpeg;
 
 namespace RedShot.Infrastructure.Recording.Recorders.MacOs
 {
@@ -9,7 +8,7 @@ namespace RedShot.Infrastructure.Recording.Recorders.MacOs
         /// <summary>
         /// Initializes Linux recorder.
         /// </summary>
-        public MacOsRecorder(FFmpegOptions options, string videoFolderPath = null) : base(options, "ffmpeg", videoFolderPath)
+        public MacOsRecorder(FFmpegConfiguration options, string ffmpegPath, string videoFolderPath = null) : base(options, ffmpegPath, videoFolderPath)
         {
         }
 
@@ -18,27 +17,19 @@ namespace RedShot.Infrastructure.Recording.Recorders.MacOs
         {
             var args = new StringBuilder();
 
-            args.Append($" -framerate {options.Fps} -f avfoundation -i \"default:none\" ");
-            args.Append($" -draw_mouse {(options.DrawCursor ? '1' : '0')} ");
+            args.Append($" -framerate {ffmpegOptions.Fps} -f avfoundation -i \"default:none\" ");
+            args.Append($" -draw_mouse {(ffmpegOptions.DrawCursor ? '1' : '0')} ");
 
-            if (options.VideoDevice != null)
+            if (ffmpegOptions.VideoDevice != null)
             {
-                args.AppendFormat("-video_device_index {0} ", options.VideoDevice.CompatibleFfmpegName);
+                args.AppendFormat("-video_device_index {0} ", ffmpegOptions.VideoDevice.CompatibleFfmpegName);
             }
 
-            if (options.UseAudio)
+            if (audioOptions.RecordAudio)
             {
-                if (options.PrimaryAudioDevice != null)
+                foreach (var device in audioOptions.Devices)
                 {
-                    args.AppendFormat("-audio_device_index {0} ", options.PrimaryAudioDevice.CompatibleFfmpegName);
-                }
-
-                if (options.OptionalAudioDevice != null)
-                {
-                    if (options.PrimaryAudioDevice != options.OptionalAudioDevice)
-                    {
-                        args.AppendFormat("-audio_device_index {0} ", options.PrimaryAudioDevice.CompatibleFfmpegName);
-                    }
+                    args.AppendFormat("-audio_device_index {0} ", device.CompatibleFfmpegName);
                 }
             }
 

@@ -14,8 +14,6 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
         private int fps;
         private bool drawCursor;
         private Device videoDevice;
-        private Device optionalAudioDevice;
-        private Device primaryAudioDevice;
         private FFmpegVideoCodec videoCodec;
         private FFmpegAudioCodec audioCodec;
         private FFmpegX264Preset x264Preset;
@@ -29,7 +27,6 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
         private int mp3Qscale;
         private string userArgs;
         private bool useGdigrab;
-        private bool useAudio;
 
         public FFmpegOptions()
         {
@@ -48,21 +45,6 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             MP3Qscale = 4;
             UserArgs = string.Empty;
             UseGdigrab = true;
-            useAudio = false;
-        }
-
-        public bool UseAudio
-        {
-            get { return useAudio; }
-
-            set
-            {
-                if (useAudio != value)
-                {
-                    useAudio = value;
-                    OnPropertyChanged();
-                }
-            }
         }
 
         public int Fps
@@ -125,34 +107,6 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             }
         }
 
-        public Device OptionalAudioDevice
-        {
-            get { return optionalAudioDevice; }
-
-            set
-            {
-                if (optionalAudioDevice != value)
-                {
-                    optionalAudioDevice = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        public Device PrimaryAudioDevice
-        {
-            get { return primaryAudioDevice; }
-
-            set
-            {
-                if (primaryAudioDevice != value)
-                {
-                    primaryAudioDevice = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
         public FFmpegVideoCodec VideoCodec
         {
             get { return videoCodec; }
@@ -195,7 +149,6 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             }
         }
 
-        // Video
         public FFmpegX264Preset X264Preset
         {
             get { return x264Preset; }
@@ -275,7 +228,6 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             }
         }
 
-        // Audio
         public int AacQScale
         {
             get { return aacQScale; }

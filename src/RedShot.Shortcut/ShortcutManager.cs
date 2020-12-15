@@ -51,7 +51,7 @@ namespace RedShot.Shortcut
             configOption.ShortCutMaps.Clear();
             configOption.ShortCutMaps.AddRange(shortcutMaps);
 
-            ConfigurationManager.SetSettingsValue(configOption);
+            ConfigurationManager.SetSection(configOption);
             ConfigurationManager.Save();
         }
 

@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using Eto.Drawing;
 using Eto.Forms;
-using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
+using RedShot.Infrastructure.Recording.Abstractions;
 using RedShot.Infrastructure.Uploading;
 using RedShot.Resources;
 
@@ -26,6 +26,7 @@ namespace RedShot.Infrastructure.Recording.Views
         private readonly Stopwatch recordingTimer;
         private RecordingButton recordingButton;
         private ImageButton closeButton;
+        private ImageButton optionsButton;
         private Label timerLabel;
 
         /// <summary>
@@ -131,14 +132,18 @@ namespace RedShot.Infrastructure.Recording.Views
                 Text = TimeSpan.Zero.ToString()
             };
             var buttonSize = new Size(40, 35);
+            var scaleSize = new Size(20, 18);
+
             recordingButton = new RecordingButton(buttonSize);
             recordingButton.Clicked += RecordingButtonClicked;
 
-            var closeImage = Icons.Close;
-            closeButton = new ImageButton(buttonSize, closeImage, scaleImageSize: new Size(20, 18));
+            closeButton = new ImageButton(buttonSize, Icons.Close, scaleImageSize: scaleSize);
             closeButton.Clicked += CloseButtonClicked;
 
-            Size = new Size(240, 41);
+            optionsButton = new ImageButton(buttonSize, Icons.Gear, scaleImageSize: scaleSize);
+            optionsButton.Clicked += OptionsButtonClicked;
+
+            Size = new Size(220, 41);
             Content = new StackLayout()
             {
                 Orientation = Orientation.Horizontal,
@@ -148,11 +153,18 @@ namespace RedShot.Infrastructure.Recording.Views
                 Items =
                 {
                     recordingButton,
-                    closeButton,
+                    timerLabel,
                     FormsHelper.GetVoidBox(15),
-                    timerLabel
+                    optionsButton,
+                    closeButton
                 }
             };
+        }
+
+        private void OptionsButtonClicked(object sender, EventArgs e)
+        {
+            using var optionsDialog = new AudioOptionsDialog();
+            optionsDialog.ShowModal();
         }
     }
 }

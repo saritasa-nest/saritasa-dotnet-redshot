@@ -37,7 +37,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         /// <inheritdoc />
         public void Save()
         {
-            ConfigurationManager.SetSettingsValue(ftpConfiguration);
+            ConfigurationManager.SetSection(ftpConfiguration);
             ConfigurationManager.Save();
         }
 

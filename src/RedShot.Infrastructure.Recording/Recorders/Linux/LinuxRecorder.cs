@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using Eto.Drawing;
-using RedShot.Infrastructure.Recording.Ffmpeg;
+using RedShot.Infrastructure.Recording;
 using RedShot.Infrastructure.Recording.Recorders;
 
 namespace RedShot.Recording.Recorders.Linux
@@ -13,7 +13,7 @@ namespace RedShot.Recording.Recorders.Linux
         /// <summary>
         /// Initializes Linux recorder.
         /// </summary>
-        public LinuxRecorder(FFmpegOptions options, string videoFolderPath = null) : base(options, "ffmpeg", videoFolderPath)
+        public LinuxRecorder(FFmpegConfiguration configuration, string videoFolderPath = null) : base(configuration, "ffmpeg", videoFolderPath)
         {
         }
 
@@ -22,13 +22,13 @@ namespace RedShot.Recording.Recorders.Linux
         {
             var args = new StringBuilder();
 
-            if (options.UseGdigrab || options.VideoDevice == null)
+            if (ffmpegOptions.UseGdigrab || ffmpegOptions.VideoDevice == null)
             {
-                args.Append($"-video_size {captureArea.Size.Width}x{captureArea.Size.Height} -framerate {options.Fps} -f x11grab -i :0.0+{captureArea.Location.X},{captureArea.Location.Y}");
-                args.Append($" -draw_mouse {(options.DrawCursor ? '1' : '0')} ");
+                args.Append($"-video_size {captureArea.Size.Width}x{captureArea.Size.Height} -framerate {ffmpegOptions.Fps} -f x11grab -i :0.0+{captureArea.Location.X},{captureArea.Location.Y}");
+                args.Append($" -draw_mouse {(ffmpegOptions.DrawCursor ? '1' : '0')} ");
             }
 
-            if (options.UseAudio)
+            if (audioOptions.RecordAudio)
             {
                 args.Append($"-f alsa -ac 2 -i hw:0 ");
             }

@@ -1,10 +1,10 @@
 ﻿using System;
 using Eto.Forms;
-using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Recording.Ffmpeg.Devices;
 using RedShot.Infrastructure.Recording;
+using RedShot.Infrastructure.Recording.Abstractions;
 
 namespace RedShot.Recording.Recorders.Linux
 {
@@ -30,9 +30,9 @@ namespace RedShot.Recording.Recorders.Linux
         {
             ThrowIfNotFoundFfmpegBinary();
 
-            var options = ConfigurationManager.GetSection<FFmpegConfiguration>().Options;
+            var configuration = ConfigurationManager.GetSection<FFmpegConfiguration>();
 
-            return new LinuxRecorder(options);
+            return new LinuxRecorder(configuration);
         }
 
         /// <inheritdoc />
@@ -51,7 +51,7 @@ namespace RedShot.Recording.Recorders.Linux
         }
 
         /// <inheritdoc />
-        public IRecordingDevices GetRecordingDevices()
+        public RecordingDevices GetRecordingDevices()
         {
             ThrowIfNotFoundFfmpegBinary();
 
