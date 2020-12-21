@@ -61,9 +61,7 @@ namespace RedShot.Infrastructure.Recording
                 region.Height--;
             }
 
-            var recorder = RecordingService.GetRecorder();
-
-            recordingView = new RecordingView(recorder, region);
+            recordingView = new RecordingView(RecordingService, region);
             recordingView.Show();
         }
 

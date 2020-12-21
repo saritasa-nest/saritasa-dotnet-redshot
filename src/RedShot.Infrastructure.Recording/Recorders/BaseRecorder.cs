@@ -96,7 +96,7 @@ namespace RedShot.Infrastructure.Recording.Recorders
                         {
                             audioArgsBuilder.Append($"[{i}:a]");
                         }
-                        audioArgsBuilder.Append($"amerge=inputs={count}[a]\" -map \"[a]\"");
+                        audioArgsBuilder.Append($"amerge=inputs={count}[a]\" -map 2 -map \"[a]\"");
                     }
                 }
             }

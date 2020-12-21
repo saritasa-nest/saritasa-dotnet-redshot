@@ -20,7 +20,8 @@ namespace RedShot.Infrastructure.Recording.Views
         /// </summary>
         public event EventHandler Closed;
 
-        private readonly IRecorder recorder;
+        private readonly IRecordingService recordingService;
+        private IRecorder recorder;
         private Rectangle recordingRectangle;
         private readonly UITimer labelRenderTimer;
         private readonly Stopwatch recordingTimer;
@@ -32,9 +33,9 @@ namespace RedShot.Infrastructure.Recording.Views
         /// <summary>
         /// Initializes recording view.
         /// </summary>
-        public RecordingVideoPanel(IRecorder recorder, Rectangle recordingRectangle)
+        public RecordingVideoPanel(IRecordingService recordingService, Rectangle recordingRectangle)
         {
-            this.recorder = recorder;
+            this.recordingService = recordingService;
             this.recordingRectangle = recordingRectangle;
 
             InitializeComponents();
@@ -67,6 +68,7 @@ namespace RedShot.Infrastructure.Recording.Views
             else
             {
                 recordingTimer.Reset();
+                recorder = recordingService.GetRecorder();
                 StartWithDelay();
             }
         }
