@@ -3,13 +3,12 @@
 namespace RedShot.Infrastructure.Recording.Abstractions
 {
     /// <summary>
-    /// Abstraction for recording services.
-    /// Recorder factory.
+    /// Recording service.
     /// </summary>
     public interface IRecordingService
     {
         /// <summary>
-        /// Gives recorder.
+        /// Get recorder.
         /// </summary>
         IRecorder GetRecorder();
 
@@ -24,7 +23,7 @@ namespace RedShot.Infrastructure.Recording.Abstractions
         bool CheckFFmpeg();
 
         /// <summary>
-        /// Gives recording devices (Audio, Video).
+        /// Get recording devices (Audio, Video).
         /// </summary>
         RecordingDevices GetRecordingDevices();
     }

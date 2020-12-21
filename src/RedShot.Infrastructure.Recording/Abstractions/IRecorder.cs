@@ -15,12 +15,12 @@ namespace RedShot.Infrastructure.Recording.Abstractions
         void Start(Rectangle area);
 
         /// <summary>
-        /// Stops recording.
+        /// Stop recording.
         /// </summary>
         void Stop();
 
         /// <summary>
-        /// Gives recorded video.
+        /// Get recorded video.
         /// </summary>
         IFile GetVideo();
 

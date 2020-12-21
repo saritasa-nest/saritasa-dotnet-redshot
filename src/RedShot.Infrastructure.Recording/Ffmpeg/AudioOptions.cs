@@ -43,6 +43,7 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
         /// </summary>
         public HashSet<Device> Devices { get; set; }
 
+        /// <inheritdoc/>
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] string memberName = null)
@@ -50,6 +51,9 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(memberName));
         }
 
+        /// <summary>
+        /// Clone.
+        /// </summary>
         public AudioOptions Clone()
         {
             return MemberwiseClone() as AudioOptions;

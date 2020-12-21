@@ -36,7 +36,7 @@ namespace RedShot.Infrastructure.Recording.Recorders
         /// <inheritdoc />
         public bool CheckFFmpeg()
         {
-            return GetFfmpegFiles().Any();
+            return File.Exists(GetFfmpegPath());
         }
 
         /// <inheritdoc />
@@ -63,7 +63,7 @@ namespace RedShot.Infrastructure.Recording.Recorders
             {
                 try
                 {
-                    ZipFile.ExtractToDirectory(path, GetFfmpegPath());
+                    ZipFile.ExtractToDirectory(path, GetFfmpegBinariesFolder());
                     NotifyHelper.Notify("FFmpeg has been downloaded", "RedShot", NotifyStatus.Success);
                     downloader.Dispose();
                 }
@@ -90,33 +90,17 @@ namespace RedShot.Infrastructure.Recording.Recorders
         }
 
         /// <summary>
-        /// Get lines.
-        /// </summary>
-        protected string[] GetLines(string text)
-        {
-            return text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-        }
-
-        /// <summary>
         /// Get full FFmpeg path.
         /// </summary>
-        protected virtual string GetFullFfmpegPath()
+        protected virtual string GetFfmpegPath()
         {
-            return GetFfmpegFiles().First();
-        }
-
-        /// <summary>
-        /// Get FFmpeg files.
-        /// </summary>
-        protected virtual string[] GetFfmpegFiles()
-        {
-            return Directory.GetFiles(GetFfmpegPath(), FfmpegBinaryName, SearchOption.AllDirectories);
+            return Directory.GetFiles(GetFfmpegBinariesFolder(), FfmpegBinaryName, SearchOption.AllDirectories).First();
         }
 
         /// <summary>
         /// Get FFmpeg path.
         /// </summary>
-        protected virtual string GetFfmpegPath()
+        protected virtual string GetFfmpegBinariesFolder()
         {
             return Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FFmpeg")).FullName;
         }

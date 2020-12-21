@@ -1,12 +1,11 @@
 ﻿using System;
-using RedShot.Infrastructure.Abstractions.Recording;
 
 namespace RedShot.Infrastructure.Recording.Ffmpeg.Devices
 {
     /// <summary>
     /// Recording device.
     /// </summary>
-    public class Device : IRecordingDevice, IEquatable<Device>
+    public class Device : IEquatable<Device>
     {
         /// <summary>
         /// Initialize.

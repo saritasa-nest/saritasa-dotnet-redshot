@@ -22,7 +22,7 @@ namespace RedShot.Infrastructure.Recording.Views
         public AudioOptionsDialog()
         {
             Title = "Audio Options";
-            audioOptions = ConfigurationManager.GetSection<FFmpegConfiguration>().AudioOptions;
+            audioOptions = ConfigurationManager.GetSection<FFmpegConfiguration>().AudioOptions.Clone();
             InitializeComponents();
         }
 

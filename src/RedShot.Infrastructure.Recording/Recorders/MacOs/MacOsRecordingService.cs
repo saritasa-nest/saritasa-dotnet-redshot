@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Recording.Abstractions;
 using RedShot.Infrastructure.Recording.Ffmpeg.Devices;
@@ -23,10 +24,8 @@ namespace RedShot.Infrastructure.Recording.Recorders.MacOs
         public override IRecorder GetRecorder()
         {
             ThrowIfNotFoundFfmpegBinary();
-
             var configuration = ConfigurationManager.GetSection<FFmpegConfiguration>();
-
-            return new MacOsRecorder(configuration, GetFullFfmpegPath());
+            return new MacOsRecorder(configuration, GetFfmpegPath(), RecordingHelper.GetDefaultVideoFolder());
         }
 
         /// <inheritdoc />
@@ -34,7 +33,7 @@ namespace RedShot.Infrastructure.Recording.Recorders.MacOs
         {
             ThrowIfNotFoundFfmpegBinary();
 
-            var cli = new FFmpegCliManager(GetFullFfmpegPath());
+            var cli = new FFmpegCliManager(GetFfmpegPath());
 
             var recordingDevices = new RecordingDevices();
 
@@ -42,9 +41,9 @@ namespace RedShot.Infrastructure.Recording.Recorders.MacOs
             cli.WaitForExit();
 
             string output = cli.Output.ToString();
-            string[] lines = GetLines(output);
             bool isVideo = true;
 
+            var lines = ArgumentsHelper.SplitLines(output);
             foreach (string line in lines)
             {
                 if (line.Contains("] AVFoundation video devices", StringComparison.InvariantCulture))

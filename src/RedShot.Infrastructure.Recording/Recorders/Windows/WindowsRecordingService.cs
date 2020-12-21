@@ -5,6 +5,7 @@ using RedShot.Infrastructure.Recording.Ffmpeg.Devices;
 using RedShot.Infrastructure.Recording;
 using RedShot.Infrastructure.Recording.Recorders;
 using RedShot.Infrastructure.Recording.Abstractions;
+using RedShot.Infrastructure.Common;
 
 namespace RedShot.Recording.Recorders.Windows
 {
@@ -23,10 +24,8 @@ namespace RedShot.Recording.Recorders.Windows
         public override IRecorder GetRecorder()
         {
             ThrowIfNotFoundFfmpegBinary();
-
             var options = ConfigurationManager.GetSection<FFmpegConfiguration>();
-
-            return new WindowsRecorder(options, GetFullFfmpegPath());
+            return new WindowsRecorder(options, GetFfmpegPath(), RecordingHelper.GetDefaultVideoFolder());
         }
 
         /// <inheritdoc />
@@ -34,7 +33,7 @@ namespace RedShot.Recording.Recorders.Windows
         {
             ThrowIfNotFoundFfmpegBinary();
 
-            var cli = new FFmpegCliManager(GetFullFfmpegPath());
+            var cli = new FFmpegCliManager(GetFfmpegPath());
 
             var recordingDevices = new RecordingDevices();
 
@@ -42,10 +41,10 @@ namespace RedShot.Recording.Recorders.Windows
             cli.WaitForExit();
 
             string output = cli.Output.ToString();
-            string[] lines = GetLines(output);
             bool isVideo = true;
             Regex regex = new Regex(@"\[dshow @ \w+\]  ""(.+)""", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
+            var lines = ArgumentsHelper.SplitLines(output);
             foreach (string line in lines)
             {
                 if (line.Contains("] DirectShow video devices", StringComparison.InvariantCulture))

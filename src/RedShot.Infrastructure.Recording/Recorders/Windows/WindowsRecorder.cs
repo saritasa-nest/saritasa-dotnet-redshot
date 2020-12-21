@@ -13,7 +13,7 @@ namespace RedShot.Recording.Recorders.Windows
         /// <summary>
         /// Initializes Windows recorder.
         /// </summary>
-        public WindowsRecorder(FFmpegConfiguration options, string ffmpegPath, string videoFolderPath = null) : base(options, ffmpegPath, videoFolderPath)
+        public WindowsRecorder(FFmpegConfiguration options, string ffmpegPath, string videoFolderPath) : base(options, ffmpegPath, videoFolderPath)
         {
         }
 

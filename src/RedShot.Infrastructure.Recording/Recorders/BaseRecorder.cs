@@ -18,7 +18,7 @@ namespace RedShot.Infrastructure.Recording.Recorders
         /// <summary>
         /// Video folder path.
         /// </summary>
-        public string VideoFolderPath { get; }
+        protected readonly string videoFolderPath;
 
         /// <summary>
         /// Last video.
@@ -41,6 +41,9 @@ namespace RedShot.Infrastructure.Recording.Recorders
         /// </summary>
         protected readonly FFmpegOptions ffmpegOptions;
 
+        /// <summary>
+        /// Audio options.
+        /// </summary>
         protected readonly AudioOptions audioOptions;
 
         /// <summary>
@@ -51,20 +54,12 @@ namespace RedShot.Infrastructure.Recording.Recorders
         /// <summary>
         /// Initialize.
         /// </summary>
-        public BaseRecorder(FFmpegConfiguration configuration, string ffmpegPath, string videoFolderPath = null)
+        public BaseRecorder(FFmpegConfiguration configuration, string ffmpegPath, string videoFolderPath)
         {
+            this.videoFolderPath = videoFolderPath;
             ffmpegOptions = configuration.FFmpegOptions;
             audioOptions = configuration.AudioOptions;
             cliManager = new FFmpegCliManager(ffmpegPath);
-
-            if (string.IsNullOrEmpty(videoFolderPath))
-            {
-                VideoFolderPath = Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyVideos), "RedShot")).FullName;
-            }
-            else
-            {
-                VideoFolderPath = videoFolderPath;
-            }
         }
 
         /// <inheritdoc />
@@ -72,7 +67,7 @@ namespace RedShot.Infrastructure.Recording.Recorders
         {
             var deviceArgs = GetDeviceArgs(area);
             var pathName = $"RedShot-Video-{DateTime.Now:yyyy-MM-ddTHH-mm-ss}";
-            var path = Path.Combine(VideoFolderPath, $"{pathName}.{ffmpegOptions.Extension}");
+            var path = Path.Combine(videoFolderPath, $"{pathName}.{ffmpegOptions.Extension}");
             var name = FormatManager.GetFormattedName();
 
             LastVideo = new VideoFile(name, path);
