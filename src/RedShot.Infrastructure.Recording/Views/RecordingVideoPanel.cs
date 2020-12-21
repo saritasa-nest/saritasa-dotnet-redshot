@@ -64,9 +64,11 @@ namespace RedShot.Infrastructure.Recording.Views
                 FinishRecording();
                 recordingButton.RevertState();
                 recordingButton.Enabled = true;
+                optionsButton.Enabled = true;
             }
             else
             {
+                optionsButton.Enabled = false;
                 recordingTimer.Reset();
                 recorder = recordingService.GetRecorder();
                 StartWithDelay();
