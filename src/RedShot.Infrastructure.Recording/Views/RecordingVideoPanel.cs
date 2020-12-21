@@ -61,7 +61,7 @@ namespace RedShot.Infrastructure.Recording.Views
             recordingButton.Enabled = false;
             if (recordingButton.IsRecording)
             {
-                StopRecording();
+                FinishRecording();
                 recordingButton.RevertState();
                 recordingButton.Enabled = true;
             }
@@ -109,11 +109,11 @@ namespace RedShot.Infrastructure.Recording.Views
 
         private void CloseButtonClicked(object sender, EventArgs e)
         {
-            recorder.Stop();
+            recorder?.Stop();
             Closed?.Invoke(this, EventArgs.Empty);
         }
 
-        private void StopRecording()
+        private void FinishRecording()
         {
             recordingTimer.Stop();
             recorder.Stop();
