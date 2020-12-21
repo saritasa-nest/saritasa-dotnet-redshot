@@ -119,7 +119,7 @@ namespace RedShot.Infrastructure.Formatting
 
         private static string GetPatternFromConfig()
         {
-            return ConfigurationManager.GetSection<FormatConfigurationOption>().Pattern;
+            return ConfigurationManager.GetSection<GeneralConfigurationOption>().Pattern;
         }
     }
 }

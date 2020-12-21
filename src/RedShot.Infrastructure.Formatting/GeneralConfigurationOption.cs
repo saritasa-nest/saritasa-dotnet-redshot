@@ -1,22 +1,24 @@
-﻿using RedShot.Infrastructure.Abstractions;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using RedShot.Infrastructure.Abstractions;
 
 namespace RedShot.Infrastructure.Formatting
 {
     /// <summary>
     /// Format configuration option.
     /// </summary>
-    public class FormatConfigurationOption : IConfigurationOption, INotifyPropertyChanged
+    public class GeneralConfigurationOption : IConfigurationOption, INotifyPropertyChanged
     {
         private string pattern;
+        private bool launchAtSystemStart;
 
         /// <summary>
-        /// Initializes <see cref="FormatConfigurationOption"/> object.
+        /// Initializes <see cref="GeneralConfigurationOption"/> object.
         /// </summary>
-        public FormatConfigurationOption()
+        public GeneralConfigurationOption()
         {
-            Pattern = "%date%rnd";
+            pattern = "%date%rnd";
+            launchAtSystemStart = true;
         }
 
         /// <inheritdoc />
@@ -35,6 +37,19 @@ namespace RedShot.Infrastructure.Formatting
             set
             {
                 pattern = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Whether to launch at system start.
+        /// </summary>
+        public bool LaunchAtSystemStart
+        {
+            get => launchAtSystemStart;
+            set
+            {
+                launchAtSystemStart = value;
                 OnPropertyChanged();
             }
         }

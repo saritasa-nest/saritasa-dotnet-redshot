@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.IO;
+using System.Globalization;
 using Microsoft.Extensions.Configuration;
 using NLog.Extensions.Logging;
 using Eto.Forms;
@@ -9,7 +10,7 @@ using RedShot.Infrastructure;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Configuration.Models;
 using RedShot.Infrastructure.Settings;
-using System.Globalization;
+using RedShot.Infrastructure.Formatting;
 #if _WINDOWS
 using Eto.WinForms.Forms;
 #elif _UNIX
@@ -75,6 +76,18 @@ namespace RedShot.Application
             var appSettings = configuration.GetSection("AppSettings").Get<AppSettings>();
             ConfigurationManager.Initialize(appSettings, applicationTypes.ConfigurationOptionsTypes);
             SettingsManager.Initialize(applicationTypes.SettingsOptionsTypes);
+
+            ConfigureAutostart();
+        }
+
+        private static void ConfigureAutostart()
+        {
+            var general = ConfigurationManager.GetSection<GeneralConfigurationOption>();
+            if (general.LaunchAtSystemStart)
+            {
+                var autostart = new Autostart();
+                autostart.EnableAutostart();
+            }
         }
 
         private static void AppInitialized(object sender, EventArgs e)
