@@ -94,7 +94,7 @@ namespace RedShot.Infrastructure.Recording.Recorders
         /// </summary>
         protected virtual string GetFfmpegPath()
         {
-            return Directory.GetFiles(GetFfmpegBinariesFolder(), FfmpegBinaryName, SearchOption.AllDirectories).First();
+            return Directory.GetFiles(GetFfmpegBinariesFolder(), FfmpegBinaryName, SearchOption.AllDirectories).FirstOrDefault();
         }
 
         /// <summary>
