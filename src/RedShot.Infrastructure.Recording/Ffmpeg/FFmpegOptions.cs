@@ -28,6 +28,9 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
         private string userArgs;
         private bool useGdigrab;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public FFmpegOptions()
         {
             Fps = 30;
@@ -47,6 +50,9 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             UseGdigrab = true;
         }
 
+        /// <summary>
+        /// FPS.
+        /// </summary>
         public int Fps
         {
             get { return fps; }
@@ -64,6 +70,9 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             }
         }
 
+        /// <summary>
+        /// Draw cursor.
+        /// </summary>
         public bool DrawCursor
         {
             get { return drawCursor; }
@@ -78,7 +87,10 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             }
         }
 
-        // Windows only.
+        /// <summary>
+        /// Use GDI grab.
+        /// Windows only.
+        /// </summary>
         public bool UseGdigrab
         {
             get { return useGdigrab; }
@@ -93,6 +105,9 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             }
         }
 
+        /// <summary>
+        /// Video device.
+        /// </summary>
         public Device VideoDevice
         {
             get { return videoDevice; }
@@ -107,6 +122,9 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             }
         }
 
+        /// <summary>
+        /// Video codec.
+        /// </summary>
         public FFmpegVideoCodec VideoCodec
         {
             get { return videoCodec; }
@@ -121,6 +139,9 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             }
         }
 
+        /// <summary>
+        /// Audio codec.
+        /// </summary>
         public FFmpegAudioCodec AudioCodec
         {
             get { return audioCodec; }
@@ -135,6 +156,9 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             }
         }
 
+        /// <summary>
+        /// User's custom arguments.
+        /// </summary>
         public string UserArgs
         {
             get { return userArgs; }
@@ -149,6 +173,9 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             }
         }
 
+        /// <summary>
+        /// X264 preset.
+        /// </summary>
         public FFmpegX264Preset X264Preset
         {
             get { return x264Preset; }
@@ -163,6 +190,9 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             }
         }
 
+        /// <summary>
+        /// VP9 CRF.
+        /// </summary>
         public int Vp9Crf
         {
             get { return vp9Crf; }
@@ -180,6 +210,9 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             }
         }
 
+        /// <summary>
+        /// X264 CRF.
+        /// </summary>
         public int X264Crf
         {
             get { return x264Crf; }
@@ -197,6 +230,9 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             }
         }
 
+        /// <summary>
+        /// XviD quality scale.
+        /// </summary>
         public int XviDQscale
         {
             get { return xviDQscale; }
@@ -214,6 +250,9 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             }
         }
 
+        /// <summary>
+        /// VP9 bit rate.
+        /// </summary>
         public int Vp9Bitrate
         {
             get { return vp9Bitrate; }
@@ -228,6 +267,9 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             }
         }
 
+        /// <summary>
+        /// AAC quality scale.
+        /// </summary>
         public int AacQScale
         {
             get { return aacQScale; }
@@ -245,6 +287,9 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             }
         }
 
+        /// <summary>
+        /// Opus bit rate.
+        /// </summary>
         public int OpusBitrate
         {
             get { return opusBitrate; }
@@ -262,6 +307,9 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             }
         }
 
+        /// <summary>
+        /// Vorbis quality scale.
+        /// </summary>
         public int VorbisQscale
         {
             get { return vorbisQscale; }
@@ -279,6 +327,9 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             }
         }
 
+        /// <summary>
+        /// MP3 quality scale.
+        /// </summary>
         public int MP3Qscale
         {
             get { return mp3Qscale; }
@@ -296,6 +347,9 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             }
         }
 
+        /// <summary>
+        /// Video extension.
+        /// </summary>
         public string Extension
         {
             get
@@ -315,6 +369,7 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             }
         }
 
+        /// <inheritdoc/>
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] string memberName = null)
@@ -322,6 +377,9 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(memberName));
         }
 
+        /// <summary>
+        /// Clone.
+        /// </summary>
         public FFmpegOptions Clone()
         {
             return MemberwiseClone() as FFmpegOptions;

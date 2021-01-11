@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Recording.Ffmpeg;
-using RedShot.Infrastructure.Recording.Ffmpeg.Devices;
 
 namespace RedShot.Infrastructure.Recording
 {
@@ -24,6 +22,9 @@ namespace RedShot.Infrastructure.Recording
         /// <inheritdoc/>
         public string UniqueName { get; }
 
+        /// <summary>
+        /// Audio options.
+        /// </summary>
         public AudioOptions AudioOptions { get; set; }
 
         /// <summary>

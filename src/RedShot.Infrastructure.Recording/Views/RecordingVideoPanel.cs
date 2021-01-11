@@ -142,9 +142,11 @@ namespace RedShot.Infrastructure.Recording.Views
             recordingButton.Clicked += RecordingButtonClicked;
 
             closeButton = new ImageButton(buttonSize, Icons.Close, scaleImageSize: scaleSize);
+            closeButton.ToolTip = "Close";
             closeButton.Clicked += CloseButtonClicked;
 
             optionsButton = new ImageButton(buttonSize, Icons.Gear, scaleImageSize: scaleSize);
+            optionsButton.ToolTip = "Audio Options";
             optionsButton.Clicked += OptionsButtonClicked;
 
             Size = new Size(220, 41);

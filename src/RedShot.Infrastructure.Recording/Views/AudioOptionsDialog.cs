@@ -56,7 +56,8 @@ namespace RedShot.Infrastructure.Recording.Views
 
             okButton = new Button(OkButtonClick)
             {
-                Text = "Ok",
+                Text = "OK",
+                ToolTip = "OK",
                 Width = 70
             };
 

@@ -42,7 +42,8 @@ namespace RedShot.Infrastructure.Common.Forms
         {
             button = new Button
             {
-                Size = Size
+                Size = Size,
+                ToolTip = "Start"
             };
 
             countdownLabel = new Label()
@@ -75,11 +76,13 @@ namespace RedShot.Infrastructure.Common.Forms
             {
                 IsRecording = false;
                 SetImage(playIcon);
+                button.ToolTip = "Start";
             }
             else
             {
                 IsRecording = true;
                 SetImage(stopIcon);
+                button.ToolTip = "Stop";
             }
 
             Invalidate(true);
