@@ -49,7 +49,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
         {
             if (string.IsNullOrEmpty(HttpHomePath))
             {
-                return "EmptyUrl";
+                return "Empty URL";
             }
 
             var builder = new StringBuilder();

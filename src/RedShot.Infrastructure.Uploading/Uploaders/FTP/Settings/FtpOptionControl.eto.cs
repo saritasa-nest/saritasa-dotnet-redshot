@@ -13,18 +13,48 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         {
             InitializeFields();
 
-            Content = new StackLayout
+            Content = new TableLayout
             {
-                VerticalContentAlignment = VerticalAlignment.Center,
-                Orientation = Orientation.Vertical,
-                Padding = 10,
-                Spacing = 10,
-                Items =
+                Padding = 20,
+                Spacing = new Size(0, 10),
+                Rows =
                 {
                     GetAccountsPanel(),
-                    accountFields,
+                    GetAccountFields()
                 }
             };
+        }
+
+        private Control GetAccountFields()
+        {
+            if (accountFields == null)
+            {
+                accountFields = new GroupBox()
+                {
+                    Enabled = false,
+                    Content = new TableLayout()
+                    {
+                        Padding = new Padding(5, 10),
+                        Spacing = new Size(10, 10),
+                        Rows =
+                        {
+                            FormsHelper.CreateFieldStack("Protocol", ftpProtocol),
+                            GetAddressBoxes(),
+                            CreateAuthenticationFields(),
+                            FormsHelper.CreateFieldStack("Directory", directoryPath),
+                            GetLinkBoxes(),
+                            TableLayout.AutoSized(GetFtpsBoxes(), new Padding(3, 0, 0, 0)),
+                            TableLayout.AutoSized(GetSftpBoxes(), new Padding(3, 0, 0, 0)),
+                            TableLayout.AutoSized(defaultAccountCheckBox, new Padding(3, 0, 0, 0)),
+                            TableLayout.AutoSized(testButton, new Padding(2, 0, 0, 0))
+                        }
+                    },
+                    Text = "Account",
+                    Padding = 10,
+                };
+            }
+
+            return accountFields;
         }
 
         private void InitializeFields()
@@ -36,7 +66,11 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             {
                 Text = "Append file extension"
             };
-            previewLinkLabel = new Label();
+            previewLink = new TextBox()
+            {
+                ReadOnly = true,
+                Size = defaultLongSize
+            };
             homePathTextBox = new TextBox()
             {
                 Size = defaultLongSize
@@ -106,7 +140,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
 
             accounts = new ComboBox()
             {
-                Size = new Size(250, 21)
+                Size = new Size(250, 21),
+                ReadOnly = true
             };
 
             addButton = new Button()
@@ -140,38 +175,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             keyPathButton.Clicked += KeyPathButtonClick;
 
             ftpProtocol.SelectedValueChanged += FtpProtocolSelectedValueChanged;
-
-            ftpsBoxes = GetFtpsBoxes();
-            ftpsBoxes.Visible = false;
-
-            sftpBoxes = GetSftpBoxes();
-            sftpBoxes.Visible = false;
-
-            accountFields = GetAccountFieldsControl();
-            accountFields.Enabled = false;
-        }
-
-        private Control GetAccountFieldsControl()
-        {
-            return new GroupBox()
-            {
-                Content = new StackLayout()
-                {
-                    Orientation = Orientation.Vertical,
-                    Spacing = 10,
-                    Width = 412,
-                    Items =
-                    {
-                        BaseAccountBoxes(),
-                        ftpsBoxes,
-                        sftpBoxes,
-                        defaultAccountCheckBox,
-                        testButton
-                    }
-                },
-                Text = "Account",
-                Padding = 10
-            };
         }
 
         private void FtpProtocolSelectedValueChanged(object sender, EventArgs e)
@@ -200,24 +203,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             }
         }
 
-        private StackLayout BaseAccountBoxes()
-        {
-            return new StackLayout
-            {
-                Orientation = Orientation.Vertical,
-                HorizontalContentAlignment = HorizontalAlignment.Left,
-                Spacing = 5,
-                Items =
-                {
-                    FormsHelper.CreateFieldStack("Protocol", ftpProtocol),
-                    GetAddressBoxes(),
-                    CreateAuthenticationFields(),
-                    FormsHelper.CreateFieldStack("Directory", directoryPath),
-                    GetLinkBoxes(),
-                }
-            };
-        }
-
         private StackLayout CreateAuthenticationFields()
         {
             return new StackLayout
@@ -239,7 +224,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
             {
                 VerticalContentAlignment = VerticalAlignment.Center,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
-                Padding = 10,
+                Padding = 5,
                 Spacing = 10,
                 Orientation = Orientation.Horizontal,
                 Items =
@@ -284,7 +269,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 pathControl = new StackLayout()
                 {
                     Orientation = Orientation.Vertical,
-                    Padding = 5,
                     Items =
                     {
                         new Label()
@@ -303,77 +287,89 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 Items =
                 {
                     pathControl,
-                    addExtensionCheckBox,
-                    FormsHelper.GetBaseStack("URL preview", previewLinkLabel, controlWidth: 300)
+                    TableLayout.AutoSized(addExtensionCheckBox, new Padding(3, 0, 0, 0)),
+                    FormsHelper.GetVoidBox(5),
+                    FormsHelper.CreateFieldStack("URL preview", previewLink)
                 }
             };
         }
 
-        private GroupBox GetFtpsBoxes()
+        private Control GetFtpsBoxes()
         {
-            return new GroupBox()
+            if (ftpsBoxes == null)
             {
-                Text = "FTPS",
-                Content = new StackLayout
+                ftpsBoxes = new GroupBox()
                 {
-                    Spacing = 5,
+                    Visible = false,
                     Padding = 5,
-                    Orientation = Orientation.Vertical,
-                    Items =
+                    Text = "FTPS",
+                    Content = new StackLayout
                     {
-                        FormsHelper.CreateFieldStack("Encryption", ftpsEncryption, 0),
-                        FormsHelper.CreateFieldStack("Location of the certificate", new StackLayout()
+                        Spacing = 5,
+                        Orientation = Orientation.Vertical,
+                        Items =
                         {
-                            Spacing = 5,
-                            HorizontalContentAlignment = HorizontalAlignment.Left,
-                            Orientation = Orientation.Horizontal,
-                            Items =
+                            FormsHelper.CreateFieldStack("Encryption", ftpsEncryption),
+                            FormsHelper.CreateFieldStack("Location of the certificate", new StackLayout()
                             {
-                                ftpsCertificateLocation,
-                                ftpsCertificateLocationButton
-                            }
-                        }, 0)
-                    }
-                }
-            };
-        }
-
-        private GroupBox GetSftpBoxes()
-        {
-            return new GroupBox()
-            {
-                Text = "SFTP",
-                Content = new StackLayout
-                {
-                    Padding = 5,
-                    Spacing = 5,
-                    Orientation = Orientation.Vertical,
-                    Items =
-                    {
-                        new StackLayout()
-                        {
-                            Spacing = 5,
-                            Orientation = Orientation.Horizontal,
-                            Items =
-                            {
-                                FormsHelper.CreateFieldStack("RSA Key",
-                                new StackLayout()
+                                Spacing = 5,
+                                HorizontalContentAlignment = HorizontalAlignment.Left,
+                                Orientation = Orientation.Horizontal,
+                                Items =
                                 {
-                                    Spacing = 5,
-                                    HorizontalContentAlignment = HorizontalAlignment.Left,
-                                    Orientation = Orientation.Horizontal,
-                                    Items =
-                                    {
-                                        keypath,
-                                        keyPathButton
-                                    }
-                                }, 0),
-                            }
-                        },
-                        FormsHelper.CreateFieldStack("Pass phrase", passphrase, 0)
+                                    ftpsCertificateLocation,
+                                    ftpsCertificateLocationButton
+                                }
+                            })
+                        }
                     }
-                }
-            };
+                };
+            }
+
+            return ftpsBoxes;
+        }
+
+        private Control GetSftpBoxes()
+        {
+            if (sftpBoxes == null)
+            {
+                sftpBoxes = new GroupBox()
+                {
+                    Visible = false,
+                    Padding = 5,
+                    Text = "SFTP",
+                    Content = new StackLayout
+                    {
+                        Padding = 5,
+                        Orientation = Orientation.Vertical,
+                        Items =
+                        {
+                            new StackLayout()
+                            {
+                                Orientation = Orientation.Horizontal,
+                                Items =
+                                {
+                                    FormsHelper.CreateFieldStack("RSA Key",
+                                    new StackLayout()
+                                    {
+                                        Spacing = 5,
+                                        HorizontalContentAlignment = HorizontalAlignment.Left,
+                                        Orientation = Orientation.Horizontal,
+                                        Items =
+                                        {
+                                            keypath,
+                                            keyPathButton
+                                        }
+                                    }),
+                                }
+                            },
+                            FormsHelper.CreateFieldStack("Pass phrase", passphrase)
+                        }
+                    }
+                };
+            }
+
+            return sftpBoxes;
         }
     }
 }

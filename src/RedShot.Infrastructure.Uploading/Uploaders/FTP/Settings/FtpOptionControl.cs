@@ -17,7 +17,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         private FtpAccount SelectedAccount => accounts.SelectedValue as FtpAccount;
 
         private CheckBox addExtensionCheckBox;
-        private Label previewLinkLabel;
+        private TextBox previewLink;
         private TextBox homePathTextBox;
         private Button addButton;
         private Button delButton;
@@ -92,7 +92,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         {
             if (accounts.SelectedValue is FtpAccount account)
             {
-                previewLinkLabel.Text = account.GetFormatLink("example.png");
+                previewLink.Text = account.GetFormatLink("example.png");
             }
         }
 

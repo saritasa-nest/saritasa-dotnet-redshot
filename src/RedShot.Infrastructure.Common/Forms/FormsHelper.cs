@@ -128,7 +128,7 @@ namespace RedShot.Infrastructure.Common.Forms
         /// <param name="name">Field name.</param>
         /// <param name="control">Field control.</param>
         /// <param name="padding">Field padding.</param>
-        public static StackLayout CreateFieldStack(string name, Control control, int padding = 5) =>
+        public static StackLayout CreateFieldStack(string name, Control control, int padding = 0) =>
             new StackLayout
             {
                 Orientation = Orientation.Vertical,
@@ -140,7 +140,7 @@ namespace RedShot.Infrastructure.Common.Forms
                     {
                         Text = name,
                     },
-                    control
+                    TableLayout.AutoSized(control, new Padding(3, 0, 0, 0))
                 }
             };
     }
