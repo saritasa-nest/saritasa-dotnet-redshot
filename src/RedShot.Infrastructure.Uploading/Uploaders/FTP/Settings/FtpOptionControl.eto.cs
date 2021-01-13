@@ -225,7 +225,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
                 VerticalContentAlignment = VerticalAlignment.Center,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
                 Padding = 5,
-                Spacing = 10,
+                Spacing = 8,
                 Orientation = Orientation.Horizontal,
                 Items =
                 {
