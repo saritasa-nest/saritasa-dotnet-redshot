@@ -13,6 +13,7 @@ namespace RedShot.Infrastructure.Recording.Settings
     /// </summary>
     internal partial class RecordingOptionControl : Panel
     {
+        private UITimer ffmpegCheckTimer;
         private FFmpegConfiguration ffmpegConfiguration;
         private ComboBox videoCodec;
         private Button videoCodecOptionsButton;
@@ -31,7 +32,36 @@ namespace RedShot.Infrastructure.Recording.Settings
         {
             this.ffmpegConfiguration = ffmpegConfiguration;
 
-            InitializeComponents();
+            if (!RecordingManager.RecordingService.CheckFFmpeg())
+            {
+                var control = new FfmpegUninstalledControl();
+                ffmpegCheckTimer = new UITimer()
+                {
+                    Interval = 2
+                };
+                ffmpegCheckTimer.Elapsed += CheckTimerElapsed;
+                ffmpegCheckTimer.Start();
+                Content = control;
+            }
+            else
+            {
+                InitializeComponents();
+            }
+        }
+
+        private void CheckTimerElapsed(object sender, EventArgs e)
+        {
+            ffmpegCheckTimer.Stop();
+
+            if (RecordingManager.RecordingService.CheckFFmpeg())
+            {
+                InitializeComponents();
+                Invalidate(true);
+            }
+            else
+            {
+                ffmpegCheckTimer.Start();
+            }
         }
 
         private void SetDefaultButtonClicked(object sender, EventArgs e)

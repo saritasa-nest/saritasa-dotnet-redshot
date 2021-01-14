@@ -5,6 +5,7 @@ using System.Linq;
 using Eto.Forms;
 using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Common.Notifying;
 
 namespace RedShot.Infrastructure.Recording.Recorders
@@ -49,22 +50,21 @@ namespace RedShot.Infrastructure.Recording.Recorders
                 throw new Exception("FFmpeg is installed already!");
             }
 
-            const string message = "FFmpeg is not installed. Do you want to automatically install it?";
-            const string title = "FFmpeg Installing";
-            var yesNoDialogResult = MessageBox.Show(message, title, MessageBoxButtons.YesNo, MessageBoxType.Warning);
-            if (yesNoDialogResult != DialogResult.Yes)
-            {
-                return;
-            }
-
             var downloader = new Downloader();
+            var downloadForm = new DownloadForm(downloader, "FFmpeg Downloader");
+            downloadForm.Closed += (o, e) =>
+            {
+                downloader.CancelAsync();
+                downloader.Dispose();
+            };
+            downloadForm.Show();
+
             downloader.DownloadAsync(BinariesUrl, "ffmpeg.zip", (path) =>
             {
                 try
                 {
                     ZipFile.ExtractToDirectory(path, GetFfmpegPath());
                     NotifyHelper.Notify("FFmpeg has been downloaded", "RedShot", NotifyStatus.Success);
-                    downloader.Dispose();
                 }
                 catch (Exception e)
                 {
@@ -73,8 +73,7 @@ namespace RedShot.Infrastructure.Recording.Recorders
                     logger.Error(e, $"{errorMessage}.");
                     MessageBox.Show($"{errorMessage}: {e.Message}", MessageBoxButtons.OK, MessageBoxType.Error);
                 }
-            },
-            "Downloading FFmpeg");
+            });
         }
 
         /// <summary>
@@ -101,7 +100,7 @@ namespace RedShot.Infrastructure.Recording.Recorders
         /// </summary>
         protected virtual string GetFullFfmpegPath()
         {
-            return GetFfmpegFiles().First();
+            return GetFfmpegFiles().FirstOrDefault();
         }
 
         /// <summary>
