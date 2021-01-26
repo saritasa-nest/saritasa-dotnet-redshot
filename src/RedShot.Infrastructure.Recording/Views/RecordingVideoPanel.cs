@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using Eto.Drawing;
 using Eto.Forms;
-using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
+using RedShot.Infrastructure.Recording.Abstractions;
 using RedShot.Infrastructure.Uploading;
 using RedShot.Resources;
 
@@ -20,21 +20,22 @@ namespace RedShot.Infrastructure.Recording.Views
         /// </summary>
         public event EventHandler Closed;
 
-        private readonly IRecorder recorder;
+        private readonly IRecordingService recordingService;
+        private IRecorder recorder;
         private Rectangle recordingRectangle;
         private readonly UITimer labelRenderTimer;
         private readonly Stopwatch recordingTimer;
         private RecordingButton recordingButton;
         private ImageButton closeButton;
+        private ImageButton optionsButton;
         private Label timerLabel;
-        private Label beforeStartLabel;
 
         /// <summary>
         /// Initializes recording view.
         /// </summary>
-        public RecordingVideoPanel(IRecorder recorder, Rectangle recordingRectangle)
+        public RecordingVideoPanel(IRecordingService recordingService, Rectangle recordingRectangle)
         {
-            this.recorder = recorder;
+            this.recordingService = recordingService;
             this.recordingRectangle = recordingRectangle;
 
             InitializeComponents();
@@ -44,7 +45,7 @@ namespace RedShot.Infrastructure.Recording.Views
             {
                 Interval = 0.01
             };
-            labelRenderTimer.Elapsed += RecordingLabelTimer_Elapsed;
+            labelRenderTimer.Elapsed += RecordingLabelTimerElapsed;
             labelRenderTimer.Start();
 
             this.UnLoad += RecordingVideoPanelUnLoad;
@@ -55,17 +56,21 @@ namespace RedShot.Infrastructure.Recording.Views
             recorder?.Stop();
         }
 
-        private void RecordingButton_Clicked(object sender, System.EventArgs e)
+        private void RecordingButtonClicked(object sender, System.EventArgs e)
         {
             recordingButton.Enabled = false;
             if (recordingButton.IsRecording)
             {
-                StopRecording();
+                FinishRecording();
+                recordingButton.RevertState();
                 recordingButton.Enabled = true;
+                optionsButton.Enabled = true;
             }
             else
             {
+                optionsButton.Enabled = false;
                 recordingTimer.Reset();
+                recorder = recordingService.GetRecorder();
                 StartWithDelay();
             }
         }
@@ -73,6 +78,7 @@ namespace RedShot.Infrastructure.Recording.Views
         private void StartWithDelay()
         {
             int seconds = 3;
+            recordingButton.SetCountdownSecond(seconds);
 
             var beforeRecordTimer = new UITimer()
             {
@@ -83,7 +89,7 @@ namespace RedShot.Infrastructure.Recording.Views
                 if (seconds != 1)
                 {
                     seconds--;
-                    beforeStartLabel.Text = seconds.ToString();
+                    recordingButton.SetCountdownSecond(seconds);
                 }
                 else
                 {
@@ -94,7 +100,8 @@ namespace RedShot.Infrastructure.Recording.Views
                     {
                     }
 
-                    beforeStartLabel.Text = "0";
+                    recordingButton.SetCountdownSecond(0);
+                    recordingButton.RevertState();
                     recordingTimer.Start();
                     recordingButton.Enabled = true;
                 }
@@ -102,13 +109,13 @@ namespace RedShot.Infrastructure.Recording.Views
             beforeRecordTimer.Start();
         }
 
-        private void CloseButton_Clicked(object sender, EventArgs e)
+        private void CloseButtonClicked(object sender, EventArgs e)
         {
-            recorder.Stop();
+            recorder?.Stop();
             Closed?.Invoke(this, EventArgs.Empty);
         }
 
-        private void StopRecording()
+        private void FinishRecording()
         {
             recordingTimer.Stop();
             recorder.Stop();
@@ -116,7 +123,7 @@ namespace RedShot.Infrastructure.Recording.Views
             UploadingManager.RunUploading(recorder.GetVideo());
         }
 
-        private void RecordingLabelTimer_Elapsed(object sender, EventArgs e)
+        private void RecordingLabelTimerElapsed(object sender, EventArgs e)
         {
             timerLabel.Text = recordingTimer.Elapsed.ToString(@"hh\:mm\:ss");
             timerLabel.Invalidate();
@@ -128,22 +135,21 @@ namespace RedShot.Infrastructure.Recording.Views
             {
                 Text = TimeSpan.Zero.ToString()
             };
+            var buttonSize = new Size(40, 35);
+            var scaleSize = new Size(20, 18);
 
-            beforeStartLabel = new Label()
-            {
-                TextColor = Colors.Red,
-                Text = "3",
-                Width = 10
-            };
+            recordingButton = new RecordingButton(buttonSize);
+            recordingButton.Clicked += RecordingButtonClicked;
 
-            recordingButton = new RecordingButton(40, 35);
-            recordingButton.Clicked += RecordingButton_Clicked;
+            closeButton = new ImageButton(buttonSize, Icons.Close, scaleImageSize: scaleSize);
+            closeButton.ToolTip = "Close";
+            closeButton.Clicked += CloseButtonClicked;
 
-            var closeImage = Icons.Close;
-            closeButton = new ImageButton(new Size(40, 35), closeImage, scaleImageSize: new Size(20, 18));
-            closeButton.Clicked += CloseButton_Clicked;
+            optionsButton = new ImageButton(buttonSize, Icons.Gear, scaleImageSize: scaleSize);
+            optionsButton.ToolTip = "Audio Options";
+            optionsButton.Clicked += OptionsButtonClicked;
 
-            Size = new Size(240, 41);
+            Size = new Size(220, 41);
             Content = new StackLayout()
             {
                 Orientation = Orientation.Horizontal,
@@ -153,13 +159,18 @@ namespace RedShot.Infrastructure.Recording.Views
                 Items =
                 {
                     recordingButton,
-                    closeButton,
-                    FormsHelper.GetVoidBox(15),
                     timerLabel,
-                    FormsHelper.GetVoidBox(25),
-                    beforeStartLabel
+                    FormsHelper.GetVoidBox(15),
+                    optionsButton,
+                    closeButton
                 }
             };
+        }
+
+        private void OptionsButtonClicked(object sender, EventArgs e)
+        {
+            using var optionsDialog = new AudioOptionsDialog();
+            optionsDialog.ShowModal();
         }
     }
 }

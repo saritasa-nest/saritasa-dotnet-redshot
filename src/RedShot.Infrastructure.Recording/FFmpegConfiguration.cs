@@ -15,16 +15,22 @@ namespace RedShot.Infrastructure.Recording
         public FFmpegConfiguration()
         {
             UniqueName = "FFmpeg configuration";
-            Options = new FFmpegOptions();
+            FFmpegOptions = new FFmpegOptions();
+            AudioOptions = new AudioOptions();
         }
 
         /// <inheritdoc/>
         public string UniqueName { get; }
 
         /// <summary>
+        /// Audio options.
+        /// </summary>
+        public AudioOptions AudioOptions { get; set; }
+
+        /// <summary>
         /// FFmpeg options.
         /// </summary>
-        public FFmpegOptions Options { get; set; }
+        public FFmpegOptions FFmpegOptions { get; set; }
 
         /// <summary>
         /// Clone.
@@ -32,7 +38,7 @@ namespace RedShot.Infrastructure.Recording
         public FFmpegConfiguration Clone()
         {
             var clone = (FFmpegConfiguration)MemberwiseClone();
-            clone.Options = Options.Clone();
+            clone.FFmpegOptions = FFmpegOptions.Clone();
 
             return clone;
         }

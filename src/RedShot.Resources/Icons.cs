@@ -141,5 +141,10 @@ namespace RedShot.Resources
         /// Down Arrow.
         /// </summary>
         public static Bitmap DownArrow => new Bitmap(Properties.Resources.DownArrow);
+
+        /// <summary>
+        /// Gear icon.
+        /// </summary>
+        public static Bitmap Gear => new Bitmap(Properties.Resources.Gear);
     }
 }

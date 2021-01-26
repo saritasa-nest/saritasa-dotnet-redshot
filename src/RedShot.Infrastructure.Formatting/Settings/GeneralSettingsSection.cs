@@ -10,7 +10,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
     /// </summary>
     public class GeneralSettingsSection : IValidatableSection
     {
-        private Control formatOptionControl;
+        private Control generalOptionControl;
         private readonly GeneralConfigurationOption configurationOption;
         private readonly Autostart autostart;
 
@@ -29,12 +29,12 @@ namespace RedShot.Infrastructure.Formatting.Settings
         /// <inheritdoc />
         public Control GetControl()
         {
-            if (formatOptionControl == null)
+            if (generalOptionControl == null)
             {
-                formatOptionControl = new GeneralOptionControl(configurationOption);
+                generalOptionControl = new GeneralOptionControl(configurationOption);
             }
 
-            return formatOptionControl;
+            return generalOptionControl;
         }
 
         /// <inheritdoc />
@@ -49,7 +49,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
                 autostart.DisableAutostart();
             }
 
-            ConfigurationManager.SetSettingsValue(configurationOption);
+            ConfigurationManager.SetSection(configurationOption);
             ConfigurationManager.Save();
         }
 

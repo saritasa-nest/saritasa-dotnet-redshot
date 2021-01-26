@@ -66,7 +66,7 @@ namespace RedShot.Infrastructure.Configuration
         /// <summary>
         /// Sets option's object.
         /// </summary>
-        public static void SetSettingsValue(IConfigurationOption option)
+        public static void SetSection(IConfigurationOption option)
         {
             var optionType = option.GetType();
 

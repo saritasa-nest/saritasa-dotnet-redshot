@@ -1,30 +1,29 @@
-﻿using RedShot.Infrastructure.Abstractions.Recording;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace RedShot.Infrastructure.Recording.Ffmpeg.Devices
 {
     /// <summary>
     /// Recording devices.
     /// </summary>
-    public class RecordingDevices : IRecordingDevices
+    public class RecordingDevices
     {
         /// <summary>
         /// Initialize.
         /// </summary>
-        public RecordingDevices(IEnumerable<IRecordingDevice> videoDevices = null, IEnumerable<IRecordingDevice> audioDevices = null)
+        public RecordingDevices()
         {
-            VideoDevices = videoDevices ?? new List<IRecordingDevice>();
-            AudioDevices = audioDevices ?? new List<IRecordingDevice>();
+            VideoDevices = new List<Device>();
+            AudioDevices = new List<Device>();
         }
 
         /// <summary>
         /// Video devices.
         /// </summary>
-        public IEnumerable<IRecordingDevice> VideoDevices { get; }
+        public List<Device> VideoDevices { get; }
 
         /// <summary>
         /// Audio devices.
         /// </summary>
-        public IEnumerable<IRecordingDevice> AudioDevices { get; }
+        public List<Device> AudioDevices { get; }
     }
 }

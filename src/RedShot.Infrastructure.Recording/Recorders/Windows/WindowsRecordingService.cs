@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Recording.Ffmpeg.Devices;
 using RedShot.Infrastructure.Recording;
 using RedShot.Infrastructure.Recording.Recorders;
+using RedShot.Infrastructure.Recording.Abstractions;
+using RedShot.Infrastructure.Common;
 
 namespace RedShot.Recording.Recorders.Windows
 {
@@ -19,34 +19,32 @@ namespace RedShot.Recording.Recorders.Windows
 
         /// <inheritdoc />
         protected override string BinariesUrl => ConfigurationManager.AppSettings.FfmpegWindowsDownloadPath;
+
         /// <inheritdoc />
         public override IRecorder GetRecorder()
         {
             ThrowIfNotFoundFfmpegBinary();
-
-            var options = ConfigurationManager.GetSection<FFmpegConfiguration>().Options;
-
-            return new WindowsRecorder(options, GetFullFfmpegPath());
+            var options = ConfigurationManager.GetSection<FFmpegConfiguration>();
+            return new WindowsRecorder(options, GetFfmpegPath(), RecordingHelper.GetDefaultVideoFolder());
         }
 
         /// <inheritdoc />
-        public override IRecordingDevices GetRecordingDevices()
+        public override RecordingDevices GetRecordingDevices()
         {
             ThrowIfNotFoundFfmpegBinary();
 
-            var cli = new FFmpegCliManager(GetFullFfmpegPath());
+            var cli = new FFmpegCliManager(GetFfmpegPath());
 
-            var videoDevices = new List<Device>();
-            var audioDevices = new List<Device>();
+            var recordingDevices = new RecordingDevices();
 
             cli.Run("-list_devices true -f dshow -i dummy");
             cli.WaitForExit();
 
             string output = cli.Output.ToString();
-            string[] lines = GetLines(output);
             bool isVideo = true;
             Regex regex = new Regex(@"\[dshow @ \w+\]  ""(.+)""", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
+            var lines = ArgumentsHelper.SplitLines(output);
             foreach (string line in lines)
             {
                 if (line.Contains("] DirectShow video devices", StringComparison.InvariantCulture))
@@ -69,16 +67,16 @@ namespace RedShot.Recording.Recorders.Windows
 
                     if (isVideo)
                     {
-                        videoDevices.Add(new Device(value, value));
+                        recordingDevices.VideoDevices.Add(new Device(value, value));
                     }
                     else
                     {
-                        audioDevices.Add(new Device(value, value));
+                        recordingDevices.AudioDevices.Add(new Device(value, value));
                     }
                 }
             }
 
-            return new RecordingDevices(videoDevices, audioDevices);
+            return recordingDevices;
         }
     }
 }

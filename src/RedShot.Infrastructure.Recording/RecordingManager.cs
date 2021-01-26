@@ -5,10 +5,10 @@ using Eto.Forms;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Recording.Recorders.Linux;
 using RedShot.Recording.Recorders.Windows;
-using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.RecordingRedShot.Views;
 using RedShot.Infrastructure.Recording.Views;
 using RedShot.Infrastructure.Recording.Recorders.MacOs;
+using RedShot.Infrastructure.Recording.Abstractions;
 
 namespace RedShot.Infrastructure.Recording
 {
@@ -61,9 +61,7 @@ namespace RedShot.Infrastructure.Recording
                 region.Height--;
             }
 
-            var recorder = RecordingService.GetRecorder();
-
-            recordingView = new RecordingView(recorder, region);
+            recordingView = new RecordingView(RecordingService, region);
             recordingView.Show();
         }
 
@@ -122,25 +120,13 @@ namespace RedShot.Infrastructure.Recording
         private static void ConfigureDevices()
         {
             var configuration = ConfigurationManager.GetSection<FFmpegConfiguration>();
-            var options = configuration.Options;
+            var options = configuration.FFmpegOptions;
 
             var recordingDevices = RecordingService.GetRecordingDevices();
 
-            if (options.PrimaryAudioDevice != null)
-            {
-                if (recordingDevices.AudioDevices.All(d => d.Name != options.PrimaryAudioDevice.Name))
-                {
-                    options.PrimaryAudioDevice = null;
-                }
-            }
-
-            if (options.OptionalAudioDevice != null)
-            {
-                if (recordingDevices.AudioDevices.All(d => d.Name != options.OptionalAudioDevice.Name))
-                {
-                    options.OptionalAudioDevice = null;
-                }
-            }
+            var usingDevices = configuration.AudioOptions.Devices.ToList();
+            configuration.AudioOptions.Devices.Clear();
+            configuration.AudioOptions.Devices.UnionWith(usingDevices.Intersect(recordingDevices.AudioDevices));
 
             if (options.VideoDevice != null)
             {
@@ -150,7 +136,8 @@ namespace RedShot.Infrastructure.Recording
                 }
             }
 
-            ConfigurationManager.SetSettingsValue(configuration);
+            ConfigurationManager.SetSection(configuration);
+            ConfigurationManager.Save();
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System;
 using Eto.Forms;
-using RedShot.Infrastructure.Abstractions.Recording;
+using Saritasa.Tools.Domain.Exceptions;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Recording.Ffmpeg.Devices;
 using RedShot.Infrastructure.Recording;
+using RedShot.Infrastructure.Recording.Abstractions;
+using RedShot.Infrastructure.Recording.Recorders;
 
 namespace RedShot.Recording.Recorders.Linux
 {
@@ -29,10 +31,8 @@ namespace RedShot.Recording.Recorders.Linux
         public IRecorder GetRecorder()
         {
             ThrowIfNotFoundFfmpegBinary();
-
-            var options = ConfigurationManager.GetSection<FFmpegConfiguration>().Options;
-
-            return new LinuxRecorder(options);
+            var configuration = ConfigurationManager.GetSection<FFmpegConfiguration>();
+            return new LinuxRecorder(configuration, RecordingHelper.GetDefaultVideoFolder());
         }
 
         /// <inheritdoc />
@@ -51,7 +51,7 @@ namespace RedShot.Recording.Recorders.Linux
         }
 
         /// <inheritdoc />
-        public IRecordingDevices GetRecordingDevices()
+        public RecordingDevices GetRecordingDevices()
         {
             ThrowIfNotFoundFfmpegBinary();
 
@@ -65,7 +65,7 @@ namespace RedShot.Recording.Recorders.Linux
         {
             if (CheckFFmpeg())
             {
-                throw new Exception("FFmpeg is installed already!");
+                throw new DomainException("FFmpeg is installed already!");
             }
 
             MessageBox.Show("Download FFmpeg package to your system before recording video.", MessageBoxButtons.OK, MessageBoxType.Information);

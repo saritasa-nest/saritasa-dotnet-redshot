@@ -2,9 +2,11 @@
 using System.IO;
 using Eto.Drawing;
 using RedShot.Infrastructure.Abstractions;
-using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.Recording.Ffmpeg;
 using RedShot.Infrastructure.Formatting;
+using RedShot.Infrastructure.Recording.Abstractions;
+using System.Text;
+using System.Linq;
 
 namespace RedShot.Infrastructure.Recording.Recorders
 {
@@ -16,7 +18,7 @@ namespace RedShot.Infrastructure.Recording.Recorders
         /// <summary>
         /// Video folder path.
         /// </summary>
-        public string VideoFolderPath { get; }
+        protected readonly string videoFolderPath;
 
         /// <summary>
         /// Last video.
@@ -37,7 +39,12 @@ namespace RedShot.Infrastructure.Recording.Recorders
         /// <summary>
         /// FFmpeg options.
         /// </summary>
-        protected readonly FFmpegOptions options;
+        protected readonly FFmpegOptions ffmpegOptions;
+
+        /// <summary>
+        /// Audio options.
+        /// </summary>
+        protected readonly AudioOptions audioOptions;
 
         /// <summary>
         /// CLI manager.
@@ -47,19 +54,12 @@ namespace RedShot.Infrastructure.Recording.Recorders
         /// <summary>
         /// Initialize.
         /// </summary>
-        public BaseRecorder(FFmpegOptions options, string ffmpegPath, string videoFolderPath = null)
+        public BaseRecorder(FFmpegConfiguration configuration, string ffmpegPath, string videoFolderPath)
         {
-            this.options = options;
+            this.videoFolderPath = videoFolderPath;
+            ffmpegOptions = configuration.FFmpegOptions;
+            audioOptions = configuration.AudioOptions;
             cliManager = new FFmpegCliManager(ffmpegPath);
-
-            if (string.IsNullOrEmpty(videoFolderPath))
-            {
-                VideoFolderPath = Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyVideos), "RedShot")).FullName;
-            }
-            else
-            {
-                VideoFolderPath = videoFolderPath;
-            }
         }
 
         /// <inheritdoc />
@@ -67,13 +67,41 @@ namespace RedShot.Infrastructure.Recording.Recorders
         {
             var deviceArgs = GetDeviceArgs(area);
             var pathName = $"RedShot-Video-{DateTime.Now:yyyy-MM-ddTHH-mm-ss}";
-            var path = Path.Combine(VideoFolderPath, $"{pathName}.{options.Extension}");
+            var path = Path.Combine(videoFolderPath, $"{pathName}.{ffmpegOptions.Extension}");
             var name = FormatManager.GetFormattedName();
 
             LastVideo = new VideoFile(name, path);
             var outputArgs = FFmpegArgsHelper.GetArgsForOutput(path);
 
-            cliManager.Run($"-thread_queue_size 1024 {deviceArgs} {options.GetFFmpegArgs()} {outputArgs}");
+            cliManager.Run($"-thread_queue_size 1024 {deviceArgs} {ffmpegOptions.GetFFmpegArgs()} {GetAudioStreamArgs()} {outputArgs}");
+        }
+
+        /// <summary>
+        /// Get audio stream arguments.
+        /// </summary>
+        protected virtual string GetAudioStreamArgs()
+        {
+            var audioArgsBuilder = new StringBuilder();
+
+            if (audioOptions.RecordAudio)
+            {
+                if (audioOptions.Devices.Any())
+                {
+                    var count = audioOptions.Devices.Count();
+
+                    if (count > 1)
+                    {
+                        audioArgsBuilder.Append("-filter_complex \"");
+                        for (int i = 0; i < count; i++)
+                        {
+                            audioArgsBuilder.Append($"[{i}:a]");
+                        }
+                        audioArgsBuilder.Append($"amerge=inputs={count}[a]\" -map 2 -map \"[a]\"");
+                    }
+                }
+            }
+
+            return audioArgsBuilder.ToString();
         }
 
         /// <inheritdoc />

@@ -1,8 +1,8 @@
 ﻿using System;
 using Eto.Drawing;
 using Eto.Forms;
-using RedShot.Infrastructure.Abstractions.Recording;
 using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Recording.Abstractions;
 
 namespace RedShot.Infrastructure.Recording.Views
 {
@@ -11,16 +11,16 @@ namespace RedShot.Infrastructure.Recording.Views
     /// </summary>
     internal class RecordingView : Form
     {
-        private readonly IRecorder recorder;
+        private readonly IRecordingService recordingService;
         private readonly Rectangle recordingRectangle;
 
         /// <summary>
         /// Initializes recording view.
         /// </summary>
-        public RecordingView(IRecorder recorder, Rectangle recordingRectangle)
+        public RecordingView(IRecordingService recordingService, Rectangle recordingRectangle)
         {
+            this.recordingService = recordingService;
             this.recordingRectangle = recordingRectangle;
-            this.recorder = recorder;
             Topmost = true;
             Resizable = false;
 
@@ -29,7 +29,7 @@ namespace RedShot.Infrastructure.Recording.Views
 
         private void InitializeComponents()
         {
-            var recordingVideoPanel = new RecordingVideoPanel(recorder, recordingRectangle);
+            var recordingVideoPanel = new RecordingVideoPanel(recordingService, recordingRectangle);
             recordingVideoPanel.Closed += RecordingVideoPanelClosed;
 
             Content = new StackLayout()

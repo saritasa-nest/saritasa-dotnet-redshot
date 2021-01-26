@@ -1,6 +1,7 @@
 ﻿using Eto.Drawing;
+using RedShot.Infrastructure.Abstractions;
 
-namespace RedShot.Infrastructure.Abstractions.Recording
+namespace RedShot.Infrastructure.Recording.Abstractions
 {
     /// <summary>
     /// Provides recorder.
@@ -14,12 +15,12 @@ namespace RedShot.Infrastructure.Abstractions.Recording
         void Start(Rectangle area);
 
         /// <summary>
-        /// Stops recording.
+        /// Stop recording.
         /// </summary>
         void Stop();
 
         /// <summary>
-        /// Gives recorded video.
+        /// Get recorded video.
         /// </summary>
         IFile GetVideo();
 
