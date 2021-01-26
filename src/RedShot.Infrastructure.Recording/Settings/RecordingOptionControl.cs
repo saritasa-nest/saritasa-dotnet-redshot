@@ -13,8 +13,13 @@ namespace RedShot.Infrastructure.Recording.Settings
     /// </summary>
     internal partial class RecordingOptionControl : Panel
     {
-        private UITimer ffmpegCheckTimer;
-        private FFmpegConfiguration ffmpegConfiguration;
+        /// <summary>
+        /// Check FFmpeg binaries interval in seconds.
+        /// </summary>
+        private const int CheckFfmpegInterval = 2;
+
+        private readonly UITimer ffmpegCheckTimer;
+        private readonly FFmpegConfiguration ffmpegConfiguration;
         private ComboBox videoCodec;
         private Button videoCodecOptionsButton;
         private ComboBox audioCodec;
@@ -37,7 +42,7 @@ namespace RedShot.Infrastructure.Recording.Settings
                 var control = new FfmpegUninstalledControl();
                 ffmpegCheckTimer = new UITimer()
                 {
-                    Interval = 2
+                    Interval = CheckFfmpegInterval
                 };
                 ffmpegCheckTimer.Elapsed += CheckTimerElapsed;
                 ffmpegCheckTimer.Start();
@@ -49,6 +54,11 @@ namespace RedShot.Infrastructure.Recording.Settings
             }
         }
 
+        /// <summary>
+        /// If FFmpeg is not installed on the PC, the FFmpeg options will not be displayed.
+        /// Instead, the control shows a text in the settings “FFmpeg is not installed” and a button below it “Install”.
+        /// If FFmpeg binaries were found the control initializes FFmpeg options.
+        /// </summary>
         private void CheckTimerElapsed(object sender, EventArgs e)
         {
             ffmpegCheckTimer.Stop();

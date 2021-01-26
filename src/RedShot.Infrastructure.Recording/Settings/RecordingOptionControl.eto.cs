@@ -79,14 +79,14 @@ namespace RedShot.Infrastructure.Recording.Settings
         }
 
         /// <summary>
-        /// Remove focus from Audio and Video controls.
+        /// Hack to remove focus from Audio and Video controls.
         /// </summary>
         protected override void OnShown(EventArgs e)
         {
-            base.OnShown(e);
             audioCodec?.Focus();
             videoCodec?.Focus();
             Focus();
+            base.OnShown(e);
         }
 
         private Control GetVideoCodecField()
