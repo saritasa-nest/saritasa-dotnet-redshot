@@ -63,7 +63,7 @@ namespace RedShot.Infrastructure.Common
         /// <summary>
         /// Cancel downloading.
         /// </summary>
-        public void CancelAsync()
+        public void Cancel()
         {
             WebClient.CancelAsync();
         }

@@ -54,7 +54,7 @@ namespace RedShot.Infrastructure.Recording.Recorders
             var downloadForm = new DownloadForm(downloader, "FFmpeg Downloader");
             downloadForm.Closed += (o, e) =>
             {
-                downloader.CancelAsync();
+                downloader.Cancel();
                 downloader.Dispose();
             };
             downloadForm.Show();
