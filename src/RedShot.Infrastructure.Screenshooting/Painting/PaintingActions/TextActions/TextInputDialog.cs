@@ -23,7 +23,8 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextAct
         {
             Title = "Enter Text";
             InitializeComponents();
-            this.Shown += TextInputView_Shown;
+            this.Shown += TextInputViewShown;
+            this.KeyDown += TextInputDialogKeyDown;
 
             this.Resizable = false;
             this.Maximizable = false;
@@ -31,7 +32,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextAct
             Result = new TextDialogResult();
         }
 
-        private void TextInputView_Shown(object sender, EventArgs e)
+        private void TextInputViewShown(object sender, EventArgs e)
         {
             Location = ScreenHelper.GetCenterLocation(Size);
         }
@@ -60,6 +61,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextAct
                 Size = new Size(300, 200),
                 AllowDrop = true
             };
+            textArea.KeyDown += TextInputDialogKeyDown;
 
             Content = new StackLayout()
             {
@@ -85,6 +87,15 @@ namespace RedShot.Infrastructure.Screenshooting.Painting.PaintingActions.TextAct
                 }
             };
             SetTextOptions();
+        }
+
+        private void TextInputDialogKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Keys.Escape)
+            {
+                Result.DialogResult = DialogResult.Cancel;
+                Close();
+            }
         }
 
         private void OkButtonOnClicked(object sender, EventArgs e)
