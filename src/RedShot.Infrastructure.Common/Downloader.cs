@@ -1,8 +1,6 @@
 ﻿using System;
-using System.ComponentModel;
 using System.IO;
 using System.Net;
-using RedShot.Infrastructure.Common.Forms;
 
 namespace RedShot.Infrastructure.Common
 {
@@ -12,28 +10,19 @@ namespace RedShot.Infrastructure.Common
     public class Downloader : IDisposable
     {
         private readonly string downloadDirectory;
-        private WebClient webClient;
         private bool disposed;
 
         /// <summary>
-        /// Download progress changed event.
+        /// Web client.
         /// </summary>
-        public event EventHandler<DownloadProgressChangedEventArgs> DownloadProgressChanged;
+        public WebClient WebClient { get; }
 
         /// <summary>
-        /// Download file completed event.
-        /// </summary>
-        public event EventHandler<AsyncCompletedEventArgs> DownloadFileCompleted;
-
-        /// <summary>
-        /// Initializes downloader.
+        /// Constructor.
         /// </summary>
         public Downloader()
         {
-            webClient = new WebClient();
-            webClient.DownloadFileCompleted += WebClientDownloadFileCompleted;
-            webClient.DownloadProgressChanged += WebClientDownloadProgressChanged;
-
+            WebClient = new WebClient();
             var tempDirectory = Path.GetTempPath();
             downloadDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory, Guid.NewGuid().ToString())).FullName;
         }
@@ -44,19 +33,18 @@ namespace RedShot.Infrastructure.Common
         /// <param name="url">A URL to the file.</param>
         /// <param name="fileName">File name.</param>
         /// <param name="callback">A delegate that will be invoked after data is downloaded, returns file path as a parameter.</param>
-        /// <param name="downloadFormTitle">Download form title.</param>
-        public void DownloadAsync(string url, string fileName, Action<string> callback, string downloadFormTitle = null)
+        public void DownloadAsync(string url, string fileName, Action<string> callback)
         {
-            if (string.IsNullOrWhiteSpace(downloadFormTitle))
-            {
-                downloadFormTitle = fileName;
-            }
-
-            RunForm(downloadFormTitle);
             var path = Path.Combine(downloadDirectory, fileName);
 
-            webClient.DownloadFileAsync(new Uri(url), path);
-            webClient.DownloadFileCompleted += (o, e) => callback.Invoke(path);
+            WebClient.DownloadFileAsync(new Uri(url), path);
+            WebClient.DownloadFileCompleted += (o, e) =>
+            {
+                if (!e.Cancelled)
+                {
+                    callback.Invoke(path);
+                }
+            };
         }
 
         /// <summary>
@@ -67,41 +55,25 @@ namespace RedShot.Infrastructure.Common
         {
             var path = Path.Combine(downloadDirectory, fileName);
 
-            webClient.DownloadFile(url, path);
+            WebClient.DownloadFile(url, path);
 
             return path;
         }
 
-        private void WebClientDownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            DownloadFileCompleted?.Invoke(sender, e);
-        }
-
-        private void WebClientDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            DownloadProgressChanged?.Invoke(sender, e);
-        }
-
-        private void RunForm(string title)
-        {
-            var form = new DownloadForm(this)
-            {
-                Title = title
-            };
-
-            form.Show();
-        }
-
         /// <summary>
-        /// Disposes web client.
+        /// Cancel downloading.
         /// </summary>
+        public void Cancel()
+        {
+            WebClient.CancelAsync();
+        }
+
+        /// <inheritdoc/>
         public void Dispose()
         {
             if (!disposed)
             {
-                webClient.Dispose();
-                webClient = null;
-
+                WebClient.Dispose();
                 disposed = true;
             }
         }

@@ -4,6 +4,7 @@ using System.IO.Compression;
 using System.Linq;
 using Eto.Forms;
 using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Common.Notifying;
 using RedShot.Infrastructure.Recording.Abstractions;
 using RedShot.Infrastructure.Recording.Ffmpeg.Devices;
@@ -50,22 +51,21 @@ namespace RedShot.Infrastructure.Recording.Recorders
                 throw new Exception("FFmpeg is installed already!");
             }
 
-            const string message = "FFmpeg is not installed. Do you want to automatically install it?";
-            const string title = "FFmpeg Installing";
-            var yesNoDialogResult = MessageBox.Show(message, title, MessageBoxButtons.YesNo, MessageBoxType.Warning);
-            if (yesNoDialogResult != DialogResult.Yes)
-            {
-                return;
-            }
-
             var downloader = new Downloader();
+            var downloadForm = new DownloadForm(downloader, "FFmpeg Downloader");
+            downloadForm.Closed += (o, e) =>
+            {
+                downloader.Cancel();
+                downloader.Dispose();
+            };
+            downloadForm.Show();
+
             downloader.DownloadAsync(BinariesUrl, "ffmpeg.zip", (path) =>
             {
                 try
                 {
                     ZipFile.ExtractToDirectory(path, GetFfmpegBinariesFolder());
                     NotifyHelper.Notify("FFmpeg has been downloaded", "RedShot", NotifyStatus.Success);
-                    downloader.Dispose();
                 }
                 catch (Exception e)
                 {
@@ -74,8 +74,7 @@ namespace RedShot.Infrastructure.Recording.Recorders
                     logger.Error(e, $"{errorMessage}.");
                     MessageBox.Show($"{errorMessage}: {e.Message}", MessageBoxButtons.OK, MessageBoxType.Error);
                 }
-            },
-            "Downloading FFmpeg");
+            });
         }
 
         /// <summary>
@@ -94,7 +93,8 @@ namespace RedShot.Infrastructure.Recording.Recorders
         /// </summary>
         protected virtual string GetFfmpegPath()
         {
-            return Directory.GetFiles(GetFfmpegBinariesFolder(), FfmpegBinaryName, SearchOption.AllDirectories).FirstOrDefault();
+            var ffmpegfiles = Directory.GetFiles(GetFfmpegBinariesFolder(), FfmpegBinaryName, SearchOption.AllDirectories);
+            return ffmpegfiles.FirstOrDefault();
         }
 
         /// <summary>

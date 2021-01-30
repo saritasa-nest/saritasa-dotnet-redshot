@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Eto.Drawing;
+﻿using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Resources;
 
@@ -14,14 +13,17 @@ namespace RedShot.Infrastructure.Common.Forms
         private ProgressBar progressBar;
 
         /// <summary>
-        /// Initializes download form.
+        /// Constructor.
         /// </summary>
-        public DownloadForm(Downloader downloader)
+        /// <param name="downloader">Downloader.</param>
+        /// <param name="downloadTitle">Download title.</param>
+        public DownloadForm(Downloader downloader, string downloadTitle)
         {
+            Title = downloadTitle;
             Icon = new Icon(1, Icons.RedCircle);
-            downloader.DownloadFileCompleted += Downloader_DownloadFileCompleted;
-            downloader.DownloadProgressChanged += Downloader_DownloadProgressChanged;
-            this.Shown += DownloadForm_Shown;
+            downloader.WebClient.DownloadFileCompleted += DownloaderDownloadFileCompleted;
+            downloader.WebClient.DownloadProgressChanged += DownloaderDownloadProgressChanged;
+            Shown += DownloadFormShown;
 
             Maximizable = false;
             Resizable = false;
@@ -29,17 +31,17 @@ namespace RedShot.Infrastructure.Common.Forms
             IntitializeComponents();
         }
 
-        private void DownloadForm_Shown(object sender, System.EventArgs e)
+        private void DownloadFormShown(object sender, System.EventArgs e)
         {
             Location = ScreenHelper.GetCenterLocation(Size);
         }
 
-        private void Downloader_DownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
+        private void DownloaderDownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
         {
             progressBar.Value = e.ProgressPercentage;
         }
 
-        private void Downloader_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        private void DownloaderDownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
             progressBar.Value = 100;
             Close();

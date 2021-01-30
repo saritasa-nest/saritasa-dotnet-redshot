@@ -66,37 +66,29 @@ namespace RedShot.Infrastructure.Recording
         }
 
         /// <summary>
-        /// Checks FFmpeg binaries in the OS.
-        /// If they don't exist, it tries to install them.
-        /// </summary>
-        /// <returns>True, if the binaries are installed and ready to work.</returns>
-        public static bool CheckInstallFfmpeg()
-        {
-            if (!RecordingService.CheckFFmpeg())
-            {
-                try
-                {
-                    RecordingService.InstallFFmpeg();
-                }
-                catch
-                {
-                    MessageBox.Show("An error occurred when FFmpeg was installing!");
-                }
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        /// <summary>
-        /// Try to start recording; checks FFmpeg binaries before starting recorder.
+        /// Try to start recording.
+        /// Check the FFmpeg binaries before running recorder,
+        /// if they don't exist, suggest installing them.
         /// </summary>
         public static void InitiateRecording()
         {
-            if (!CheckInstallFfmpeg())
+            if (!RecordingService.CheckFFmpeg())
             {
+                const string message = "FFmpeg is not installed. Do you want to automatically install it?";
+                const string title = "FFmpeg Installing";
+                var yesNoDialogResult = MessageBox.Show(message, title, MessageBoxButtons.YesNo, MessageBoxType.Warning);
+                if (yesNoDialogResult == DialogResult.Yes)
+                {
+                    try
+                    {
+                        RecordingService.InstallFFmpeg();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("An error occurred when FFmpeg was installing!");
+                    }
+                }
+
                 return;
             }
 

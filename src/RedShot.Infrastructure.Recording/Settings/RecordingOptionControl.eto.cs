@@ -1,7 +1,7 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 using Eto.Drawing;
 using Eto.Forms;
-using RedShot.Infrastructure.Common.Forms;
 
 namespace RedShot.Infrastructure.Recording.Settings
 {
@@ -40,7 +40,7 @@ namespace RedShot.Infrastructure.Recording.Settings
             videoCodec = new ComboBox()
             {
                 Size = new Size(180, 19),
-                ReadOnly = true
+                ReadOnly = true,
             };
 
             audioCodec = new ComboBox()
@@ -76,6 +76,17 @@ namespace RedShot.Infrastructure.Recording.Settings
             }
 
             BindOptions();
+        }
+
+        /// <summary>
+        /// Hack to remove focus from Audio and Video controls.
+        /// </summary>
+        protected override void OnShown(EventArgs e)
+        {
+            audioCodec?.Focus();
+            videoCodec?.Focus();
+            Focus();
+            base.OnShown(e);
         }
 
         private Control GetVideoCodecField()

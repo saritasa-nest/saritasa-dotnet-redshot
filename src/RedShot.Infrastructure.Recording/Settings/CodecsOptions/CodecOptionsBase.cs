@@ -29,7 +29,7 @@ namespace RedShot.Recording.Settings.CodecsOptions
         /// <summary>
         /// Quality about.
         /// </summary>
-        private DefaultButton aboutButton;
+        protected DefaultButton aboutButton;
 
         /// <summary>
         /// OK button.
@@ -46,7 +46,8 @@ namespace RedShot.Recording.Settings.CodecsOptions
             this.options = options;
             InitializeBaseComponents();
             InitializeComponents();
-            AddButtons();
+            AddButtonControl(aboutButton);
+            AddButtonControl(okButton);
 
             Content = layout;
             Bind();
@@ -66,6 +67,16 @@ namespace RedShot.Recording.Settings.CodecsOptions
         {
             var row = new TableRow(TableLayout.AutoSized(new Label { Text = title }, new Padding(0, 2)), control);
             layout.Rows.Add(row);
+        }
+
+        /// <summary>
+        /// Add quality row with about button option control.
+        /// </summary>
+        /// <param name="title">Name of the control.</param>
+        /// <param name="control">Option control.</param>
+        protected void AddQualityRowWithAbout(string title, Control control)
+        {
+            AddQualityRow(title, TableLayout.AutoSized(TableLayout.HorizontalScaled(5, control, aboutButton)));
         }
 
         /// <summary>
@@ -97,32 +108,19 @@ namespace RedShot.Recording.Settings.CodecsOptions
             };
         }
 
-        private void AddButtons()
+        private void AddButtonControl(Control control)
         {
             var row = new TableRow(
                 null,
-                TableLayout.AutoSized(
                 new StackLayout()
                 {
-                    MinimumSize = new Size(200, 30),
-                    Padding = new Padding(0, 5, 0, 0),
-                    Orientation = Orientation.Vertical,
+                    MinimumSize = new Size(200, 25),
                     HorizontalContentAlignment = HorizontalAlignment.Right,
                     Items =
                     {
-                        new StackLayout()
-                        {
-                            Orientation = Orientation.Horizontal,
-                            VerticalContentAlignment = VerticalAlignment.Bottom,
-                            Items =
-                            {
-                                okButton,
-                                FormsHelper.GetVoidBox(5),
-                                aboutButton
-                            }
-                        }
+                        control
                     }
-                }));
+                });
 
             layout.Rows.Add(row);
         }
