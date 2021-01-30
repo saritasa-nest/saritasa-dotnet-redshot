@@ -6,7 +6,6 @@
     <CodeAnalysisRuleSet>../../tools/Saritasa.ruleset</CodeAnalysisRuleSet>
     <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <AssemblyName>redshot</AssemblyName>
-    <ApplicationIcon>Redcircle.ico</ApplicationIcon>
     <NoWarn>NU1701;$(NoWarn)</NoWarn>
     <Company>Saritasa</Company>
     <Product>RedShot</Product>
@@ -26,7 +25,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RedShot.Initialization\RedShot.Initialization.csproj" />
     <ProjectReference Include="..\RedShot.Infrastructure\RedShot.Infrastructure.csproj" />
     <ProjectReference Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp.Mac\Eto.Forms.Controls.SkiaSharp.Mac.csproj" />
     <ProjectReference Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp\Eto.Forms.Controls.SkiaSharp.csproj" />

@@ -4,7 +4,6 @@ using Eto.Forms;
 using Eto.Forms.Controls.SkiaSharp;
 using RedShot.Infrastructure;
 using RedShot.Infrastructure.Configuration;
-using RedShot.Initialization;
 
 namespace RedShot.Application.MacOS
 {
@@ -33,25 +32,16 @@ namespace RedShot.Application.MacOS
         {
             logger.Debug("The RedShot application was started!");
 
-            AppInitializer.Initialize();
-
             var app = new Eto.Forms.Application(Eto.Platforms.Mac64);
             app.UnhandledException += InstanceOnUnhandledException;
-            app.Initialized += AppInitialized;
             AppDomain.CurrentDomain.UnhandledException += DomainUnhandledException;
             AppDomain.CurrentDomain.ProcessExit += CurrentDomainProcessExit;
             Eto.Platform.Detect.Add<ISKControl>(() => new Eto.Forms.Controls.SkiaSharp.Mac.SKControlHandler());
             app.Run(ApplicationManager.GetTrayApp());
         }
 
-        private static void AppInitialized(object sender, EventArgs e)
-        {
-            Shortcut.ShortcutManager.BindShortcuts();
-        }
-
         private static void CurrentDomainProcessExit(object sender, EventArgs e)
         {
-            Shortcut.ShortcutManager.UnbindShortcuts();
             ConfigurationManager.Save();
         }
 
