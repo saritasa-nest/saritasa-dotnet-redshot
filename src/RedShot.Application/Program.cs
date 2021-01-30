@@ -156,7 +156,7 @@ namespace RedShot.Application
 
             logger.Fatal(ex);
 
-            Eto.Forms.Application.Instance.Dispose();
+            Eto.Forms.Application.Instance.Quit();
         }
     }
 }

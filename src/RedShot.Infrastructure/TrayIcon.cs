@@ -89,12 +89,5 @@ namespace RedShot.Infrastructure
             base.OnUnLoad(e);
             Tray.Hide();
         }
-
-        /// <inheritdoc/>
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-            Application.Instance.Dispose();
-        }
     }
 }
