@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net5.0-windows</TargetFrameworks>
     <CodeAnalysisRuleSet>../../../tools/Saritasa.ruleset</CodeAnalysisRuleSet>
     <NoWarn>NU1701;$(NoWarn)</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Eto.Platform.Windows" Version="2.5.6" />
-    <PackageReference Include="NLog" Version="4.7.5" />
+    <PackageReference Include="Eto.Platform.Windows" Version="2.5.10" />
+    <PackageReference Include="NLog" Version="4.7.7" />
     <PackageReference Include="SkiaSharp.Views" Version="2.80.2" />
     <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="2.80.2" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
