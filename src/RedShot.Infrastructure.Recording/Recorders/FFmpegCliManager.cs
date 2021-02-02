@@ -34,8 +34,8 @@ namespace RedShot.Infrastructure.Recording
         /// </summary>
         public FFmpegCliManager(string ffmpegPath) : base(ffmpegPath)
         {
-            OutputDataReceived += FFmpeg_DataReceived;
-            ErrorDataReceived += FFmpeg_DataReceived;
+            OutputDataReceived += FFmpegDataReceived;
+            ErrorDataReceived += FFmpegDataReceived;
             AppDomain.CurrentDomain.ProcessExit += (o, e) => Stop();
         }
 
@@ -129,6 +129,9 @@ namespace RedShot.Infrastructure.Recording
                     try
                     {
                         process.Start();
+#if _WINDOWS
+                        Platforms.Windows.ChildProcessTracking.ChildProcessTracker.AddProcess(process);
+#endif
                         process.BeginOutputReadLine();
                         process.BeginErrorReadLine();
                         process.WaitForExit();
@@ -172,7 +175,7 @@ namespace RedShot.Infrastructure.Recording
             }
         }
 
-        private void FFmpeg_DataReceived(object sender, DataReceivedEventArgs e)
+        private void FFmpegDataReceived(object sender, DataReceivedEventArgs e)
         {
             var data = e.Data;
 
