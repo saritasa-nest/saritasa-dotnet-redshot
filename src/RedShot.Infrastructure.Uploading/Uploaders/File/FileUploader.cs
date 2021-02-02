@@ -59,10 +59,9 @@ namespace RedShot.Infrastructure.Uploaders.File
                 }
 
                 UploadingFinished?.Invoke(this, UploadingFinishedEventArgs.CreateNew(file));
-                return new BaseUploadingResponse(true);
             }
 
-            return new BaseUploadingResponse(false);
+            return new BaseUploadingResponse(true);
         }
 
         private async Task<IUploadingResponse> UploadVideoAsync(IFile file, CancellationToken cancellationToken)
