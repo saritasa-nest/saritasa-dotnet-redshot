@@ -21,14 +21,17 @@ namespace RedShot.Infrastructure.Recording.Views
         /// </summary>
         public AudioOptionsDialog()
         {
-            Title = "Audio Options";
+            Title = "Recording Settings";
             audioOptions = ConfigurationManager.GetSection<FFmpegConfiguration>().AudioOptions.Clone();
             InitializeComponents();
         }
 
         private void InitializeComponents()
         {
-            recordAudio = new CheckBox();
+            recordAudio = new CheckBox()
+            {
+                Text = "Record audio"
+            };
             recordAudio.CheckedBinding.Bind(audioOptions, o => o.RecordAudio);
 
             var tableLayout = new TableLayout()
@@ -37,14 +40,7 @@ namespace RedShot.Infrastructure.Recording.Views
                 Padding = new Padding(0, 0, 10, 30),
                 Rows =
                 {
-                    new TableRow()
-                    {
-                        Cells =
-                        {
-                            recordAudio,
-                            new Label() { Text = "Record audio" }
-                        }
-                    }
+                    new TableRow(recordAudio)
                 }
             };
 
@@ -91,7 +87,10 @@ namespace RedShot.Infrastructure.Recording.Views
 
         private void AddAudioDeviceRow(TableLayout tableLayout, Device audioDevice)
         {
-            var deviceCheckbox = new CheckBox();
+            var deviceCheckbox = new CheckBox()
+            {
+                Text = audioDevice.Name
+            };
             SetEnabledProperty(deviceCheckbox);
             recordAudio.CheckedChanged += (o, e) => SetEnabledProperty(deviceCheckbox);
             deviceCheckbox.Checked = audioOptions.Devices.Contains(audioDevice);
@@ -107,16 +106,7 @@ namespace RedShot.Infrastructure.Recording.Views
                 }
             };
 
-            var row = new TableRow()
-            {
-                Cells =
-                {
-                    deviceCheckbox,
-                    new Label() { Text = audioDevice.Name }
-                }
-            };
-
-            tableLayout.Rows.Add(row);
+            tableLayout.Rows.Add(deviceCheckbox);
         }
 
         private void SetEnabledProperty(CheckBox checkBox)
