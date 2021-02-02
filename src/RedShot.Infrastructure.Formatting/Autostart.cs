@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.Versioning;
 
 namespace RedShot.Infrastructure.Formatting
 {
@@ -18,6 +19,7 @@ namespace RedShot.Infrastructure.Formatting
         /// <summary>
         /// Enable autostart of the application.
         /// </summary>
+        [SupportedOSPlatform("windows")]
         public void EnableAutostart()
         {
 #if _WINDOWS
@@ -28,6 +30,7 @@ namespace RedShot.Infrastructure.Formatting
         /// <summary>
         /// Disable autostart of the application.
         /// </summary>
+        [SupportedOSPlatform("windows")]
         public void DisableAutostart()
         {
 #if _WINDOWS
@@ -35,6 +38,8 @@ namespace RedShot.Infrastructure.Formatting
 #endif
         }
 
+#if _WINDOWS
+        [SupportedOSPlatform("windows")]
         private void EnableAutostartInWindows()
         {
             var key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(RegistrySubKey, true);
@@ -49,6 +54,7 @@ namespace RedShot.Infrastructure.Formatting
             }
         }
 
+        [SupportedOSPlatform("windows")]
         private void DisableAutostartInWindows()
         {
             var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(RegistrySubKey, true);
@@ -68,5 +74,6 @@ namespace RedShot.Infrastructure.Formatting
                 throw new InvalidOperationException(RegistryNotFoundMessage);
             }
         }
+#endif
     }
 }
