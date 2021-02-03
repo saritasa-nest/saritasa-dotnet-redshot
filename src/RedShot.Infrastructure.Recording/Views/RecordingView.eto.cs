@@ -15,7 +15,40 @@ namespace RedShot.Infrastructure.Recording.Views
     {
         private void InitializeComponents()
         {
-            optionsPanelSize = new Size(220, 41);
+            InitializeOptionsPanel();
+
+            Padding contentPadding = default;
+
+#if _WINDOWS
+            WindowStyle = WindowStyle.None;
+            BackgroundColor = Colors.Red;
+
+            Rectangle excludeRectangle = default;
+            Rectangle excludeRectangle2 = default;
+
+            if (CheckPanelFit())
+            {
+                Location = new Point(recordingRectangle.X, recordingRectangle.Y - optionsPanel.Height - 1);
+                Size = new Size(recordingRectangle.Width, recordingRectangle.Height + optionsPanel.Height + 1);
+                excludeRectangle = new Rectangle(new Point(0, optionsPanel.Height), new Size(recordingRectangle.Width, recordingRectangle.Height + 1)).OffsetRectangle(1);
+                excludeRectangle2 = new Rectangle(new Point(optionsPanel.Width, 0), new Size(recordingRectangle.Width - optionsPanel.Width, optionsPanel.Height));
+            }
+            else
+            {
+                Location = recordingRectangle.Location;
+                Size = new Size(recordingRectangle.Width, recordingRectangle.Height + 1);
+                excludeRectangle = new Rectangle(new Point(0, optionsPanel.Height - 1), new Size(recordingRectangle.Width, recordingRectangle.Height - optionsPanel.Height + 2)).OffsetRectangle(1);
+                excludeRectangle2 = new Rectangle(new Point(optionsPanel.Width + 1, 1), new Size(recordingRectangle.Width - optionsPanel.Width - 2, optionsPanel.Height));
+                contentPadding = new Padding(1, 1, 0, 0);
+            }
+
+            excludeRectangles = new Rectangle[]
+            {
+                excludeRectangle,
+                excludeRectangle2
+            };
+            Platforms.Windows.WindowsRegionHelper.Exclude(ControlObject, excludeRectangles);
+#endif
 
             recordingTimer = new Stopwatch();
             renderingTimer = new UITimer
@@ -25,49 +58,18 @@ namespace RedShot.Infrastructure.Recording.Views
             renderingTimer.Elapsed += RenderingTimerElapsed;
             renderingTimer.Start();
 
-            var recordingVideoPanel = GetOptionsPanel();
-
             Content = new StackLayout()
             {
                 Orientation = Orientation.Vertical,
+                Padding = contentPadding,
                 Items =
                 {
-                    recordingVideoPanel
+                    optionsPanel
                 }
             };
-
-#if _WINDOWS
-            WindowStyle = WindowStyle.None;
-            BackgroundColor = Colors.Red;
-
-            Rectangle excludeRectangle = default;
-            Rectangle excludeRectangle2 = default;
-
-            if ((recordingRectangle.Location.Y - recordingVideoPanel.Height) > 0)
-            {
-                Location = new Point(recordingRectangle.X, recordingRectangle.Y - recordingVideoPanel.Height - 1);
-                Size = new Size(recordingRectangle.Width, recordingRectangle.Height + recordingVideoPanel.Height + 1);
-                excludeRectangle = new Rectangle(new Point(0, recordingVideoPanel.Height), new Size(recordingRectangle.Width, recordingRectangle.Height + 1)).OffsetRectangle(1);
-                excludeRectangle2 = new Rectangle(new Point(recordingVideoPanel.Width, 0), new Size(recordingRectangle.Width - recordingVideoPanel.Width, recordingVideoPanel.Height));
-            }
-            else
-            {
-                var screenBounds = ScreenHelper.GetScreenBounds();
-
-                if ((recordingRectangle.Location.Y + recordingVideoPanel.Height) < screenBounds.Height)
-                {
-                    Location = recordingRectangle.Location;
-                    Size = new Size(recordingRectangle.Width, recordingRectangle.Height + 1);
-                    excludeRectangle = new Rectangle(new Point(0, recordingVideoPanel.Height - 1), new Size(recordingRectangle.Width, recordingRectangle.Height - recordingVideoPanel.Height + 2)).OffsetRectangle(1);
-                    excludeRectangle2 = new Rectangle(new Point(recordingVideoPanel.Width, 1), new Size(recordingRectangle.Width - recordingVideoPanel.Width - 1, recordingVideoPanel.Height));
-                }
-            }
-
-            RedShot.Platforms.Windows.WindowsRegionHelper.Exclude(this.ControlObject, excludeRectangle, excludeRectangle2);
-#endif
         }
 
-        private Control GetOptionsPanel()
+        private void InitializeOptionsPanel()
         {
             timerLabel = new Label()
             {
@@ -81,13 +83,15 @@ namespace RedShot.Infrastructure.Recording.Views
 
             closeButton = new ImageButton(buttonSize, Icons.Close, scaleImageSize: scaleSize);
             closeButton.ToolTip = "Close";
-            closeButton.Clicked += CloseButtonClicked;
+            closeButton.Clicked += (o, e) => Close();
 
             optionsButton = new ImageButton(buttonSize, Icons.Gear, scaleImageSize: scaleSize);
             optionsButton.ToolTip = "Audio Options";
             optionsButton.Clicked += OptionsButtonClicked;
 
-            return new StackLayout()
+            var optionsPanelSize = new Size(220, 41);
+
+            optionsPanel = new StackLayout()
             {
                 Size = optionsPanelSize,
                 BackgroundColor = Colors.WhiteSmoke,

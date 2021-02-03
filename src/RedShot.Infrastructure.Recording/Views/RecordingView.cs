@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Diagnostics;
 using Eto.Drawing;
 using Eto.Forms;
@@ -16,6 +17,7 @@ namespace RedShot.Infrastructure.Recording.Views
     {
         private readonly IRecordingService recordingService;
         private readonly Rectangle recordingRectangle;
+        private UITimer beforeRecordTimer;
         private UITimer renderingTimer;
         private Stopwatch recordingTimer;
         private RecordingButton recordingButton;
@@ -23,7 +25,9 @@ namespace RedShot.Infrastructure.Recording.Views
         private ImageButton optionsButton;
         private Label timerLabel;
         private IRecorder recorder;
-        private Size optionsPanelSize;
+        private Control optionsPanel;
+        private Rectangle[] excludeRectangles;
+        private bool isOptionsPanelHidden;
 
         /// <summary>
         /// Initializes recording view.
@@ -36,7 +40,16 @@ namespace RedShot.Infrastructure.Recording.Views
             Resizable = false;
 
             InitializeComponents();
-            this.UnLoad += (o, e) => recorder?.Stop();
+        }
+
+        /// <inheritdoc/>
+        protected override void OnClosed(EventArgs e)
+        {
+            recordingTimer.Stop();
+            renderingTimer.Stop();
+            beforeRecordTimer?.Stop();
+            recorder?.Stop();
+            base.OnClosed(e);
         }
 
         private void RecordingButtonClicked(object sender, System.EventArgs e)
@@ -63,7 +76,7 @@ namespace RedShot.Infrastructure.Recording.Views
             int seconds = 3;
             recordingButton.SetCountdownSecond(seconds);
 
-            var beforeRecordTimer = new UITimer()
+            beforeRecordTimer = new UITimer()
             {
                 Interval = 1
             };
@@ -92,12 +105,6 @@ namespace RedShot.Infrastructure.Recording.Views
             beforeRecordTimer.Start();
         }
 
-        private void CloseButtonClicked(object sender, EventArgs e)
-        {
-            recorder?.Stop();
-            Close();
-        }
-
         private void FinishRecording()
         {
             recordingTimer.Stop();
@@ -111,23 +118,40 @@ namespace RedShot.Infrastructure.Recording.Views
             timerLabel.Text = recordingTimer.Elapsed.ToString(@"hh\:mm\:ss");
             timerLabel.Invalidate();
 
+#if _WINDOWS
+            var optionsPanelRectangle = new Rectangle(optionsPanel.Size);
+            if (!CheckPanelFit())
+            {
+                optionsPanelRectangle.Location = new Point(1, 1);
+            }
+
             if (recorder != null && recorder.IsRecording)
             {
-                var rectangle = new Rectangle(Location, optionsPanelSize);
+                var rectangle = new Rectangle(Location, optionsPanel.Size);
                 var mouseRectangle = new Rectangle((Point)Mouse.Position, new Size(1, 1));
-                if (rectangle.Intersects(mouseRectangle))
+                if (!rectangle.Intersects(mouseRectangle))
                 {
-                    Opacity = 1;
-                }
-                else
-                {
-                    Opacity = 0.001;
+                    if (!isOptionsPanelHidden)
+                    {
+                        Platforms.Windows.WindowsRegionHelper.Exclude(ControlObject, excludeRectangles.Append(optionsPanelRectangle).ToArray());
+                        isOptionsPanelHidden = true;
+                    }
+                    return;
                 }
             }
-            else
+
+            if (isOptionsPanelHidden)
             {
-                Opacity = 1;
+                Platforms.Windows.WindowsRegionHelper.Union(ControlObject, optionsPanelRectangle);
+                Platforms.Windows.WindowsRegionHelper.Exclude(ControlObject, excludeRectangles);
+                isOptionsPanelHidden = false;
             }
+#endif
+        }
+
+        private bool CheckPanelFit()
+        {
+            return recordingRectangle.Location.Y - optionsPanel.Size.Height > 0;
         }
 
         private void OptionsButtonClicked(object sender, EventArgs e)

@@ -41,8 +41,6 @@ namespace RedShot.Platforms.Windows.ChildProcessTracking
             // This feature requires Windows 8 or later. To support Windows 7 requires
             //  registry settings to be added if you are using Visual Studio plus an
             //  app.manifest change.
-            //  https://stackoverflow.com/a/4232259/386091
-            //  https://stackoverflow.com/a/9507862/386091
             if (Environment.OSVersion.Version < new Version(6, 2))
             {
                 return;
