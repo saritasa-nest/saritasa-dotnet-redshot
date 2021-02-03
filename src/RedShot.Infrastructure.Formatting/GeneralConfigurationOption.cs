@@ -9,6 +9,8 @@ namespace RedShot.Infrastructure.Formatting
     /// </summary>
     public class GeneralConfigurationOption : IConfigurationOption, INotifyPropertyChanged
     {
+        public string Test { get; set; }
+
         private string pattern;
         private bool launchAtSystemStart;
 

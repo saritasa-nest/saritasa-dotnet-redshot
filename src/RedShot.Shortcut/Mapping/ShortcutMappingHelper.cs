@@ -26,7 +26,7 @@ namespace RedShot.Shortcut.Mapping
         {
             foreach (var shortcutMap in shortcutMaps)
             {
-                var shortcut = shortcuts.Single(s => s.GetType() == shortcutMap.ShortcutType);
+                var shortcut = shortcuts.SingleOrDefault(s => s.GetType() == shortcutMap.ShortcutType);
                 shortcut.Keys = shortcutMap.Keys;
             }
 
