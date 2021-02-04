@@ -3,9 +3,9 @@
 namespace RedShot.Shortcut.Shortcuts
 {
     /// <summary>
-    /// Shortcut abstraction.
+    /// Shortcut.
     /// </summary>
-    internal abstract class Shortcut
+    public abstract class Shortcut
     {
         /// <summary>
         /// Shortcut name.

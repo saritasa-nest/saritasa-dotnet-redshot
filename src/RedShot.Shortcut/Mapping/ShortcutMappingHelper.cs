@@ -13,10 +13,7 @@ namespace RedShot.Shortcut.Mapping
         /// </summary>
         public static IEnumerable<ShortcutMap> GetShortcutMaps(IEnumerable<Shortcuts.Shortcut> shortcuts)
         {
-            foreach (var shortcut in shortcuts)
-            {
-                yield return new ShortcutMap(shortcut.GetType(), shortcut.Keys);
-            }
+            return shortcuts.Select(s => new ShortcutMap(s.Name, s.Keys));
         }
 
         /// <summary>
@@ -26,8 +23,12 @@ namespace RedShot.Shortcut.Mapping
         {
             foreach (var shortcutMap in shortcutMaps)
             {
-                var shortcut = shortcuts.SingleOrDefault(s => s.GetType() == shortcutMap.ShortcutType);
-                shortcut.Keys = shortcutMap.Keys;
+                var shortcut = shortcuts.FirstOrDefault(s => shortcutMap.ShortcutName == s.Name);
+
+                if (shortcut != null)
+                {
+                    shortcut.Keys = shortcutMap.Keys;
+                }
             }
 
             return shortcuts;

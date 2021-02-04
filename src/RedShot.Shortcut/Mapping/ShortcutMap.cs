@@ -1,5 +1,4 @@
-﻿using System;
-using Eto.Forms;
+﻿using Eto.Forms;
 
 namespace RedShot.Shortcut.Mapping
 {
@@ -10,27 +9,27 @@ namespace RedShot.Shortcut.Mapping
     public class ShortcutMap
     {
         /// <summary>
-        /// Uses for initialization when the object serializes from a file.
+        /// Constructor.
         /// </summary>
         public ShortcutMap()
         {
         }
 
         /// <summary>
-        /// Initialize the object.
+        /// Constructor.
         /// </summary>
-        /// <param name="shortcutType">Shortcut type <see cref="Shortcuts.Shortcut"/>.</param>
+        /// <param name="shortcutName">Shortcut name.</param>
         /// <param name="keys">Hotkeys.</param>
-        public ShortcutMap(Type shortcutType, Keys keys)
+        public ShortcutMap(string shortcutName, Keys keys)
         {
-            ShortcutType = shortcutType;
+            ShortcutName = shortcutName;
             Keys = keys;
         }
 
         /// <summary>
-        /// Shortcut type <see cref="Shortcuts.Shortcut"/>.
+        /// Shortcut name.
         /// </summary>
-        public Type ShortcutType { get; set; }
+        public string ShortcutName { get; set; }
 
         /// <summary>
         /// Hotkeys.
