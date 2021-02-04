@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Common.Encryption;
-using RedShot.Infrastructure.Configuration.Models;
 
 namespace RedShot.Infrastructure.Configuration
 {
@@ -15,71 +14,108 @@ namespace RedShot.Infrastructure.Configuration
     /// </summary>
     public class UserConfiguration
     {
-        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-
         /// <summary>
-        /// Application settings.
+        /// Instance of user configuration.
         /// </summary>
-        public AppSettings AppSettings { get; private set; }
+        public static UserConfiguration Instance { get; } = new UserConfiguration();
 
-        private readonly List<IConfigurationOption> configurationOptions;
+        private readonly Dictionary<Type, object> configurationOptions;
         private IEncryptionService encryptionService;
-        private readonly Lazy<JsonDocument> jsonDocument;
+        private readonly Lazy<JObject> jsonRootObject;
+        private readonly JsonSerializer jsonSerializer;
 
         /// <summary>
-        /// Initialize configuration manager.
+        /// Constructor.
         /// </summary>
-        public UserConfiguration(AppSettings appSettings)
+        public UserConfiguration()
         {
-            AppSettings = appSettings;
             encryptionService = new Base64Encrypter();
-            jsonDocument = new Lazy<JsonDocument>(GetJsonDocument);
-        }
-
-        private JsonDocument GetJsonDocument()
-        {
-            var json = GetJsonText();
-            return JsonDocument.Parse(json);
+            jsonRootObject = new Lazy<JObject>(GetJsonRootObject);
+            jsonSerializer = GetSafeJsonSerializer();
+            configurationOptions = new Dictionary<Type, object>();
         }
 
         /// <summary>
-        /// Returns section by the type.
+        /// Get configuration option or default.
         /// </summary>
-        public T GetOption<T>() where T : class, IConfigurationOption, new()
+        public T GetOptionOrDefault<T>() where T : class, new()
         {
-            var option = Activator.CreateInstance<T>() as IConfigurationOption;
+            if (TryGetOption<T>(out var value))
+            {
+                return value;
+            }
+            else
+            {
+                return Activator.CreateInstance<T>();
+            }
         }
 
-        private bool TryGetJsonElement(string elementName, out JsonElement jsonElement)
+        /// <summary>
+        /// Try get the option.
+        /// </summary>
+        public bool TryGetOption<T>(out T option) where T : class
         {
-            foreach (var element in jsonDocument.Value.RootElement.EnumerateArray())
+            var optionType = typeof(T);
+            option = null;
+
+            if (configurationOptions.TryGetValue(optionType, out var value))
             {
-                if (element.TryGetProperty(nameof(IConfigurationOption.UniqueName), out var value))
+                option = value as T;
+            }
+            else if (jsonRootObject.Value.TryGetValue(optionType.FullName, out var jToken))
+            {
+                option = jToken.ToObject<T>(jsonSerializer);
+
+                if (option is IEncryptable encryptable)
                 {
-                    if (value.GetString().Equals(elementName, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        jsonElement = element;
-                        return true;
-                    }
+                    option = encryptable.Decrypt(encryptionService) as T;
                 }
+
+                configurationOptions.Add(optionType, option);
             }
 
-            jsonElement = default;
-            return false;
+            return option != null;
         }
 
         /// <summary>
-        /// Sets option's object.
+        /// Set configuration option.
         /// </summary>
-        public void SetOption(IConfigurationOption option)
+        public void SetOption<T>(T option) where T : class
         {
+            var optionType = typeof(T);
+            configurationOptions.Remove(optionType);
+            configurationOptions.Add(optionType, option);
         }
 
         /// <summary>
-        /// Saves configuration to the file.
+        /// Save configuration options.
         /// </summary>
         public void Save()
         {
+            foreach (var keyValuePair in configurationOptions)
+            {
+                jsonRootObject.Value.Remove(keyValuePair.Key.FullName);
+
+                var option = keyValuePair.Value;
+
+                if (option is IEncryptable encryptable)
+                {
+                    option = encryptable.Encrypt(encryptionService);
+                }
+
+                jsonRootObject.Value.Add(keyValuePair.Key.FullName, JObject.FromObject(option));
+            }
+
+            var json = jsonRootObject.Value.ToString();
+            var path = GetConfigurationPath();
+
+            File.WriteAllText(path, json, Encoding.UTF8);
+        }
+
+        private JObject GetJsonRootObject()
+        {
+            var json = GetJsonText();
+            return JObject.Parse(json);
         }
 
         private string GetJsonText()
@@ -91,16 +127,28 @@ namespace RedShot.Infrastructure.Configuration
             }
             else
             {
-                return string.Empty;
+                return "{}";
             }
         }
 
         private string GetConfigurationPath()
         {
-            return Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "RedShot",
-                "config.json");
+            var directoryPath = Directory.CreateDirectory(
+                Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RedShot")).FullName;
+
+            return Path.Combine(directoryPath, "config.json");
+        }
+
+        /// <summary>
+        /// Get a safe JSON serializer that doesn't throw exceptions when the configuration parameters changed.
+        /// </summary>
+        private JsonSerializer GetSafeJsonSerializer()
+        {
+            var serializer = new JsonSerializer();
+            serializer.Error += (o, e) => e.ErrorContext.Handled = true;
+
+            return serializer;
         }
     }
 }

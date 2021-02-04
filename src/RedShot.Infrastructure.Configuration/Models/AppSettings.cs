@@ -5,6 +5,27 @@
     /// </summary>
     public class AppSettings
     {
+        private static AppSettings instance;
+
+        /// <summary>
+        /// Instance of application settings.
+        /// </summary>
+        public static AppSettings Instance
+        {
+            get
+            {
+                return instance;
+            }
+
+            set
+            {
+                if (instance == null)
+                {
+                    instance = value;
+                }
+            }
+        }
+
         /// <summary>
         /// RedShot email address.
         /// </summary>

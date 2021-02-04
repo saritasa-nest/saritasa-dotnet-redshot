@@ -6,6 +6,7 @@ using RedShot.Infrastructure.Recording;
 using RedShot.Infrastructure.Recording.Recorders;
 using RedShot.Infrastructure.Recording.Abstractions;
 using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Configuration.Models;
 
 namespace RedShot.Recording.Recorders.Windows
 {
@@ -18,13 +19,13 @@ namespace RedShot.Recording.Recorders.Windows
         protected override string FfmpegBinaryName => "ffmpeg.exe";
 
         /// <inheritdoc />
-        protected override string BinariesUrl => ConfigurationManager.AppSettings.FfmpegWindowsDownloadPath;
+        protected override string BinariesUrl => AppSettings.Instance.FfmpegWindowsDownloadPath;
 
         /// <inheritdoc />
         public override IRecorder GetRecorder()
         {
             ThrowIfNotFoundFfmpegBinary();
-            var options = ConfigurationManager.GetSection<FFmpegConfiguration>();
+            var options = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfiguration>();
             return new WindowsRecorder(options, GetFfmpegPath(), RecordingHelper.GetDefaultVideoFolder());
         }
 

@@ -71,7 +71,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
 
         private static FtpConfiguration GetConfiguration()
         {
-            return ConfigurationManager.GetSection<FtpConfiguration>();
+            return UserConfiguration.Instance.GetOptionOrDefault<FtpConfiguration>();
         }
     }
 }

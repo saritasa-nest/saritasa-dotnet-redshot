@@ -1,16 +1,13 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using RedShot.Infrastructure.Abstractions;
 
 namespace RedShot.Infrastructure.Formatting
 {
     /// <summary>
     /// Format configuration option.
     /// </summary>
-    public class GeneralConfigurationOption : IConfigurationOption, INotifyPropertyChanged
+    public class GeneralConfigurationOption : INotifyPropertyChanged
     {
-        public string Test { get; set; }
-
         private string pattern;
         private bool launchAtSystemStart;
 
@@ -22,9 +19,6 @@ namespace RedShot.Infrastructure.Formatting
             pattern = "%date%rnd";
             launchAtSystemStart = true;
         }
-
-        /// <inheritdoc />
-        public string UniqueName => "Formatting";
 
         /// <summary>
         /// Pattern for formatting.

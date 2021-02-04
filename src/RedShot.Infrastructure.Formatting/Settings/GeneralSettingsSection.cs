@@ -19,7 +19,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
         /// </summary>
         public GeneralSettingsSection()
         {
-            configurationOption = ConfigurationManager.GetSection<GeneralConfigurationOption>();
+            configurationOption = UserConfiguration.Instance.GetOptionOrDefault<GeneralConfigurationOption>();
             autostart = new Autostart();
         }
 
@@ -49,8 +49,7 @@ namespace RedShot.Infrastructure.Formatting.Settings
                 autostart.DisableAutostart();
             }
 
-            ConfigurationManager.SetSection(configurationOption);
-            ConfigurationManager.Save();
+            UserConfiguration.Instance.SetOption(configurationOption);
         }
 
         /// <inheritdoc />

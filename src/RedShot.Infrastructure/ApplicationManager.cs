@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Configuration;
+using RedShot.Infrastructure.Configuration.Models;
 using RedShot.Infrastructure.Recording;
 using RedShot.Infrastructure.Screenshooting;
 using RedShot.Infrastructure.Uploading;
@@ -77,7 +78,7 @@ namespace RedShot.Infrastructure
         /// </summary>
         public static void SendFeedBack()
         {
-            var email = ConfigurationManager.AppSettings.Email;
+            var email = AppSettings.Instance.Email;
             var url = $"mailto:{email}";
 
             Process.Start(new ProcessStartInfo

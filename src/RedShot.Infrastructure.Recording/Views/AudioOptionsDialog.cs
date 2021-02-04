@@ -22,7 +22,7 @@ namespace RedShot.Infrastructure.Recording.Views
         public AudioOptionsDialog()
         {
             Title = "Audio Options";
-            audioOptions = ConfigurationManager.GetSection<FFmpegConfiguration>().AudioOptions.Clone();
+            audioOptions = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfiguration>().AudioOptions.Clone();
             InitializeComponents();
         }
 
@@ -82,11 +82,11 @@ namespace RedShot.Infrastructure.Recording.Views
 
         private void SaveOptions()
         {
-            var configuration = ConfigurationManager.GetSection<FFmpegConfiguration>();
+            var configuration = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfiguration>();
             configuration.AudioOptions = audioOptions;
 
-            ConfigurationManager.SetSection(configuration);
-            ConfigurationManager.Save();
+            UserConfiguration.Instance.SetOption(configuration);
+            UserConfiguration.Instance.Save();
         }
 
         private void AddAudioDeviceRow(TableLayout tableLayout, Device audioDevice)

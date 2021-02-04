@@ -1,5 +1,4 @@
 ﻿using System;
-using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Recording.Ffmpeg;
 
 namespace RedShot.Infrastructure.Recording
@@ -7,20 +6,16 @@ namespace RedShot.Infrastructure.Recording
     /// <summary>
     /// FFmpeg configuration.
     /// </summary>
-    public class FFmpegConfiguration : IConfigurationOption
+    public class FFmpegConfiguration : ICloneable
     {
         /// <summary>
         /// Initialize.
         /// </summary>
         public FFmpegConfiguration()
         {
-            UniqueName = "FFmpeg configuration";
             FFmpegOptions = new FFmpegOptions();
             AudioOptions = new AudioOptions();
         }
-
-        /// <inheritdoc/>
-        public string UniqueName { get; }
 
         /// <summary>
         /// Audio options.

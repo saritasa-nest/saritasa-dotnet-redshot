@@ -9,11 +9,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
     /// <summary>
     /// FTP configuration.
     /// </summary>
-    public class FtpConfiguration : IConfigurationOption, IEncryptable
+    public class FtpConfiguration : IEncryptable, ICloneable
     {
-        /// <inheritdoc cref="IConfigurationOption"/>
-        public string UniqueName => "FTP accounts configuration";
-
         /// <summary>
         /// Primary account guid.
         /// </summary>
@@ -62,7 +59,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             return clone;
         }
 
-        /// <inheritdoc cref="ICloneable"/>
+        /// <inheritdoc />
         object ICloneable.Clone()
         {
             return Clone();

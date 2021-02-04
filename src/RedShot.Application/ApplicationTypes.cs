@@ -21,14 +21,6 @@ namespace RedShot.Application
         /// </summary>
         public ApplicationTypes()
         {
-            ConfigurationOptionsTypes = new List<Type>()
-            {
-                typeof(FtpConfiguration),
-                typeof(FFmpegConfiguration),
-                typeof(GeneralConfigurationOption),
-                typeof(ShortcutConfiguration)
-            };
-
             SettingsOptionsTypes = new List<Type>()
             {
                 typeof(FtpSettingsSection),
