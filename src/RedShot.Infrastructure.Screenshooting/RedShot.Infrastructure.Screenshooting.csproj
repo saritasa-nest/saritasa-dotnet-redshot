@@ -1,17 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFrameworks>netcoreapp3.1</TargetFrameworks>
-		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+    <TargetFramework>net5.0-windows</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
 		<CodeAnalysisRuleSet>../../tools/Saritasa.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="NLog" Version="4.7.5" />
+		<PackageReference Include="NLog" Version="4.7.7" />
 		<PackageReference Include="Prism.Core" Version="8.0.0.1909" />
-		<PackageReference Include="Saritasa.Tools.Common" Version="3.2.2" />
+		<PackageReference Include="Saritasa.Tools.Common" Version="3.3.1" />
 		<PackageReference Condition=" '$(OS)' != 'Windows_NT' " Include="SkiaSharp.NativeAssets.Linux" Version="2.80.1" />
-		<PackageReference Include="Eto.Forms" Version="2.5.6" />
+		<PackageReference Include="Eto.Forms" Version="2.5.10" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
