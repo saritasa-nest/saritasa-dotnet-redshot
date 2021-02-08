@@ -4,6 +4,7 @@ using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
+using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Settings.Sections;
 using RedShot.Resources;
 
@@ -31,14 +32,14 @@ namespace RedShot.Infrastructure.Settings.Views
             Title = "RedShot Settings";
             this.settingsSections = settingsSections;
             Resizable = false;
-            Shown += SettingsView_Shown;
+            Shown += SettingsViewShown;
             Maximizable = false;
 
             InitializeComponents();
-            this.Closing += SettingsView_Closing;
+            this.Closing += SettingsViewClosing;
         }
 
-        private void SettingsView_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void SettingsViewClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (saved)
             {
@@ -60,20 +61,20 @@ namespace RedShot.Infrastructure.Settings.Views
         {
             settingsListPanel = GetSettingsListPanel();
             okButton = new DefaultButton("OK", 70, 25);
-            okButton.Clicked += OkButton_Clicked;
+            okButton.Clicked += OkButtonClicked;
 
             cancelButton = new DefaultButton("Cancel", 70, 25);
-            cancelButton.Clicked += CancelButton_Clicked;
+            cancelButton.Clicked += CancelButtonClicked;
 
             Content = GetContentLayout();
         }
 
-        private void CancelButton_Clicked(object sender, System.EventArgs e)
+        private void CancelButtonClicked(object sender, System.EventArgs e)
         {
             Close();
         }
 
-        private void OkButton_Clicked(object sender, System.EventArgs e)
+        private void OkButtonClicked(object sender, System.EventArgs e)
         {
             if (ValidateSettings())
             {
@@ -81,6 +82,7 @@ namespace RedShot.Infrastructure.Settings.Views
                 {
                     section.Save();
                 }
+                UserConfiguration.Instance.Save();
                 saved = true;
                 Close();
             }
@@ -105,7 +107,7 @@ namespace RedShot.Infrastructure.Settings.Views
             return true;
         }
 
-        private void SettingsView_Shown(object sender, System.EventArgs e)
+        private void SettingsViewShown(object sender, System.EventArgs e)
         {
             Location = ScreenHelper.GetCenterLocation(Size);
         }
