@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RedShot.Infrastructure.Abstractions;
@@ -19,7 +18,6 @@ namespace RedShot.Infrastructure.Configuration
         /// </summary>
         public static UserConfiguration Instance { get; } = new UserConfiguration();
 
-        private readonly Dictionary<Type, object> configurationOptions;
         private IEncryptionService encryptionService;
         private readonly Lazy<JObject> jsonRootObject;
         private readonly JsonSerializer jsonSerializer;
@@ -32,13 +30,12 @@ namespace RedShot.Infrastructure.Configuration
             encryptionService = new Base64Encrypter();
             jsonRootObject = new Lazy<JObject>(GetJsonRootObject);
             jsonSerializer = GetSafeJsonSerializer();
-            configurationOptions = new Dictionary<Type, object>();
         }
 
         /// <summary>
         /// Get configuration option or default.
         /// </summary>
-        public T GetOptionOrDefault<T>() where T : class, new()
+        public T GetOptionOrDefault<T>() where T : new()
         {
             if (TryGetOption<T>(out var value))
             {
@@ -53,38 +50,40 @@ namespace RedShot.Infrastructure.Configuration
         /// <summary>
         /// Try get the option.
         /// </summary>
-        public bool TryGetOption<T>(out T option) where T : class
+        public bool TryGetOption<T>(out T option)
         {
             var optionType = typeof(T);
-            option = null;
+            option = default;
 
-            if (configurationOptions.TryGetValue(optionType, out var value))
-            {
-                option = value as T;
-            }
-            else if (jsonRootObject.Value.TryGetValue(optionType.FullName, out var jToken))
+            if (jsonRootObject.Value.TryGetValue(optionType.FullName, out var jToken))
             {
                 option = jToken.ToObject<T>(jsonSerializer);
 
                 if (option is IEncryptable encryptable)
                 {
-                    option = encryptable.Decrypt(encryptionService) as T;
+                    option = (T)encryptable.Decrypt(encryptionService);
                 }
 
-                configurationOptions.Add(optionType, option);
+                return true;
             }
 
-            return option != null;
+            return false;
         }
 
         /// <summary>
         /// Set configuration option.
         /// </summary>
-        public void SetOption<T>(T option) where T : class
+        public void SetOption<T>(T option)
         {
             var optionType = typeof(T);
-            configurationOptions.Remove(optionType);
-            configurationOptions.Add(optionType, option);
+            jsonRootObject.Value.Remove(optionType.FullName);
+
+            if (option is IEncryptable encryptable)
+            {
+                option = (T)encryptable.Encrypt(encryptionService);
+            }
+
+            jsonRootObject.Value.Add(optionType.FullName, JObject.FromObject(option));
         }
 
         /// <summary>
@@ -92,20 +91,6 @@ namespace RedShot.Infrastructure.Configuration
         /// </summary>
         public void Save()
         {
-            foreach (var keyValuePair in configurationOptions)
-            {
-                jsonRootObject.Value.Remove(keyValuePair.Key.FullName);
-
-                var option = keyValuePair.Value;
-
-                if (option is IEncryptable encryptable)
-                {
-                    option = encryptable.Encrypt(encryptionService);
-                }
-
-                jsonRootObject.Value.Add(keyValuePair.Key.FullName, JObject.FromObject(option));
-            }
-
             var json = jsonRootObject.Value.ToString();
             var path = GetConfigurationPath();
 

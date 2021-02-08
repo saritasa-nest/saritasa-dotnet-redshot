@@ -9,7 +9,7 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
     /// <summary>
     /// Audio options.
     /// </summary>
-    public class AudioOptions : INotifyPropertyChanged, ICloneable
+    public class AudioOptions : INotifyPropertyChanged
     {
         private bool recordAudio;
 
@@ -49,19 +49,6 @@ namespace RedShot.Infrastructure.Recording.Ffmpeg
         private void OnPropertyChanged([CallerMemberName] string memberName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(memberName));
-        }
-
-        /// <summary>
-        /// Clone.
-        /// </summary>
-        public AudioOptions Clone()
-        {
-            return MemberwiseClone() as AudioOptions;
-        }
-
-        object ICloneable.Clone()
-        {
-            return Clone();
         }
     }
 }
