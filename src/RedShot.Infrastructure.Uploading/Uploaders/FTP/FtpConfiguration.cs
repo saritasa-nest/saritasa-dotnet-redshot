@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using RedShot.Infrastructure.Abstractions;
+using RedShot.Infrastructure.Abstractions.Configuration;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
@@ -9,7 +10,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
     /// <summary>
     /// FTP configuration.
     /// </summary>
-    public class FtpConfiguration : IEncryptable, ICloneable
+    public class FtpConfiguration : IEncryptable, ICloneable, IConfigurationOption
     {
         /// <summary>
         /// Primary account guid.
@@ -20,6 +21,9 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// List of FTP accounts.
         /// </summary>
         public List<FtpAccount> FtpAccounts { get; private set; } = new List<FtpAccount>();
+
+        /// <inheritdoc/>
+        public string UniqueName => "FtpConfiguration";
 
         /// <inheritdoc cref="IEncryptable"/>
         public IEncryptable Encrypt(IEncryptionService encryptionService)

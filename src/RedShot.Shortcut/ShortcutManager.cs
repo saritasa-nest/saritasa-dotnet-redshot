@@ -50,7 +50,7 @@ namespace RedShot.Shortcut
         public IEnumerable<Shortcuts.Shortcut> GetShortcutsFromConfig()
         {
             var configOption = UserConfiguration.Instance.GetOptionOrDefault<ShortcutConfiguration>();
-            var mappedShortcuts = Shortcuts.MapShortcutsWithHotkeys(configOption.ShortCutMaps);
+            var mappedShortcuts = Shortcuts.MapShortcutsWithHotkeys(configOption.ShortcutMaps);
 
             return mappedShortcuts;
         }

@@ -4,6 +4,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RedShot.Infrastructure.Abstractions;
+using RedShot.Infrastructure.Abstractions.Configuration;
 using RedShot.Infrastructure.Common.Encryption;
 
 namespace RedShot.Infrastructure.Configuration
@@ -35,27 +36,28 @@ namespace RedShot.Infrastructure.Configuration
         /// <summary>
         /// Get configuration option or default.
         /// </summary>
-        public T GetOptionOrDefault<T>() where T : new()
+        public T GetOptionOrDefault<T>() where T : IConfigurationOption, new()
         {
-            if (TryGetOption<T>(out var value))
+            var option = new T();
+
+            if (TryGetOption<T>(option.UniqueName, out var value))
             {
-                return value;
+                option = value;
             }
-            else
-            {
-                return Activator.CreateInstance<T>();
-            }
+
+            return option;
         }
 
         /// <summary>
-        /// Try get the option.
+        /// Try to get the configuration option.
         /// </summary>
-        public bool TryGetOption<T>(out T option)
+        /// <param name="uniqueName">Unique name.</param>
+        /// <param name="option">Configuration option.</param>
+        public bool TryGetOption<T>(string uniqueName, out T option) where T : IConfigurationOption
         {
-            var optionType = typeof(T);
             option = default;
 
-            if (jsonRootObject.Value.TryGetValue(optionType.FullName, out var jToken))
+            if (jsonRootObject.Value.TryGetValue(uniqueName, out var jToken))
             {
                 option = jToken.ToObject<T>(jsonSerializer);
 
@@ -73,17 +75,16 @@ namespace RedShot.Infrastructure.Configuration
         /// <summary>
         /// Set configuration option.
         /// </summary>
-        public void SetOption<T>(T option)
+        public void SetOption<T>(T option) where T : IConfigurationOption
         {
-            var optionType = typeof(T);
-            jsonRootObject.Value.Remove(optionType.FullName);
+            jsonRootObject.Value.Remove(option.UniqueName);
 
             if (option is IEncryptable encryptable)
             {
                 option = (T)encryptable.Encrypt(encryptionService);
             }
 
-            jsonRootObject.Value.Add(optionType.FullName, JObject.FromObject(option));
+            jsonRootObject.Value.Add(option.UniqueName, JObject.FromObject(option));
         }
 
         /// <summary>

@@ -1,15 +1,19 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using RedShot.Infrastructure.Abstractions.Configuration;
 
 namespace RedShot.Infrastructure.Formatting
 {
     /// <summary>
     /// Format configuration option.
     /// </summary>
-    public class GeneralConfigurationOption : INotifyPropertyChanged
+    public class GeneralConfigurationOption : INotifyPropertyChanged, IConfigurationOption
     {
         private string pattern;
         private bool launchAtSystemStart;
+
+        /// <inheritdoc/>
+        public string UniqueName => "GeneralConfigurationOption";
 
         /// <summary>
         /// Initializes <see cref="GeneralConfigurationOption"/> object.

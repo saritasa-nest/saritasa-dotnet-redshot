@@ -47,8 +47,8 @@ namespace RedShot.Shortcut.Settings
         {
             var shortcutMaps = ShortcutMappingHelper.GetShortcutMaps(shortcuts);
             var configOption = UserConfiguration.Instance.GetOptionOrDefault<ShortcutConfiguration>();
-            configOption.ShortCutMaps.Clear();
-            configOption.ShortCutMaps.AddRange(shortcutMaps);
+            configOption.ShortcutMaps.Clear();
+            configOption.ShortcutMaps.AddRange(shortcutMaps);
 
             UserConfiguration.Instance.SetOption(configOption);
         }
