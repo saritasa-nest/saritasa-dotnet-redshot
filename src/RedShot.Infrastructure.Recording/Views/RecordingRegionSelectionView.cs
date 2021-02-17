@@ -1,7 +1,6 @@
 ﻿using RedShot.Infrastructure.Common.Forms.SelectionForm;
-using RedShot.Infrastructure.Recording;
 
-namespace RedShot.Infrastructure.RecordingRedShot.Views
+namespace RedShot.Infrastructure.Recording.Views
 {
     /// <summary>
     /// Recording region selection view.
@@ -27,7 +26,7 @@ namespace RedShot.Infrastructure.RecordingRedShot.Views
         /// <inheritdoc/>
         protected override void FinishSelection()
         {
-            RecordingManager.RecordRegion(GetRealSelectionRegion());
+            RecordingManager.Instance.RecordRegion(GetRealSelectionRegion());
             Close();
         }
     }

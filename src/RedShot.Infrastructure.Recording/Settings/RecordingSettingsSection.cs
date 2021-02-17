@@ -1,6 +1,7 @@
 ﻿using Eto.Forms;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Configuration;
+using RedShot.Infrastructure.Recording.Common.Ffmpeg;
 using RedShot.Infrastructure.Recording.Validation;
 using RedShot.Infrastructure.Settings.Sections;
 

@@ -49,7 +49,7 @@ namespace RedShot.Infrastructure
         /// </summary>
         public static void RunRecording()
         {
-            RecordingManager.InitiateRecording();
+            RecordingManager.Instance.InitiateRecording();
         }
 
         /// <summary>

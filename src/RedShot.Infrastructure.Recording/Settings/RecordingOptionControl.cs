@@ -1,8 +1,8 @@
 ﻿using System;
 using Eto.Forms;
 using RedShot.Infrastructure.Common.Forms;
-using RedShot.Infrastructure.Recording.Ffmpeg;
-using RedShot.Infrastructure.Recording.Ffmpeg.Encoding;
+using RedShot.Infrastructure.Recording.Common.Ffmpeg;
+using RedShot.Infrastructure.Recording.Common.Ffmpeg.Encoding;
 using RedShot.Recording.Settings.CodecsOptions.AudioOptions;
 using RedShot.Recording.Settings.CodecsOptions.VideoOptions;
 
@@ -37,7 +37,7 @@ namespace RedShot.Infrastructure.Recording.Settings
         {
             this.ffmpegConfiguration = ffmpegConfiguration;
 
-            if (!RecordingManager.RecordingService.CheckFFmpeg())
+            if (!RecordingManager.Instance.RecordingService.CheckFFmpeg())
             {
                 var control = new FfmpegUninstalledControl();
                 ffmpegCheckTimer = new UITimer()
@@ -63,7 +63,7 @@ namespace RedShot.Infrastructure.Recording.Settings
         {
             ffmpegCheckTimer.Stop();
 
-            if (RecordingManager.RecordingService.CheckFFmpeg())
+            if (RecordingManager.Instance.RecordingService.CheckFFmpeg())
             {
                 InitializeComponents();
                 Invalidate(true);

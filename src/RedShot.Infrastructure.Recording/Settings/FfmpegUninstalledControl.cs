@@ -19,7 +19,7 @@ namespace RedShot.Infrastructure.Recording.Settings
                 ToolTip = "Install",
                 Size = new Size(80, 25)
             };
-            installButton.Click += (o, e) => RecordingManager.RecordingService.InstallFFmpeg();
+            installButton.Click += (o, e) => RecordingManager.Instance.RecordingService.InstallFFmpeg();
 
             Content = new StackLayout()
             {
