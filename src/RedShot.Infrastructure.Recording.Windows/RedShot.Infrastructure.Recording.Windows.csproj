@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <CodeAnalysisRuleSet>../../tools/Saritasa.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RedShot.Infrastructure.Recording.Common\RedShot.Infrastructure.Recording.Common.csproj" />
+    <ProjectReference Include="..\RedShot.Platforms.Windows\RedShot.Platforms.Windows.csproj" />
+  </ItemGroup>
+
+</Project>
