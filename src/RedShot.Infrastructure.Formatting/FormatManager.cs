@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using RedShot.Infrastructure.Configuration;
+using RedShot.Infrastructure.Configuration.Models;
 using RedShot.Infrastructure.Formatting.Formatters;
 
 namespace RedShot.Infrastructure.Formatting
@@ -27,7 +28,7 @@ namespace RedShot.Infrastructure.Formatting
 
         static FormatManager()
         {
-            FormatTag = ConfigurationManager.AppSettings.FormatFileNameTag;
+            FormatTag = AppSettings.Instance.FormatFileNameTag;
 
             FormatItems = Assembly
                 .GetExecutingAssembly().GetTypes()
@@ -119,7 +120,7 @@ namespace RedShot.Infrastructure.Formatting
 
         private static string GetPatternFromConfig()
         {
-            return ConfigurationManager.GetSection<GeneralConfigurationOption>().Pattern;
+            return UserConfiguration.Instance.GetOptionOrDefault<GeneralConfigurationOption>().Pattern;
         }
     }
 }

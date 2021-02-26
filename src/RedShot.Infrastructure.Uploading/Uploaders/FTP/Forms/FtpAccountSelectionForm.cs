@@ -28,7 +28,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Forms
         /// </summary>
         public FtpAccountSelectionForm()
         {
-            ftpConfiguration = ConfigurationManager.GetSection<FtpConfiguration>();
+            ftpConfiguration = UserConfiguration.Instance.GetOptionOrDefault<FtpConfiguration>();
             Title = "FTP account selection";
             ShowInTaskbar = true;
             InitializeComponents();

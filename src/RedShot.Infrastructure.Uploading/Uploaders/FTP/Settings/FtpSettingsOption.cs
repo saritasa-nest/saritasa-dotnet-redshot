@@ -17,7 +17,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         /// </summary>
         public FtpSettingsSection()
         {
-            ftpConfiguration = ConfigurationManager.GetSection<FtpConfiguration>();
+            ftpConfiguration = UserConfiguration.Instance.GetOptionOrDefault<FtpConfiguration>();
         }
 
         /// <inheritdoc />
@@ -37,8 +37,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         /// <inheritdoc />
         public void Save()
         {
-            ConfigurationManager.SetSection(ftpConfiguration);
-            ConfigurationManager.Save();
+            UserConfiguration.Instance.SetOption(ftpConfiguration);
         }
 
         /// <summary>

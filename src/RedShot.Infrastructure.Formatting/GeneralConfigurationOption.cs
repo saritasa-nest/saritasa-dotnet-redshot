@@ -1,16 +1,19 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using RedShot.Infrastructure.Abstractions;
+using RedShot.Infrastructure.Abstractions.Configuration;
 
 namespace RedShot.Infrastructure.Formatting
 {
     /// <summary>
     /// Format configuration option.
     /// </summary>
-    public class GeneralConfigurationOption : IConfigurationOption, INotifyPropertyChanged
+    public class GeneralConfigurationOption : INotifyPropertyChanged, IConfigurationOption
     {
         private string pattern;
         private bool launchAtSystemStart;
+
+        /// <inheritdoc/>
+        public string UniqueName => "GeneralConfiguration";
 
         /// <summary>
         /// Initializes <see cref="GeneralConfigurationOption"/> object.
@@ -20,9 +23,6 @@ namespace RedShot.Infrastructure.Formatting
             pattern = "%date%rnd";
             launchAtSystemStart = true;
         }
-
-        /// <inheritdoc />
-        public string UniqueName => "Formatting";
 
         /// <summary>
         /// Pattern for formatting.

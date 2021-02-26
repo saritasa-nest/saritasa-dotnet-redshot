@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Configuration.Models;
 using RedShot.Infrastructure.Recording.Common.Recorders;
 using RedShot.Infrastructure.Recording.Common;
 using RedShot.Infrastructure.Recording.Common.Ffmpeg;
@@ -18,13 +19,13 @@ namespace RedShot.Infrastructure.Recording
         protected override string FfmpegBinaryName => "ffmpeg.exe";
 
         /// <inheritdoc />
-        protected override string BinariesUrl => ConfigurationManager.AppSettings.FfmpegWindowsDownloadPath;
+        protected override string BinariesUrl => AppSettings.Instance.FfmpegWindowsDownloadPath;
 
         /// <inheritdoc />
         public override IRecorder GetRecorder()
         {
             ThrowIfNotFoundFfmpegBinary();
-            var options = ConfigurationManager.GetSection<FFmpegConfiguration>();
+            var options = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfiguration>();
             return new Recorder(options, GetFfmpegPath(), RecordingHelper.GetDefaultVideoFolder());
         }
 

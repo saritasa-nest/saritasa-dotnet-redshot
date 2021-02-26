@@ -73,8 +73,7 @@ namespace RedShot.Application
         private static void ConfigureApplication(IConfiguration configuration)
         {
             var applicationTypes = new ApplicationTypes();
-            var appSettings = configuration.GetSection("AppSettings").Get<AppSettings>();
-            ConfigurationManager.Initialize(appSettings, applicationTypes.ConfigurationOptionsTypes);
+            AppSettings.Instance = configuration.GetSection("AppSettings").Get<AppSettings>();
             SettingsManager.Initialize(applicationTypes.SettingsOptionsTypes);
 
             ConfigureAutostart();
@@ -82,7 +81,7 @@ namespace RedShot.Application
 
         private static void ConfigureAutostart()
         {
-            var general = ConfigurationManager.GetSection<GeneralConfigurationOption>();
+            var general = UserConfiguration.Instance.GetOptionOrDefault<GeneralConfigurationOption>();
             if (general.LaunchAtSystemStart)
             {
                 var autostart = new Autostart();
@@ -92,13 +91,13 @@ namespace RedShot.Application
 
         private static void AppInitialized(object sender, EventArgs e)
         {
-            Shortcut.ShortcutManager.BindShortcuts();
+            Shortcut.ShortcutManager.Instance.BindShortcuts();
         }
 
         private static void CurrentDomainProcessExit(object sender, EventArgs e)
         {
-            Shortcut.ShortcutManager.UnbindShortcuts();
-            ConfigurationManager.Save();
+            Shortcut.ShortcutManager.Instance.UnbindShortcuts();
+            UserConfiguration.Instance.Save();
         }
 
         private static void AddAreaControl()

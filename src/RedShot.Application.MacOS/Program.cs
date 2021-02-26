@@ -42,7 +42,7 @@ namespace RedShot.Application.MacOS
 
         private static void CurrentDomainProcessExit(object sender, EventArgs e)
         {
-            ConfigurationManager.Save();
+            UserConfiguration.Instance.Save();
         }
 
         private static void InstanceOnUnhandledException(object sender, Eto.UnhandledExceptionEventArgs e)

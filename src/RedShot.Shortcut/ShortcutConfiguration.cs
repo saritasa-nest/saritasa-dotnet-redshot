@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using RedShot.Infrastructure.Abstractions;
+using RedShot.Infrastructure.Abstractions.Configuration;
 using RedShot.Shortcut.Mapping;
 
 namespace RedShot.Shortcut
@@ -10,17 +10,11 @@ namespace RedShot.Shortcut
     public class ShortcutConfiguration : IConfigurationOption
     {
         /// <inheritdoc/>
-        public string UniqueName => "Shortcut configuration";
+        public string UniqueName => "ShortcutConfiguration";
 
         /// <summary>
         /// Shortcut maps.
         /// </summary>
-        public List<ShortcutMap> ShortCutMaps { get; } = new List<ShortcutMap>();
-
-        /// <inheritdoc/>
-        public object Clone()
-        {
-            return this.MemberwiseClone();
-        }
+        public List<ShortcutMap> ShortcutMaps { get; } = new List<ShortcutMap>();
     }
 }

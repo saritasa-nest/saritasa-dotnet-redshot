@@ -101,7 +101,7 @@ namespace RedShot.Infrastructure.Recording
         /// </summary>
         private void ConfigureDevices()
         {
-            var configuration = ConfigurationManager.GetSection<FFmpegConfiguration>();
+            var configuration = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfiguration>();
             var options = configuration.FFmpegOptions;
 
             var recordingDevices = RecordingService.GetRecordingDevices();
@@ -118,8 +118,8 @@ namespace RedShot.Infrastructure.Recording
                 }
             }
 
-            ConfigurationManager.SetSection(configuration);
-            ConfigurationManager.Save();
+            UserConfiguration.Instance.SetOption(configuration);
+            UserConfiguration.Instance.Save();
         }
     }
 }

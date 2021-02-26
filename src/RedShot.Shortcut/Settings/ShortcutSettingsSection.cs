@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using System.Collections.Generic;
 using Eto.Forms;
-using RedShot.Infrastructure.Common;
-using RedShot.Infrastructure.Settings.Sections;
 using RedShot.Shortcut.Mapping;
+using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Configuration;
+using RedShot.Infrastructure.Settings.Sections;
 
 namespace RedShot.Shortcut.Settings
 {
@@ -22,7 +23,7 @@ namespace RedShot.Shortcut.Settings
         /// </summary>
         public ShortcutSettingsSection()
         {
-            shortcuts = ShortcutManager.GetMappedShortcuts().ToList();
+            shortcuts = ShortcutManager.Instance.GetShortcutsFromConfig().ToList();
         }
 
         /// <inheritdoc/>
@@ -31,11 +32,11 @@ namespace RedShot.Shortcut.Settings
             var control = new ShortcutSettingsControl(shortcuts);
             control.Load += (o, e) =>
             {
-                ShortcutManager.UnbindShortcuts();
+                ShortcutManager.Instance.UnbindShortcuts();
             };
             control.UnLoad += (o, e) =>
             {
-                ShortcutManager.BindShortcuts();
+                ShortcutManager.Instance.BindShortcuts();
             };
 
             return control;
@@ -45,7 +46,11 @@ namespace RedShot.Shortcut.Settings
         public void Save()
         {
             var shortcutMaps = ShortcutMappingHelper.GetShortcutMaps(shortcuts);
-            ShortcutManager.SaveShortcutMapsInConfiguration(shortcutMaps);
+            var configOption = UserConfiguration.Instance.GetOptionOrDefault<ShortcutConfiguration>();
+            configOption.ShortcutMaps.Clear();
+            configOption.ShortcutMaps.AddRange(shortcutMaps);
+
+            UserConfiguration.Instance.SetOption(configOption);
         }
 
         /// <inheritdoc/>

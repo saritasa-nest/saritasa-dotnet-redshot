@@ -20,7 +20,7 @@ namespace RedShot.Infrastructure.Recording.Settings
         /// </summary>
         public RecordingSettingsSection()
         {
-            ffmpegConfiguration = ConfigurationManager.GetSection<FFmpegConfiguration>();
+            ffmpegConfiguration = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfiguration>();
         }
 
         /// <inheritdoc/>
@@ -40,8 +40,7 @@ namespace RedShot.Infrastructure.Recording.Settings
         /// <inheritdoc/>
         public void Save()
         {
-            ConfigurationManager.SetSection(ffmpegConfiguration);
-            ConfigurationManager.Save();
+            UserConfiguration.Instance.SetOption(ffmpegConfiguration);
         }
 
         /// <inheritdoc/>
