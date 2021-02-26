@@ -77,10 +77,9 @@ namespace RedShot.Infrastructure.Uploaders.File
                 await CopyFileAsync(file.FilePath, dialog.FileName, cancellationToken);
 
                 UploadingFinished?.Invoke(this, UploadingFinishedEventArgs.CreateNew(file));
-                return new BaseUploadingResponse(true);
             }
 
-            return new BaseUploadingResponse(false);
+            return new BaseUploadingResponse(true);
         }
 
         private static async Task CopyFileAsync(string sourceFile, string destinationFile, CancellationToken cancellationToken)

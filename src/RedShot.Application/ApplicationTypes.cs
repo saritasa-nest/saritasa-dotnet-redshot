@@ -4,11 +4,11 @@ using RedShot.Shortcut;
 using RedShot.Shortcut.Settings;
 using RedShot.Infrastructure.Formatting;
 using RedShot.Infrastructure.Formatting.Settings;
-using RedShot.Infrastructure.Recording;
 using RedShot.Infrastructure.Recording.Settings;
 using RedShot.Infrastructure.Uploading;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings;
+using RedShot.Infrastructure.Recording.Common.Ffmpeg;
 
 namespace RedShot.Application
 {

@@ -1,7 +1,7 @@
 ﻿using Eto.Forms;
 using RedShot.Infrastructure.Common.Forms;
-using RedShot.Infrastructure.Recording.Ffmpeg;
-using RedShot.Infrastructure.Recording.Ffmpeg.Encoding;
+using RedShot.Infrastructure.Recording.Common.Ffmpeg;
+using RedShot.Infrastructure.Recording.Common.Ffmpeg.Encoding;
 
 namespace RedShot.Recording.Settings.CodecsOptions.VideoOptions
 {

@@ -1,55 +1,45 @@
-﻿using System.Runtime.InteropServices;
-using System.Linq;
+﻿using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Configuration;
-using RedShot.Recording.Recorders.Linux;
-using RedShot.Recording.Recorders.Windows;
-using RedShot.Infrastructure.RecordingRedShot.Views;
 using RedShot.Infrastructure.Recording.Views;
-using RedShot.Infrastructure.Recording.Recorders.MacOs;
-using RedShot.Infrastructure.Recording.Abstractions;
+using RedShot.Infrastructure.Recording.Common;
+using RedShot.Infrastructure.Recording.Common.Ffmpeg;
 
 namespace RedShot.Infrastructure.Recording
 {
     /// <summary>
     /// Recording manager.
     /// </summary>
-    public static class RecordingManager
+    public class RecordingManager
     {
+        /// <summary>
+        /// Instance of the Recording manager.
+        /// </summary>
+        public static RecordingManager Instance = new RecordingManager();
+
         /// <summary>
         /// Recording service for the OS.
         /// </summary>
-        public static IRecordingService RecordingService { get; }
+        public IRecordingService RecordingService { get; }
 
         /// <summary>
         /// Recording view.
         /// </summary>
-        private static RecordingView recordingView;
+        private RecordingView recordingView;
 
         /// <summary>
-        /// Initializes recording service depending on the OS.
+        /// Constructor.
         /// </summary>
-        static RecordingManager()
+        public RecordingManager()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                RecordingService = new MacOsRecordingService();
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                RecordingService = new WindowsRecordingService();
-            }
-            else
-            {
-                RecordingService = new LinuxRecordingService();
-            }
+            RecordingService = new RecordingService();
         }
 
         /// <summary>
         /// Records video by specified region.
         /// </summary>
-        public static void RecordRegion(Rectangle region)
+        public void RecordRegion(Rectangle region)
         {
             if (region.Width % 2 != 0)
             {
@@ -70,7 +60,7 @@ namespace RedShot.Infrastructure.Recording
         /// Check the FFmpeg binaries before running recorder,
         /// if they don't exist, suggest installing them.
         /// </summary>
-        public static void InitiateRecording()
+        public void InitiateRecording()
         {
             if (!RecordingService.CheckFFmpeg())
             {
@@ -100,7 +90,7 @@ namespace RedShot.Infrastructure.Recording
         /// <summary>
         /// Open recording selection view.
         /// </summary>
-        private static void OpenSelectionView()
+        private void OpenSelectionView()
         {
             var view = new RecordingRegionSelectionView();
             view.Show();
@@ -109,7 +99,7 @@ namespace RedShot.Infrastructure.Recording
         /// <summary>
         /// Remove devices from FFmpeg configuration if there aren't such devices in the OS.
         /// </summary>
-        private static void ConfigureDevices()
+        private void ConfigureDevices()
         {
             var configuration = ConfigurationManager.GetSection<FFmpegConfiguration>();
             var options = configuration.FFmpegOptions;

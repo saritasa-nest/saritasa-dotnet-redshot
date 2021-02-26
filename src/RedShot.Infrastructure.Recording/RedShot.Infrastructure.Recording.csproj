@@ -12,13 +12,6 @@
     <CodeAnalysisRuleSet>../../tools/Saritasa.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
-    <DefineConstants>_WINDOWS</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
-    <DefineConstants>_UNIX</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Eto.Forms" Version="2.5.10" />
     <PackageReference Include="Saritasa.Tools.Common" Version="3.3.1" />
@@ -30,8 +23,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RedShot.Infrastructure.Configuration\RedShot.Infrastructure.Configuration.csproj" />
+    <ProjectReference Condition=" '$(OS)' != 'Windows_NT'" Include="..\RedShot.Infrastructure.Recording.Unix\RedShot.Infrastructure.Recording.Unix.csproj" />
+    <ProjectReference Condition=" '$(OS)' == 'Windows_NT'" Include="..\RedShot.Infrastructure.Recording.Windows\RedShot.Infrastructure.Recording.Windows.csproj" />
     <ProjectReference Include="..\RedShot.Infrastructure.Uploading\RedShot.Infrastructure.Uploading.csproj" />
-    <ProjectReference Condition=" '$(OS)' == 'Windows_NT' " Include="..\RedShot.Platforms.Windows\RedShot.Platforms.Windows.csproj" />
     <ProjectReference Include="..\RedShot.SkiaSharpControl\Eto.Forms.Controls.SkiaSharp\Eto.Forms.Controls.SkiaSharp.csproj" />
   </ItemGroup>
 

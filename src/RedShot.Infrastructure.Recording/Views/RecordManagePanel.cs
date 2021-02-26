@@ -3,12 +3,12 @@ using Eto.Drawing;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Resources;
 
-namespace RedShot.Infrastructure.RecordingRedShot.Views
+namespace RedShot.Infrastructure.Recording.Views
 {
     /// <summary>
     /// Painting panel for editor view.
     /// </summary>
-    public partial class RecordManagePanel : Form
+    internal partial class RecordManagePanel : Form
     {
         /// <summary>
         /// Start recording button.

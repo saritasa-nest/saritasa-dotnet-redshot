@@ -11,18 +11,30 @@ namespace RedShot.Platforms.Windows
         /// <summary>
         /// Excludes rectangles from the windows control.
         /// </summary>
-        public static void Exclude(this object windowsControl, params Eto.Drawing.Rectangle[] rectangles)
+        public static void Exclude(this object controlObject, params Eto.Drawing.Rectangle[] rectangles)
         {
-            if (windowsControl is Control control)
+            var windowsControl = (Control)controlObject;
+
+            var region = new Region(windowsControl.ClientRectangle);
+
+            foreach (var rectangle in rectangles)
             {
-                var region = new Region(control.ClientRectangle);
+                region.Exclude(ToSystemRectangle(rectangle));
+            }
 
-                foreach (var rectangle in rectangles)
-                {
-                    region.Exclude(ToSystemRectangle(rectangle));
-                }
+            windowsControl.Region = region;
+        }
 
-                control.Region = region;
+        /// <summary>
+        /// Union rectangles in the windows control.
+        /// </summary>
+        public static void Union(this object controlObject, params Eto.Drawing.Rectangle[] rectangles)
+        {
+            var windowsControl = (Control)controlObject;
+
+            foreach (var rectangle in rectangles)
+            {
+                windowsControl.Region.Union(ToSystemRectangle(rectangle));
             }
         }
 
