@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Eto.Forms;
+using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Common.Notifying;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
@@ -44,6 +45,11 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         private DefaultButton testButton;
         private readonly List<FtpAccount> ftpAccounts;
         private readonly FtpConfiguration ftpConfiguration;
+
+        /// <summary>
+        /// Active configuration data.
+        /// </summary>
+        public FtpConfiguration FtpConfiguration => ftpConfiguration;
 
         /// <summary>
         /// Initializes FTP option dialog.

@@ -1,5 +1,6 @@
 ﻿using Eto.Forms;
 using RedShot.Infrastructure.Configuration;
+using RedShot.Infrastructure.Configuration.Models;
 using RedShot.Infrastructure.Settings.Sections;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
@@ -9,15 +10,13 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
     /// </summary>
     public class FtpSettingsSection : ISettingsSection
     {
-        private readonly FtpConfiguration ftpConfiguration;
-        private Control ftpOptionControl;
+        private FtpOptionControl ftpOptionControl;
 
         /// <summary>
         /// Initializes FTP settings option.
         /// </summary>
         public FtpSettingsSection()
         {
-            ftpConfiguration = UserConfiguration.Instance.GetOptionOrDefault<FtpConfiguration>();
         }
 
         /// <inheritdoc />
@@ -28,6 +27,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         {
             if (ftpOptionControl == null)
             {
+                var accountConfiguration = ConfigurationProvider.Instance.GetConfiguration<AccountConfiguration>();
+                var ftpConfiguration = Common.Mapping.Mapper.Map<FtpConfiguration>(accountConfiguration);
                 ftpOptionControl = new FtpOptionControl(ftpConfiguration);
             }
 
@@ -37,7 +38,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Settings
         /// <inheritdoc />
         public void Save()
         {
-            UserConfiguration.Instance.SetOption(ftpConfiguration);
+            var configuration = Common.Mapping.Mapper.Map<AccountConfiguration>(ftpOptionControl.FtpConfiguration);
+            ConfigurationProvider.Instance.SetConfiguration(configuration);
         }
 
         /// <summary>

@@ -6,6 +6,7 @@ using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
+using RedShot.Infrastructure.Configuration.Models;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Forms
 {
@@ -28,7 +29,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Forms
         /// </summary>
         public FtpAccountSelectionForm()
         {
-            ftpConfiguration = UserConfiguration.Instance.GetOptionOrDefault<FtpConfiguration>();
+            var accountConfig = ConfigurationProvider.Instance.GetConfiguration<AccountConfiguration>();
+            ftpConfiguration = Mapping.Mapper.Map<FtpConfiguration>(accountConfig);
             Title = "FTP account selection";
             ShowInTaskbar = true;
             InitializeComponents();

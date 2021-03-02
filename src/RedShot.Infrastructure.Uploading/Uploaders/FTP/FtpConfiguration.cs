@@ -1,16 +1,14 @@
-﻿using System;
+﻿using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using RedShot.Infrastructure.Abstractions;
-using RedShot.Infrastructure.Abstractions.Configuration;
-using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
 {
     /// <summary>
     /// FTP configuration.
     /// </summary>
-    public class FtpConfiguration : IEncryptable, ICloneable, IConfigurationOption
+    public class FtpConfiguration : ICloneable
     {
         /// <summary>
         /// Primary account guid.
@@ -21,36 +19,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// List of FTP accounts.
         /// </summary>
         public List<FtpAccount> FtpAccounts { get; private set; } = new List<FtpAccount>();
-
-        /// <inheritdoc/>
-        public string UniqueName => "FtpConfiguration";
-
-        /// <inheritdoc cref="IEncryptable"/>
-        public IEncryptable Encrypt(IEncryptionService encryptionService)
-        {
-            var encrypted = Clone();
-
-            encrypted.FtpAccounts = new List<FtpAccount>(FtpAccounts.Select(a => a.Clone()));
-            encrypted.FtpAccounts.ForEach(a =>
-            {
-                a.Passphrase = encryptionService.Encrypt(a.Passphrase);
-                a.Password = encryptionService.Encrypt(a.Password);
-            });
-
-            return encrypted;
-        }
-
-        /// <inheritdoc cref="IEncryptable"/>
-        public IEncryptable Decrypt(IEncryptionService encryptionService)
-        {
-            FtpAccounts.ForEach(a =>
-            {
-                a.Passphrase = encryptionService.Decrypt(a.Passphrase);
-                a.Password = encryptionService.Decrypt(a.Password);
-            });
-
-            return this;
-        }
 
         /// <summary>
         /// Return clone of the configuration option.

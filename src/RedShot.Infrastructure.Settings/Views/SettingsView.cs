@@ -83,6 +83,7 @@ namespace RedShot.Infrastructure.Settings.Views
                     section.Save();
                 }
                 UserConfiguration.Instance.Save();
+                ConfigurationProvider.Instance.Save();
                 saved = true;
                 Close();
             }

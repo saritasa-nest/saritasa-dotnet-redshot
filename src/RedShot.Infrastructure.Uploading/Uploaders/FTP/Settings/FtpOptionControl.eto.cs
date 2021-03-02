@@ -2,6 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using Eto.Drawing;
 using Eto.Forms;
+using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 

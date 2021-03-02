@@ -19,7 +19,6 @@ namespace RedShot.Application
         {
             SettingsOptionsTypes = new List<Type>()
             {
-                typeof(FtpSettingsSection),
                 typeof(RecordingSettingsSection),
                 typeof(GeneralSettingsSection),
                 typeof(ShortcutSettingsSection)

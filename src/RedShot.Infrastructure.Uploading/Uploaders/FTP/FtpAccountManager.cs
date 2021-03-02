@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Eto.Forms;
+using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Configuration;
+using RedShot.Infrastructure.Configuration.Models;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Forms;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 
@@ -71,7 +73,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
 
         private static FtpConfiguration GetConfiguration()
         {
-            return UserConfiguration.Instance.GetOptionOrDefault<FtpConfiguration>();
+            var accountConfig = ConfigurationProvider.Instance.GetConfiguration<AccountConfiguration>();
+            return Mapping.Mapper.Map<FtpConfiguration>(accountConfig);
         }
     }
 }

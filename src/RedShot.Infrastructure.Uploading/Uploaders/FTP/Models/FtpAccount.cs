@@ -1,4 +1,5 @@
-﻿using Saritasa.Tools.Common.Utils;
+﻿using RedShot.Infrastructure.Common;
+using Saritasa.Tools.Common.Utils;
 using System;
 using System.ComponentModel;
 using System.IO;

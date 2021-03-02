@@ -1,6 +1,7 @@
 ﻿using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Abstractions.Uploading;
+using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Notifying;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 using RedShot.Resources;

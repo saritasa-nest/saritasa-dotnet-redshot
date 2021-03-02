@@ -11,6 +11,7 @@ using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Configuration.Models;
 using RedShot.Infrastructure.Settings;
 using RedShot.Infrastructure.Formatting;
+using AutoMapper;
 #if _WINDOWS
 using Eto.WinForms.Forms;
 #elif _UNIX
@@ -75,6 +76,13 @@ namespace RedShot.Application
             var applicationTypes = new ApplicationTypes();
             AppSettings.Instance = configuration.GetSection("AppSettings").Get<AppSettings>();
             SettingsManager.Initialize(applicationTypes.SettingsOptionsTypes);
+
+            var mappingConfiguration = new MapperConfiguration(config =>
+            {
+                config.AddProfile<RedShot.Infrastructure.Uploading.MappingProfile>();
+            });
+            mappingConfiguration.CompileMappings();
+            Infrastructure.Common.Mapping.Mapper = mappingConfiguration.CreateMapper();
 
             ConfigureAutostart();
         }
