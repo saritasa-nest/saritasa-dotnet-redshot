@@ -1,10 +1,10 @@
 ﻿using Eto.Drawing;
+using RedShot.Infrastructure.Uploading.Common;
 
-namespace RedShot.Infrastructure.Abstractions.Uploading
+namespace RedShot.Infrastructure.Uploading.Abstractions
 {
     /// <summary>
-    /// Upload service abstraction.
-    /// Will be changed.
+    /// Uploading service.
     /// </summary>
     public interface IUploadingService
     {
@@ -14,7 +14,7 @@ namespace RedShot.Infrastructure.Abstractions.Uploading
         string Name { get; }
 
         /// <summary>
-        /// Service about.
+        /// About.
         /// </summary>
         string About { get; }
 
@@ -24,7 +24,7 @@ namespace RedShot.Infrastructure.Abstractions.Uploading
         Bitmap ServiceImage { get; }
 
         /// <summary>
-        /// Creates IUploader instance.
+        /// Get uploader instance.
         /// </summary>
         IUploader GetUploader();
 

@@ -5,11 +5,9 @@ using System.Threading.Tasks;
 using Renci.SshNet;
 using Renci.SshNet.Common;
 using Saritasa.Tools.Domain.Exceptions;
-using RedShot.Infrastructure.Abstractions.Uploading;
-using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Common;
-using RedShot.Infrastructure.Basics;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
+using RedShot.Infrastructure.Formatting;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
 {
@@ -19,7 +17,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
     internal sealed class SftpUploader : BaseFtpUploader, IDisposable, IAsyncDisposable
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        private readonly FtpAccount account;
         private bool disposed;
         private bool isNeedToHandle;
         private volatile SftpClient client;
@@ -28,28 +25,28 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// <summary>
         /// Initializes SFTP uploader.
         /// </summary>
-        public SftpUploader(FtpAccount account)
+        public SftpUploader(FtpAccount ftpAccount) : base(ftpAccount)
         {
-            this.account = account;
             isNeedToHandle = true;
             InitializeClient();
         }
 
         /// <inheritdoc/>
-        public override async Task<IUploadingResponse> UploadAsync(IFile file, CancellationToken cancellationToken)
+        public override async Task UploadAsync(Common.File file, CancellationToken cancellationToken)
         {
-            var subFolderPath = account.Directory;
-            var fullFileName = FtpHelper.GetFullFileName(file);
+            var subFolderPath = ftpAccount.Directory;
+
+            var fileName = FormatManager.GetFormattedName();
+            var fullFileName = GetFullFileName(fileName, file);
+
             var path = UrlHelper.CombineUrl(subFolderPath, fullFileName);
 
             IsUploading = true;
             await using var fileStream = file.GetStream();
-            if (await UploadStreamAsync(fileStream, path, true, cancellationToken))
-            {
-                return await base.UploadAsync(file, cancellationToken);
-            }
+            await UploadStreamAsync(fileStream, path, true, cancellationToken);
             IsUploading = false;
-            return new BaseUploadingResponse(false);
+
+            SaveFileUrlToClipboard(fullFileName);
         }
 
         /// <inheritdoc/>
@@ -72,25 +69,22 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             return client.IsConnected;
         }
 
-        private async Task<bool> UploadStreamAsync(Stream stream, string remotePath, bool autoCreateDirectory = false, CancellationToken cancellationToken = default)
+        private async Task UploadStreamAsync(Stream stream, string remotePath, bool autoCreateDirectory = false, CancellationToken cancellationToken = default)
         {
             if (await ConnectAsync(cancellationToken))
             {
                 try
                 {
                     await Task.Factory.FromAsync(client.BeginUploadFile(stream, remotePath), client.EndUploadFile);
-                    return true;
                 }
                 catch (SftpPathNotFoundException) when (isNeedToHandle)
                 {
                     isNeedToHandle = false;
                     logger.Info("Directory not exist, path: {remotePath}", remotePath);
                     await CreateDirectoryAsync(UrlHelper.GetDirectoryPath(remotePath), autoCreateDirectory, cancellationToken);
-                    return await UploadStreamAsync(stream, remotePath, true, cancellationToken);
+                    await UploadStreamAsync(stream, remotePath, true, cancellationToken);
                 }
             }
-
-            return false;
         }
 
         private async Task DisconnectAsync()
@@ -155,36 +149,36 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
                 if (! await DirectoryExistsAsync(directory, cancellationToken))
                 {
                     await CreateDirectoryAsync(directory, true, cancellationToken);
-                    logger.Info("Directory: {directory} was created on server: {server}", directory, account.Host);
+                    logger.Info("Directory: {directory} was created on server: {server}", directory, ftpAccount.Host);
                 }
             }
         }
 
         private void InitializeClient()
         {
-            if (!string.IsNullOrEmpty(account.Keypath))
+            if (!string.IsNullOrEmpty(ftpAccount.Keypath))
             {
-                if (!File.Exists(account.Keypath))
+                if (!File.Exists(ftpAccount.Keypath))
                 {
                     throw new Exception("Key not found");
                 }
 
                 PrivateKeyFile keyFile;
 
-                if (string.IsNullOrEmpty(account.Passphrase))
+                if (string.IsNullOrEmpty(ftpAccount.Passphrase))
                 {
-                    keyFile = new PrivateKeyFile(account.Keypath);
+                    keyFile = new PrivateKeyFile(ftpAccount.Keypath);
                 }
                 else
                 {
-                    keyFile = new PrivateKeyFile(account.Keypath, account.Passphrase);
+                    keyFile = new PrivateKeyFile(ftpAccount.Keypath, ftpAccount.Passphrase);
                 }
 
-                client = new SftpClient(account.Host, account.Port, account.Username, keyFile);
+                client = new SftpClient(ftpAccount.Host, ftpAccount.Port, ftpAccount.Username, keyFile);
             }
-            else if (!string.IsNullOrEmpty(account.Password))
+            else if (!string.IsNullOrEmpty(ftpAccount.Password))
             {
-                client = new SftpClient(account.Host, account.Port, account.Username, account.Password);
+                client = new SftpClient(ftpAccount.Host, ftpAccount.Port, ftpAccount.Username, ftpAccount.Password);
             }
 
             if (client != null)

@@ -13,9 +13,9 @@ using RedShot.Infrastructure.Uploading.Uploaders.Ftp;
 using RedShot.Infrastructure.Uploading;
 using RedShot.Infrastructure.Uploaders.Clipboard;
 using RedShot.Infrastructure.Uploaders.File;
-using RedShot.Infrastructure.Abstractions.Uploading;
-using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Screenshooting.Support;
+using RedShot.Infrastructure.Uploading.Common;
+using RedShot.Infrastructure.Uploading.Abstractions;
 
 namespace RedShot.Infrastructure.Screenshooting.Painting
 {
@@ -29,12 +29,11 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
 
         private readonly int paintingPanelWidth = 60;
         private readonly Bitmap image;
-        private readonly GlobalProperties globalProperties;
         private PaintingPanel paintingPanel;
         private ImagePanel imagePanel;
         private SKPaint paint;
         private int uploadedImageHash;
-        private IFile imageFile;
+        private File imageFile;
 
         /// <summary>
         /// Initializes painting view via image.
@@ -46,7 +45,6 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             MinimumSize = new Size(500, paintingPanelWidth);
             Resizable = false;
             this.image = image;
-            globalProperties = new GlobalProperties();
             InitializeComponents();
             Content = GetContent();
         }
@@ -158,17 +156,15 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
 
         private async Task UploadImageAsync(IUploader uploader)
         {
-            var cancellationToken = globalProperties.ApplicationCancellationToken;
             var newImageHash = imagePanel.GetImageHash();
             if (uploadedImageHash != newImageHash)
             {
                 uploadedImageHash = newImageHash;
-                var file = await ImageFileHelper.GetFileFromBitmapAsync(imagePanel.GetPaintingImage(), cancellationToken);
+                var file = await ImageFileHelper.GetFileFromBitmapAsync(imagePanel.GetPaintingImage());
                 imageFile = file;
             }
 
-            await UploadingManager.UploadAsync(uploader, imageFile, cancellationToken);
-
+            await UploadingProvider.SafeUploadAsync(uploader, imageFile);
             Close();
         }
 

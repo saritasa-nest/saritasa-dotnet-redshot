@@ -1,9 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using RedShot.Infrastructure.Abstractions;
-using RedShot.Infrastructure.Abstractions.Uploading;
-using RedShot.Infrastructure.Basics;
+using Eto.Forms;
+using RedShot.Infrastructure.Common.Notifying;
+using RedShot.Infrastructure.Uploading.Abstractions;
+using RedShot.Infrastructure.Uploading.Common;
+using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
 {
@@ -12,8 +15,16 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
     /// </summary>
     public abstract class BaseFtpUploader : IUploader
     {
-        /// <inheritdoc/>
-        public event EventHandler<UploadingFinishedEventArgs> UploadingFinished;
+        protected readonly FtpAccount ftpAccount;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="ftpAccount">FTP account.</param>
+        public BaseFtpUploader(FtpAccount ftpAccount)
+        {
+            this.ftpAccount = ftpAccount;
+        }
 
         /// <summary>
         /// Uploading flag.
@@ -28,11 +39,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// <summary>
         /// Upload file to destination resource.
         /// </summary>
-        public virtual Task<IUploadingResponse> UploadAsync(IFile file, CancellationToken cancellationToken)
-        {
-            UploadingFinished?.Invoke(this, new UploadingFinishedEventArgs() { UploadingFile = file });
-            return Task.FromResult(new BaseUploadingResponse(true) as IUploadingResponse);
-        }
+        public abstract Task UploadAsync(Common.File file, CancellationToken cancellationToken);
 
         /// <summary>
         /// Connect to FTP server.
@@ -52,6 +59,21 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             {
                 return false;
             }
+        }
+
+        protected void SaveFileUrlToClipboard(string fullFileName)
+        {
+            var link = ftpAccount.GetFormatLink(fullFileName);
+
+            Clipboard.Instance.Clear();
+            Clipboard.Instance.Text = link;
+
+            NotifyHelper.Notify("File uploaded to FTP server.\n\nFile link saved to clipboard.", "RedShot", NotifyStatus.Success);
+        }
+
+        protected string GetFullFileName(string fileName, Common.File file)
+        {
+            return $"{fileName}{Path.GetExtension(file.FilePath)}";
         }
     }
 }

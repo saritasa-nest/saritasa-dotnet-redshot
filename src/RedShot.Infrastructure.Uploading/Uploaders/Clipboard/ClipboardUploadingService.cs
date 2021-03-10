@@ -1,6 +1,6 @@
 ﻿using Eto.Drawing;
-using RedShot.Infrastructure.Abstractions.Uploading;
-using RedShot.Infrastructure.Common.Notifying;
+using RedShot.Infrastructure.Uploading.Abstractions;
+using RedShot.Infrastructure.Uploading.Common;
 using RedShot.Resources;
 
 namespace RedShot.Infrastructure.Uploaders.Clipboard
@@ -20,27 +20,9 @@ namespace RedShot.Infrastructure.Uploaders.Clipboard
         public string About => "Uploads the file to clipboard";
 
         /// <inheritdoc/>
-        public bool CheckOnSupporting(FileType fileType)
-        {
-            return fileType switch
-            {
-                FileType.Image => true,
-                _ => false
-            };
-        }
+        public bool CheckOnSupporting(FileType fileType) => fileType == FileType.Image;
 
         /// <inheritdoc/>
-        public IUploader GetUploader()
-        {
-            var uploader = new ClipboardUploader();
-            uploader.UploadingFinished += ClipboardUploaderUploadingFinished;
-
-            return uploader;
-        }
-
-        private void ClipboardUploaderUploadingFinished(object sender, UploadingFinishedEventArgs e)
-        {
-            NotifyHelper.Notify("Screenshot has been copied to clipboard.", "RedShot", NotifyStatus.Success);
-        }
+        public IUploader GetUploader() => new ClipboardUploader();
     }
 }

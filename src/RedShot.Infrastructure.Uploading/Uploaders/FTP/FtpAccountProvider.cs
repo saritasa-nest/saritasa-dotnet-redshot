@@ -11,12 +11,17 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
     /// <summary>
     /// FTP accounts manager.
     /// </summary>
-    public static class FtpAccountManager
+    public class FtpAccountProvider
     {
+        /// <summary>
+        /// Instance of FTP account provider.
+        /// </summary>
+        public static FtpAccountProvider Instance { get; } = new FtpAccountProvider();
+
         /// <summary>
         /// Get primary account.
         /// </summary>
-        public static FtpAccount GetPrimaryFtpAccount()
+        public FtpAccount GetPrimaryFtpAccount()
         {
             var config = GetConfiguration();
 
@@ -26,14 +31,14 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             }
             else
             {
-                return null;
+                return GetFtpAccountManually();
             }
         }
 
         /// <summary>
         /// Get FTP accounts.
         /// </summary>
-        public static IEnumerable<FtpAccount> GetFtpAccounts()
+        public IEnumerable<FtpAccount> GetFtpAccounts()
         {
             var config = GetConfiguration();
             return config.FtpAccounts;
@@ -42,7 +47,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// <summary>
         /// Get FTP account manually.
         /// </summary>
-        public static FtpAccount GetFtpAccountManually()
+        public FtpAccount GetFtpAccountManually()
         {
             using (var form = new FtpAccountSelectionForm())
             {
@@ -55,7 +60,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             return null;
         }
 
-        internal static bool TryGetAccountByGuid(Guid guid, IEnumerable<FtpAccount> ftpAccounts, out FtpAccount ftpAccount)
+        private bool TryGetAccountByGuid(Guid guid, IEnumerable<FtpAccount> ftpAccounts, out FtpAccount ftpAccount)
         {
             if (ftpAccounts.Any(a => a.Id == guid))
             {
@@ -69,7 +74,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             }
         }
 
-        private static FtpConfiguration GetConfiguration()
+        private FtpConfiguration GetConfiguration()
         {
             return UserConfiguration.Instance.GetOptionOrDefault<FtpConfiguration>();
         }

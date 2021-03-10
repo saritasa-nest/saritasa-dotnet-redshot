@@ -1,7 +1,7 @@
-﻿namespace RedShot.Infrastructure.Abstractions.Uploading
+﻿namespace RedShot.Infrastructure.Uploading.Common
 {
     /// <summary>
-    /// File types in the application.
+    /// File types.
     /// </summary>
     public enum FileType
     {

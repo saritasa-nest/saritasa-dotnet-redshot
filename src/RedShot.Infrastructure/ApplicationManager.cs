@@ -7,6 +7,7 @@ using RedShot.Infrastructure.Configuration.Models;
 using RedShot.Infrastructure.Recording;
 using RedShot.Infrastructure.Screenshooting;
 using RedShot.Infrastructure.Uploading;
+using RedShot.Infrastructure.Uploading.Common;
 using RedShot.Resources;
 
 namespace RedShot.Infrastructure
@@ -27,7 +28,7 @@ namespace RedShot.Infrastructure
             try
             {
                 trayIcon = new TrayIcon("RedShot", Icons.RedCircle);
-                UploadingManager.UploadStarted += UploadingManagerUploadStarted;
+                UploadingProvider.UploadStarted += UploadingManagerUploadStarted;
             }
             catch (Exception ex)
             {
@@ -58,17 +59,18 @@ namespace RedShot.Infrastructure
         /// </summary>
         public static void UploadLastFile()
         {
-            var lastFile = UploadingManager.LastFile;
+            var lastFile = UploadingProvider.LastFile;
             if (lastFile != null)
             {
-                if (lastFile.FileType == Abstractions.Uploading.FileType.Image)
+                if (lastFile.FileType == FileType.Image)
                 {
                     var image = new Bitmap(lastFile.GetStream());
                     ScreenshotManager.RunPaintingView(image);
                 }
                 else
                 {
-                    UploadingManager.RunUploading(lastFile);
+
+                    UploadingProvider.RunUploading(lastFile);
                 }
             }
         }

@@ -5,6 +5,7 @@ using Eto.Forms;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Uploading;
+using RedShot.Infrastructure.Uploading.Forms;
 
 namespace RedShot.Infrastructure.Recording.Common.Views
 {
@@ -13,6 +14,8 @@ namespace RedShot.Infrastructure.Recording.Common.Views
     /// </summary>
     public partial class RecordingViewBase : Form
     {
+        private UploadingForm uploadingForm;
+
         /// <summary>
         /// Recording service.
         /// </summary>
@@ -158,7 +161,9 @@ namespace RedShot.Infrastructure.Recording.Common.Views
             recordingTimer.Stop();
             recorder.Stop();
 
-            UploadingManager.RunUploading(recorder.GetVideo());
+            uploadingForm?.Close();
+            uploadingForm = new UploaderForm(recorder.GetVideo(), UploadingProvider.GetUploadingServices());
+            uploadingForm.Show();
         }
 
         /// <summary>

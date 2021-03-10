@@ -1,8 +1,7 @@
 ﻿using Eto.Drawing;
-using RedShot.Infrastructure.Abstractions;
-using RedShot.Infrastructure.Abstractions.Uploading;
-using RedShot.Infrastructure.Common.Notifying;
 using RedShot.Resources;
+using RedShot.Infrastructure.Uploading.Abstractions;
+using RedShot.Infrastructure.Uploading.Common;
 
 namespace RedShot.Infrastructure.Uploaders.File
 {
@@ -15,13 +14,7 @@ namespace RedShot.Infrastructure.Uploaders.File
         public string Name => "File";
 
         /// <inheritdoc />
-        public Bitmap ServiceImage
-        {
-            get
-            {
-                return Icons.Folder;
-            }
-        }
+        public Bitmap ServiceImage => Icons.Folder;
 
         /// <inheritdoc />
         public string About => "Uploads the file to specified folder";
@@ -29,21 +22,14 @@ namespace RedShot.Infrastructure.Uploaders.File
         /// <inheritdoc />
         public bool CheckOnSupporting(FileType fileType)
         {
-            return true;
+            return fileType switch
+            {
+                FileType.Image or FileType.Video => true,
+                _ => false,
+            };
         }
 
         /// <inheritdoc />
-        public IUploader GetUploader()
-        {
-            var uploader = new FileUploader();
-            uploader.UploadingFinished += FileUploaderUploadingFinished;
-
-            return uploader;
-        }
-
-        private void FileUploaderUploadingFinished(object sender, UploadingFinishedEventArgs e)
-        {
-            NotifyHelper.Notify($"The {e.UploadingFile.FileName} file has been saved.", "RedShot", NotifyStatus.Success);
-        }
+        public IUploader GetUploader() => new FileUploader();
     }
 }
