@@ -86,6 +86,7 @@ namespace RedShot.Infrastructure.Uploading.Forms
             {
                 var cancellationToken = globalProperties.ApplicationCancellationToken;
                 await UploadingManager.UploadAsync(service.GetUploader(), file, cancellationToken);
+                Close();
             };
 
             button.Enabled = service.CheckOnSupporting(file.FileType);

@@ -136,13 +136,13 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         private async void PaintingPanelUploadToFtpSelected(object sender, DataEventArgs<FtpAccount> e)
         {
             var uploadingService = new FtpUploadingService();
-            await UploadWithBlockingButtonAsync(uploadingService.GetFtpUploader(e.Value));
+            await UploadImageAsync(uploadingService.GetFtpUploader(e.Value));
         }
 
         private async void PaintingPanelUploadToFileSelected(object sender, EventArgs e)
         {
             var uploadingService = new FileUploadingService();
-            await UploadWithBlockingButtonAsync(uploadingService.GetUploader());
+            await UploadImageAsync(uploadingService.GetUploader());
         }
 
         private async void PaintingPanelUploadToClipboardSelected(object sender, EventArgs e)
@@ -154,13 +154,6 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         {
             var uploadingService = new ClipboardUploadingService();
             await UploadImageAsync(uploadingService.GetUploader());
-        }
-
-        private async Task UploadWithBlockingButtonAsync(IUploader uploader)
-        {
-            paintingPanel.UploadImageButton.Enabled = false;
-            await UploadImageAsync(uploader);
-            paintingPanel.UploadImageButton.Enabled = true;
         }
 
         private async Task UploadImageAsync(IUploader uploader)
@@ -175,6 +168,8 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
             }
 
             await UploadingManager.UploadAsync(uploader, imageFile, cancellationToken);
+
+            Close();
         }
 
         private void PaintingPanelStateChanged(object sender, DataEventArgs<PaintingState> e)
