@@ -1,4 +1,4 @@
-﻿using RedShot.Infrastructure;
+﻿using RedShot.Infrastructure.Screenshooting;
 
 namespace RedShot.Shortcut.Shortcuts
 {
@@ -13,7 +13,7 @@ namespace RedShot.Shortcut.Shortcuts
         /// <inheritdoc/>
         public override void OnPressedAction()
         {
-            ApplicationManager.RunScreenShooting();
+            ScreenshotManager.TakeScreenShot();
         }
     }
 }

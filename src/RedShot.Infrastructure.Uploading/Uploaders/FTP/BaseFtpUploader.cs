@@ -1,11 +1,9 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Eto.Forms;
 using RedShot.Infrastructure.Common.Notifying;
 using RedShot.Infrastructure.Uploading.Abstractions;
-using RedShot.Infrastructure.Uploading.Common;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp

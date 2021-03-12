@@ -3,9 +3,8 @@ using System.Text;
 using System.Linq;
 using System.IO;
 using Eto.Drawing;
-using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Recording.Common.Ffmpeg;
-using RedShot.Infrastructure.Formatting;
+using RedShot.Infrastructure.Uploading.Common;
 
 namespace RedShot.Infrastructure.Recording.Common.Recorders
 {
@@ -22,7 +21,7 @@ namespace RedShot.Infrastructure.Recording.Common.Recorders
         /// <summary>
         /// Last video.
         /// </summary>
-        public VideoFile LastVideo { get; protected set; }
+        public Uploading.Common.File LastVideo { get; protected set; }
 
         /// <summary>
         /// Is recording.
@@ -67,9 +66,8 @@ namespace RedShot.Infrastructure.Recording.Common.Recorders
             var deviceArgs = GetDeviceArgs(area);
             var pathName = $"RedShot-Video-{DateTime.Now:yyyy-MM-ddTHH-mm-ss}";
             var path = Path.Combine(videoFolderPath, $"{pathName}.{ffmpegOptions.Extension}");
-            var name = FormatManager.GetFormattedName();
 
-            LastVideo = new VideoFile(name, path);
+            LastVideo = new Uploading.Common.File(path, FileType.Video);
             var outputArgs = FFmpegArgsHelper.GetArgsForOutput(path);
 
             cliManager.Run($"-thread_queue_size 1024 {deviceArgs} {ffmpegOptions.GetFFmpegArgs()} {GetAudioStreamArgs()} {outputArgs}");
@@ -112,7 +110,7 @@ namespace RedShot.Infrastructure.Recording.Common.Recorders
         /// <summary>
         /// Get last video.
         /// </summary>
-        public virtual IFile GetVideo()
+        public virtual Uploading.Common.File GetVideo()
         {
             Stop();
             return LastVideo;

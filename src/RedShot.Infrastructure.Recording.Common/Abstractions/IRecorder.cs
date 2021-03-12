@@ -1,5 +1,5 @@
 ﻿using Eto.Drawing;
-using RedShot.Infrastructure.Abstractions;
+using RedShot.Infrastructure.Uploading.Common;
 
 namespace RedShot.Infrastructure.Recording.Common
 {
@@ -22,7 +22,7 @@ namespace RedShot.Infrastructure.Recording.Common
         /// <summary>
         /// Get recorded video.
         /// </summary>
-        IFile GetVideo();
+        File GetVideo();
 
         /// <summary>
         /// State of the recorder (Recording or not).

@@ -162,7 +162,7 @@ namespace RedShot.Infrastructure.Recording.Common.Views
             recorder.Stop();
 
             uploadingForm?.Close();
-            uploadingForm = new UploaderForm(recorder.GetVideo(), UploadingProvider.GetUploadingServices());
+            uploadingForm = new UploadingForm(recorder.GetVideo(), UploadingProvider.GetUploadingServices());
             uploadingForm.Show();
         }
 

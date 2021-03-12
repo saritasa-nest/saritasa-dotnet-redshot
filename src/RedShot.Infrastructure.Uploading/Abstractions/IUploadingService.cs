@@ -29,8 +29,9 @@ namespace RedShot.Infrastructure.Uploading.Abstractions
         IUploader GetUploader();
 
         /// <summary>
-        /// Checks on supporting file type.
+        /// Check on supporting file type.
         /// </summary>
+        /// <param name="fileType">File type.</param>
         bool CheckOnSupporting(FileType fileType);
     }
 }

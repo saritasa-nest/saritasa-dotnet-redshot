@@ -9,6 +9,7 @@ using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Uploading.Abstractions;
 using RedShot.Infrastructure.Uploading.Common;
+using RedShot.Infrastructure.Uploading.Extensions;
 
 namespace RedShot.Infrastructure.Uploading.Forms
 {
@@ -91,7 +92,7 @@ namespace RedShot.Infrastructure.Uploading.Forms
             Enabled = false;
 
             var uploader = uploadingService.GetUploader();
-            await UploadingProvider.SafeUploadAsync(uploader, file);
+            await uploader.SafeUploadAsync(file);
             Close();
         }
 

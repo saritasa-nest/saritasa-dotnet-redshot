@@ -1,4 +1,4 @@
-﻿using RedShot.Infrastructure;
+﻿using RedShot.Infrastructure.Recording;
 
 namespace RedShot.Shortcut.Shortcuts
 {
@@ -13,7 +13,7 @@ namespace RedShot.Shortcut.Shortcuts
         /// <inheritdoc/>
         public override void OnPressedAction()
         {
-            ApplicationManager.RunRecording();
+            RecordingManager.Instance.InitiateRecording();
         }
     }
 }

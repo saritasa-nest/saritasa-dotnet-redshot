@@ -29,7 +29,8 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\RedShot.Infrastructure.Abstractions\RedShot.Infrastructure.Abstractions.csproj" />
-	  <ProjectReference Include="..\RedShot.Infrastructure\RedShot.Infrastructure.csproj" />
+	  <ProjectReference Include="..\RedShot.Infrastructure.Recording\RedShot.Infrastructure.Recording.csproj" />
+	  <ProjectReference Include="..\RedShot.Infrastructure.Screenshooting\RedShot.Infrastructure.Screenshooting.csproj" />
     <ProjectReference Condition=" '$(OS)' == 'Windows_NT' " Include="..\RedShot.Platforms.Windows\RedShot.Platforms.Windows.csproj" />
     <ProjectReference Condition=" '$(OS)' != 'Windows_NT' " Include="..\RedShot.Platforms.Linux\RedShot.Platforms.Linux.csproj" />
 	</ItemGroup>

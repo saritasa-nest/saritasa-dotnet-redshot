@@ -44,8 +44,7 @@ namespace RedShot.Infrastructure.Uploaders.File
 
             if (dialog.ShowDialog(new Form()) == DialogResult.Ok)
             {
-                using var fileStream = file.GetStream();
-                using var image = new Bitmap(file.GetStream());
+                using var image = new Bitmap(file.FilePath);
 
                 switch (dialog.CurrentFilterIndex)
                 {

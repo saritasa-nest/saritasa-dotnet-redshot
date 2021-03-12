@@ -5,13 +5,15 @@ using RedShot.Infrastructure.Uploading.Common;
 namespace RedShot.Infrastructure.Uploading.Abstractions
 {
     /// <summary>
-    /// Upload abstraction.
+    /// File uploader.
     /// </summary>
     public interface IUploader
     {
         /// <summary>
-        /// Uploads stream to some source.
+        /// Upload file.
         /// </summary>
+        /// <param name="file">File.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         Task UploadAsync(File file, CancellationToken cancellationToken);
     }
 }

@@ -5,7 +5,7 @@
     /// </summary>
     public enum FileType
     {
-        Image,
-        Video
+        Image = 1,
+        Video = 2
     }
 }

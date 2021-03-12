@@ -10,12 +10,12 @@ using RedShot.Infrastructure.Screenshooting.Painting.States;
 using RedShot.Resources;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp;
-using RedShot.Infrastructure.Uploading;
 using RedShot.Infrastructure.Uploaders.Clipboard;
 using RedShot.Infrastructure.Uploaders.File;
 using RedShot.Infrastructure.Screenshooting.Support;
 using RedShot.Infrastructure.Uploading.Common;
 using RedShot.Infrastructure.Uploading.Abstractions;
+using RedShot.Infrastructure.Uploading.Extensions;
 
 namespace RedShot.Infrastructure.Screenshooting.Painting
 {
@@ -164,7 +164,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
                 imageFile = file;
             }
 
-            await UploadingProvider.SafeUploadAsync(uploader, imageFile);
+            await uploader.SafeUploadAsync(imageFile);
             Close();
         }
 

@@ -1,7 +1,4 @@
-﻿using System;
-using Eto.Drawing;
-using Eto.Forms;
-using RedShot.Infrastructure.Common.Forms;
+﻿using Eto.Forms;
 
 namespace RedShot.Infrastructure.Formatting.Settings
 {

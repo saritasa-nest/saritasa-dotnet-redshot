@@ -11,6 +11,7 @@ using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Configuration.Models;
 using RedShot.Infrastructure.Settings;
 using RedShot.Infrastructure.Formatting;
+using RedShot.Resources;
 #if _WINDOWS
 using Eto.WinForms.Forms;
 #elif _UNIX
@@ -61,7 +62,7 @@ namespace RedShot.Application
 
             AddAreaControl();
             AddStyles();
-            app.Run(ApplicationManager.GetTrayApp());
+            app.Run(new ApplicationTray("RedShot", Icons.RedCircle));
         }
 
         private static void ConfigureLogging(IConfiguration configuration)
