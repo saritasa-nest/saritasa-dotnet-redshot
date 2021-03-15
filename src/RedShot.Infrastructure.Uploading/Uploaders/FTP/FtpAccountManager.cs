@@ -4,7 +4,7 @@ using System.Linq;
 using Eto.Forms;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Configuration;
-using RedShot.Infrastructure.Configuration.Models;
+using RedShot.Infrastructure.Configuration.Models.Account;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Forms;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 

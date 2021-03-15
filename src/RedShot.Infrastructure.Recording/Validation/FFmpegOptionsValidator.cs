@@ -1,7 +1,7 @@
 ﻿using Saritasa.Tools.Common.Utils;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Recording.Common.Ffmpeg;
-using RedShot.Infrastructure.Recording.Common.Ffmpeg.Encoding;
+using RedShot.Infrastructure.Common.Recording.Encoding;
 
 namespace RedShot.Infrastructure.Recording.Validation
 {

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using RedShot.Infrastructure.Configuration.Models;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
+using RedShot.Infrastructure.Configuration.Models.Account;
 
 namespace RedShot.Infrastructure.Uploading
 {

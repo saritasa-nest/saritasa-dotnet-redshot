@@ -14,7 +14,7 @@ namespace RedShot.Infrastructure.Recording
         /// <summary>
         /// Constructor.
         /// </summary>
-        public Recorder(FFmpegConfiguration options, string ffmpegPath, string videoFolderPath) : base(options, ffmpegPath, videoFolderPath)
+        public Recorder(FFmpegConfigurationOption options, string ffmpegPath, string videoFolderPath) : base(options, ffmpegPath, videoFolderPath)
         {
             cliManager = new FFmpegCliManager(ffmpegPath, SetProcessTracker);
         }

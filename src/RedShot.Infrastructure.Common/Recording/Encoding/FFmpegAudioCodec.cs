@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace RedShot.Infrastructure.Recording.Common.Ffmpeg.Encoding
+namespace RedShot.Infrastructure.Common.Recording.Encoding
 {
     /// <summary>
     /// FFmpeg audio codecs.

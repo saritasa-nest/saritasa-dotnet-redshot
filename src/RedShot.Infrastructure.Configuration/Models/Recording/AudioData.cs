@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RedShot.Infrastructure.Configuration.Models
+namespace RedShot.Infrastructure.Configuration.Models.Recording
 {
     /// <summary>
     /// Contains data about audio parameters.

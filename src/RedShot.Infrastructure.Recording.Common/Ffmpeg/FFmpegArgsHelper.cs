@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using RedShot.Infrastructure.Recording.Common.Ffmpeg.Encoding;
+using RedShot.Infrastructure.Common.Recording.Encoding;
 
 namespace RedShot.Infrastructure.Recording.Common.Ffmpeg
 {

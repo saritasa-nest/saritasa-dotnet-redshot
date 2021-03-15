@@ -13,7 +13,7 @@ namespace RedShot.Infrastructure.Recording.Unix.Linux
         /// <summary>
         /// Initializes Linux recorder.
         /// </summary>
-        public LinuxRecorder(FFmpegConfiguration configuration, string videoFolderPath) : base(configuration, "ffmpeg", videoFolderPath)
+        public LinuxRecorder(FFmpegConfigurationOption configuration, string videoFolderPath) : base(configuration, "ffmpeg", videoFolderPath)
         {
         }
 

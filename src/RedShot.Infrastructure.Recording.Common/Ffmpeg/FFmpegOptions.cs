@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using RedShot.Infrastructure.Common.Recording.Encoding;
 using RedShot.Infrastructure.Recording.Common.Devices;
-using RedShot.Infrastructure.Recording.Common.Ffmpeg.Encoding;
 
 namespace RedShot.Infrastructure.Recording.Common.Ffmpeg
 {

@@ -7,6 +7,7 @@ using RedShot.Infrastructure.Abstractions.Settings;
 using RedShot.Shortcut;
 using RedShot.Shortcut.Units;
 using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Configuration.Models.Shortcut;
 
 namespace RedShot.Infrastructure.Settings.Sections.Shortcut
 {
@@ -48,11 +49,14 @@ namespace RedShot.Infrastructure.Settings.Sections.Shortcut
         public void Save()
         {
             var shortcutMaps = ShortcutMappingHelper.GetShortcutMaps(shortcuts);
-            var configOption = UserConfiguration.Instance.GetOptionOrDefault<ShortcutConfiguration>();
+            var configurationModel = ConfigurationProvider.Instance.GetConfiguration<ShortcutConfiguration>();
+            var configOption = Mapping.Mapper.Map<ShortcutConfigurationOption>(configurationModel);
+
             configOption.ShortcutMaps.Clear();
             configOption.ShortcutMaps.AddRange(shortcutMaps);
 
-            UserConfiguration.Instance.SetOption(configOption);
+            configurationModel = Mapping.Mapper.Map<ShortcutConfiguration>(configOption);
+            ConfigurationProvider.Instance.SetConfiguration(configurationModel);
         }
 
         /// <inheritdoc/>

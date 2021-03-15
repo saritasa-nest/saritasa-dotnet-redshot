@@ -25,7 +25,7 @@ namespace RedShot.Infrastructure.Recording
         public override IRecorder GetRecorder()
         {
             ThrowIfNotFoundFfmpegBinary();
-            var options = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfiguration>();
+            var options = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfigurationOption>();
             return new Recorder(options, GetFfmpegPath(), RecordingHelper.GetDefaultVideoFolder());
         }
 

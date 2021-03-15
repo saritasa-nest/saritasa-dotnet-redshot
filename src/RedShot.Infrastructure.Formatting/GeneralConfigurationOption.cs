@@ -5,7 +5,7 @@ using RedShot.Infrastructure.Abstractions.Configuration;
 namespace RedShot.Infrastructure.Formatting
 {
     /// <summary>
-    /// Format configuration option.
+    /// General configuration option.
     /// </summary>
     public class GeneralConfigurationOption : INotifyPropertyChanged, IConfigurationOption
     {

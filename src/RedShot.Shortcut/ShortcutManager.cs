@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using RedShot.Infrastructure.Configuration;
+using RedShot.Infrastructure.Configuration.Models.Shortcut;
 using RedShot.Shortcut.Mapping;
 using RedShot.Shortcut.Units;
 
@@ -49,7 +50,8 @@ namespace RedShot.Shortcut
         /// </summary>
         public IEnumerable<BaseShortcut> GetShortcutsFromConfig()
         {
-            var configOption = UserConfiguration.Instance.GetOptionOrDefault<ShortcutConfiguration>();
+            var configurationModel = ConfigurationProvider.Instance.GetConfiguration<ShortcutConfiguration>();
+            var configurationOption = Mapping.Mapper.Map
             var mappedShortcuts = Shortcuts.MapShortcutsWithHotkeys(configOption.ShortcutMaps);
 
             return mappedShortcuts;

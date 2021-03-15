@@ -24,7 +24,7 @@ namespace RedShot.Infrastructure.Recording.Common.Views
         {
             Title = "Recording Settings";
             this.recordingService = recordingService;
-            audioOptions = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfiguration>().AudioOptions;
+            audioOptions = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfigurationOption>().AudioOptions;
             InitializeComponents();
         }
 
@@ -80,7 +80,7 @@ namespace RedShot.Infrastructure.Recording.Common.Views
 
         private void SaveOptions()
         {
-            var configuration = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfiguration>();
+            var configuration = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfigurationOption>();
             configuration.AudioOptions = audioOptions;
 
             UserConfiguration.Instance.SetOption(configuration);

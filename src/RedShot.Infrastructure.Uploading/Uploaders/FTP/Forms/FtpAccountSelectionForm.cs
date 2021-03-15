@@ -6,7 +6,7 @@ using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
-using RedShot.Infrastructure.Configuration.Models;
+using RedShot.Infrastructure.Configuration.Models.Account;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Forms
 {

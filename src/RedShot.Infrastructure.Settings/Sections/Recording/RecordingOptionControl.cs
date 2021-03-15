@@ -3,7 +3,7 @@ using Eto.Forms;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Recording;
 using RedShot.Infrastructure.Recording.Common.Ffmpeg;
-using RedShot.Infrastructure.Recording.Common.Ffmpeg.Encoding;
+using RedShot.Infrastructure.Common.Recording.Encoding;
 using RedShot.Infrastructure.Settings.Sections.Recording.CodecsOptions.AudioOptions;
 using RedShot.Infrastructure.Settings.Sections.Recording.CodecsOptions.VideoOptions;
 

@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Configuration.Models;
+using RedShot.Infrastructure.Configuration.Models.General;
 using RedShot.Infrastructure.Formatting.Formatters;
 
 namespace RedShot.Infrastructure.Formatting
@@ -120,7 +121,7 @@ namespace RedShot.Infrastructure.Formatting
 
         private static string GetPatternFromConfig()
         {
-            return UserConfiguration.Instance.GetOptionOrDefault<GeneralConfigurationOption>().Pattern;
+            return ConfigurationProvider.Instance.GetConfiguration<GeneralConfiguration>().Pattern;
         }
     }
 }

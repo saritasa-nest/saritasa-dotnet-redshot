@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RedShot.Infrastructure.Configuration.Models
+namespace RedShot.Infrastructure.Configuration.Models.Account
 {
     /// <summary>
     /// Contains a configuration for user accounts.

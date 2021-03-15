@@ -30,7 +30,7 @@ namespace RedShot.Infrastructure.Recording.Unix.Linux
         public IRecorder GetRecorder()
         {
             ThrowIfNotFoundFfmpegBinary();
-            var configuration = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfiguration>();
+            var configuration = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfigurationOption>();
             return new LinuxRecorder(configuration, RecordingHelper.GetDefaultVideoFolder());
         }
 

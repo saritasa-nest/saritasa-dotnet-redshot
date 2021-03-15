@@ -3,6 +3,7 @@ using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Abstractions.Settings;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Formatting;
+using RedShot.Infrastructure.Configuration.Models.General;
 
 namespace RedShot.Infrastructure.Settings.Sections.General
 {
@@ -20,7 +21,8 @@ namespace RedShot.Infrastructure.Settings.Sections.General
         /// </summary>
         public GeneralSettingsSection()
         {
-            configurationOption = UserConfiguration.Instance.GetOptionOrDefault<GeneralConfigurationOption>();
+            var configurationModel = ConfigurationProvider.Instance.GetConfiguration<GeneralConfiguration>();
+            configurationOption = Mapping.Mapper.Map<GeneralConfigurationOption>(configurationModel);
             autostart = new Autostart();
         }
 
@@ -50,7 +52,8 @@ namespace RedShot.Infrastructure.Settings.Sections.General
                 autostart.DisableAutostart();
             }
 
-            UserConfiguration.Instance.SetOption(configurationOption);
+            var configurationModel = Mapping.Mapper.Map<GeneralConfiguration>(configurationOption);
+            ConfigurationProvider.Instance.SetConfiguration(configurationModel);
         }
 
         /// <inheritdoc />

@@ -26,7 +26,7 @@ namespace RedShot.Infrastructure.Recording.Unix.MacOs
         public override IRecorder GetRecorder()
         {
             ThrowIfNotFoundFfmpegBinary();
-            var configuration = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfiguration>();
+            var configuration = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfigurationOption>();
             return new MacOsRecorder(configuration, GetFfmpegPath(), RecordingHelper.GetDefaultVideoFolder());
         }
 

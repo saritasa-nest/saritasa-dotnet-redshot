@@ -12,6 +12,8 @@ using RedShot.Infrastructure.Configuration.Models;
 using RedShot.Infrastructure.Settings;
 using RedShot.Infrastructure.Formatting;
 using AutoMapper;
+using RedShot.Infrastructure.Configuration.Models.General;
+using RedShot.Infrastructure.Common;
 #if _WINDOWS
 using Eto.WinForms.Forms;
 #elif _UNIX
@@ -77,18 +79,19 @@ namespace RedShot.Application
 
             var mappingConfiguration = new MapperConfiguration(config =>
             {
-                config.AddProfile<RedShot.Infrastructure.Uploading.MappingProfile>();
+                config.AddProfile<Infrastructure.Uploading.MappingProfile>();
             });
             mappingConfiguration.CompileMappings();
-            Infrastructure.Common.Mapping.Mapper = mappingConfiguration.CreateMapper();
+            Mapping.Mapper = mappingConfiguration.CreateMapper();
 
             ConfigureAutostart();
         }
 
         private static void ConfigureAutostart()
         {
-            var general = UserConfiguration.Instance.GetOptionOrDefault<GeneralConfigurationOption>();
-            if (general.LaunchAtSystemStart)
+            var generalConfigurationModel = Infrastructure.Configuration.ConfigurationProvider.Instance.GetConfiguration<GeneralConfiguration>();
+            var generalConfiguration = Mapping.Mapper.Map<GeneralConfigurationOption>(generalConfigurationModel);
+            if (generalConfiguration.LaunchAtSystemStart)
             {
                 var autostart = new Autostart();
                 autostart.EnableAutostart();
@@ -103,7 +106,7 @@ namespace RedShot.Application
         private static void CurrentDomainProcessExit(object sender, EventArgs e)
         {
             Shortcut.ShortcutManager.Instance.UnbindShortcuts();
-            UserConfiguration.Instance.Save();
+            Infrastructure.Configuration.ConfigurationProvider.Instance.Save();
         }
 
         private static void AddAreaControl()

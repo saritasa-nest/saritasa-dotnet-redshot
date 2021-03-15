@@ -4,6 +4,8 @@ using Eto.Forms;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Recording.Views;
 using RedShot.Infrastructure.Recording.Common;
+using RedShot.Infrastructure.Configuration.Models.Recording;
+using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Recording.Common.Ffmpeg;
 
 namespace RedShot.Infrastructure.Recording
@@ -101,7 +103,8 @@ namespace RedShot.Infrastructure.Recording
         /// </summary>
         private void ConfigureDevices()
         {
-            var configuration = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfiguration>();
+            var configurationModel = ConfigurationProvider.Instance.GetConfiguration<RecordingConfiguration>();
+            var configuration = Mapping.Mapper.Map<FFmpegConfigurationOption>(configurationModel);
             var options = configuration.FFmpegOptions;
 
             var recordingDevices = RecordingService.GetRecordingDevices();
@@ -118,8 +121,8 @@ namespace RedShot.Infrastructure.Recording
                 }
             }
 
-            UserConfiguration.Instance.SetOption(configuration);
-            UserConfiguration.Instance.Save();
+            configurationModel = Mapping.Mapper.Map<RecordingConfiguration>(configuration);
+            ConfigurationProvider.Instance.SetConfiguration(configurationModel);
         }
     }
 }

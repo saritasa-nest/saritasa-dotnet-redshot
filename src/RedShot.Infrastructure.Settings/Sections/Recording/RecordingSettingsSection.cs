@@ -4,6 +4,7 @@ using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Recording.Common.Ffmpeg;
 using RedShot.Infrastructure.Recording.Validation;
 using RedShot.Infrastructure.Abstractions.Settings;
+using RedShot.Infrastructure.Configuration.Models.Recording;
 
 namespace RedShot.Infrastructure.Settings.Sections.Recording
 {
@@ -12,7 +13,7 @@ namespace RedShot.Infrastructure.Settings.Sections.Recording
     /// </summary>
     public class RecordingSettingsSection : IValidatableSection
     {
-        private readonly FFmpegConfiguration ffmpegConfiguration;
+        private readonly FFmpegConfigurationOption ffmpegConfiguration;
         private Control recordingOptionControl;
 
         /// <summary>
@@ -20,7 +21,8 @@ namespace RedShot.Infrastructure.Settings.Sections.Recording
         /// </summary>
         public RecordingSettingsSection()
         {
-            ffmpegConfiguration = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfiguration>();
+            var configurationModel = ConfigurationProvider.Instance.GetConfiguration<RecordingConfiguration>();
+            ffmpegConfiguration = Mapping.Mapper.Map<FFmpegConfigurationOption>(configurationModel);
         }
 
         /// <inheritdoc/>
@@ -40,7 +42,8 @@ namespace RedShot.Infrastructure.Settings.Sections.Recording
         /// <inheritdoc/>
         public void Save()
         {
-            UserConfiguration.Instance.SetOption(ffmpegConfiguration);
+            var configurationModel = Mapping.Mapper.Map<RecordingConfiguration>(ffmpegConfiguration);
+            ConfigurationProvider.Instance.SetConfiguration(configurationModel);
         }
 
         /// <inheritdoc/>
