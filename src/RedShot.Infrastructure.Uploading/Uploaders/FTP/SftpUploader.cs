@@ -14,7 +14,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
     /// <summary>
     /// SFTP uploader.
     /// </summary>
-    internal sealed class SftpUploader : BaseFtpUploader, IDisposable, IAsyncDisposable
+    internal sealed class SftpUploader : FtpUploaderBase, IDisposable, IAsyncDisposable
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private bool disposed;

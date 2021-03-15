@@ -11,7 +11,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
     /// <summary>
     /// Base upload functions.
     /// </summary>
-    public abstract class BaseFtpUploader : IUploader
+    public abstract class FtpUploaderBase : IUploader
     {
         protected readonly FtpAccount ftpAccount;
 
@@ -19,7 +19,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// Constructor.
         /// </summary>
         /// <param name="ftpAccount">FTP account.</param>
-        public BaseFtpUploader(FtpAccount ftpAccount)
+        public FtpUploaderBase(FtpAccount ftpAccount)
         {
             this.ftpAccount = ftpAccount;
         }

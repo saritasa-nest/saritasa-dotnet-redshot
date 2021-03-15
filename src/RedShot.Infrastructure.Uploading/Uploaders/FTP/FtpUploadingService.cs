@@ -24,15 +24,21 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         public IUploader GetUploader()
         {
             var account = FtpAccountProvider.Instance.GetPrimaryFtpAccount();
+
+            if (account == null)
+            {
+                account = FtpAccountProvider.Instance.GetFtpAccountManually();
+            }
+
             return GetFtpUploader(account);
         }
 
         /// <summary>
         /// Get either FTP or SFTP uploader by specified FTP account.
         /// </summary>
-        public BaseFtpUploader GetFtpUploader(FtpAccount account)
+        public FtpUploaderBase GetFtpUploader(FtpAccount account)
         {
-            BaseFtpUploader ftpUploader;
+            FtpUploaderBase ftpUploader;
             if (account.Protocol == FtpProtocol.FTP || account.Protocol == FtpProtocol.FTPS)
             {
                 ftpUploader = new FtpUploader(account);

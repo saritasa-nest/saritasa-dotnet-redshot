@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Eto.Forms;
 using RedShot.Infrastructure.Configuration;
@@ -24,15 +23,9 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         public FtpAccount GetPrimaryFtpAccount()
         {
             var config = GetConfiguration();
+            var account = GetFtpAccounts().FirstOrDefault(a => a.Id == config.PrimaryAccountGuid);
 
-            if (config.PrimaryAccountGuid != default && TryGetAccountByGuid(config.PrimaryAccountGuid, config.FtpAccounts, out var ftpAccount))
-            {
-                return ftpAccount;
-            }
-            else
-            {
-                return GetFtpAccountManually();
-            }
+            return account;
         }
 
         /// <summary>
@@ -58,20 +51,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             }
 
             return null;
-        }
-
-        private bool TryGetAccountByGuid(Guid guid, IEnumerable<FtpAccount> ftpAccounts, out FtpAccount ftpAccount)
-        {
-            if (ftpAccounts.Any(a => a.Id == guid))
-            {
-                ftpAccount = ftpAccounts.Single(a => a.Id == guid);
-                return true;
-            }
-            else
-            {
-                ftpAccount = null;
-                return false;
-            }
         }
 
         private FtpConfiguration GetConfiguration()
