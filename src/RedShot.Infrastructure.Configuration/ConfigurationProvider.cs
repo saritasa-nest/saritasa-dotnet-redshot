@@ -1,13 +1,16 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.IO;
+using System.Text;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Common.Encryption;
-using RedShot.Infrastructure.Configuration.Models;
 using RedShot.Infrastructure.Configuration.Providers;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+using RedShot.Infrastructure.Configuration.Models.Account;
+using RedShot.Infrastructure.Configuration.Models.General;
+using RedShot.Infrastructure.Configuration.Models.Recording;
+using RedShot.Infrastructure.Configuration.Models.Shortcut;
 
 namespace RedShot.Infrastructure.Configuration
 {
@@ -109,7 +112,10 @@ namespace RedShot.Infrastructure.Configuration
 
             configurationProviders = new Dictionary<Type, IConfigurationProvider>()
             {
-                { typeof(AccountConfiguration), new AccountConfigurationProvider(serializer) }
+                { typeof(AccountConfiguration), new AccountConfigurationProvider(serializer) },
+                { typeof(GeneralConfiguration), new GeneralConfigurationProvider(serializer) },
+                { typeof(RecordingConfiguration), new RecordingConfigurationProvider(serializer) },
+                { typeof(ShortcutConfiguration), new ShortcutConfigurationProvider(serializer) }
             };
         }
     }

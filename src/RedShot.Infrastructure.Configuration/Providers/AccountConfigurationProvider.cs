@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using RedShot.Infrastructure.Configuration.Models;
 using System.Collections.Generic;
+using RedShot.Infrastructure.Configuration.Models.Account;
 
 namespace RedShot.Infrastructure.Configuration.Providers
 {
