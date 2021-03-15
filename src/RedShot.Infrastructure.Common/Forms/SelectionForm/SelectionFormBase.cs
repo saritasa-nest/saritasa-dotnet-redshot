@@ -171,7 +171,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
 
         private void SetScreenImage()
         {
-            var rect = new Rectangle(ScreenHelper.GetScreenSize(selectionScreen));
+            var rect = new Rectangle(ScreenHelper.GetScreenBounds(selectionScreen));
             screenRectangle = rect;
             etoScreenImage = ScreenHelper.TakeScreenshot(selectionScreen);
             skScreenImage = SkiaSharpHelper.ConvertFromEtoBitmap(etoScreenImage);
