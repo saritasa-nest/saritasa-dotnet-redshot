@@ -19,7 +19,10 @@ namespace RedShot.Infrastructure.Common
             }
             else
             {
-                return (Bitmap)screen.GetImage(GetScreenSize(screen));
+                var rect = screen.Bounds;
+                // Fix black screen shot due to negative location.
+                rect.Location = PointF.Empty;
+                return (Bitmap)screen.GetImage(rect);
             }
         }
 
