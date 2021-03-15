@@ -124,7 +124,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             dialogOpenDate = DateTime.Now;
 
             renderTimer = new UITimer();
-            renderTimer.Elapsed += RenderFrame;
+            renderTimer.Elapsed += (o, e) => RenderFrame();
             renderTimer.Interval = renderFrameTime / 1000;
 
             skcontrol = new SKControl();
@@ -182,7 +182,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
         /// <summary>
         /// Renders image for this editor.
         /// </summary>
-        private void RenderFrame(object sender, EventArgs e)
+        private void RenderFrame()
         {
             if (!disposed)
             {
@@ -242,6 +242,7 @@ namespace RedShot.Infrastructure.Common.Forms.SelectionForm
             else if (capturing)
             {
                 UpdateSelectedArea(e.Location);
+                RenderFrame();
             }
         }
 
