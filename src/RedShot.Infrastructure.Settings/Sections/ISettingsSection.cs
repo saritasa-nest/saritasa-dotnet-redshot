@@ -1,9 +1,9 @@
 ﻿using Eto.Forms;
 
-namespace RedShot.Infrastructure.Settings.Sections
+namespace RedShot.Infrastructure.Abstractions.Settings
 {
     /// <summary>
-    /// Abstraction for settings.
+    /// Settings section.
     /// </summary>
     public interface ISettingsSection
     {
@@ -13,12 +13,12 @@ namespace RedShot.Infrastructure.Settings.Sections
         string Name { get; }
 
         /// <summary>
-        /// Gives option dialog.
+        /// Get setting control.
         /// </summary>
         Control GetControl();
 
         /// <summary>
-        /// Saves setting state.
+        /// Save settings state.
         /// </summary>
         void Save();
     }

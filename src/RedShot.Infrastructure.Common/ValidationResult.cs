@@ -10,11 +10,17 @@ namespace RedShot.Infrastructure.Common
     public class ValidationResult
     {
         /// <summary>
-        /// Initialize validation result.
+        /// Represents the success of the validation.
         /// </summary>
-        public ValidationResult(bool isSuccess, string errorMessage = default, IList<string> errors = null)
+        public static ValidationResult Success => new ValidationResult();
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="errorMessage">Error message.</param>
+        /// <param name="errors">Errors.</param>
+        public ValidationResult(string errorMessage, IList<string> errors = null)
         {
-            IsSuccess = isSuccess;
             ErrorMessage = errorMessage;
 
             if (errors == null)
@@ -25,6 +31,14 @@ namespace RedShot.Infrastructure.Common
             {
                 Errors = new ReadOnlyCollection<string>(errors);
             }
+        }
+
+        /// <summary>
+        /// Constructor for a successful validation result.
+        /// </summary>
+        protected ValidationResult()
+        {
+            IsSuccess = true;
         }
 
         /// <summary>

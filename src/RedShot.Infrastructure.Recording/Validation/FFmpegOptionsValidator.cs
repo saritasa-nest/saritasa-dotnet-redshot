@@ -34,12 +34,12 @@ namespace RedShot.Infrastructure.Recording.Validation
                     break;
             }
 
-            return new ValidationResult(true);
+            return ValidationResult.Success;
         }
 
         private static ValidationResult GetIncompatibleCodecResult(FFmpegOptions options)
         {
-            return new ValidationResult(false, GetIncompatibleCodecMessage(options));
+            return new ValidationResult(GetIncompatibleCodecMessage(options));
         }
 
         private static string GetIncompatibleCodecMessage(FFmpegOptions options)

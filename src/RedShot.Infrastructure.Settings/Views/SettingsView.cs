@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using Eto.Drawing;
 using Eto.Forms;
+using RedShot.Resources;
+using RedShot.Infrastructure.Abstractions.Settings;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Configuration;
-using RedShot.Infrastructure.Settings.Sections;
-using RedShot.Resources;
+using RedShot.Infrastructure.Settings.Sections.Ftp;
+using RedShot.Infrastructure.Settings.Sections.General;
+using RedShot.Infrastructure.Settings.Sections.Recording;
+using RedShot.Infrastructure.Settings.Sections.Shortcut;
 
 namespace RedShot.Infrastructure.Settings.Views
 {
@@ -15,7 +19,7 @@ namespace RedShot.Infrastructure.Settings.Views
     /// </summary>
     internal class SettingsView : Form
     {
-        private readonly IEnumerable<ISettingsSection> settingsSections;
+        private IReadOnlyCollection<ISettingsSection> settingsSections;
 
         private ListBox settingsListPanel;
         private Scrollable contentPanel;
@@ -26,17 +30,28 @@ namespace RedShot.Infrastructure.Settings.Views
         /// <summary>
         /// Initializes settings view.
         /// </summary>
-        public SettingsView(IEnumerable<ISettingsSection> settingsSections)
+        public SettingsView()
         {
             Icon = new Icon(1, Icons.RedCircle);
             Title = "RedShot Settings";
-            this.settingsSections = settingsSections;
             Resizable = false;
             Shown += SettingsViewShown;
             Maximizable = false;
 
+            RegisterSettingsSections();
             InitializeComponents();
             this.Closing += SettingsViewClosing;
+        }
+
+        private void RegisterSettingsSections()
+        {
+            settingsSections = new List<ISettingsSection>
+            {
+                new RecordingSettingsSection(),
+                new GeneralSettingsSection(),
+                new ShortcutSettingsSection(),
+                new FtpSettingsSection()
+            };
         }
 
         private void SettingsViewClosing(object sender, System.ComponentModel.CancelEventArgs e)

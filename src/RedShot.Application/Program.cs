@@ -73,9 +73,7 @@ namespace RedShot.Application
 
         private static void ConfigureApplication(IConfiguration configuration)
         {
-            var applicationTypes = new ApplicationTypes();
             AppSettings.Instance = configuration.GetSection("AppSettings").Get<AppSettings>();
-            SettingsManager.Initialize(applicationTypes.SettingsOptionsTypes);
 
             var mappingConfiguration = new MapperConfiguration(config =>
             {

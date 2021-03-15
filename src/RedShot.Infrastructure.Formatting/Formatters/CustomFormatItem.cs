@@ -1,9 +1,9 @@
 ﻿namespace RedShot.Infrastructure.Formatting.Formatters
 {
     /// <summary>
-    /// Custom format
+    /// Custom format item.
     /// </summary>
-    internal class CustomFormatItem : IFormatItem
+    public class CustomFormatItem : IFormatItem
     {
         /// <inheritdoc/>
         public string Name => "Custom";

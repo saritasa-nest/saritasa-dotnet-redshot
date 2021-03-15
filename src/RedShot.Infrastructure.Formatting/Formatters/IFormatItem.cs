@@ -3,7 +3,7 @@
     /// <summary>
     /// Format item.
     /// </summary>
-    internal interface IFormatItem
+    public interface IFormatItem
     {
         /// <summary>
         /// Name of the format item.

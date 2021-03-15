@@ -24,6 +24,19 @@
     <ProjectReference Include="..\RedShot.Infrastructure.Configuration\RedShot.Infrastructure.Configuration.csproj" />
     <ProjectReference Include="..\RedShot.Infrastructure.Abstractions\RedShot.Infrastructure.Abstractions.csproj" />
     <ProjectReference Include="..\RedShot.Infrastructure.Common\RedShot.Infrastructure.Common.csproj" />
+    <ProjectReference Include="..\RedShot.Infrastructure.Formatting\RedShot.Infrastructure.Formatting.csproj" />
+    <ProjectReference Include="..\RedShot.Infrastructure.Recording\RedShot.Infrastructure.Recording.csproj" />
+    <ProjectReference Include="..\RedShot.Infrastructure.Uploading\RedShot.Infrastructure.Uploading.csproj" />
+    <ProjectReference Include="..\RedShot.Shortcut\RedShot.Shortcut.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Sections\Ftp\FtpOptionControl.eto.cs">
+      <DependentUpon>$([System.String]::Copy('%(Filename)').Replace('.eto', ''))%(Extension)</DependentUpon>
+    </Compile>
+    <Compile Update="Sections\Recording\RecordingOptionControl.eto.cs">
+      <DependentUpon>$([System.String]::Copy('%(Filename)').Replace('.eto', ''))%(Extension)</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

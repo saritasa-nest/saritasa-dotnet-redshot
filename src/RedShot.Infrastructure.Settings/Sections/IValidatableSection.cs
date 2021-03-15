@@ -1,4 +1,6 @@
-﻿namespace RedShot.Infrastructure.Settings.Sections
+﻿using RedShot.Infrastructure.Common;
+
+namespace RedShot.Infrastructure.Abstractions.Settings
 {
     /// <summary>
     /// Validatable section.
@@ -8,6 +10,6 @@
         /// <summary>
         /// Validate the settings section.
         /// </summary>
-        Common.ValidationResult Validate();
+        ValidationResult Validate();
     }
 }

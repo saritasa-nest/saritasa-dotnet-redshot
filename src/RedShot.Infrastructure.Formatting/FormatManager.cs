@@ -36,12 +36,12 @@ namespace RedShot.Infrastructure.Formatting
                 .Select(t => (IFormatItem) Activator.CreateInstance(t));
         }
 
-        internal static readonly IEnumerable<IFormatItem> FormatItems;
+        public static readonly IEnumerable<IFormatItem> FormatItems;
 
         /// <summary>
         /// Try to format pattern.
         /// </summary>
-        internal static bool TryFormat(string pattern, out string formattedString)
+        public static bool TryFormat(string pattern, out string formattedString)
         {
             formattedString = Format(pattern);
 

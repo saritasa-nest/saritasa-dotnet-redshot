@@ -34,10 +34,4 @@
 	  <ProjectReference Include="..\RedShot.Resources\RedShot.Resources.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Compile Update="Uploaders\FTP\Settings\FtpOptionControl.eto.cs">
-	    <DependentUpon>FtpOptionControl.cs</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-
 </Project>
