@@ -156,6 +156,8 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
 
         private async Task UploadImageAsync(IUploader uploader)
         {
+            paintingPanel.UploadImageButton.Enabled = false;
+
             var newImageHash = imagePanel.GetImageHash();
             if (uploadedImageHash != newImageHash)
             {
@@ -164,12 +166,14 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
                 imageFile = file;
             }
 
-            var result = await uploader.SafeUploadAsync(imageFile);
+            var result = await uploader.ExtendedUploadAsync(imageFile);
 
             if (result.ResultType == UploadResultType.Successful)
             {
                 Close();
             }
+
+            paintingPanel.UploadImageButton.Enabled = true;
         }
 
         private void PaintingPanelStateChanged(object sender, DataEventArgs<PaintingState> e)

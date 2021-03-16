@@ -92,7 +92,7 @@ namespace RedShot.Infrastructure.Uploading.Forms
             Enabled = false;
 
             var uploader = uploadingService.GetUploader();
-            var result = await uploader.SafeUploadAsync(file);
+            var result = await uploader.ExtendedUploadAsync(file);
 
             if (result.ResultType == UploadResultType.Successful)
             {
