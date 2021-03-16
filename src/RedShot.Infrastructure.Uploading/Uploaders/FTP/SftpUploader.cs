@@ -8,6 +8,7 @@ using Saritasa.Tools.Domain.Exceptions;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 using RedShot.Infrastructure.Formatting;
+using RedShot.Infrastructure.Uploading.Common;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
 {
@@ -16,6 +17,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
     /// </summary>
     internal sealed class SftpUploader : FtpUploaderBase, IDisposable, IAsyncDisposable
     {
+        private const int BufferSize = 8192;
+
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private bool disposed;
         private bool isNeedToHandle;
@@ -29,24 +32,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         {
             isNeedToHandle = true;
             InitializeClient();
-        }
-
-        /// <inheritdoc/>
-        public override async Task UploadAsync(Common.File file, CancellationToken cancellationToken)
-        {
-            var subFolderPath = ftpAccount.Directory;
-
-            var fileName = FormatManager.GetFormattedName();
-            var fullFileName = GetFullFileName(fileName, file);
-
-            var path = UrlHelper.CombineUrl(subFolderPath, fullFileName);
-
-            IsUploading = true;
-            await using var fileStream = file.GetStream();
-            await UploadStreamAsync(fileStream, path, true, cancellationToken);
-            IsUploading = false;
-
-            SaveFileUrlToClipboard(fullFileName);
         }
 
         /// <inheritdoc/>
@@ -69,7 +54,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             return client.IsConnected;
         }
 
-        private async Task UploadStreamAsync(Stream stream, string remotePath, bool autoCreateDirectory = false, CancellationToken cancellationToken = default)
+        /// <inheritdoc/>
+        protected override async Task UploadStreamAsync(Stream stream, string remotePath, CancellationToken cancellationToken = default)
         {
             if (await ConnectAsync(cancellationToken))
             {
@@ -81,8 +67,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
                 {
                     isNeedToHandle = false;
                     logger.Info("Directory not exist, path: {remotePath}", remotePath);
-                    await CreateDirectoryAsync(UrlHelper.GetDirectoryPath(remotePath), autoCreateDirectory, cancellationToken);
-                    await UploadStreamAsync(stream, remotePath, true, cancellationToken);
+                    await CreateDirectoryAsync(UrlHelper.GetDirectoryPath(remotePath), cancellationToken);
+                    await UploadStreamAsync(stream, remotePath, cancellationToken);
                 }
             }
         }
@@ -118,7 +104,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             return false;
         }
 
-        private async Task CreateDirectoryAsync(string path, bool createMultiDirectory = false, CancellationToken cancellationToken = default)
+        private async Task CreateDirectoryAsync(string path, CancellationToken cancellationToken = default)
         {
             if (await ConnectAsync(cancellationToken))
             {
@@ -133,7 +119,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
                         }
                     });
                 }
-                catch (SftpPathNotFoundException) when (createMultiDirectory)
+                catch (SftpPathNotFoundException)
                 {
                     await CreateMultiDirectoryAsync(path, cancellationToken);
                 }
@@ -148,7 +134,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             {
                 if (! await DirectoryExistsAsync(directory, cancellationToken))
                 {
-                    await CreateDirectoryAsync(directory, true, cancellationToken);
+                    await CreateDirectoryAsync(directory, cancellationToken);
                     logger.Info("Directory: {directory} was created on server: {server}", directory, ftpAccount.Host);
                 }
             }
@@ -158,7 +144,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         {
             if (!string.IsNullOrEmpty(ftpAccount.Keypath))
             {
-                if (!File.Exists(ftpAccount.Keypath))
+                if (!System.IO.File.Exists(ftpAccount.Keypath))
                 {
                     throw new Exception("Key not found");
                 }

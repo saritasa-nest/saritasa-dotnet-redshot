@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Eto.Drawing;
@@ -17,21 +18,28 @@ namespace RedShot.Infrastructure.Uploaders.File
     internal sealed class FileUploader : IUploader
     {
         /// <inheritdoc />
-        public async Task UploadAsync(Uploading.Common.File file, CancellationToken cancellationToken)
+        public async Task<UploadResult> UploadAsync(Uploading.Common.File file, CancellationToken cancellationToken)
         {
+            UploadResult result;
+
             if (file.FileType == FileType.Image)
             {
-                await UploadImageAsync(file, cancellationToken);
+                result = await UploadImageAsync(file, cancellationToken);
             }
             else
             {
-                await UploadVideoAsync(file, cancellationToken);
+                result = await UploadVideoAsync(file, cancellationToken);
             }
 
-            NotifyHelper.Notify($"The file has been saved.", "RedShot", NotifyStatus.Success);
+            if (result.ResultType == UploadResultType.Successful)
+            {
+                NotifyHelper.Notify($"The file has been saved.", "RedShot", NotifyStatus.Success);
+            }
+
+            return result;
         }
 
-        private async Task UploadImageAsync(Uploading.Common.File file, CancellationToken cancellationToken)
+        private async Task<UploadResult> UploadImageAsync(Uploading.Common.File file, CancellationToken cancellationToken)
         {
             using var dialog = new SaveFileDialog();
             dialog.Title = "RedShot";
@@ -59,10 +67,15 @@ namespace RedShot.Infrastructure.Uploaders.File
                         await image.SaveAsync(filePath, ImageFormat.Png, cancellationToken);
                         break;
                 }
+                return UploadResult.Successful;
+            }
+            else
+            {
+                return UploadResult.Canceled;
             }
         }
 
-        private async Task UploadVideoAsync(Uploading.Common.File file, CancellationToken cancellationToken)
+        private async Task<UploadResult> UploadVideoAsync(Uploading.Common.File file, CancellationToken cancellationToken)
         {
             using var dialog = new SaveFileDialog();
             dialog.Title = "RedShot";
@@ -74,6 +87,11 @@ namespace RedShot.Infrastructure.Uploaders.File
             if (dialog.ShowDialog(new Form()) == DialogResult.Ok)
             {
                 await CopyFileAsync(file.FilePath, dialog.FileName, cancellationToken);
+                return UploadResult.Successful;
+            }
+            else
+            {
+                return UploadResult.Canceled;
             }
         }
 

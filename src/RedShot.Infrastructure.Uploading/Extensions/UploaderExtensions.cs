@@ -17,14 +17,22 @@ namespace RedShot.Infrastructure.Uploading.Extensions
         /// <summary>
         /// Safely file upload.
         /// Sets last file.
-        /// Disposes of the uploder instance at the end.
+        /// Disposes of the uploader instance at the end.
         /// </summary>
-        public static async Task SafeUploadAsync(this IUploader uploader, File file, CancellationToken cancellationToken = default)
+        public static async Task<UploadResult> SafeUploadAsync(this IUploader uploader, File file, CancellationToken cancellationToken = default)
         {
             try
             {
                 UploadingProvider.LastFile = file;
-                await uploader.UploadAsync(file, cancellationToken);
+
+                var result = await uploader.UploadAsync(file, cancellationToken);
+
+                if (result.ResultType == UploadResultType.Error)
+                {
+                    NotifyHelper.Notify(result.ErrorMessage, "RedShot Uploading", NotifyStatus.Failed);
+                }
+
+                return result;
             }
             catch (Exception ex)
             {
@@ -40,7 +48,9 @@ namespace RedShot.Infrastructure.Uploading.Extensions
                 }
 
                 logger.Error(ex, message);
-                NotifyHelper.Notify(message, "RedShot uploading", NotifyStatus.Failed);
+                NotifyHelper.Notify(message, "RedShot Uploading", NotifyStatus.Failed);
+
+                return UploadResult.Error(message);
             }
             finally
             {

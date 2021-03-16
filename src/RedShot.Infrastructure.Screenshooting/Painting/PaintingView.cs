@@ -164,8 +164,12 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
                 imageFile = file;
             }
 
-            await uploader.SafeUploadAsync(imageFile);
-            Close();
+            var result = await uploader.SafeUploadAsync(imageFile);
+
+            if (result.ResultType == UploadResultType.Successful)
+            {
+                Close();
+            }
         }
 
         private void PaintingPanelStateChanged(object sender, DataEventArgs<PaintingState> e)

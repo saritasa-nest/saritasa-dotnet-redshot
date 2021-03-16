@@ -11,6 +11,7 @@ using Saritasa.Tools.Domain.Exceptions;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Formatting;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
+using RedShot.Infrastructure.Uploading.Common;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
 {
@@ -87,23 +88,12 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             }
         }
 
-        /// <inheritdoc />
-        public override async Task UploadAsync(Common.File file, CancellationToken cancellationToken)
+        /// <inheritdoc/>
+        protected override async Task UploadStreamAsync(Stream fileStream, string remotePath, CancellationToken cancellationToken = default)
         {
-            var subFolderPath = ftpAccount.Directory;
-
-            var fileName = FormatManager.GetFormattedName();
-            var fullFileName = GetFullFileName(fileName, file);
-
-            var path = UrlHelper.CombineUrl(subFolderPath, fullFileName);
-
-            IsUploading = true;
-            Stream fileStream = null;
-
             try
             {
-                fileStream = file.GetStream();
-                await UploadDataAsync(fileStream, path, cancellationToken);
+                await UploadDataAsync(fileStream, remotePath, cancellationToken);
             }
             catch (FtpCommandException e) when (isNeedToHandle)
             {
@@ -111,21 +101,10 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
                 if (e.CompletionCode == "550" || e.CompletionCode == "553")
                 {
                     isNeedToHandle = false;
-                    await CreateMultiDirectoryAsync(UrlHelper.GetDirectoryPath(path), cancellationToken);
-                    await UploadAsync(file, cancellationToken);
+                    await CreateMultiDirectoryAsync(UrlHelper.GetDirectoryPath(remotePath), cancellationToken);
+                    await UploadStreamAsync(fileStream, remotePath);
                 }
             }
-            finally
-            {
-                if (fileStream != null)
-                {
-                    await fileStream.DisposeAsync();
-                }
-            }
-
-            IsUploading = false;
-
-            SaveFileUrlToClipboard(fullFileName);
         }
 
         /// <summary>

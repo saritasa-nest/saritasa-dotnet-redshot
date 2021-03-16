@@ -14,6 +14,7 @@ namespace RedShot.Infrastructure.Uploading.Abstractions
         /// </summary>
         /// <param name="file">File.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
-        Task UploadAsync(File file, CancellationToken cancellationToken);
+        /// <returns>Upload result.</returns>
+        Task<UploadResult> UploadAsync(File file, CancellationToken cancellationToken);
     }
 }
