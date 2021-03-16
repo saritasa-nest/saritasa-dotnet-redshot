@@ -1,4 +1,5 @@
-﻿using Eto.Drawing;
+﻿using System.Linq;
+using Eto.Drawing;
 using RedShot.Resources;
 using RedShot.Infrastructure.Uploading.Abstractions;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
@@ -54,11 +55,13 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// <inheritdoc />
         public bool CheckOnSupporting(FileType fileType)
         {
-            return fileType switch
+            if (FtpAccountProvider.Instance.GetFtpAccounts().Any())
             {
-                FileType.Image or FileType.Video => true,
-                _ => false,
-            };
+                // FTP/SFTP can upload any file type.
+                return true;
+            }
+
+            return false;
         }
     }
 }
