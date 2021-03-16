@@ -41,6 +41,15 @@ namespace RedShot.Infrastructure.Settings.Views
             RegisterSettingsSections();
             InitializeComponents();
             this.Closing += SettingsViewClosing;
+            this.Closed += SettingsViewClosed;
+        }
+
+        private void SettingsViewClosed(object sender, EventArgs e)
+        {
+            foreach (var section in settingsSections)
+            {
+                section.Dispose();
+            }
         }
 
         private void RegisterSettingsSections()
@@ -97,7 +106,6 @@ namespace RedShot.Infrastructure.Settings.Views
                 {
                     section.Save();
                 }
-                UserConfiguration.Instance.Save();
                 ConfigurationProvider.Instance.Save();
                 saved = true;
                 Close();

@@ -71,10 +71,10 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             }
         }
 
-        private static FtpConfiguration GetConfiguration()
+        private static FtpOptions GetConfiguration()
         {
             var accountConfig = ConfigurationProvider.Instance.GetConfiguration<AccountConfiguration>();
-            return Mapping.Mapper.Map<FtpConfiguration>(accountConfig);
+            return Mapping.Mapper.Map<FtpOptions>(accountConfig);
         }
     }
 }

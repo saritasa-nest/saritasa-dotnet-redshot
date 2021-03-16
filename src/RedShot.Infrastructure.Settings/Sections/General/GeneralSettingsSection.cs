@@ -10,10 +10,9 @@ namespace RedShot.Infrastructure.Settings.Sections.General
     /// <summary>
     /// General settings option.
     /// </summary>
-    public class GeneralSettingsSection : IValidatableSection
+    public sealed class GeneralSettingsSection : IValidatableSection
     {
-        private Control generalOptionControl;
-        private readonly GeneralConfigurationOption configurationOption;
+        private readonly GeneralOptionsControl generalOptionsControl;
         private readonly Autostart autostart;
 
         /// <summary>
@@ -22,7 +21,8 @@ namespace RedShot.Infrastructure.Settings.Sections.General
         public GeneralSettingsSection()
         {
             var configurationModel = ConfigurationProvider.Instance.GetConfiguration<GeneralConfiguration>();
-            configurationOption = Mapping.Mapper.Map<GeneralConfigurationOption>(configurationModel);
+            var generalOptions = Mapping.Mapper.Map<GeneralOptions>(configurationModel);
+            generalOptionsControl = new GeneralOptionsControl(generalOptions);
             autostart = new Autostart();
         }
 
@@ -30,20 +30,20 @@ namespace RedShot.Infrastructure.Settings.Sections.General
         public string Name => "General";
 
         /// <inheritdoc />
-        public Control GetControl()
+        public void Dispose()
         {
-            if (generalOptionControl == null)
-            {
-                generalOptionControl = new GeneralOptionControl(configurationOption);
-            }
-
-            return generalOptionControl;
+            generalOptionsControl.Dispose();
         }
+
+        /// <inheritdoc />
+        public Control GetControl() => generalOptionsControl;
 
         /// <inheritdoc />
         public void Save()
         {
-            if (configurationOption.LaunchAtSystemStart)
+            var generalOptions = generalOptionsControl.GeneralOptions;
+
+            if (generalOptions.LaunchAtSystemStart)
             {
                 autostart.EnableAutostart();
             }
@@ -52,14 +52,16 @@ namespace RedShot.Infrastructure.Settings.Sections.General
                 autostart.DisableAutostart();
             }
 
-            var configurationModel = Mapping.Mapper.Map<GeneralConfiguration>(configurationOption);
-            ConfigurationProvider.Instance.SetConfiguration(configurationModel);
+            var configuration = Mapping.Mapper.Map<GeneralConfiguration>(generalOptions);
+            ConfigurationProvider.Instance.SetConfiguration(configuration);
         }
 
         /// <inheritdoc />
         public ValidationResult Validate()
         {
-            if (FormatManager.TryFormat(configurationOption.Pattern, out _))
+            var generalOptions = generalOptionsControl.GeneralOptions;
+
+            if (FormatManager.TryFormat(generalOptions.Pattern, out _))
             {
                 return ValidationResult.Success;
             }

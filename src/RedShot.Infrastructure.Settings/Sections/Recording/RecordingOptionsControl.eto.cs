@@ -5,7 +5,7 @@ using Eto.Forms;
 
 namespace RedShot.Infrastructure.Settings.Sections.Recording
 {
-    internal partial class RecordingOptionControl : Panel
+    internal partial class RecordingOptionsControl : Panel
     {
         private void InitializeComponents()
         {
@@ -72,7 +72,7 @@ namespace RedShot.Infrastructure.Settings.Sections.Recording
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 useGdigrab.Enabled = false;
-                ffmpegConfiguration.FFmpegOptions.UseGdigrab = false;
+                recordingOptions.FFmpegOptions.UseGdigrab = false;
             }
 
             BindOptions();

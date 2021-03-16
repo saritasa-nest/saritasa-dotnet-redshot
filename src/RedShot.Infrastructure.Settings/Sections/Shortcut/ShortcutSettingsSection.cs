@@ -14,9 +14,10 @@ namespace RedShot.Infrastructure.Settings.Sections.Shortcut
     /// <summary>
     /// Shortcut settings section.
     /// </summary>
-    public class ShortcutSettingsSection : IValidatableSection
+    public sealed class ShortcutSettingsSection : IValidatableSection
     {
         private readonly List<BaseShortcut> shortcuts;
+        private readonly ShortcutOptionsControl shortcutOptionsControl;
 
         /// <inheritdoc/>
         public string Name => "Shortcuts";
@@ -27,36 +28,30 @@ namespace RedShot.Infrastructure.Settings.Sections.Shortcut
         public ShortcutSettingsSection()
         {
             shortcuts = ShortcutManager.Instance.GetShortcutsFromConfig().ToList();
-        }
 
-        /// <inheritdoc/>
-        public Control GetControl()
-        {
-            var control = new ShortcutSettingsControl(shortcuts);
-            control.Load += (o, e) =>
+            shortcutOptionsControl = new ShortcutOptionsControl(shortcuts);
+            shortcutOptionsControl.Load += (o, e) =>
             {
                 ShortcutManager.Instance.UnbindShortcuts();
             };
-            control.UnLoad += (o, e) =>
+            shortcutOptionsControl.UnLoad += (o, e) =>
             {
                 ShortcutManager.Instance.BindShortcuts();
             };
-
-            return control;
         }
+
+        /// <inheritdoc/>
+        public Control GetControl() => shortcutOptionsControl;
 
         /// <inheritdoc/>
         public void Save()
         {
             var shortcutMaps = ShortcutMappingHelper.GetShortcutMaps(shortcuts);
-            var configurationModel = ConfigurationProvider.Instance.GetConfiguration<ShortcutConfiguration>();
-            var configOption = Mapping.Mapper.Map<ShortcutConfigurationOption>(configurationModel);
+            var configuration = ConfigurationProvider.Instance.GetConfiguration<ShortcutConfiguration>();
 
-            configOption.ShortcutMaps.Clear();
-            configOption.ShortcutMaps.AddRange(shortcutMaps);
+            configuration.Shortcuts = shortcutMaps.ToList();
 
-            configurationModel = Mapping.Mapper.Map<ShortcutConfiguration>(configOption);
-            ConfigurationProvider.Instance.SetConfiguration(configurationModel);
+            ConfigurationProvider.Instance.SetConfiguration(configuration);
         }
 
         /// <inheritdoc/>
@@ -71,6 +66,12 @@ namespace RedShot.Infrastructure.Settings.Sections.Shortcut
             {
                 return ValidationResult.Success;
             }
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            shortcutOptionsControl.Dispose();
         }
     }
 }

@@ -45,20 +45,20 @@ namespace RedShot.Infrastructure.Settings.Sections.Ftp
         private ObservableCollection<FtpAccount> bindingList;
         private DefaultButton testButton;
         private readonly List<FtpAccount> ftpAccounts;
-        private readonly FtpConfiguration ftpConfiguration;
+        private readonly FtpOptions ftpOptions;
 
         /// <summary>
         /// Active configuration data.
         /// </summary>
-        public FtpConfiguration FtpConfiguration => ftpConfiguration;
+        public FtpOptions FtpOptions => ftpOptions;
 
         /// <summary>
         /// Initializes FTP option dialog.
         /// </summary>
-        public FtpOptionControl(FtpConfiguration ftpConfiguration)
+        public FtpOptionControl(FtpOptions ftpOptions)
         {
-            this.ftpConfiguration = ftpConfiguration;
-            ftpAccounts = ftpConfiguration.FtpAccounts;
+            this.ftpOptions = ftpOptions;
+            ftpAccounts = ftpOptions.FtpAccounts;
 
             InitializeComponents();
             InitializeAccountsBinding();
@@ -156,10 +156,10 @@ namespace RedShot.Infrastructure.Settings.Sections.Ftp
             addExtensionCheckBox.Bind(t => t.Checked, selectedAccount, account => account.HttpHomePathAddExtension).Changed += FtpOptionControlChanged;
             homePathTextBox.Bind(t => t.Text, selectedAccount, account => account.HttpHomePath).Changed += FtpOptionControlChanged;
 
-            defaultAccountCheckBox.DataContext = ftpConfiguration;
+            defaultAccountCheckBox.DataContext = ftpOptions;
             defaultAccountCheckBox.CheckedBinding.Convert(DefaultAccountUpdated,
                 v => selectedAccount != null && selectedAccount.Id == v)
-                .BindDataContext((FtpConfiguration c) => c.PrimaryAccountGuid);
+                .BindDataContext((FtpOptions c) => c.PrimaryAccountGuid);
         }
 
         private Guid DefaultAccountUpdated(bool? isChecked)
@@ -230,7 +230,7 @@ namespace RedShot.Infrastructure.Settings.Sections.Ftp
 
                 if (ftpAccounts.Count == 1)
                 {
-                    ftpConfiguration.PrimaryAccountGuid = ftpAccounts.First().Id;
+                    ftpOptions.PrimaryAccountGuid = ftpAccounts.First().Id;
                 }
 
                 RefreshAccountFields();
@@ -260,7 +260,7 @@ namespace RedShot.Infrastructure.Settings.Sections.Ftp
 
             if (ftpAccounts.Count == 0)
             {
-                ftpConfiguration.PrimaryAccountGuid = newAccount.Id;
+                ftpOptions.PrimaryAccountGuid = newAccount.Id;
             }
 
             bindingList.Add(newAccount);

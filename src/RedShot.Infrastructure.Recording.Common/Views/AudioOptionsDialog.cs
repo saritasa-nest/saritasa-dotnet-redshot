@@ -1,7 +1,9 @@
 ﻿using System;
 using Eto.Drawing;
 using Eto.Forms;
+using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Configuration;
+using RedShot.Infrastructure.Configuration.Models.Recording;
 using RedShot.Infrastructure.Recording.Common.Devices;
 using RedShot.Infrastructure.Recording.Common.Ffmpeg;
 
@@ -24,7 +26,8 @@ namespace RedShot.Infrastructure.Recording.Common.Views
         {
             Title = "Recording Settings";
             this.recordingService = recordingService;
-            audioOptions = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfigurationOption>().AudioOptions;
+            var configuration = ConfigurationProvider.Instance.GetConfiguration<RecordingConfiguration>();
+            audioOptions = Mapping.Mapper.Map<AudioOptions>(configuration.AudioData);
             InitializeComponents();
         }
 
@@ -80,11 +83,11 @@ namespace RedShot.Infrastructure.Recording.Common.Views
 
         private void SaveOptions()
         {
-            var configuration = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfigurationOption>();
-            configuration.AudioOptions = audioOptions;
+            var configuration = ConfigurationProvider.Instance.GetConfiguration<RecordingConfiguration>();
+            configuration.AudioData = Mapping.Mapper.Map<AudioData>(audioOptions);
 
-            UserConfiguration.Instance.SetOption(configuration);
-            UserConfiguration.Instance.Save();
+            ConfigurationProvider.Instance.SetConfiguration(configuration);
+            ConfigurationProvider.Instance.Save();
         }
 
         private void AddAudioDeviceRow(TableLayout tableLayout, Device audioDevice)

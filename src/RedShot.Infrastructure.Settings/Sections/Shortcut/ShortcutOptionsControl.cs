@@ -9,16 +9,16 @@ using RedShot.Shortcut.Units;
 namespace RedShot.Infrastructure.Settings.Sections.Shortcut
 {
     /// <summary>
-    /// Shortcut settings control.
+    /// Shortcut options control.
     /// </summary>
-    internal class ShortcutSettingsControl : Panel
+    internal class ShortcutOptionsControl : Panel
     {
         private readonly IEnumerable<BaseShortcut> shortcuts;
 
         /// <summary>
         /// Create the control.
         /// </summary>
-        public ShortcutSettingsControl(IEnumerable<BaseShortcut> shortcuts)
+        public ShortcutOptionsControl(IEnumerable<BaseShortcut> shortcuts)
         {
             this.shortcuts = GetOrderedShortcuts(shortcuts.ToList());
             InitializeComponents();

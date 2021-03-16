@@ -80,6 +80,8 @@ namespace RedShot.Application
             var mappingConfiguration = new MapperConfiguration(config =>
             {
                 config.AddProfile<Infrastructure.Uploading.MappingProfile>();
+                config.AddProfile<Infrastructure.Formatting.MappingProfile>();
+                config.AddProfile<Infrastructure.Recording.Common.MappingProfile>();
             });
             mappingConfiguration.CompileMappings();
             Mapping.Mapper = mappingConfiguration.CreateMapper();
@@ -90,7 +92,7 @@ namespace RedShot.Application
         private static void ConfigureAutostart()
         {
             var generalConfigurationModel = Infrastructure.Configuration.ConfigurationProvider.Instance.GetConfiguration<GeneralConfiguration>();
-            var generalConfiguration = Mapping.Mapper.Map<GeneralConfigurationOption>(generalConfigurationModel);
+            var generalConfiguration = Mapping.Mapper.Map<GeneralOptions>(generalConfigurationModel);
             if (generalConfiguration.LaunchAtSystemStart)
             {
                 var autostart = new Autostart();

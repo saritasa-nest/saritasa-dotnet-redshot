@@ -1,11 +1,12 @@
-﻿using Eto.Forms;
+﻿using System;
+using Eto.Forms;
 
 namespace RedShot.Infrastructure.Abstractions.Settings
 {
     /// <summary>
     /// Settings section.
     /// </summary>
-    public interface ISettingsSection
+    public interface ISettingsSection : IDisposable
     {
         /// <summary>
         /// Setting name.

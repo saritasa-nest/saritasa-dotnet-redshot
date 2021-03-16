@@ -15,7 +15,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Forms
     /// </summary>
     internal class FtpAccountSelectionForm : Dialog<DialogResult>
     {
-        private readonly FtpConfiguration ftpConfiguration;
+        private readonly FtpOptions ftpConfiguration;
         private ComboBox accounts;
         private DefaultButton selectionButton;
 
@@ -30,7 +30,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Forms
         public FtpAccountSelectionForm()
         {
             var accountConfig = ConfigurationProvider.Instance.GetConfiguration<AccountConfiguration>();
-            ftpConfiguration = Mapping.Mapper.Map<FtpConfiguration>(accountConfig);
+            ftpConfiguration = Mapping.Mapper.Map<FtpOptions>(accountConfig);
             Title = "FTP account selection";
             ShowInTaskbar = true;
             InitializeComponents();

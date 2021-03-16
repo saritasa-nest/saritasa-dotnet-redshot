@@ -9,39 +9,42 @@ namespace RedShot.Infrastructure.Settings.Sections.Ftp
     /// <summary>
     /// FTP setting's option.
     /// </summary>
-    public class FtpSettingsSection : ISettingsSection
+    public sealed class FtpSettingsSection : ISettingsSection
     {
-        private FtpOptionControl ftpOptionControl;
+        private readonly FtpOptionControl ftpOptionControl;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public FtpSettingsSection()
+        {
+            var accountConfiguration = ConfigurationProvider.Instance.GetConfiguration<AccountConfiguration>();
+            var ftpConfiguration = Common.Mapping.Mapper.Map<FtpOptions>(accountConfiguration);
+            ftpOptionControl = new FtpOptionControl(ftpConfiguration);
+        }
 
         /// <inheritdoc />
         public string Name => "Accounts";
 
         /// <inheritdoc />
-        public Control GetControl()
-        {
-            if (ftpOptionControl == null)
-            {
-                var accountConfiguration = ConfigurationProvider.Instance.GetConfiguration<AccountConfiguration>();
-                var ftpConfiguration = Common.Mapping.Mapper.Map<FtpConfiguration>(accountConfiguration);
-                ftpOptionControl = new FtpOptionControl(ftpConfiguration);
-            }
-
-            return ftpOptionControl;
-        }
+        public Control GetControl() => ftpOptionControl;
 
         /// <inheritdoc />
         public void Save()
         {
-            var configuration = Common.Mapping.Mapper.Map<AccountConfiguration>(ftpOptionControl.FtpConfiguration);
+            var configuration = Common.Mapping.Mapper.Map<AccountConfiguration>(ftpOptionControl.FtpOptions);
             ConfigurationProvider.Instance.SetConfiguration(configuration);
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            ftpOptionControl.Dispose();
         }
 
         /// <summary>
         /// Returns name of the option.
         /// </summary>
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
     }
 }

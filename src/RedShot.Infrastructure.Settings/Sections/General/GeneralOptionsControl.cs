@@ -1,7 +1,4 @@
-﻿using System;
-using Eto.Drawing;
-using Eto.Forms;
-using RedShot.Infrastructure.Common.Forms;
+﻿using Eto.Forms;
 using RedShot.Infrastructure.Formatting;
 
 namespace RedShot.Infrastructure.Settings.Sections.General
@@ -9,31 +6,36 @@ namespace RedShot.Infrastructure.Settings.Sections.General
     /// <summary>
     /// Format settings option dialog.
     /// </summary>
-    internal class GeneralOptionControl : Panel
+    internal class GeneralOptionsControl : Panel
     {
-        private readonly GeneralConfigurationOption configurationOption;
+        private readonly GeneralOptions generalOptions;
         private CheckBox launchAtSystemStartCheckBox;
         private TextBox patternTextBox;
         private Label exampleLabel;
 
         /// <summary>
+        /// Active configuration data.
+        /// </summary>
+        public GeneralOptions GeneralOptions => generalOptions;
+
+        /// <summary>
         /// Initializes format settings option dialog.
         /// </summary>
-        public GeneralOptionControl(GeneralConfigurationOption configurationOption)
+        public GeneralOptionsControl(GeneralOptions generalOptions)
         {
-            this.configurationOption = configurationOption;
+            this.generalOptions = generalOptions;
             InitializeComponents();
         }
 
         private void InitializeComponents()
         {
             exampleLabel = new Label();
-            SetFormatExample(configurationOption.Pattern);
+            SetFormatExample(generalOptions.Pattern);
 
             patternTextBox = new TextBox()
             {
                 Width = 300,
-                Text = configurationOption.Pattern
+                Text = generalOptions.Pattern
             };
             patternTextBox.TextChanging += PatternTextBoxOnTextChanging;
 
@@ -41,7 +43,7 @@ namespace RedShot.Infrastructure.Settings.Sections.General
             {
                 Text = "Launch at system start"
             };
-            launchAtSystemStartCheckBox.Bind(cb => cb.Checked, configurationOption, config => config.LaunchAtSystemStart);
+            launchAtSystemStartCheckBox.Bind(cb => cb.Checked, generalOptions, config => config.LaunchAtSystemStart);
 
             // External stack layout is needed to add padding. Padding doesn't work for GroupBox.
             Content = new StackLayout
@@ -106,7 +108,7 @@ namespace RedShot.Infrastructure.Settings.Sections.General
 
         private void PatternTextBoxOnTextChanging(object sender, TextChangingEventArgs e)
         {
-            configurationOption.Pattern = e.NewText;
+            generalOptions.Pattern = e.NewText;
             SetFormatExample(e.NewText);
         }
 

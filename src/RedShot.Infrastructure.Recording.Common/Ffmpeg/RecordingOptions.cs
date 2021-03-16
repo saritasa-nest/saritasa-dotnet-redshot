@@ -1,24 +1,18 @@
-﻿using RedShot.Infrastructure.Abstractions.Configuration;
-
-namespace RedShot.Infrastructure.Recording.Common.Ffmpeg
+﻿namespace RedShot.Infrastructure.Recording.Common.Ffmpeg
 {
     /// <summary>
-    /// FFmpeg configuration.
+    /// Recording options.
     /// </summary>
-    public class FFmpegConfiguration : IConfigurationOption
+    public class RecordingOptions
     {
         /// <summary>
         /// Initialize.
         /// </summary>
-        public FFmpegConfiguration()
+        public RecordingOptions()
         {
-            UniqueName = "FFmpegConfiguration";
             FFmpegOptions = new FFmpegOptions();
             AudioOptions = new AudioOptions();
-        }
-
-        /// <inheritdoc/>
-        public string UniqueName { get; }        
+        } 
         
         /// <summary>
         /// Audio options.

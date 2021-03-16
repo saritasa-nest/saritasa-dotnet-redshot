@@ -11,45 +11,44 @@ namespace RedShot.Infrastructure.Settings.Sections.Recording
     /// <summary>
     /// Recording settings option.
     /// </summary>
-    public class RecordingSettingsSection : IValidatableSection
+    public sealed class RecordingSettingsSection : IValidatableSection
     {
-        private readonly FFmpegConfigurationOption ffmpegConfiguration;
-        private Control recordingOptionControl;
+        private readonly RecordingOptionsControl recordingOptionsControl;
 
         /// <summary>
         /// Initializes recording settings.
         /// </summary>
         public RecordingSettingsSection()
         {
-            var configurationModel = ConfigurationProvider.Instance.GetConfiguration<RecordingConfiguration>();
-            ffmpegConfiguration = Mapping.Mapper.Map<FFmpegConfigurationOption>(configurationModel);
+            var configuration = ConfigurationProvider.Instance.GetConfiguration<RecordingConfiguration>();
+            var recordingOptions = Mapping.Mapper.Map<RecordingOptions>(configuration);
+            recordingOptionsControl = new RecordingOptionsControl(recordingOptions);
         }
 
         /// <inheritdoc/>
         public string Name => "Recording";
 
         /// <inheritdoc/>
-        public Control GetControl()
+        public void Dispose()
         {
-            if (recordingOptionControl == null)
-            {
-                recordingOptionControl = new RecordingOptionControl(ffmpegConfiguration);
-            }
-
-            return recordingOptionControl;
+            recordingOptionsControl.Dispose();
         }
+
+        /// <inheritdoc/>
+        public Control GetControl() => recordingOptionsControl;
 
         /// <inheritdoc/>
         public void Save()
         {
-            var configurationModel = Mapping.Mapper.Map<RecordingConfiguration>(ffmpegConfiguration);
-            ConfigurationProvider.Instance.SetConfiguration(configurationModel);
+            var recordingOptions = recordingOptionsControl.RecordingOptions;
+            var configuration = Mapping.Mapper.Map<RecordingConfiguration>(recordingOptions);
+            ConfigurationProvider.Instance.SetConfiguration(configuration);
         }
 
         /// <inheritdoc/>
         public ValidationResult Validate()
         {
-            return FFmpegOptionsValidator.Validate(ffmpegConfiguration.FFmpegOptions);
+            return FFmpegOptionsValidator.Validate(recordingOptionsControl.RecordingOptions.FFmpegOptions);
         }
     }
 }

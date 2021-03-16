@@ -12,7 +12,7 @@ namespace RedShot.Infrastructure.Settings.Sections.Recording
     /// <summary>
     /// Recording option dialog.
     /// </summary>
-    internal partial class RecordingOptionControl : Panel
+    internal partial class RecordingOptionsControl : Panel
     {
         /// <summary>
         /// Check FFmpeg binaries interval in seconds.
@@ -20,7 +20,7 @@ namespace RedShot.Infrastructure.Settings.Sections.Recording
         private const int CheckFfmpegInterval = 2;
 
         private readonly UITimer ffmpegCheckTimer;
-        private readonly FFmpegConfiguration ffmpegConfiguration;
+        private readonly RecordingOptions recordingOptions;
         private ComboBox videoCodec;
         private Button videoCodecOptionsButton;
         private ComboBox audioCodec;
@@ -32,11 +32,16 @@ namespace RedShot.Infrastructure.Settings.Sections.Recording
         private CheckBox useGdigrab;
 
         /// <summary>
+        /// Active configuration data.
+        /// </summary>
+        public RecordingOptions RecordingOptions => recordingOptions;
+
+        /// <summary>
         /// Initializes recording option dialog.
         /// </summary>
-        public RecordingOptionControl(FFmpegConfiguration ffmpegConfiguration)
+        public RecordingOptionsControl(RecordingOptions recordingOptions)
         {
-            this.ffmpegConfiguration = ffmpegConfiguration;
+            this.recordingOptions = recordingOptions;
 
             if (!RecordingManager.Instance.RecordingService.CheckFFmpeg())
             {
@@ -78,13 +83,13 @@ namespace RedShot.Infrastructure.Settings.Sections.Recording
         private void SetDefaultButtonClicked(object sender, EventArgs e)
         {
             Content.Unbind();
-            ffmpegConfiguration.FFmpegOptions = new FFmpegOptions();
+            recordingOptions.FFmpegOptions = new FFmpegOptions();
             BindOptions();
         }
 
         private void BindOptions()
         {
-            Content.DataContext = ffmpegConfiguration.FFmpegOptions;
+            Content.DataContext = recordingOptions.FFmpegOptions;
 
             fps.ValueBinding.Convert(f => (int)f, t => t).BindDataContext((FFmpegOptions o) => o.Fps);
             userArgs.TextBinding.BindDataContext((FFmpegOptions o) => o.UserArgs);
@@ -100,19 +105,19 @@ namespace RedShot.Infrastructure.Settings.Sections.Recording
         private void VideoCodecOptionsButtonClicked(object sender, EventArgs e)
         {
             Dialog options;
-            switch (ffmpegConfiguration.FFmpegOptions.VideoCodec)
+            switch (recordingOptions.FFmpegOptions.VideoCodec)
             {
                 case FFmpegVideoCodec.Libx264:
                 case FFmpegVideoCodec.Libx265:
-                    options = new H264H265CodecOptions(ffmpegConfiguration.FFmpegOptions);
+                    options = new H264H265CodecOptions(recordingOptions.FFmpegOptions);
                     break;
 
                 case FFmpegVideoCodec.Libvpx_vp9:
-                    options = new Vp9CodecOptions(ffmpegConfiguration.FFmpegOptions);
+                    options = new Vp9CodecOptions(recordingOptions.FFmpegOptions);
                     break;
 
                 case FFmpegVideoCodec.Libxvid:
-                    options = new MpegCodecOptions(ffmpegConfiguration.FFmpegOptions);
+                    options = new MpegCodecOptions(recordingOptions.FFmpegOptions);
                     break;
 
                 default:
@@ -125,22 +130,22 @@ namespace RedShot.Infrastructure.Settings.Sections.Recording
         private void AudioCodecOptionsButtonClicked(object sender, EventArgs e)
         {
             Dialog options;
-            switch (ffmpegConfiguration.FFmpegOptions.AudioCodec)
+            switch (recordingOptions.FFmpegOptions.AudioCodec)
             {
                 case FFmpegAudioCodec.Libvoaacenc:
-                    options = new AacOptions(ffmpegConfiguration.FFmpegOptions);
+                    options = new AacOptions(recordingOptions.FFmpegOptions);
                     break;
 
                 case FFmpegAudioCodec.Libopus:
-                    options = new OpusOptions(ffmpegConfiguration.FFmpegOptions);
+                    options = new OpusOptions(recordingOptions.FFmpegOptions);
                     break;
 
                 case FFmpegAudioCodec.Libvorbis:
-                    options = new VorbisOptions(ffmpegConfiguration.FFmpegOptions);
+                    options = new VorbisOptions(recordingOptions.FFmpegOptions);
                     break;
 
                 case FFmpegAudioCodec.Libmp3lame:
-                    options = new Mp3Options(ffmpegConfiguration.FFmpegOptions);
+                    options = new Mp3Options(recordingOptions.FFmpegOptions);
                     break;
 
                 default:

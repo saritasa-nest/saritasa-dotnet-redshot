@@ -34,8 +34,8 @@
     <Compile Update="Sections\Ftp\FtpOptionControl.eto.cs">
       <DependentUpon>$([System.String]::Copy('%(Filename)').Replace('.eto', ''))%(Extension)</DependentUpon>
     </Compile>
-    <Compile Update="Sections\Recording\RecordingOptionControl.eto.cs">
-      <DependentUpon>$([System.String]::Copy('%(Filename)').Replace('.eto', ''))%(Extension)</DependentUpon>
+    <Compile Update="Sections\Recording\RecordingOptionsControl.eto.cs">
+      <DependentUpon>RecordingOptionsControl.cs</DependentUpon>
     </Compile>
   </ItemGroup>
 

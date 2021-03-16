@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using RedShot.Infrastructure.Configuration.Models.Shortcut;
 using RedShot.Shortcut.Units;
 
 namespace RedShot.Shortcut.Mapping
@@ -12,15 +13,19 @@ namespace RedShot.Shortcut.Mapping
         /// <summary>
         /// Get shortcut maps.
         /// </summary>
-        public static IEnumerable<ShortcutMap> GetShortcutMaps(IEnumerable<BaseShortcut> shortcuts)
+        public static IEnumerable<ShortcutData> GetShortcutMaps(IEnumerable<BaseShortcut> shortcuts)
         {
-            return shortcuts.Select(s => new ShortcutMap(s.Name, s.Keys));
+            return shortcuts.Select(s => new ShortcutData()
+            {
+                ShortcutName = s.Name,
+                Keys = s.Keys
+            });
         }
 
         /// <summary>
         /// Map shortcut objects with their hot keys.
         /// </summary>
-        public static IEnumerable<BaseShortcut> MapShortcutsWithHotkeys(this IEnumerable<BaseShortcut> shortcuts, IEnumerable<ShortcutMap> shortcutMaps)
+        public static IEnumerable<BaseShortcut> MapShortcutsWithHotkeys(this IEnumerable<BaseShortcut> shortcuts, IEnumerable<ShortcutData> shortcutMaps)
         {
             foreach (var shortcutMap in shortcutMaps)
             {

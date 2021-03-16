@@ -6,9 +6,9 @@ using System.Linq;
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
 {
     /// <summary>
-    /// FTP configuration.
+    /// FTP/SFTP options.
     /// </summary>
-    public class FtpConfiguration : ICloneable
+    public class FtpOptions : ICloneable
     {
         /// <summary>
         /// Primary account guid.
@@ -23,9 +23,9 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// <summary>
         /// Return clone of the configuration option.
         /// </summary>
-        public FtpConfiguration Clone()
+        public FtpOptions Clone()
         {
-            var clone = (FtpConfiguration)MemberwiseClone();
+            var clone = (FtpOptions)MemberwiseClone();
             clone.FtpAccounts = new List<FtpAccount>(FtpAccounts.Select(a => a.Clone()));
 
             return clone;

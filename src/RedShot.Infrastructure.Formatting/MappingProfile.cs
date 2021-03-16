@@ -13,10 +13,10 @@ namespace RedShot.Infrastructure.Formatting
         /// </summary>
         public MappingProfile()
         {
-            CreateMap<GeneralConfiguration, GeneralConfigurationOption>()
+            CreateMap<GeneralConfiguration, GeneralOptions>()
                      .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != default));
 
-            CreateMap<GeneralConfigurationOption, GeneralConfiguration>();
+            CreateMap<GeneralOptions, GeneralConfiguration>();
         }
     }
 }

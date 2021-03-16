@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using RedShot.Infrastructure.Abstractions.Configuration;
 
 namespace RedShot.Infrastructure.Formatting
 {
     /// <summary>
-    /// General configuration option.
+    /// General options.
     /// </summary>
-    public class GeneralConfigurationOption : INotifyPropertyChanged, IConfigurationOption
+    public class GeneralOptions : INotifyPropertyChanged
     {
         private string pattern;
         private bool launchAtSystemStart;
@@ -16,9 +15,9 @@ namespace RedShot.Infrastructure.Formatting
         public string UniqueName => "GeneralConfiguration";
 
         /// <summary>
-        /// Initializes <see cref="GeneralConfigurationOption"/> object.
+        /// Initializes <see cref="GeneralOptions"/> object.
         /// </summary>
-        public GeneralConfigurationOption()
+        public GeneralOptions()
         {
             pattern = "%date%rnd";
             launchAtSystemStart = true;
