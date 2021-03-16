@@ -45,7 +45,7 @@ namespace RedShot.Infrastructure
                 Text = "Open last file",
                 ToolTip = "Open last created file",
                 Visible = false,
-                Command = new Command((e, o) => UploadLastFile())
+                Command = new Command((e, o) => OpenLastFile())
             };
 
             var menu = new ContextMenu();
@@ -95,7 +95,7 @@ namespace RedShot.Infrastructure
         /// <summary>
         /// Upload last file.
         /// </summary>
-        private void UploadLastFile()
+        private void OpenLastFile()
         {
             var lastFile = UploadingProvider.LastFile;
             if (lastFile != null)
