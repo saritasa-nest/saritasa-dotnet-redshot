@@ -30,6 +30,7 @@ namespace RedShot.Infrastructure.Settings.Sections.Recording
         private TextBox userArgs;
         private CheckBox showCursor;
         private CheckBox useGdigrab;
+        private bool isRecordingOptionsInitialized;
 
         /// <summary>
         /// Active configuration data.
@@ -51,12 +52,31 @@ namespace RedShot.Infrastructure.Settings.Sections.Recording
                     Interval = CheckFfmpegInterval
                 };
                 ffmpegCheckTimer.Elapsed += CheckTimerElapsed;
-                ffmpegCheckTimer.Start();
+
+                UnLoad += RecordingOptionsControlUnLoad;
+                Load += RecordingOptionsControlLoad;
+
                 Content = control;
             }
             else
             {
                 InitializeComponents();
+            }
+        }
+
+        private void RecordingOptionsControlLoad(object sender, EventArgs e)
+        {
+            if (!isRecordingOptionsInitialized)
+            {
+                ffmpegCheckTimer.Start();
+            }
+        }
+
+        private void RecordingOptionsControlUnLoad(object sender, EventArgs e)
+        {
+            if (!isRecordingOptionsInitialized)
+            {
+                ffmpegCheckTimer.Stop();
             }
         }
 

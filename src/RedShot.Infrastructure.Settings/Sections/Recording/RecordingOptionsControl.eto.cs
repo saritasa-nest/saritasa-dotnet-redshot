@@ -76,6 +76,7 @@ namespace RedShot.Infrastructure.Settings.Sections.Recording
             }
 
             BindOptions();
+            isRecordingOptionsInitialized = true;
         }
 
         /// <summary>
