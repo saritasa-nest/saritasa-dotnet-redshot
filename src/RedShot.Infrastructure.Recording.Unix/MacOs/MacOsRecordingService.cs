@@ -6,6 +6,7 @@ using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Recording.Common.Recorders;
 using RedShot.Infrastructure.Recording.Common.Devices;
 using RedShot.Infrastructure.Recording.Common.Ffmpeg;
+using RedShot.Infrastructure.Configuration.Models.Recording;
 
 namespace RedShot.Infrastructure.Recording.Unix.MacOs
 {
@@ -26,8 +27,9 @@ namespace RedShot.Infrastructure.Recording.Unix.MacOs
         public override IRecorder GetRecorder()
         {
             ThrowIfNotFoundFfmpegBinary();
-            var configuration = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfigurationOption>();
-            return new MacOsRecorder(configuration, GetFfmpegPath(), RecordingHelper.GetDefaultVideoFolder());
+            var configuration = ConfigurationProvider.Instance.GetConfiguration<RecordingConfiguration>();
+            var options = Mapping.Mapper.Map<RecordingOptions>(configuration);
+            return new MacOsRecorder(options, GetFfmpegPath(), RecordingHelper.GetDefaultVideoFolder());
         }
 
         /// <inheritdoc />

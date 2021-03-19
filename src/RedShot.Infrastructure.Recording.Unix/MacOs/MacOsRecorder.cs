@@ -10,7 +10,7 @@ namespace RedShot.Infrastructure.Recording.Unix.MacOs
         /// <summary>
         /// Initializes Linux recorder.
         /// </summary>
-        public MacOsRecorder(FFmpegConfigurationOption options, string ffmpegPath, string videoFolderPath) : base(options, ffmpegPath, videoFolderPath)
+        public MacOsRecorder(RecordingOptions options, string ffmpegPath, string videoFolderPath) : base(options, ffmpegPath, videoFolderPath)
         {
         }
 

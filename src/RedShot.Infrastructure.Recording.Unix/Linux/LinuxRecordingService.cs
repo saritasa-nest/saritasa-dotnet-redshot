@@ -6,6 +6,7 @@ using RedShot.Infrastructure.Recording.Common.Recorders;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Recording.Common.Devices;
 using RedShot.Infrastructure.Recording.Common.Ffmpeg;
+using RedShot.Infrastructure.Configuration.Models.Recording;
 
 namespace RedShot.Infrastructure.Recording.Unix.Linux
 {
@@ -30,8 +31,9 @@ namespace RedShot.Infrastructure.Recording.Unix.Linux
         public IRecorder GetRecorder()
         {
             ThrowIfNotFoundFfmpegBinary();
-            var configuration = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfigurationOption>();
-            return new LinuxRecorder(configuration, RecordingHelper.GetDefaultVideoFolder());
+            var configuration = ConfigurationProvider.Instance.GetConfiguration<RecordingConfiguration>();
+            var options = Mapping.Mapper.Map<RecordingOptions>(configuration);
+            return new LinuxRecorder(options, RecordingHelper.GetDefaultVideoFolder());
         }
 
         /// <inheritdoc />

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Configuration;
@@ -6,8 +7,6 @@ using RedShot.Infrastructure.Recording.Views;
 using RedShot.Infrastructure.Recording.Common;
 using RedShot.Infrastructure.Configuration.Models.Recording;
 using RedShot.Infrastructure.Common;
-using RedShot.Infrastructure.Recording.Common.Ffmpeg;
-using System.Collections.Generic;
 using RedShot.Infrastructure.Recording.Common.Devices;
 
 namespace RedShot.Infrastructure.Recording
