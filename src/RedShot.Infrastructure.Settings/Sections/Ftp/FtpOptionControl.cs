@@ -148,8 +148,8 @@ namespace RedShot.Infrastructure.Settings.Sections.Ftp
             ftpsEncryption.DataContext = selectedAccount;
             ftpsEncryption.SelectedValueBinding.Convert(l => l != null ? Enum.Parse(typeof(FtpsEncryption), (string)l) : null,
                     v => v?.ToString() ?? FtpsEncryption.Explicit.ToString())
-                .BindDataContext((FtpAccount m) => m.FTPSEncryption);
-            ftpsCertificateLocation.Bind(t => t.Text, selectedAccount, account => account.FTPSCertificateLocation);
+                .BindDataContext((FtpAccount m) => m.FtpsEncryption);
+            ftpsCertificateLocation.Bind(t => t.Text, selectedAccount, account => account.FtpsCertificateLocation);
             keypath.Bind(t => t.Text, selectedAccount, account => account.Keypath);
             passphrase.Bind(t => t.Text, selectedAccount, account => account.Passphrase);
 

@@ -39,8 +39,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
             Port = 21;
             IsActive = false;
             Directory = "";
-            FTPSEncryption = FtpsEncryption.Explicit;
-            FTPSCertificateLocation = "";
+            FtpsEncryption = FtpsEncryption.Explicit;
+            FtpsCertificateLocation = "";
             Id = Guid.NewGuid();
             HttpHomePath = "";
             HttpHomePathAddExtension = false;
@@ -261,7 +261,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
         /// <summary>
         /// FTPS encryption method.
         /// </summary>
-        public FtpsEncryption FTPSEncryption
+        public FtpsEncryption FtpsEncryption
         {
             get { return ftpsEncryption; }
 
@@ -278,7 +278,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
         /// <summary>
         /// FTPS Certificate location.
         /// </summary>
-        public string FTPSCertificateLocation
+        public string FtpsCertificateLocation
         {
             get { return ftpsCertificateLocation; }
 

@@ -63,12 +63,12 @@ namespace RedShot.Infrastructure.Configuration.Models.Account
         /// <summary>
         /// FTPS encryption method.
         /// </summary>
-        public FtpsEncryption FTPSEncryption { get; set; }
+        public FtpsEncryption FtpsEncryption { get; set; }
 
         /// <summary>
         /// FTPS Certificate location.
         /// </summary>
-        public string FTPSCertificateLocation { get; set; }
+        public string FtpsCertificateLocation { get; set; }
 
         /// <summary>
         /// Key path.
