@@ -61,8 +61,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// Upload file stream.
         /// </summary>
         /// <param name="stream">File stream.</param>
-        /// <param name="remotePath">remote path.</param>
-        /// <param name="cancellationToken">cancellation token.</param>
+        /// <param name="remotePath">Remote path.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         protected abstract Task UploadStreamAsync(Stream stream, string remotePath, CancellationToken cancellationToken = default);
 
         /// <summary>
