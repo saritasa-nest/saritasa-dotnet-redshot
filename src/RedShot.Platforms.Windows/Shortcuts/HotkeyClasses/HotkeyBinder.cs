@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace RedShot.Platforms.Windows.Shortcuts.HotkeyClasses

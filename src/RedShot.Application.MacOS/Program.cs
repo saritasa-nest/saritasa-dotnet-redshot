@@ -1,11 +1,4 @@
-﻿using System;
-using System.Reflection;
-using Eto.Forms;
-using Eto.Forms.Controls.SkiaSharp;
-using RedShot.Infrastructure;
-using RedShot.Infrastructure.Configuration;
-
-namespace RedShot.Application.MacOS
+﻿namespace RedShot.Application.MacOS
 {
     /// <summary>
     /// Main class.

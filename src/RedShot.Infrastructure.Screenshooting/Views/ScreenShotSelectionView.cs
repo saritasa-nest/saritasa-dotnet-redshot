@@ -1,6 +1,4 @@
-﻿using System;
-using Eto.Drawing;
-using RedShot.Infrastructure.Common.Forms.SelectionForm;
+﻿using RedShot.Infrastructure.Common.Forms.SelectionForm;
 
 namespace RedShot.Infrastructure.Screenshooting.Views
 {

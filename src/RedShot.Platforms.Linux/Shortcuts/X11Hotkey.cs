@@ -1,5 +1,4 @@
-﻿using Eto.Forms;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
 namespace RedShot.Platforms.Linux.Shortcuts

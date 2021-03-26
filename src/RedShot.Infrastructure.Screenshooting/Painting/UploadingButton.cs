@@ -36,7 +36,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         public UploadingButton()
         {
             var size = new Size(90, 30);
-            primaryAccount = FtpAccountManager.GetPrimaryFtpAccount();
+            primaryAccount = FtpAccountProvider.Instance.GetPrimaryFtpAccount();
 
             var uploadButton = new SegmentedButton
             {
@@ -85,7 +85,7 @@ namespace RedShot.Infrastructure.Screenshooting.Painting
         {
             var menu = new ContextMenu();
 
-            var ftpAccounts = FtpAccountManager.GetFtpAccounts();
+            var ftpAccounts = FtpAccountProvider.Instance.GetFtpAccounts();
 
             foreach (var account in ftpAccounts)
             {

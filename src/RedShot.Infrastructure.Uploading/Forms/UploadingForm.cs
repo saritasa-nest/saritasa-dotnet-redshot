@@ -1,34 +1,34 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Diagnostics;
-using System;
 using System.Collections.Generic;
 using Eto.Drawing;
 using Eto.Forms;
-using RedShot.Infrastructure.Abstractions;
-using RedShot.Infrastructure.Abstractions.Uploading;
+using RedShot.Resources;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
-using RedShot.Resources;
+using RedShot.Infrastructure.Uploading.Abstractions;
+using RedShot.Infrastructure.Uploading.Common;
+using RedShot.Infrastructure.Uploading.Extensions;
 
 namespace RedShot.Infrastructure.Uploading.Forms
 {
     /// <summary>
     /// Uploader choosing form.
     /// </summary>
-    internal class UploaderChoosingForm : Form
+    public class UploadingForm : Form
     {
-        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        private readonly IFile file;
+        private readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
+        private readonly File file;
         private readonly IEnumerable<IUploadingService> uploadingServices;
-        private readonly GlobalProperties globalProperties;
 
         /// <summary>
         /// Initializes uploader choosing form.
         /// </summary>
-        public UploaderChoosingForm(IFile file, IEnumerable<IUploadingService> uploadingServices)
+        public UploadingForm(File file, ICollection<IUploadingService> uploadingServices)
         {
             Title = $"{file.FileType} uploading";
-            globalProperties = new GlobalProperties();
             this.file = file;
             this.uploadingServices = uploadingServices;
             InitializeComponents();
@@ -82,18 +82,29 @@ namespace RedShot.Infrastructure.Uploading.Forms
                 ToolTip = service.About
             };
 
-            button.Clicked += async (o, e) =>
-            {
-                var cancellationToken = globalProperties.ApplicationCancellationToken;
-                await UploadingManager.UploadAsync(service.GetUploader(), file, cancellationToken);
-            };
-
+            button.Clicked += async (o, e) => await UploadAsync(service);
             button.Enabled = service.CheckOnSupporting(file.FileType);
-
             return button;
         }
 
-        private void OpenFile(IFile file)
+        private async Task UploadAsync(IUploadingService uploadingService)
+        {
+            Enabled = false;
+
+            var uploader = uploadingService.GetUploader();
+            var result = await uploader.ExtendedUploadAsync(file);
+
+            if (result.ResultType == UploadResultType.Successful)
+            {
+                Close();
+            }
+            else
+            {
+                Enabled = true;
+            }
+        }
+
+        private void OpenFile(File file)
         {
             if (!string.IsNullOrEmpty(file.FilePath))
             {

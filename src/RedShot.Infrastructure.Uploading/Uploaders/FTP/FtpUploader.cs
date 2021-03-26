@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Security;
@@ -8,21 +7,21 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentFTP;
-using RedShot.Infrastructure.Abstractions;
-using RedShot.Infrastructure.Abstractions.Uploading;
-using RedShot.Infrastructure.Basics;
+using Saritasa.Tools.Domain.Exceptions;
 using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Formatting;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
+using RedShot.Infrastructure.Uploading.Common;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
 {
     /// <summary>
     /// FTP/FTPS uploader.
     /// </summary>
-    internal sealed class FtpUploader : BaseFtpUploader, IDisposable, IAsyncDisposable
+    internal sealed class FtpUploader : FtpUploaderBase, IDisposable, IAsyncDisposable
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        private readonly FtpAccount account;
+
         private FtpClient client;
         private bool disposed;
         private bool isNeedToHandle;
@@ -30,9 +29,8 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// <summary>
         /// Initializes FTP/FTPS uploader.
         /// </summary>
-        public FtpUploader(FtpAccount account)
+        public FtpUploader(FtpAccount ftpAccount) : base(ftpAccount)
         {
-            this.account = account;
             isNeedToHandle = true;
             InitializeFtpClient();
         }
@@ -41,12 +39,12 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         {
             client = new FtpClient()
             {
-                Host = account.Host,
-                Port = account.Port,
-                Credentials = new NetworkCredential(account.Username, account.Password)
+                Host = ftpAccount.Host,
+                Port = ftpAccount.Port,
+                Credentials = new NetworkCredential(ftpAccount.Username, ftpAccount.Password)
             };
 
-            if (account.IsActive)
+            if (ftpAccount.IsActive)
             {
                 client.DataConnectionType = FtpDataConnectionType.AutoActive;
             }
@@ -55,12 +53,12 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
                 client.DataConnectionType = FtpDataConnectionType.AutoPassive;
             }
 
-            if (account.Protocol != FtpProtocol.FTPS)
+            if (ftpAccount.Protocol != FtpProtocol.FTPS)
             {
                 return;
             }
 
-            switch (account.FTPSEncryption)
+            switch (ftpAccount.FTPSEncryption)
             {
                 case FtpsEncryption.Implicit:
                     client.EncryptionMode = FtpEncryptionMode.Implicit;
@@ -73,9 +71,9 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             client.SslProtocols = SslProtocols.Tls | SslProtocols.Tls11 | SslProtocols.Tls12 | SslProtocols.Tls13;
             client.DataConnectionEncryption = true;
 
-            if (!string.IsNullOrEmpty(account.FTPSCertificateLocation) && System.IO.File.Exists(account.FTPSCertificateLocation))
+            if (!string.IsNullOrEmpty(ftpAccount.FTPSCertificateLocation) && System.IO.File.Exists(ftpAccount.FTPSCertificateLocation))
             {
-                var cert = X509Certificate.CreateFromSignedFile(account.FTPSCertificateLocation);
+                var cert = X509Certificate.CreateFromSignedFile(ftpAccount.FTPSCertificateLocation);
                 client.ClientCertificates.Add(cert);
             }
             else
@@ -90,23 +88,12 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             }
         }
 
-        /// <inheritdoc />
-        public override async Task<IUploadingResponse> UploadAsync(IFile file, CancellationToken cancellationToken)
+        /// <inheritdoc/>
+        protected override async Task UploadStreamAsync(Stream fileStream, string remotePath, CancellationToken cancellationToken = default)
         {
-            var subFolderPath = account.Directory;
-            var fullFileName = FtpHelper.GetFullFileName(file);
-            var path = UrlHelper.CombineUrl(subFolderPath, fullFileName);
-
-            IsUploading = true;
-            Stream fileStream = null;
-
             try
             {
-                fileStream = file.GetStream();
-                if (await UploadDataAsync(fileStream, path, cancellationToken))
-                {
-                    return await base.UploadAsync(file, cancellationToken);
-                }
+                await UploadDataAsync(fileStream, remotePath, cancellationToken);
             }
             catch (FtpCommandException e) when (isNeedToHandle)
             {
@@ -114,20 +101,10 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
                 if (e.CompletionCode == "550" || e.CompletionCode == "553")
                 {
                     isNeedToHandle = false;
-                    await CreateMultiDirectoryAsync(UrlHelper.GetDirectoryPath(path), cancellationToken);
-                    return await UploadAsync(file, cancellationToken);
+                    await CreateMultiDirectoryAsync(UrlHelper.GetDirectoryPath(remotePath), cancellationToken);
+                    await UploadStreamAsync(fileStream, remotePath);
                 }
             }
-            finally
-            {
-                if (fileStream != null)
-                {
-                    await fileStream.DisposeAsync();
-                }
-            }
-
-            IsUploading = false;
-            return new BaseUploadingResponse(false);
         }
 
         /// <summary>
@@ -154,10 +131,14 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             }
         }
 
-        private async Task<bool> UploadDataAsync(Stream stream, string remotePath, CancellationToken cancellationToken)
+        private async Task UploadDataAsync(Stream stream, string remotePath, CancellationToken cancellationToken)
         {
             var result = await client.UploadAsync(stream, remotePath, FtpRemoteExists.Overwrite, true, null, cancellationToken);
-            return result.IsSuccess();
+
+            if (!result.IsSuccess())
+            {
+                throw new DomainException("The FTP upload operation was failed");
+            }
         }
 
         /// <summary>
@@ -191,7 +172,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             foreach (string directory in paths)
             {
                 await CreateDirectoryAsync(directory, cancellationToken);
-                logger.Info("Directory {directory} was created on server {server}", directory, account.Host);
+                logger.Info("Directory {directory} was created on server {server}", directory, ftpAccount.Host);
             }
         }
 

@@ -4,10 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
-using RedShot.Infrastructure.Abstractions;
-using RedShot.Infrastructure.Abstractions.Uploading;
-using RedShot.Infrastructure.Basics;
 using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Common.Notifying;
+using RedShot.Infrastructure.Formatting;
+using RedShot.Infrastructure.Uploading.Abstractions;
+using RedShot.Infrastructure.Uploading.Common;
 
 namespace RedShot.Infrastructure.Uploaders.File
 {
@@ -16,33 +17,42 @@ namespace RedShot.Infrastructure.Uploaders.File
     /// </summary>
     internal sealed class FileUploader : IUploader
     {
-        /// <inheritdoc/>
-        public event EventHandler<UploadingFinishedEventArgs> UploadingFinished;
-
         /// <inheritdoc />
-        public async Task<IUploadingResponse> UploadAsync(IFile file, CancellationToken cancellationToken)
+        public async Task<UploadResult> UploadAsync(Uploading.Common.File file, CancellationToken cancellationToken)
         {
+            UploadResult result;
+
             if (file.FileType == FileType.Image)
             {
-                return await UploadImageAsync(file, cancellationToken);
+                result = await UploadImageAsync(file, cancellationToken);
             }
             else
             {
-                return await UploadVideoAsync(file, cancellationToken);
+                result = await UploadVideoAsync(file, cancellationToken);
             }
+
+            if (result.ResultType == UploadResultType.Successful)
+            {
+                NotifyHelper.Notify($"The file has been saved.", "RedShot", NotifyStatus.Success);
+            }
+
+            return result;
         }
 
-        private async Task<IUploadingResponse> UploadImageAsync(IFile file, CancellationToken cancellationToken)
+        private async Task<UploadResult> UploadImageAsync(Uploading.Common.File file, CancellationToken cancellationToken)
         {
             using var dialog = new SaveFileDialog();
             dialog.Title = "RedShot";
-            dialog.FileName = $"{file.FileName}";
-            dialog.Filters.Add(new FileFilter("Png format", ".png"));
-            dialog.Filters.Add(new FileFilter("Jpeg format", ".jpeg"));
+
+            var fileName = FormatManager.GetFormattedName();
+
+            dialog.FileName = fileName;
+            dialog.Filters.Add(new FileFilter("PNG Image", ".png"));
+            dialog.Filters.Add(new FileFilter("JPEG Image", ".jpeg"));
 
             if (dialog.ShowDialog(new Form()) == DialogResult.Ok)
             {
-                var image = file.GetFilePreview();
+                using var image = new Bitmap(file.FilePath);
 
                 switch (dialog.CurrentFilterIndex)
                 {
@@ -53,33 +63,36 @@ namespace RedShot.Infrastructure.Uploaders.File
                         await image.SaveAsync(dialog.FileName, ImageFormat.Png, cancellationToken);
                         break;
                     default:
-                        var fileName = Path.Combine(dialog.Directory.ToString(), $"{file.FileName}.png");
-                        await image.SaveAsync(fileName, ImageFormat.Png, cancellationToken);
+                        var filePath = Path.Combine(dialog.Directory.ToString(), $"{fileName}.png");
+                        await image.SaveAsync(filePath, ImageFormat.Png, cancellationToken);
                         break;
                 }
-
-                UploadingFinished?.Invoke(this, UploadingFinishedEventArgs.CreateNew(file));
+                return UploadResult.Successful;
             }
-
-            return new BaseUploadingResponse(true);
+            else
+            {
+                return UploadResult.Canceled;
+            }
         }
 
-        private async Task<IUploadingResponse> UploadVideoAsync(IFile file, CancellationToken cancellationToken)
+        private async Task<UploadResult> UploadVideoAsync(Uploading.Common.File file, CancellationToken cancellationToken)
         {
             using var dialog = new SaveFileDialog();
             dialog.Title = "RedShot";
-            var extension = Path.GetExtension(file.FilePath);
-            dialog.FileName = $"{file.FileName}{extension}";
-            dialog.Filters.Add(new FileFilter("Video format", $"{extension}"));
+            var fileInfo = new FileInfo(file.FilePath);
+
+            dialog.FileName = FormatManager.GetFormattedName();
+            dialog.Filters.Add(new FileFilter("Video format", $"{fileInfo.Extension}"));
 
             if (dialog.ShowDialog(new Form()) == DialogResult.Ok)
             {
                 await CopyFileAsync(file.FilePath, dialog.FileName, cancellationToken);
-
-                UploadingFinished?.Invoke(this, UploadingFinishedEventArgs.CreateNew(file));
+                return UploadResult.Successful;
             }
-
-            return new BaseUploadingResponse(true);
+            else
+            {
+                return UploadResult.Canceled;
+            }
         }
 
         private static async Task CopyFileAsync(string sourceFile, string destinationFile, CancellationToken cancellationToken)

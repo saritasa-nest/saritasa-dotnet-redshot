@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Eto.Forms;
 using RedShot.Infrastructure.Configuration;
@@ -11,29 +10,28 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
     /// <summary>
     /// FTP accounts manager.
     /// </summary>
-    public static class FtpAccountManager
+    public class FtpAccountProvider
     {
+        /// <summary>
+        /// Instance of FTP account provider.
+        /// </summary>
+        public static FtpAccountProvider Instance { get; } = new FtpAccountProvider();
+
         /// <summary>
         /// Get primary account.
         /// </summary>
-        public static FtpAccount GetPrimaryFtpAccount()
+        public FtpAccount GetPrimaryFtpAccount()
         {
             var config = GetConfiguration();
+            var account = GetFtpAccounts().FirstOrDefault(a => a.Id == config.PrimaryAccountGuid);
 
-            if (config.PrimaryAccountGuid != default && TryGetAccountByGuid(config.PrimaryAccountGuid, config.FtpAccounts, out var ftpAccount))
-            {
-                return ftpAccount;
-            }
-            else
-            {
-                return null;
-            }
+            return account;
         }
 
         /// <summary>
         /// Get FTP accounts.
         /// </summary>
-        public static IEnumerable<FtpAccount> GetFtpAccounts()
+        public IEnumerable<FtpAccount> GetFtpAccounts()
         {
             var config = GetConfiguration();
             return config.FtpAccounts;
@@ -42,7 +40,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// <summary>
         /// Get FTP account manually.
         /// </summary>
-        public static FtpAccount GetFtpAccountManually()
+        public FtpAccount GetFtpAccountManually()
         {
             using (var form = new FtpAccountSelectionForm())
             {
@@ -55,21 +53,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             return null;
         }
 
-        internal static bool TryGetAccountByGuid(Guid guid, IEnumerable<FtpAccount> ftpAccounts, out FtpAccount ftpAccount)
-        {
-            if (ftpAccounts.Any(a => a.Id == guid))
-            {
-                ftpAccount = ftpAccounts.Single(a => a.Id == guid);
-                return true;
-            }
-            else
-            {
-                ftpAccount = null;
-                return false;
-            }
-        }
-
-        private static FtpConfiguration GetConfiguration()
+        private FtpConfiguration GetConfiguration()
         {
             return UserConfiguration.Instance.GetOptionOrDefault<FtpConfiguration>();
         }

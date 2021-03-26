@@ -27,7 +27,6 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\RedShot.Infrastructure.Common\RedShot.Infrastructure.Common.csproj" />
-	  <ProjectReference Include="..\RedShot.Infrastructure.Formatting\RedShot.Infrastructure.Formatting.csproj" />
 	  <ProjectReference Include="..\RedShot.Infrastructure.Uploading\RedShot.Infrastructure.Uploading.csproj" />
 	</ItemGroup>
 
