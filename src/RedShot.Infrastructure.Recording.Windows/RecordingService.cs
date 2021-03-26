@@ -7,6 +7,7 @@ using RedShot.Infrastructure.Recording.Common.Recorders;
 using RedShot.Infrastructure.Recording.Common;
 using RedShot.Infrastructure.Recording.Common.Ffmpeg;
 using RedShot.Infrastructure.Recording.Common.Devices;
+using RedShot.Infrastructure.Configuration.Models.Recording;
 
 namespace RedShot.Infrastructure.Recording
 {
@@ -25,8 +26,9 @@ namespace RedShot.Infrastructure.Recording
         public override IRecorder GetRecorder()
         {
             ThrowIfNotFoundFfmpegBinary();
-            var options = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfiguration>();
-            return new Recorder(options, GetFfmpegPath(), RecordingHelper.GetDefaultVideoFolder());
+            var configuration = ConfigurationProvider.Instance.GetConfiguration<RecordingConfiguration>();
+            var recordingOptions = Mapping.Mapper.Map<RecordingOptions>(configuration);
+            return new Recorder(recordingOptions, GetFfmpegPath(), RecordingHelper.GetDefaultVideoFolder());
         }
 
         /// <inheritdoc />

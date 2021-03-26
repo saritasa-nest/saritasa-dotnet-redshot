@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using RedShot.Infrastructure.Configuration;
+using RedShot.Infrastructure.Configuration.Models.Shortcut;
 using RedShot.Shortcut.Mapping;
-using RedShot.Shortcut.Shortcuts;
+using RedShot.Shortcut.Units;
 
 namespace RedShot.Shortcut
 {
@@ -18,7 +19,7 @@ namespace RedShot.Shortcut
         /// <summary>
         /// Get default shortcuts.
         /// </summary>
-        private IReadOnlyCollection<Shortcuts.Shortcut> Shortcuts => new List<Shortcuts.Shortcut>
+        private IReadOnlyCollection<BaseShortcut> Shortcuts => new List<BaseShortcut>
         {
             new RecordShortcut(),
             new ScreenShotShortcut()
@@ -47,10 +48,10 @@ namespace RedShot.Shortcut
         /// <summary>
         /// Get shortcuts from configuration.
         /// </summary>
-        public IEnumerable<Shortcuts.Shortcut> GetShortcutsFromConfig()
+        public IEnumerable<BaseShortcut> GetShortcutsFromConfig()
         {
-            var configOption = UserConfiguration.Instance.GetOptionOrDefault<ShortcutConfiguration>();
-            var mappedShortcuts = Shortcuts.MapShortcutsWithHotkeys(configOption.ShortcutMaps);
+            var configuration = ConfigurationProvider.Instance.GetConfiguration<ShortcutConfiguration>();
+            var mappedShortcuts = Shortcuts.MapShortcutsWithHotkeys(configuration.Shortcuts);
 
             return mappedShortcuts;
         }

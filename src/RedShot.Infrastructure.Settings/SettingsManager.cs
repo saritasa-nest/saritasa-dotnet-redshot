@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RedShot.Infrastructure.Settings.Sections;
-using RedShot.Infrastructure.Settings.Views;
+﻿using RedShot.Infrastructure.Settings.Views;
 
 namespace RedShot.Infrastructure.Settings
 {
@@ -12,20 +8,6 @@ namespace RedShot.Infrastructure.Settings
     public static class SettingsManager
     {
         private static SettingsView settingsView;
-
-        /// <summary>
-        /// Settings options.
-        /// Must implement ISettingsOption interface.
-        /// </summary>
-        internal static IEnumerable<Type> SettingsSections { get; private set; }
-
-        /// <summary>
-        /// Initialize.
-        /// </summary>
-        public static void Initialize(IEnumerable<Type> settingsSections)
-        {
-            SettingsSections = settingsSections;
-        }
 
         /// <summary>
         /// Open settings of the application.
@@ -40,16 +22,9 @@ namespace RedShot.Infrastructure.Settings
             {
                 settingsView?.Close();
 
-                settingsView = new SettingsView(ActivateSections());
+                settingsView = new SettingsView();
                 settingsView.Show();
             }
-        }
-
-        private static IEnumerable<ISettingsSection> ActivateSections()
-        {
-            return SettingsSections
-                .Where(type => typeof(ISettingsSection).IsAssignableFrom(type) && !type.IsInterface)
-                .Select(s => (ISettingsSection)Activator.CreateInstance(s)).ToList();
         }
     }
 }

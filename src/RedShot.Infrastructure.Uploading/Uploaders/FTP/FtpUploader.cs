@@ -58,7 +58,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
                 return;
             }
 
-            switch (ftpAccount.FTPSEncryption)
+            switch (ftpAccount.FtpsEncryption)
             {
                 case FtpsEncryption.Implicit:
                     client.EncryptionMode = FtpEncryptionMode.Implicit;
@@ -71,9 +71,9 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             client.SslProtocols = SslProtocols.Tls | SslProtocols.Tls11 | SslProtocols.Tls12 | SslProtocols.Tls13;
             client.DataConnectionEncryption = true;
 
-            if (!string.IsNullOrEmpty(ftpAccount.FTPSCertificateLocation) && System.IO.File.Exists(ftpAccount.FTPSCertificateLocation))
+            if (!string.IsNullOrEmpty(ftpAccount.FtpsCertificateLocation) && System.IO.File.Exists(ftpAccount.FtpsCertificateLocation))
             {
-                var cert = X509Certificate.CreateFromSignedFile(ftpAccount.FTPSCertificateLocation);
+                var cert = X509Certificate.CreateFromSignedFile(ftpAccount.FtpsCertificateLocation);
                 client.ClientCertificates.Add(cert);
             }
             else

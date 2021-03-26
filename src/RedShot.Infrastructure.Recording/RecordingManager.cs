@@ -1,10 +1,13 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
 using RedShot.Infrastructure.Configuration;
 using RedShot.Infrastructure.Recording.Views;
 using RedShot.Infrastructure.Recording.Common;
-using RedShot.Infrastructure.Recording.Common.Ffmpeg;
+using RedShot.Infrastructure.Configuration.Models.Recording;
+using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Recording.Common.Devices;
 
 namespace RedShot.Infrastructure.Recording
 {
@@ -101,25 +104,29 @@ namespace RedShot.Infrastructure.Recording
         /// </summary>
         private void ConfigureDevices()
         {
-            var configuration = UserConfiguration.Instance.GetOptionOrDefault<FFmpegConfiguration>();
-            var options = configuration.FFmpegOptions;
+            var configuration = ConfigurationProvider.Instance.GetConfiguration<RecordingConfiguration>();
 
             var recordingDevices = RecordingService.GetRecordingDevices();
 
-            var usingDevices = configuration.AudioOptions.Devices.ToList();
-            configuration.AudioOptions.Devices.Clear();
-            configuration.AudioOptions.Devices.UnionWith(usingDevices.Intersect(recordingDevices.AudioDevices));
+            var audioDevicesData = configuration.AudioData.Devices;
+            var audioDevices = Mapping.Mapper.Map<IEnumerable<Device>>(audioDevicesData);
 
-            if (options.VideoDevice != null)
+            audioDevices = audioDevices.Intersect(recordingDevices.AudioDevices);
+
+            configuration.AudioData.Devices = Mapping.Mapper.Map<IList<DeviceData>>(audioDevices);
+
+            if (configuration.FFmpegData.VideoDevice != null)
             {
-                if (recordingDevices.VideoDevices.All(d => d.Name != options.VideoDevice.Name))
+                var videoDeviceData = configuration.FFmpegData.VideoDevice;
+                var videoDevice = Mapping.Mapper.Map<Device>(videoDeviceData);
+
+                if (recordingDevices.VideoDevices.All(d => d.Name != videoDevice.Name))
                 {
-                    options.VideoDevice = null;
+                    configuration.FFmpegData.VideoDevice = null;
                 }
             }
 
-            UserConfiguration.Instance.SetOption(configuration);
-            UserConfiguration.Instance.Save();
+            ConfigurationProvider.Instance.SetConfiguration(configuration);
         }
     }
 }

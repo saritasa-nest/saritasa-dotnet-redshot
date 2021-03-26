@@ -12,6 +12,9 @@ using RedShot.Infrastructure.Configuration.Models;
 using RedShot.Infrastructure.Settings;
 using RedShot.Infrastructure.Formatting;
 using RedShot.Resources;
+using AutoMapper;
+using RedShot.Infrastructure.Configuration.Models.General;
+using RedShot.Infrastructure.Common;
 #if _WINDOWS
 using Eto.WinForms.Forms;
 #elif _UNIX
@@ -73,17 +76,25 @@ namespace RedShot.Application
 
         private static void ConfigureApplication(IConfiguration configuration)
         {
-            var applicationTypes = new ApplicationTypes();
             AppSettings.Instance = configuration.GetSection("AppSettings").Get<AppSettings>();
-            SettingsManager.Initialize(applicationTypes.SettingsOptionsTypes);
+
+            var mappingConfiguration = new MapperConfiguration(config =>
+            {
+                config.AddProfile<Infrastructure.Uploading.MappingProfile>();
+                config.AddProfile<Infrastructure.Formatting.MappingProfile>();
+                config.AddProfile<Infrastructure.Recording.Common.MappingProfile>();
+            });
+            mappingConfiguration.CompileMappings();
+            Mapping.Mapper = mappingConfiguration.CreateMapper();
 
             ConfigureAutostart();
         }
 
         private static void ConfigureAutostart()
         {
-            var general = UserConfiguration.Instance.GetOptionOrDefault<GeneralConfigurationOption>();
-            if (general.LaunchAtSystemStart)
+            var generalConfigurationModel = Infrastructure.Configuration.ConfigurationProvider.Instance.GetConfiguration<GeneralConfiguration>();
+            var generalConfiguration = Mapping.Mapper.Map<GeneralOptions>(generalConfigurationModel);
+            if (generalConfiguration.LaunchAtSystemStart)
             {
                 var autostart = new Autostart();
                 autostart.EnableAutostart();
@@ -98,7 +109,7 @@ namespace RedShot.Application
         private static void CurrentDomainProcessExit(object sender, EventArgs e)
         {
             Shortcut.ShortcutManager.Instance.UnbindShortcuts();
-            UserConfiguration.Instance.Save();
+            Infrastructure.Configuration.ConfigurationProvider.Instance.Save();
         }
 
         private static void AddAreaControl()

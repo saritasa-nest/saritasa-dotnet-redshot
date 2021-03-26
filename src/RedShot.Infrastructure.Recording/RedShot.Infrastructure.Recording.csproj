@@ -35,9 +35,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Update="Settings\RecordingOptionControl.eto.cs">
-      <DependentUpon>RecordingOptionControl.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>

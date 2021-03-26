@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Eto.Forms;
+using RedShot.Shortcut.Units;
 
 namespace RedShot.Shortcut
 {
@@ -11,7 +12,7 @@ namespace RedShot.Shortcut
         /// <summary>
         /// Bind shortcut list.
         /// </summary>
-        internal static void BindShortcutsList(IEnumerable<Shortcuts.Shortcut> shortcuts)
+        internal static void BindShortcutsList(IEnumerable<BaseShortcut> shortcuts)
         {
             foreach (var shortcut in shortcuts)
             {
@@ -29,7 +30,7 @@ namespace RedShot.Shortcut
         /// <summary>
         /// Unbind shortcut list.
         /// </summary>
-        internal static void UnbindShortcutsList(IEnumerable<Shortcuts.Shortcut> shortcuts)
+        internal static void UnbindShortcutsList(IEnumerable<BaseShortcut> shortcuts)
         {
             foreach (var shortcut in shortcuts)
             {

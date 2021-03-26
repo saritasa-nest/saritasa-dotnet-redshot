@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Eto.Drawing;
 using RedShot.Resources;
+using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Uploading.Abstractions;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 using RedShot.Infrastructure.Uploading.Common;

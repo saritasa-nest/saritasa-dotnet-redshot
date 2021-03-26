@@ -52,11 +52,11 @@ namespace RedShot.Infrastructure.Recording.Common.Recorders
         /// <summary>
         /// Initialize.
         /// </summary>
-        public BaseRecorder(FFmpegConfiguration configuration, string ffmpegPath, string videoFolderPath)
+        public BaseRecorder(RecordingOptions recordingOptions, string ffmpegPath, string videoFolderPath)
         {
             this.videoFolderPath = videoFolderPath;
-            ffmpegOptions = configuration.FFmpegOptions;
-            audioOptions = configuration.AudioOptions;
+            ffmpegOptions = recordingOptions.FFmpegOptions;
+            audioOptions = recordingOptions.AudioOptions;
             cliManager = new FFmpegCliManager(ffmpegPath);
         }
 

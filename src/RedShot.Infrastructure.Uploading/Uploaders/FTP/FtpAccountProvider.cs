@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Eto.Forms;
+using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Configuration;
+using RedShot.Infrastructure.Configuration.Models.Account;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Forms;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 
@@ -31,6 +33,7 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
         /// <summary>
         /// Get FTP accounts.
         /// </summary>
+
         public IEnumerable<FtpAccount> GetFtpAccounts()
         {
             var config = GetConfiguration();
@@ -53,9 +56,10 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp
             return null;
         }
 
-        private FtpConfiguration GetConfiguration()
+        private FtpOptions GetConfiguration()
         {
-            return UserConfiguration.Instance.GetOptionOrDefault<FtpConfiguration>();
+            var accountConfig = ConfigurationProvider.Instance.GetConfiguration<AccountConfiguration>();
+            return Mapping.Mapper.Map<FtpOptions>(accountConfig);
         }
     }
 }

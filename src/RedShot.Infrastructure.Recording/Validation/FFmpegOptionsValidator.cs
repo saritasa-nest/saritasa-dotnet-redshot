@@ -1,7 +1,7 @@
 ﻿using Saritasa.Tools.Common.Utils;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Recording.Common.Ffmpeg;
-using RedShot.Infrastructure.Recording.Common.Ffmpeg.Encoding;
+using RedShot.Infrastructure.Common.Recording.Encoding;
 
 namespace RedShot.Infrastructure.Recording.Validation
 {
@@ -34,12 +34,12 @@ namespace RedShot.Infrastructure.Recording.Validation
                     break;
             }
 
-            return new ValidationResult(true);
+            return ValidationResult.Success;
         }
 
         private static ValidationResult GetIncompatibleCodecResult(FFmpegOptions options)
         {
-            return new ValidationResult(false, GetIncompatibleCodecMessage(options));
+            return new ValidationResult(GetIncompatibleCodecMessage(options));
         }
 
         private static string GetIncompatibleCodecMessage(FFmpegOptions options)
