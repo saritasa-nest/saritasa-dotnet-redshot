@@ -18,7 +18,7 @@ namespace RedShot.Infrastructure.Configuration.Models.Account
             Port = 21;
             FtpsEncryption = FtpsEncryption.Explicit;
             Id = Guid.NewGuid();
-            HttpHomePathAddExtension = false;
+            HttpHomePathAddExtension = true;
         }
 
         /// <summary>

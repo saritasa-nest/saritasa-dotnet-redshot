@@ -6,6 +6,7 @@ using Eto.Forms;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Common.Notifying;
+using RedShot.Infrastructure.Configuration.Models.Account;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp;
 using RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models;
 
@@ -252,10 +253,9 @@ namespace RedShot.Infrastructure.Settings.Sections.Ftp
             }
             else
             {
-                newAccount = new FtpAccount
-                {
-                    HttpHomePathAddExtension = true
-                };
+                // To get default values from account data model.
+                var accountModel = new AccountData();
+                newAccount = Mapping.Mapper.Map<FtpAccount>(accountModel);
             }
 
             if (ftpAccounts.Count == 0)
