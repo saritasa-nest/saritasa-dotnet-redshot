@@ -6,6 +6,15 @@
     public class GeneralConfiguration
     {
         /// <summary>
+        /// Constructor.
+        /// </summary>
+        public GeneralConfiguration()
+        {
+            Pattern = "%date%rnd";
+            LaunchAtSystemStart = true;
+        }
+
+        /// <summary>
         /// Pattern for formatting.
         /// </summary>
         public string Pattern { get; set; }

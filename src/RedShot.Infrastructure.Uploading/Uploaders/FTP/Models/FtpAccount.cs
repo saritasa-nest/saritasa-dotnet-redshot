@@ -1,10 +1,9 @@
-﻿using RedShot.Infrastructure.Common;
-using Saritasa.Tools.Common.Utils;
-using System;
-using System.ComponentModel;
+﻿using System;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Text;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using RedShot.Infrastructure.Common;
 
 namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
 {
@@ -13,7 +12,6 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
     /// </summary>
     public class FtpAccount : INotifyPropertyChanged, ICloneable
     {
-        private string name;
         private FtpProtocol protocol;
         private string host;
         private int port;
@@ -27,25 +25,11 @@ namespace RedShot.Infrastructure.Uploading.Uploaders.Ftp.Models
         private string passphrase;
         private string httpHomePath;
         private bool httpHomePathAddExtension;
-        private BrowserProtocol browserProtocol;
 
         /// <summary>
-        /// Inits base values.
+        /// Get format link.
         /// </summary>
-        public FtpAccount()
-        {
-            Protocol = FtpProtocol.FTP;
-            Host = "";
-            Port = 21;
-            IsActive = false;
-            Directory = "";
-            FtpsEncryption = FtpsEncryption.Explicit;
-            FtpsCertificateLocation = "";
-            Id = Guid.NewGuid();
-            HttpHomePath = "";
-            HttpHomePathAddExtension = false;
-        }
-
+        /// <param name="fileName">File name.</param>
         public string GetFormatLink(string fileName)
         {
             if (string.IsNullOrEmpty(HttpHomePath))

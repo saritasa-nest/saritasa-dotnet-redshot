@@ -1,6 +1,6 @@
-﻿using RedShot.Infrastructure.Common;
+﻿using System;
+using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Common.Encryption;
-using System;
 
 namespace RedShot.Infrastructure.Configuration.Models.Account
 {
@@ -9,6 +9,18 @@ namespace RedShot.Infrastructure.Configuration.Models.Account
     /// </summary>
     public class AccountData
     {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public AccountData()
+        {
+            Protocol = FtpProtocol.FTP;
+            Port = 21;
+            FtpsEncryption = FtpsEncryption.Explicit;
+            Id = Guid.NewGuid();
+            HttpHomePathAddExtension = false;
+        }
+
         /// <summary>
         /// HTTP home path no extension.
         /// </summary>

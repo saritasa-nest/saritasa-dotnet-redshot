@@ -18,6 +18,7 @@ namespace RedShot.Infrastructure.Uploading
             CreateMap<AccountConfiguration, FtpOptions>()
                 .ForMember(target => target.FtpAccounts, config => config.MapFrom(source => source.Accounts))
                 .ReverseMap();
+
             CreateMap<AccountData, FtpAccount>()
                 .ReverseMap();
         }

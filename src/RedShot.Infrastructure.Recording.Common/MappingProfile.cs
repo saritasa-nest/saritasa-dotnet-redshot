@@ -17,18 +17,12 @@ namespace RedShot.Infrastructure.Recording.Common
         {
             CreateMap<DeviceData, Device>().ReverseMap();
             CreateMap<AudioData, AudioOptions>().ReverseMap();
-            CreateMap<FFmpegData, FFmpegOptions>()
-                        .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != default));
-            CreateMap<FFmpegOptions, FFmpegData>();
+            CreateMap<FFmpegData, FFmpegOptions>().ReverseMap();
 
             CreateMap<RecordingConfiguration, RecordingOptions>()
                         .ForMember(c => c.AudioOptions, opt => opt.MapFrom(o => o.AudioData))
                         .ForMember(c => c.FFmpegOptions, opt => opt.MapFrom(o => o.FFmpegData))
-                        .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != default));
-
-            CreateMap<RecordingOptions, RecordingConfiguration>()
-                        .ForMember(c => c.AudioData, opt => opt.MapFrom(o => o.AudioOptions))
-                        .ForMember(c => c.FFmpegData, opt => opt.MapFrom(o => o.FFmpegOptions));
+                        .ReverseMap();
         }
     }
 }
