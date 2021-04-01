@@ -27,6 +27,11 @@
         }
 
         /// <summary>
+        /// Git hub repository details.
+        /// </summary>
+        public GithubRepositoryDetails GithubRepositoryDetails { get; set; }
+
+        /// <summary>
         /// RedShot email address.
         /// </summary>
         public string Email { get; set; }

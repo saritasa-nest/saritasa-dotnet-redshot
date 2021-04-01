@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Eto.Drawing;
 using Eto.Forms;
@@ -19,11 +20,28 @@ namespace RedShot.Infrastructure.Common.Notifying
         /// </summary>
         public static void Notify(string message, string title, NotifyStatus status = NotifyStatus.Success)
         {
+            Notify(message, title, null, status);
+        }
+
+        public static void Notify(string message, string title, Action onUserClick, NotifyStatus status = NotifyStatus.Success)
+        {
             var notifyer = new Notification()
             {
                 Message = message,
-                Title = title
+                Title = title,
+                ID = Guid.NewGuid().ToString()
             };
+
+            if (onUserClick != null)
+            {
+                Application.Instance.NotificationActivated += (o, e) =>
+                {
+                    if (e.ID == notifyer.ID)
+                    {
+                        onUserClick();
+                    }
+                };
+            }
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -36,6 +54,11 @@ namespace RedShot.Infrastructure.Common.Notifying
             }
 
             notifyer.Show(tray);
+        }
+
+        private static void Notifyer_Activated(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private static TrayIndicator GetTrayIndicator()
