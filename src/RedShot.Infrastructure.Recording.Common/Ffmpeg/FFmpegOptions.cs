@@ -29,28 +29,6 @@ namespace RedShot.Infrastructure.Recording.Common.Ffmpeg
         private bool useGdigrab;
 
         /// <summary>
-        /// Constructor.
-        /// </summary>
-        public FFmpegOptions()
-        {
-            Fps = 30;
-            DrawCursor = true;
-            VideoCodec = FFmpegVideoCodec.Libx264;
-            AudioCodec = FFmpegAudioCodec.Libvoaacenc;
-            X264Preset = FFmpegX264Preset.Faster;
-            X264Crf = 23;
-            Vp9Crf = 35;
-            XviDQscale = 10;
-            Vp9Bitrate = 3000;
-            AacQScale = 3;
-            OpusBitrate = 128;
-            VorbisQscale = 3;
-            MP3Qscale = 4;
-            UserArgs = string.Empty;
-            UseGdigrab = true;
-        }
-
-        /// <summary>
         /// FPS.
         /// </summary>
         public int Fps

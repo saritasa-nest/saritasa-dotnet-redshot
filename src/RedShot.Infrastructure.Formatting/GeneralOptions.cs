@@ -11,18 +11,6 @@ namespace RedShot.Infrastructure.Formatting
         private string pattern;
         private bool launchAtSystemStart;
 
-        /// <inheritdoc/>
-        public string UniqueName => "GeneralConfiguration";
-
-        /// <summary>
-        /// Initializes <see cref="GeneralOptions"/> object.
-        /// </summary>
-        public GeneralOptions()
-        {
-            pattern = "%date%rnd";
-            launchAtSystemStart = true;
-        }
-
         /// <summary>
         /// Pattern for formatting.
         /// </summary>
@@ -51,12 +39,6 @@ namespace RedShot.Infrastructure.Formatting
                 launchAtSystemStart = value;
                 OnPropertyChanged();
             }
-        }
-
-        /// <inheritdoc />
-        public object Clone()
-        {
-            return MemberwiseClone();
         }
 
         /// <summary>

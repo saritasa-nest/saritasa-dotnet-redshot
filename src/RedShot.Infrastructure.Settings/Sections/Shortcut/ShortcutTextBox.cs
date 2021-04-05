@@ -52,6 +52,7 @@ namespace RedShot.Infrastructure.Settings.Sections.Shortcut
         {
             Keys = Keys.None;
             Text = "None";
+            KeysChanged?.Invoke(this, new ShortcutKeysChangedEventArgs(Keys));
         }
 
         /// <inheritdoc/>

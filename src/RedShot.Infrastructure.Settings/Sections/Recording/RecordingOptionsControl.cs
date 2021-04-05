@@ -6,6 +6,8 @@ using RedShot.Infrastructure.Recording.Common.Ffmpeg;
 using RedShot.Infrastructure.Common.Recording.Encoding;
 using RedShot.Infrastructure.Settings.Sections.Recording.CodecsOptions.AudioOptions;
 using RedShot.Infrastructure.Settings.Sections.Recording.CodecsOptions.VideoOptions;
+using RedShot.Infrastructure.Configuration.Models.Recording;
+using RedShot.Infrastructure.Common;
 
 namespace RedShot.Infrastructure.Settings.Sections.Recording
 {
@@ -103,7 +105,10 @@ namespace RedShot.Infrastructure.Settings.Sections.Recording
         private void SetDefaultButtonClicked(object sender, EventArgs e)
         {
             Content.Unbind();
-            recordingOptions.FFmpegOptions = new FFmpegOptions();
+            // To get default values from FFmpeg data model.
+            var ffmpegModel = new FFmpegData();
+            var ffmpegOptions = Mapping.Mapper.Map<FFmpegOptions>(ffmpegModel);
+            recordingOptions.FFmpegOptions = ffmpegOptions;
             BindOptions();
         }
 
