@@ -11,10 +11,6 @@ namespace RedShot.Infrastructure
     /// <inheritdoc cref="IApplicationUpdateService"/>
     public sealed class ApplicationUpdateService : IApplicationUpdateService, IDisposable
     {
-#pragma warning disable SA1313 // Parameter names should begin with lower-case letter
-        private record VersionDetails(Version Version, string Url);
-#pragma warning restore SA1313 // Parameter names should begin with lower-case letter
-
         private readonly Version currentApplicationVersion;
         private readonly string releasesUrl;
 
