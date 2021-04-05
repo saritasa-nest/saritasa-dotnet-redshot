@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using RedShot.Infrastructure.Abstractions;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace RedShot.Infrastructure.Formatting
@@ -8,6 +9,7 @@ namespace RedShot.Infrastructure.Formatting
     /// </summary>
     public class GeneralOptions : INotifyPropertyChanged
     {
+        private UpdateInterval updateInterval;
         private string pattern;
         private bool launchAtSystemStart;
 
@@ -49,6 +51,19 @@ namespace RedShot.Infrastructure.Formatting
             set
             {
                 launchAtSystemStart = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Update interval.
+        /// </summary>
+        public UpdateInterval UpdateInterval
+        {
+            get => updateInterval;
+            set
+            {
+                updateInterval = value;
                 OnPropertyChanged();
             }
         }

@@ -1,4 +1,6 @@
-﻿namespace RedShot.Infrastructure.Configuration.Models.General
+﻿using RedShot.Infrastructure.Abstractions;
+
+namespace RedShot.Infrastructure.Configuration.Models.General
 {
     /// <summary>
     /// General configuration.
@@ -14,5 +16,10 @@
         /// Whether to launch at system start.
         /// </summary>
         public bool LaunchAtSystemStart { get; set; }
+
+        /// <summary>
+        /// Update interval.
+        /// </summary>
+        public UpdateInterval UpdateInterval { get; set; }
     }
 }
