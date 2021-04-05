@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Common.Notifying;
-using RedShot.Infrastructure.Configuration.Models;
 
 namespace RedShot.Infrastructure
 {
@@ -12,7 +11,7 @@ namespace RedShot.Infrastructure
     public sealed class ApplicationUpdateService : IApplicationUpdateService, IDisposable
     {
         private readonly Version currentApplicationVersion;
-        private readonly string releasesUrl;
+        private readonly IApplicationStorage applicationStorage;
 
         private CancellationTokenSource cancellationTokenSource;
         private UpdateInterval updateInterval;
@@ -21,12 +20,17 @@ namespace RedShot.Infrastructure
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="currentApplicationVersion"></param>
-        public ApplicationUpdateService(Version currentApplicationVersion, UpdateInterval updateInterval = UpdateInterval.Never)
+        /// <param name="applicationStorage">Application storage.</param>
+        /// <param name="currentApplicationVersion">Current application version.</param>
+        /// <param name="updateInterval">Update interval.</param>
+        public ApplicationUpdateService(
+            IApplicationStorage applicationStorage,
+            Version currentApplicationVersion,
+            UpdateInterval updateInterval = UpdateInterval.Never)
         {
             this.currentApplicationVersion = currentApplicationVersion;
             this.updateInterval = updateInterval;
-            this.releasesUrl = AppSettings.Instance.ReleasesUrl;
+            this.applicationStorage = applicationStorage;
         }
 
         /// <inheritdoc/>
@@ -60,28 +64,24 @@ namespace RedShot.Infrastructure
 
         private async Task CheckForUpdatesAsync(CancellationToken cancellationToken)
         {
-            var lastVersionDetails = await GetLastVersionAsync(cancellationToken);
+            var latestVersion = await applicationStorage.GetLatestVersionAsync(cancellationToken);
 
-            if (currentApplicationVersion != lastVersionDetails.Version)
+            if (currentApplicationVersion != latestVersion)
             {
-                NotifyUserAboutUpdate(lastVersionDetails);
+                NotifyUserAboutUpdate(latestVersion);
             }
         }
 
-        private void NotifyUserAboutUpdate(VersionDetails versionDetails)
+        private void NotifyUserAboutUpdate(Version latestVersion)
         {
-            NotifyHelper.Notify($"New update available! New Version: {versionDetails.Version}",
+            var releaseUrl = applicationStorage.GetReleaseUrl(latestVersion);
+
+            NotifyHelper.Notify($"New update available! New Version: {latestVersion}",
                 "RedShot Update",
                 onUserClick: () =>
                 {
-                    Process.Start(versionDetails.Url);
+                    Process.Start(releaseUrl);
                 });
-        }
-
-        private Task<VersionDetails> GetLastVersionAsync(CancellationToken cancellationToken)
-        {
-            var versionDetails = new VersionDetails(new Version(1, 1, 1), "Url");
-            return Task.FromResult(versionDetails);
         }
 
         /// <inheritdoc/>

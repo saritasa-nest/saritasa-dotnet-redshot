@@ -63,6 +63,7 @@ namespace RedShot.Application
             app.UnhandledException += (o, e) => ShowException(e.ExceptionObject as Exception);
             app.Initialized += AppInitialized;
 
+            ConfigureApplicationUpdate(app);
             AddAreaControl();
             AddStyles();
             app.Run(new ApplicationTray("RedShot", Icons.RedCircle));
@@ -88,6 +89,19 @@ namespace RedShot.Application
             Mapping.Mapper = mappingConfiguration.CreateMapper();
 
             ConfigureAutostart();
+        }
+
+        private static void ConfigureApplicationUpdate(Eto.Forms.Application application)
+        {
+            var generalConfiguration = Infrastructure.Configuration.ConfigurationProvider.Instance.GetConfiguration<GeneralConfiguration>();
+
+            var applicationStorage = new GithubApplicationStorage();
+            var updateService = new ApplicationUpdateService(
+                applicationStorage,
+                new Version(1, 1, 1),
+                Infrastructure.Abstractions.UpdateInterval.OnStartup);
+
+            application.Initialized += (o, e) => updateService.StartCheckForUpdates();
         }
 
         private static void ConfigureAutostart()

@@ -36,12 +36,12 @@ namespace RedShot.Infrastructure
 
             var result = await client.ExecuteAsync<IEnumerable<TagDetails>>(request);
 
-            if (result.IsSuccessful)
+            if (!result.IsSuccessful)
             {
-                return GetLatestVersion(result.Data);
+                throw new DomainException(result.ErrorMessage);
             }
 
-            throw new DomainException(result.ErrorMessage);
+            return GetLatestVersion(result.Data);
         }
 
         private static Version GetLatestVersion(IEnumerable<TagDetails> tagDetails)
