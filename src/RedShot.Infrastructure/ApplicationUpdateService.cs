@@ -80,7 +80,12 @@ namespace RedShot.Infrastructure
                 "RedShot Update",
                 onUserClick: () =>
                 {
-                    Process.Start(releaseUrl);
+                    var processInfo = new ProcessStartInfo
+                    {
+                        FileName = releaseUrl,
+                        UseShellExecute = true
+                    };
+                    Process.Start(processInfo);
                 });
         }
 

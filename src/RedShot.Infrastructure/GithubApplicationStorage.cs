@@ -46,7 +46,16 @@ namespace RedShot.Infrastructure
 
         private static Version GetLatestVersion(IEnumerable<TagDetails> tagDetails)
         {
-            var versions = tagDetails.Select(t => Version.Parse(t.Name)).ToList();
+            var versions = new List<Version>();
+
+            foreach (var tag in tagDetails)
+            {
+                if (Version.TryParse(tag.Name, out var version))
+                {
+                    versions.Add(version);
+                }
+            }
+
             versions.Sort();
 
             return versions.Last();
@@ -55,7 +64,7 @@ namespace RedShot.Infrastructure
         /// <inheritdoc/>
         public string GetReleaseUrl(Version version)
         {
-            return $"{GitHub}/{githubRepositoryDetails.OwnerName}/{githubRepositoryDetails.OwnerName}/tag/{version}";
+            return $"{GitHub}/{githubRepositoryDetails.OwnerName}/{githubRepositoryDetails.RepositoryName}/releases/tag/{version}";
         }
 
         /// <summary>
