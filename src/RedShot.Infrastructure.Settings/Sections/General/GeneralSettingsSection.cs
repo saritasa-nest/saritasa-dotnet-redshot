@@ -4,6 +4,7 @@ using RedShot.Infrastructure.Abstractions.Settings;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Formatting;
 using RedShot.Infrastructure.Configuration.Models.General;
+using RedShot.Infrastructure.Abstractions;
 
 namespace RedShot.Infrastructure.Settings.Sections.General
 {
@@ -12,6 +13,7 @@ namespace RedShot.Infrastructure.Settings.Sections.General
     /// </summary>
     public sealed class GeneralSettingsSection : IValidatableSection
     {
+        private readonly IApplicationUpdateService applicationUpdateService;
         private readonly GeneralOptionsControl generalOptionsControl;
         private readonly Autostart autostart;
 
@@ -20,6 +22,7 @@ namespace RedShot.Infrastructure.Settings.Sections.General
         /// </summary>
         public GeneralSettingsSection()
         {
+            applicationUpdateService = Updating.ApplicationUpdateService;
             var configurationModel = ConfigurationProvider.Instance.GetConfiguration<GeneralConfiguration>();
             var generalOptions = Mapping.Mapper.Map<GeneralOptions>(configurationModel);
             generalOptionsControl = new GeneralOptionsControl(generalOptions);
@@ -42,6 +45,15 @@ namespace RedShot.Infrastructure.Settings.Sections.General
         public void Save()
         {
             var generalOptions = generalOptionsControl.GeneralOptions;
+            var configuration = Mapping.Mapper.Map<GeneralConfiguration>(generalOptions);
+            ConfigurationProvider.Instance.SetConfiguration(configuration);
+
+            ApplySettings(generalOptions);
+        }
+
+        private void ApplySettings(GeneralOptions generalOptions)
+        {
+            applicationUpdateService.ChangeInterval(generalOptions.UpdateInterval);
 
             if (generalOptions.LaunchAtSystemStart)
             {
@@ -51,9 +63,6 @@ namespace RedShot.Infrastructure.Settings.Sections.General
             {
                 autostart.DisableAutostart();
             }
-
-            var configuration = Mapping.Mapper.Map<GeneralConfiguration>(generalOptions);
-            ConfigurationProvider.Instance.SetConfiguration(configuration);
         }
 
         /// <inheritdoc />

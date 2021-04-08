@@ -1,4 +1,6 @@
 ﻿using Eto.Forms;
+using RedShot.Infrastructure.Abstractions;
+using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Formatting;
 
 namespace RedShot.Infrastructure.Settings.Sections.General
@@ -12,6 +14,7 @@ namespace RedShot.Infrastructure.Settings.Sections.General
         private CheckBox launchAtSystemStartCheckBox;
         private TextBox patternTextBox;
         private Label exampleLabel;
+        private ComboBox updateIntervals;
 
         /// <summary>
         /// Active configuration data.
@@ -25,6 +28,7 @@ namespace RedShot.Infrastructure.Settings.Sections.General
         {
             this.generalOptions = generalOptions;
             InitializeComponents();
+            BindControls();
         }
 
         private void InitializeComponents()
@@ -43,7 +47,11 @@ namespace RedShot.Infrastructure.Settings.Sections.General
             {
                 Text = "Launch at system start"
             };
-            launchAtSystemStartCheckBox.Bind(cb => cb.Checked, generalOptions, config => config.LaunchAtSystemStart);
+
+            updateIntervals = new ComboBox()
+            {
+                Text = "Update Interval"
+            };
 
             // External stack layout is needed to add padding. Padding doesn't work for GroupBox.
             Content = new StackLayout
@@ -99,9 +107,29 @@ namespace RedShot.Infrastructure.Settings.Sections.General
                         {
                             launchAtSystemStartCheckBox
                         }
-                    }
+                    },
+                    new StackLayout
+                    {
+                        Orientation = Orientation.Vertical,
+                        Items =
+                        {
+                            new Label()
+                            {
+                                Text = "Update Intervals"
+                            },
+                            updateIntervals
+                        }
+                    },
                 }
             };
+        }
+
+        private void BindControls()
+        {
+            DataContext = generalOptions;
+
+            launchAtSystemStartCheckBox.Bind(cb => cb.Checked, generalOptions, config => config.LaunchAtSystemStart);
+            updateIntervals.BindWithEnum<UpdateInterval>().BindDataContext((GeneralOptions o) => o.UpdateInterval);
         }
 
         private void PatternTextBoxOnTextChanging(object sender, TextChangingEventArgs e)
