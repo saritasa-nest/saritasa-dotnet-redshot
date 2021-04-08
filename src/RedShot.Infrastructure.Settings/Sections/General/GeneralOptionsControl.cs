@@ -111,11 +111,12 @@ namespace RedShot.Infrastructure.Settings.Sections.General
                     new StackLayout
                     {
                         Orientation = Orientation.Vertical,
+                        Padding = 10,
                         Items =
                         {
                             new Label()
                             {
-                                Text = "Update Intervals"
+                                Text = "Update Interval"
                             },
                             updateIntervals
                         }

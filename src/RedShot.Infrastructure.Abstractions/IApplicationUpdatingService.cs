@@ -3,9 +3,9 @@
 namespace RedShot.Infrastructure.Abstractions
 {
     /// <summary>
-    /// Application update service.
+    /// Application updating service.
     /// </summary>
-    public interface IApplicationUpdateService
+    public interface IApplicationUpdatingService
     {
         /// <summary>
         /// Start check for updates.

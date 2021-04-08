@@ -3,7 +3,7 @@
 namespace RedShot.Infrastructure.Common
 {
     /// <summary>
-    /// Contains a shared <see cref="IApplicationUpdateService"/> instance.
+    /// Contains a shared <see cref="IApplicationUpdatingService"/> instance.
     /// </summary>
     // TODO: remove this class, use dependency injection instead.
     public static class Updating
@@ -11,6 +11,6 @@ namespace RedShot.Infrastructure.Common
         /// <summary>
         /// Application update service.
         /// </summary>
-        public static IApplicationUpdateService ApplicationUpdateService { get; set; }
+        public static IApplicationUpdatingService ApplicationUpdateService { get; set; }
     }
 }

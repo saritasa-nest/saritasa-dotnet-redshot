@@ -7,8 +7,8 @@ using RedShot.Infrastructure.Common.Notifying;
 
 namespace RedShot.Infrastructure
 {
-    /// <inheritdoc cref="IApplicationUpdateService"/>
-    public sealed class ApplicationUpdateService : IApplicationUpdateService, IDisposable
+    /// <inheritdoc cref="IApplicationUpdatingService"/>
+    public sealed class ApplicationUpdatingService : IApplicationUpdatingService, IDisposable
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -25,7 +25,7 @@ namespace RedShot.Infrastructure
         /// <param name="applicationStorage">Application storage.</param>
         /// <param name="currentApplicationVersion">Current application version.</param>
         /// <param name="updateInterval">Update interval.</param>
-        public ApplicationUpdateService(
+        public ApplicationUpdatingService(
             IApplicationStorage applicationStorage,
             Version currentApplicationVersion,
             UpdateInterval updateInterval)

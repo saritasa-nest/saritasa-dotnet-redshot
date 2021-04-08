@@ -13,7 +13,7 @@ namespace RedShot.Infrastructure.Settings.Sections.General
     /// </summary>
     public sealed class GeneralSettingsSection : IValidatableSection
     {
-        private readonly IApplicationUpdateService applicationUpdateService;
+        private readonly IApplicationUpdatingService applicationUpdateService;
         private readonly GeneralOptionsControl generalOptionsControl;
         private readonly Autostart autostart;
 
