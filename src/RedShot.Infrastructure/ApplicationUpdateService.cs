@@ -10,6 +10,8 @@ namespace RedShot.Infrastructure
     /// <inheritdoc cref="IApplicationUpdateService"/>
     public sealed class ApplicationUpdateService : IApplicationUpdateService, IDisposable
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly Version currentApplicationVersion;
         private readonly IApplicationStorage applicationStorage;
 
@@ -26,7 +28,7 @@ namespace RedShot.Infrastructure
         public ApplicationUpdateService(
             IApplicationStorage applicationStorage,
             Version currentApplicationVersion,
-            UpdateInterval updateInterval = UpdateInterval.Never)
+            UpdateInterval updateInterval)
         {
             this.currentApplicationVersion = currentApplicationVersion;
             this.updateInterval = updateInterval;
@@ -36,12 +38,20 @@ namespace RedShot.Infrastructure
         /// <inheritdoc/>
         public void ChangeInterval(UpdateInterval interval)
         {
+            if (updateInterval == interval)
+            {
+                return;
+            }
+
             updateInterval = interval;
-            timer?.Change(0, 0);
+            if (interval == UpdateInterval.EveryDay)
+            {
+                timer?.Change(0, 0);
+            }
         }
 
         /// <inheritdoc/>
-        public void StartCheckForUpdates()
+        public void StartCheckingForUpdates()
         {
             cancellationTokenSource = new CancellationTokenSource();
             timer = new Timer(ServiceTimerCallback, null, 0, 0);
@@ -54,7 +64,15 @@ namespace RedShot.Infrastructure
                 return;
             }
 
-            await CheckForUpdatesAsync(cancellationTokenSource.Token);
+            try
+            {
+                await CheckForUpdatesAsync(cancellationTokenSource.Token);
+            }
+            // Do not close the application if an exception occurs.
+            catch (Exception e)
+            {
+                logger.Error(e);
+            }
 
             if (updateInterval == UpdateInterval.EveryDay)
             {
@@ -66,7 +84,7 @@ namespace RedShot.Infrastructure
         {
             var latestVersion = await applicationStorage.GetLatestVersionAsync(cancellationToken);
 
-            if (currentApplicationVersion != latestVersion)
+            if (currentApplicationVersion < latestVersion)
             {
                 NotifyUserAboutUpdate(latestVersion);
             }

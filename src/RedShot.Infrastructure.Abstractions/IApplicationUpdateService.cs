@@ -10,7 +10,7 @@ namespace RedShot.Infrastructure.Abstractions
         /// <summary>
         /// Start check for updates.
         /// </summary>
-        void StartCheckForUpdates();
+        void StartCheckingForUpdates();
 
         /// <summary>
         /// Stop check for updates.

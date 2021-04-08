@@ -91,6 +91,11 @@ namespace RedShot.Application
             ConfigureAutostart();
         }
 
+        private static Version GetApplicationVersion()
+        {
+            return Assembly.GetExecutingAssembly().GetName().Version ?? new Version();
+        }
+
         private static void ConfigureApplicationUpdate(Eto.Forms.Application application)
         {
             var generalConfiguration = Infrastructure.Configuration.ConfigurationProvider.Instance.GetConfiguration<GeneralConfiguration>();
@@ -98,10 +103,12 @@ namespace RedShot.Application
             var applicationStorage = new GithubApplicationStorage();
             var updateService = new ApplicationUpdateService(
                 applicationStorage,
-                new Version(1, 1, 1),
-                Infrastructure.Abstractions.UpdateInterval.OnStartup);
+                GetApplicationVersion(),
+                generalConfiguration.UpdateInterval);
 
-            application.Initialized += (o, e) => updateService.StartCheckForUpdates();
+            Updating.ApplicationUpdateService = updateService;
+
+            application.Initialized += (o, e) => updateService.StartCheckingForUpdates();
         }
 
         private static void ConfigureAutostart()
