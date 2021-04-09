@@ -97,7 +97,7 @@ namespace RedShot.Infrastructure.Settings.Sections.General
                         Items =
                         {
                             FormsHelper.GetBaseStack("Pattern:", patternLabel, 40, 100, 2),
-                            FormsHelper.GetBaseStack("Example:", exampleLabel, 47, 220, 2),
+                            FormsHelper.GetBaseStack("Example:", exampleLabel, 47, 100, 2),
                             addButton
                         }
                     }

@@ -1,4 +1,5 @@
-﻿using Eto.Forms;
+﻿using Eto.Drawing;
+using Eto.Forms;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Common.Forms;
 using RedShot.Infrastructure.Formatting;
@@ -50,13 +51,15 @@ namespace RedShot.Infrastructure.Settings.Sections.General
 
             updateIntervals = new ComboBox()
             {
-                Text = "Update Interval"
+                Size = new Size(180, 19),
+                ReadOnly = true
             };
 
             // External stack layout is needed to add padding. Padding doesn't work for GroupBox.
             Content = new StackLayout
             {
-                Padding = 5,
+                Padding = 20,
+                Spacing = 20,
                 HorizontalContentAlignment = HorizontalAlignment.Stretch,
                 Items =
                 {
@@ -71,7 +74,7 @@ namespace RedShot.Infrastructure.Settings.Sections.General
                                 {
                                     Orientation = Orientation.Vertical,
                                     HorizontalContentAlignment = HorizontalAlignment.Stretch,
-                                    Padding = 10,
+                                    Padding = new Padding(10, 0),
                                     Spacing = 5,
                                     Items =
                                     {
@@ -100,27 +103,29 @@ namespace RedShot.Infrastructure.Settings.Sections.General
                             }
                         }
                     },
-                    new StackLayout
-                    {
-                        Padding = 10,
-                        Items =
-                        {
-                            launchAtSystemStartCheckBox
-                        }
-                    },
-                    new StackLayout
-                    {
-                        Orientation = Orientation.Vertical,
-                        Padding = 10,
-                        Items =
-                        {
-                            new Label()
-                            {
-                                Text = "Update Interval"
-                            },
-                            updateIntervals
-                        }
-                    },
+                    launchAtSystemStartCheckBox,
+                    GetUpdatingSettings(updateIntervals)
+                }
+            };
+        }
+
+        private static Control GetUpdatingSettings(ComboBox updateIntervals)
+        {
+            var label = new Label()
+            {
+                Text = "Update interval"
+            };
+
+            return new StackLayout()
+            {
+                Orientation = Orientation.Vertical,
+                HorizontalContentAlignment = HorizontalAlignment.Left,
+                Spacing = 5,
+                Padding = new Padding(-3, 0, 0, 0),
+                Items =
+                {
+                    label,
+                    updateIntervals
                 }
             };
         }

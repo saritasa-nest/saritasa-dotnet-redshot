@@ -15,7 +15,7 @@ namespace RedShot.Infrastructure.Abstractions
         /// <summary>
         /// Stop check for updates.
         /// </summary>
-        void StopCheckForUpdates();
+        void StopCheckingForUpdates();
 
         /// <summary>
         /// Change update interval.

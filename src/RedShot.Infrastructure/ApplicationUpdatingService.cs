@@ -108,7 +108,7 @@ namespace RedShot.Infrastructure
         }
 
         /// <inheritdoc/>
-        public void StopCheckForUpdates()
+        public void StopCheckingForUpdates()
         {
             cancellationTokenSource?.Cancel();
             timer?.Change(Timeout.Infinite, 0);
