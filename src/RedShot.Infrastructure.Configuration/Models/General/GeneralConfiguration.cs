@@ -20,6 +20,6 @@ namespace RedShot.Infrastructure.Configuration.Models.General
         /// <summary>
         /// Update interval.
         /// </summary>
-        public UpdateInterval UpdateInterval { get; set; }
+        public UpdateInterval UpdateInterval { get; set; } = UpdateInterval.Never;
     }
 }
