@@ -9,8 +9,8 @@ namespace RedShot.Infrastructure.Common
     public static class Updating
     {
         /// <summary>
-        /// Application update service.
+        /// Application updating service.
         /// </summary>
-        public static IApplicationUpdatingService ApplicationUpdateService { get; set; }
+        public static IApplicationUpdatingService ApplicationUpdatingService { get; set; }
     }
 }

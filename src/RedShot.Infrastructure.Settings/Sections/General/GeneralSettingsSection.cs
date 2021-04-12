@@ -22,7 +22,7 @@ namespace RedShot.Infrastructure.Settings.Sections.General
         /// </summary>
         public GeneralSettingsSection()
         {
-            applicationUpdateService = Updating.ApplicationUpdateService;
+            applicationUpdateService = Updating.ApplicationUpdatingService;
             var configurationModel = ConfigurationProvider.Instance.GetConfiguration<GeneralConfiguration>();
             var generalOptions = Mapping.Mapper.Map<GeneralOptions>(configurationModel);
             generalOptionsControl = new GeneralOptionsControl(generalOptions);

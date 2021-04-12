@@ -106,7 +106,7 @@ namespace RedShot.Application
                 GetApplicationVersion(),
                 generalConfiguration.UpdateInterval);
 
-            Updating.ApplicationUpdateService = updateService;
+            Updating.ApplicationUpdatingService = updateService;
 
             application.Initialized += (o, e) => updateService.StartCheckingForUpdates();
         }

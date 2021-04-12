@@ -132,7 +132,6 @@ namespace RedShot.Infrastructure.Settings.Sections.General
                 Orientation = Orientation.Vertical,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
                 Spacing = 5,
-                Padding = new Padding(-3, 0, 0, 0),
                 Items =
                 {
                     label,
