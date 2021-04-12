@@ -34,7 +34,7 @@ namespace RedShot.Infrastructure
             var client = new RestClient(GitHubApi);
             var request = new RestRequest(url, Method.GET);
 
-            var result = await client.ExecuteAsync<IEnumerable<TagDetails>>(request);
+            var result = await client.ExecuteAsync<IEnumerable<TagDetails>>(request, cancellationToken);
 
             if (!result.IsSuccessful)
             {

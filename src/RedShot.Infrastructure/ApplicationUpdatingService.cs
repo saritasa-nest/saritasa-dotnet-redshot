@@ -11,6 +11,7 @@ namespace RedShot.Infrastructure
     public sealed class ApplicationUpdatingService : IApplicationUpdatingService, IDisposable
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly TimeSpan everyDayPeriod = TimeSpan.FromDays(1);
 
         private readonly Version currentApplicationVersion;
         private readonly IApplicationStorage applicationStorage;
@@ -76,7 +77,7 @@ namespace RedShot.Infrastructure
 
             if (updateInterval == UpdateInterval.EveryDay)
             {
-                timer.Change(TimeSpan.FromDays(1), TimeSpan.Zero);
+                timer.Change(everyDayPeriod, TimeSpan.Zero);
             }
         }
 
@@ -94,8 +95,8 @@ namespace RedShot.Infrastructure
         {
             var releaseUrl = applicationStorage.GetReleaseUrl(latestVersion);
 
-            NotifyHelper.Notify($"New update available! New Version: {latestVersion}",
-                "RedShot Update",
+            NotifyHelper.Notify($"New update is available!{Environment.NewLine}New version: {latestVersion}",
+                "RedShot",
                 onUserClick: () =>
                 {
                     var processInfo = new ProcessStartInfo
