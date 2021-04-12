@@ -1,8 +1,9 @@
-﻿using Eto.Drawing;
+﻿using System;
 using Eto.Forms;
+using Eto.Drawing;
+using RedShot.Infrastructure.Formatting;
 using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Common.Forms;
-using RedShot.Infrastructure.Formatting;
 
 namespace RedShot.Infrastructure.Settings.Sections.General
 {
@@ -30,6 +31,16 @@ namespace RedShot.Infrastructure.Settings.Sections.General
             this.generalOptions = generalOptions;
             InitializeComponents();
             BindControls();
+        }
+
+        /// <summary>
+        /// Hack to remove focus from `updateIntervals` control.
+        /// </summary>
+        protected override void OnShown(EventArgs e)
+        {
+            updateIntervals?.Focus();
+            Focus();
+            base.OnShown(e);
         }
 
         private void InitializeComponents()
