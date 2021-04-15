@@ -1,6 +1,6 @@
-﻿using RedShot.Infrastructure.Abstractions;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using RedShot.Infrastructure.Abstractions.Updating;
 
 namespace RedShot.Infrastructure.Formatting
 {

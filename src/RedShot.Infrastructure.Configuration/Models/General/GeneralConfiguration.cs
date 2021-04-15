@@ -1,4 +1,4 @@
-﻿using RedShot.Infrastructure.Abstractions;
+﻿using RedShot.Infrastructure.Abstractions.Updating;
 
 namespace RedShot.Infrastructure.Configuration.Models.General
 {

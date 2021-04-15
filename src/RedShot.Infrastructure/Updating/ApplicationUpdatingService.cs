@@ -1,20 +1,21 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using RedShot.Infrastructure.Abstractions;
-using RedShot.Infrastructure.Common.Notifying;
+using RedShot.Infrastructure.Abstractions.Updating;
 
-namespace RedShot.Infrastructure
+namespace RedShot.Infrastructure.Updating
 {
-    /// <inheritdoc cref="IApplicationUpdatingService"/>
+    /// <summary>
+    /// Application updating service.
+    /// </summary>
     public sealed class ApplicationUpdatingService : IApplicationUpdatingService, IDisposable
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        private static readonly TimeSpan everyDayPeriod = TimeSpan.FromDays(1);
+        private static readonly TimeSpan DailyPeriod = TimeSpan.FromDays(1);
 
         private readonly Version currentApplicationVersion;
-        private readonly IApplicationStorage applicationStorage;
+        private readonly IApplicationVersionRepository applicationVersionRepository;
+        private readonly IApplicationUpdatingStrategy applicationUpdatingStrategy;
 
         private CancellationTokenSource cancellationTokenSource;
         private UpdateInterval updateInterval;
@@ -23,17 +24,20 @@ namespace RedShot.Infrastructure
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="applicationStorage">Application storage.</param>
+        /// <param name="applicationVersionRepository">Application version repository.</param>
+        /// <param name="applicationUpdatingStrategy">Application updating strategy.</param>
         /// <param name="currentApplicationVersion">Current application version.</param>
         /// <param name="updateInterval">Update interval.</param>
         public ApplicationUpdatingService(
-            IApplicationStorage applicationStorage,
+            IApplicationVersionRepository applicationVersionRepository,
+            IApplicationUpdatingStrategy applicationUpdatingStrategy,
             Version currentApplicationVersion,
             UpdateInterval updateInterval)
         {
             this.currentApplicationVersion = currentApplicationVersion;
             this.updateInterval = updateInterval;
-            this.applicationStorage = applicationStorage;
+            this.applicationVersionRepository = applicationVersionRepository;
+            this.applicationUpdatingStrategy = applicationUpdatingStrategy;
         }
 
         /// <inheritdoc/>
@@ -45,26 +49,32 @@ namespace RedShot.Infrastructure
             }
 
             updateInterval = interval;
-            if (interval == UpdateInterval.EveryDay)
+            if (interval == UpdateInterval.Daily)
             {
-                timer?.Change(0, 0);
+                RestartUpdatingTimer();
             }
         }
 
         /// <inheritdoc/>
         public void StartCheckingForUpdates()
         {
-            cancellationTokenSource = new CancellationTokenSource();
-            timer = new Timer(ServiceTimerCallback, null, 0, 0);
-        }
-
-        private async void ServiceTimerCallback(object state)
-        {
             if (updateInterval == UpdateInterval.Never)
             {
                 return;
             }
 
+            cancellationTokenSource = new CancellationTokenSource();
+            timer = new Timer(ServiceTimerCallback, null, 0, 0);
+        }
+
+        private void RestartUpdatingTimer()
+        {
+            StopCheckingForUpdates();
+            StartCheckingForUpdates();
+        }
+
+        private async void ServiceTimerCallback(object state)
+        {
             try
             {
                 await CheckForUpdatesAsync(cancellationTokenSource.Token);
@@ -75,37 +85,20 @@ namespace RedShot.Infrastructure
                 logger.Error(e);
             }
 
-            if (updateInterval == UpdateInterval.EveryDay)
+            if (updateInterval == UpdateInterval.Daily)
             {
-                timer.Change(everyDayPeriod, TimeSpan.Zero);
+                timer.Change(DailyPeriod, TimeSpan.Zero);
             }
         }
 
         private async Task CheckForUpdatesAsync(CancellationToken cancellationToken)
         {
-            var latestVersion = await applicationStorage.GetLatestVersionAsync(cancellationToken);
+            var latestVersionData = await applicationVersionRepository.GetLatestVersionAsync(cancellationToken);
 
-            if (currentApplicationVersion < latestVersion)
+            if (currentApplicationVersion < latestVersionData.Version)
             {
-                NotifyUserAboutUpdate(latestVersion);
+                await applicationUpdatingStrategy.UpdateAsync(latestVersionData, cancellationToken);
             }
-        }
-
-        private void NotifyUserAboutUpdate(Version latestVersion)
-        {
-            var releaseUrl = applicationStorage.GetReleaseUrl(latestVersion);
-
-            NotifyHelper.Notify($"New update is available!{Environment.NewLine}New version: {latestVersion}",
-                "RedShot",
-                onUserClick: () =>
-                {
-                    var processInfo = new ProcessStartInfo
-                    {
-                        FileName = releaseUrl,
-                        UseShellExecute = true
-                    };
-                    Process.Start(processInfo);
-                });
         }
 
         /// <inheritdoc/>

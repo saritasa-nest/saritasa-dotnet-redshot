@@ -4,7 +4,7 @@ using RedShot.Infrastructure.Abstractions.Settings;
 using RedShot.Infrastructure.Common;
 using RedShot.Infrastructure.Formatting;
 using RedShot.Infrastructure.Configuration.Models.General;
-using RedShot.Infrastructure.Abstractions;
+using RedShot.Infrastructure.Abstractions.Updating;
 
 namespace RedShot.Infrastructure.Settings.Sections.General
 {

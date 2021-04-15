@@ -15,6 +15,7 @@ using RedShot.Resources;
 using AutoMapper;
 using RedShot.Infrastructure.Configuration.Models.General;
 using RedShot.Infrastructure.Common;
+using RedShot.Infrastructure.Updating;
 #if _WINDOWS
 using Eto.WinForms.Forms;
 #elif _UNIX
@@ -100,15 +101,18 @@ namespace RedShot.Application
         {
             var generalConfiguration = Infrastructure.Configuration.ConfigurationProvider.Instance.GetConfiguration<GeneralConfiguration>();
 
-            var applicationStorage = new GithubApplicationStorage();
-            var updateService = new ApplicationUpdatingService(
-                applicationStorage,
+            var versionRepository = new GithubApplicationVersionRepository();
+            var updatingStrategy = new NotifyApplicationUpdatingStrategy();
+
+            var updatingService = new ApplicationUpdatingService(
+                versionRepository,
+                updatingStrategy,
                 GetApplicationVersion(),
                 generalConfiguration.UpdateInterval);
 
-            Updating.ApplicationUpdatingService = updateService;
+            Updating.ApplicationUpdatingService = updatingService;
 
-            application.Initialized += (o, e) => updateService.StartCheckingForUpdates();
+            application.Initialized += (o, e) => updatingService.StartCheckingForUpdates();
         }
 
         private static void ConfigureAutostart()

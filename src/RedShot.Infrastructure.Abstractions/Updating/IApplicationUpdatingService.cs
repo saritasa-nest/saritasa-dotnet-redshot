@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace RedShot.Infrastructure.Abstractions
+namespace RedShot.Infrastructure.Abstractions.Updating
 {
     /// <summary>
     /// Application updating service.
@@ -8,12 +8,12 @@ namespace RedShot.Infrastructure.Abstractions
     public interface IApplicationUpdatingService
     {
         /// <summary>
-        /// Start check for updates.
+        /// Start checking for updates.
         /// </summary>
         void StartCheckingForUpdates();
 
         /// <summary>
-        /// Stop check for updates.
+        /// Stop checking for updates.
         /// </summary>
         void StopCheckingForUpdates();
 
@@ -29,11 +29,22 @@ namespace RedShot.Infrastructure.Abstractions
     /// </summary>
     public enum UpdateInterval
     {
+        /// <summary>
+        /// Never check for updates.
+        /// </summary>
         [Description("Never")]
         Never,
+
+        /// <summary>
+        /// Check for updates on start up.
+        /// </summary>
         [Description("On Startup")]
         OnStartup,
-        [Description("Every Day")]
-        EveryDay
+
+        /// <summary>
+        /// Check for updates daily.
+        /// </summary>
+        [Description("Daily")]
+        Daily
     }
 }

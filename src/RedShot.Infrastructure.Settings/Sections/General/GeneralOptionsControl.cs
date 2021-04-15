@@ -2,8 +2,8 @@
 using Eto.Forms;
 using Eto.Drawing;
 using RedShot.Infrastructure.Formatting;
-using RedShot.Infrastructure.Abstractions;
 using RedShot.Infrastructure.Common.Forms;
+using RedShot.Infrastructure.Abstractions.Updating;
 
 namespace RedShot.Infrastructure.Settings.Sections.General
 {
