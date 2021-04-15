@@ -18,14 +18,19 @@ namespace RedShot.Infrastructure.Common.Notifying
         /// <summary>
         /// Runs notifier with specified data.
         /// </summary>
+        /// <param name="message">Message.</param>
+        /// <param name="title">Title.</param>
+        /// <param name="status">Notify status.</param>
         public static void Notify(string message, string title, NotifyStatus status = NotifyStatus.Success)
         {
             Notify(message, title, null, status);
         }
 
+        /// <inheritdoc cref="Notify"/>
+        /// <param name="onUserClick">Event handler on user click.</param>
         public static void Notify(string message, string title, Action onUserClick, NotifyStatus status = NotifyStatus.Success)
         {
-            var notifyer = new Notification()
+            var notifier = new Notification()
             {
                 Message = message,
                 Title = title,
@@ -36,7 +41,7 @@ namespace RedShot.Infrastructure.Common.Notifying
             {
                 Application.Instance.NotificationActivated += (o, e) =>
                 {
-                    if (e.ID == notifyer.ID)
+                    if (e.ID == notifier.ID)
                     {
                         onUserClick();
                     }
@@ -45,20 +50,15 @@ namespace RedShot.Infrastructure.Common.Notifying
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                notifyer.Style = GetStyleForStatus(status);
+                notifier.Style = GetStyleForStatus(status);
             }
             else
             {
                 var icon = new Bitmap(GetIconForStatus(status), 50, 50, ImageInterpolation.High);
-                notifyer.ContentImage = icon;
+                notifier.ContentImage = icon;
             }
 
-            notifyer.Show(tray);
-        }
-
-        private static void Notifyer_Activated(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
+            notifier.Show(tray);
         }
 
         private static TrayIndicator GetTrayIndicator()
