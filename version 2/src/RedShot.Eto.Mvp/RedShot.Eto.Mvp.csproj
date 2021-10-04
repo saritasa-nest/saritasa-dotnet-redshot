@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Eto.Forms" Version="2.5.10" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RedShot.Desktop.Infrastructure.Common\RedShot.Desktop.Infrastructure.Common.csproj" />
+    <ProjectReference Include="..\RedShot.Infrastructure.Abstractions\RedShot.Infrastructure.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>
