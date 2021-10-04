@@ -1,4 +1,5 @@
-﻿using RedShot.Desktop.Views;
+﻿using RedShot.Desktop.Infrastructure.Common.Navigation;
+using RedShot.Desktop.Views;
 using RedShot.Mvvm.ServiceAbstractions.Navigation;
 using RedShot.Mvvm.Utils;
 using RedShot.Mvvm.ViewModels;

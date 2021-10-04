@@ -24,12 +24,12 @@ namespace RedShot.Desktop.Shared.Infrastructure.Navigation
         /// <summary>
         /// Associated view model.
         /// </summary>
-        public BaseViewModel ViewModel { get; init; }
+        public BaseViewModel ViewModel { get; set; }
 
         /// <summary>
         /// View model navigation result.
         /// </summary>
-        public TaskCompletionSource NavigationResult { get; init; }
+        public TaskCompletionSource<object> NavigationResult { get; set; }
 
         /// <summary>
         /// Indicates if the view is visible.

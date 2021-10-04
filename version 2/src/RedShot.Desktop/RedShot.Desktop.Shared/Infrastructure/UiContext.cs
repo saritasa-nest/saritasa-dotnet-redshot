@@ -20,7 +20,7 @@ namespace RedShot.Desktop.Shared.Infrastructure
         }
 
         /// <inheritdoc />
-        public SynchronizationContext UiSynchronizationContext { get; init; }
+        public SynchronizationContext UiSynchronizationContext { get; set; }
 
         /// <inheritdoc/>
         public IAwaitable SwitchToUi()

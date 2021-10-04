@@ -1,4 +1,5 @@
-﻿using RedShot.Mvvm.ServiceAbstractions.Navigation;
+﻿using RedShot.Desktop.Infrastructure.Common.Navigation;
+using RedShot.Mvvm.ServiceAbstractions.Navigation;
 using RedShot.Mvvm.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace RedShot.Desktop.Shared.Infrastructure.Navigation
         private readonly Dictionary<Type, Type> viewModelToViewAssociation;
         private readonly NavigationStack navigationStack;
 
-        private TaskCompletionSource navigatingFinishTaskCompletionSource;
+        private TaskCompletionSource<T> navigatingFinishTaskCompletionSource;
 
         /// <summary>
         /// Auto hide.
@@ -48,7 +49,7 @@ namespace RedShot.Desktop.Shared.Infrastructure.Navigation
             viewModelToViewAssociation = new Dictionary<Type, Type>();
             var pageTypes = Assembly.GetExecutingAssembly()
                 .GetTypes()
-                .Where(t => t.IsAssignableTo(typeof(T)));
+                .Where(t => t.IsSubclassOf(typeof(T)));
             foreach (var pageType in pageTypes)
             {
                 var viewModelAttribute = pageType.GetCustomAttribute<UsesViewModelAttribute>();
@@ -116,8 +117,9 @@ namespace RedShot.Desktop.Shared.Infrastructure.Navigation
             var state = new ViewState(frame)
             {
                 ViewModel = viewModel,
-                NavigationResult = new TaskCompletionSource(),
+                NavigationResult = new TaskCompletionSource<object>(),
             };
+
             navigationStack.Push<T>(state);
 
             var viewType = GetViewType(viewModel.GetType());
@@ -142,12 +144,12 @@ namespace RedShot.Desktop.Shared.Infrastructure.Navigation
         private void Frame_Navigating(object sender, Windows.UI.Xaml.Navigation.NavigatingCancelEventArgs e)
         {
             navigatingFinishTaskCompletionSource?.TrySetCanceled();
-            navigatingFinishTaskCompletionSource = new TaskCompletionSource();
+            navigatingFinishTaskCompletionSource = new TaskCompletionSource<T>();
         }
 
         private void Frame_Navigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
         {
-            navigatingFinishTaskCompletionSource?.TrySetResult();
+            navigatingFinishTaskCompletionSource?.TrySetResult(default);
 
             var currentView = navigationStack.Peek<T>();
             currentView.EnsureFrameVisibility();

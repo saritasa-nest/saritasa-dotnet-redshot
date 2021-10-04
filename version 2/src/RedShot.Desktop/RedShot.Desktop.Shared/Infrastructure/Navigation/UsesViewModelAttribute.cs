@@ -19,7 +19,7 @@ namespace RedShot.Desktop.Shared.Infrastructure.Navigation
         /// </summary>
         public UsesViewModelAttribute(Type viewModelType)
         {
-            if (!viewModelType.IsAssignableTo(typeof(BaseViewModel)))
+            if (!viewModelType.IsSubclassOf(typeof(BaseViewModel)))
             {
                 throw new ArgumentException($"Specified type {viewModelType.FullName} does not inherit {typeof(BaseViewModel).FullName}", nameof(viewModelType));
             }

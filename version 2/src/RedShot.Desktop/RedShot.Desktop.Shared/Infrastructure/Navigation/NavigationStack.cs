@@ -92,9 +92,9 @@ namespace RedShot.Desktop.Shared.Infrastructure.Navigation
 
         private class ViewStackItem
         {
-            public ViewState View { get; init; }
+            public ViewState View { get; set; }
 
-            public Type OwnerType { get; init; }
+            public Type OwnerType { get; set; }
         }
     }
 }
