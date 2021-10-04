@@ -2,8 +2,9 @@
   <PropertyGroup>
     <OutputType Condition="'$(Configuration)'=='Release'">WinExe</OutputType>
     <OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Uno.UI.Skia.Wpf" Version="3.10.11" />
@@ -13,6 +14,6 @@
     <Content Include="Assets\Fonts\uno-fluentui-assets.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RedShot.Desktop.Skia.WPF\RedShot.Desktop.Skia.WPF.csproj" />
+    <ProjectReference Include="..\RedShot.Desktop.Skia.Wpf\RedShot.Desktop.Skia.Wpf.csproj" />
   </ItemGroup>
 </Project>

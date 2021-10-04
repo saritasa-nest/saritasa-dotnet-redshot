@@ -1,4 +1,5 @@
-﻿using RedShot.Mvvm.ViewModels;
+﻿using RedShot.Desktop.Infrastructure.Common.Navigation;
+using RedShot.Mvvm.ViewModels;
 using System.Threading.Tasks;
 
 namespace RedShot.Mvvm.ServiceAbstractions.Navigation

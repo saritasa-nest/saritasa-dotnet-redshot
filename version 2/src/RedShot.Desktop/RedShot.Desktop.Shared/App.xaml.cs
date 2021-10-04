@@ -45,7 +45,7 @@ namespace RedShot.Desktop
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="args">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs args)
+        protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
@@ -88,7 +88,7 @@ namespace RedShot.Desktop
                 if (rootFrame.Content == null)
                 {
                     var instance = CompositionRoot.GetInstance();
-                    instance.RunAsync().GetAwaiter().GetResult();
+                    await instance.RunAsync();
                 }
                 // Ensure the current window is active
                 _window.Activate();

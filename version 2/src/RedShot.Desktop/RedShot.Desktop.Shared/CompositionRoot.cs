@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RedShot.Desktop.Shared.Infrastructure;
 using RedShot.Desktop.Shared.Infrastructure.Navigation;
+using RedShot.Eto.Desktop;
+using RedShot.Infrastructure.DomainServices.Services;
 using RedShot.Mvvm.ServiceAbstractions;
 using RedShot.Mvvm.ServiceAbstractions.Navigation;
 using RedShot.Mvvm.Utils;
@@ -72,6 +74,8 @@ namespace RedShot.Desktop
                 var uiContext = ServiceProvider.GetRequiredService<IUiContext>();
                 await uiContext.SwitchToUi();
 
+                Startup.RunEtoApplication(ServiceProvider);
+
                 var navigation = ServiceProvider.GetRequiredService<INavigationService>();
                 navigation.Open<MainMenuViewModel>();
             }
@@ -79,12 +83,14 @@ namespace RedShot.Desktop
             {
                 var logger = ServiceProvider.GetRequiredService<ILogger<CompositionRoot>>();
                 logger.LogCritical(exception, "Unexpected error occurred.");
+                throw;
             }
         }
 
         private void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IUiContext, UiContext>(provider => new UiContext(Window.Current.Dispatcher));
+            services.AddLogging();
+            services.AddSingleton<IUiContext, UiContext>(provider => new UiContext(Windows.UI.Xaml.Window.Current.Dispatcher));
             services.AddSingleton<NavigationStack>();
             services.AddSingleton<ViewModelFactory>();
             services.AddSingleton<INavigationService, NavigationService>(provider => 
@@ -94,6 +100,9 @@ namespace RedShot.Desktop
                     provider.GetRequiredService<ViewModelFactory>(),
                     provider.GetRequiredService<NavigationStack>());
             });
+
+            services.AddEtoServices();
+            services.AddDomainServices();
         }
 
         protected virtual void Dispose(bool disposing)

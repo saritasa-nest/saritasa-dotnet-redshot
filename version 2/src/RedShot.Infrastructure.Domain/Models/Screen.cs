@@ -8,11 +8,11 @@
         /// <summary>
         /// Screen name.
         /// </summary>
-        public string Name { get; init; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Preview Image.
         /// </summary>
-        public byte[] PreviouImage { get; init; }
+        public byte[] PreviouImage { get; set; }
     }
 }

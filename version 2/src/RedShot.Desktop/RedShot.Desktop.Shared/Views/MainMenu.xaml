@@ -11,5 +11,6 @@
 
     <Grid>
         <TextBlock Text="Hello"/>
+        <Button Command="{Binding OpenTestDialogCommand}"/>
     </Grid>
 </v:NavigationPage>
