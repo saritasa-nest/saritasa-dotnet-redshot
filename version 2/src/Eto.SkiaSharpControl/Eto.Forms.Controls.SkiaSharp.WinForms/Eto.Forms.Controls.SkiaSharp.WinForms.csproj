@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>../../../tools/Saritasa.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>NU1701;$(NoWarn)</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Eto.Forms" Version="2.5.10" />
+    <PackageReference Include="Eto.Platform.Windows" Version="2.5.10" />
+    <PackageReference Include="NLog" Version="4.7.7" />
+    <PackageReference Include="SkiaSharp.Views" Version="2.80.3" />
+    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="2.80.3" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Eto.Forms.Controls.SkiaSharp\Eto.Forms.Controls.SkiaSharp.csproj" />
+  </ItemGroup>
+
+</Project>
