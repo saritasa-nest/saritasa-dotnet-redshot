@@ -17,6 +17,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RedShot.Eto.Desktop\RedShot.Eto.Desktop.csproj" />
+    <ProjectReference Include="..\..\RedShot.Infrastructure.Configuration\RedShot.Infrastructure.Configuration.csproj" />
+    <ProjectReference Include="..\..\RedShot.Infrastructure.DomainServices\RedShot.Infrastructure.DomainServices.csproj" />
     <ProjectReference Include="..\..\RedShot.Mvvm\RedShot.Mvvm.csproj" />
   </ItemGroup>
   <Import Project="..\RedShot.Desktop.Shared\RedShot.Desktop.Shared.projitems" Label="Shared" />

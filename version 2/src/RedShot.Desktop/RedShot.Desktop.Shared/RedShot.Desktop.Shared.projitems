@@ -18,13 +18,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)CompositionRoot.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ICompositionRoot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Infrastructure\Navigation\FrameBasedNavigation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Infrastructure\Navigation\NavigationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Infrastructure\Navigation\NavigationStack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Infrastructure\Navigation\ViewState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Infrastructure\Navigation\UsesViewModelAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Infrastructure\UiContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\MainMenu.xaml.cs">
       <DependentUpon>MainMenu.xaml</DependentUpon>
     </Compile>
@@ -41,5 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Views\Screenshots\" />
   </ItemGroup>
 </Project>

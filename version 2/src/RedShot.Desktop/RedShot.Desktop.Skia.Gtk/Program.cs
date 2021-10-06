@@ -14,7 +14,8 @@ namespace RedShot.Desktop.Skia.Gtk
                 expArgs.ExitApplication = true;
             };
 
-            var host = new GtkHost(() => new App(), args);
+            var compositionRoot = new CompositionRoot();
+            var host = new GtkHost(() => new App(compositionRoot), args);
 
             host.Run();
         }

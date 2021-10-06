@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RedShot.Desktop.Skia.Wpf.Host;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,8 +24,8 @@ namespace RedShot.Desktop.WPF.Host
         public MainWindow()
         {
             InitializeComponent();
-
-            root.Content = new global::Uno.UI.Skia.Platform.WpfHost(Dispatcher, () => new RedShot.Desktop.App());
+            var compositionRoot = new CompositionRoot();
+            root.Content = new global::Uno.UI.Skia.Platform.WpfHost(Dispatcher, () => new RedShot.Desktop.App(compositionRoot));
         }
     }
 }
