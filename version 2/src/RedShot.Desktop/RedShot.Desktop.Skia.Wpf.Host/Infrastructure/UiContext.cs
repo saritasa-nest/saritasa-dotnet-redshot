@@ -1,26 +1,26 @@
-﻿using System;
-using System.Threading;
-using RedShot.Mvvm.ServiceAbstractions;
+﻿using RedShot.Mvvm.ServiceAbstractions;
 using RedShot.Mvvm.Utils;
-using Windows.UI.Core;
+using System;
+using System.Threading;
+using System.Windows.Threading;
 
-namespace RedShot.Desktop.Shared.Infrastructure
+namespace RedShot.Desktop.WPF.Host.Infrastructure
 {
     /// <summary>
     /// Working with UI context.
     /// </summary>
     internal class UiContext : IUiContext
     {
-        private readonly CoreDispatcher dispatcher;
-
-        public UiContext(CoreDispatcher dispatcher)
-        {
-            this.dispatcher = dispatcher;
-            UiSynchronizationContext = SynchronizationContext.Current;
-        }
+        private readonly Dispatcher dispatcher;
 
         /// <inheritdoc />
-        public SynchronizationContext UiSynchronizationContext { get; set; }
+        public SynchronizationContext UiSynchronizationContext { get; }
+
+        public UiContext(Dispatcher dispatcher)
+        {
+            this.dispatcher = dispatcher;
+            UiSynchronizationContext = new DispatcherSynchronizationContext(dispatcher);
+        }
 
         /// <inheritdoc/>
         public IAwaitable SwitchToUi()
@@ -30,9 +30,9 @@ namespace RedShot.Desktop.Shared.Infrastructure
 
         internal struct SwitchToUiAwaitable : IAwaitable
         {
-            private readonly CoreDispatcher dispatcher;
+            private readonly Dispatcher dispatcher;
 
-            public SwitchToUiAwaitable(CoreDispatcher dispatcher)
+            public SwitchToUiAwaitable(Dispatcher dispatcher)
             {
                 this.dispatcher = dispatcher;
             }
@@ -46,11 +46,11 @@ namespace RedShot.Desktop.Shared.Infrastructure
             {
             }
 
-            public bool IsCompleted => dispatcher.HasThreadAccess;
+            public bool IsCompleted => dispatcher.CheckAccess();
 
             public void OnCompleted(Action continuation)
             {
-                dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => continuation());
+                dispatcher.BeginInvoke(continuation);
             }
         }
     }
