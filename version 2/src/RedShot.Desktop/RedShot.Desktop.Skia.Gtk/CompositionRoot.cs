@@ -1,26 +1,20 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
-using System.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using RedShot.Desktop.Shared.Infrastructure;
-using RedShot.Desktop.Shared.Infrastructure.Navigation;
 using RedShot.Eto.Desktop;
-using RedShot.Infrastructure.DomainServices.Services;
 using RedShot.Mvvm.ServiceAbstractions;
 using RedShot.Mvvm.ServiceAbstractions.Navigation;
-using RedShot.Mvvm.Utils;
 using RedShot.Mvvm.ViewModels;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
-namespace RedShot.Desktop
+namespace RedShot.Desktop.Skia.Gtk
 {
-    internal class CompositionRoot : IDisposable
+    internal class CompositionRoot : ICompositionRoot
     {
         private ServiceProvider serviceProvider;
+        private bool disposedValue;
 
         /// <summary>
         /// Service provider.
@@ -32,36 +26,18 @@ namespace RedShot.Desktop
         /// </summary>
         public IConfiguration Configuration { get; private set; }
 
-        private static CompositionRoot instance;
-        private bool disposedValue;
-
-        /// <summary>
-        /// Get an instance of this class.
-        /// </summary>
-        /// <returns></returns>
-        public static CompositionRoot GetInstance()
-        {
-            if (instance == null)
-            {
-                instance = new CompositionRoot();
-                instance.Configure();
-            }
-            return instance;
-        }
-
         /// <summary>
         /// Preparing DI.
         /// </summary>
-        private void Configure()
+        public void ConfigurePlatformServices(IServiceCollection services)
         {
             var builder = new ConfigurationBuilder();
-
             Configuration = builder.Build();
 
-            var serviceCollection = new ServiceCollection();
-            ConfigureServices(serviceCollection);
+            //var dispatcher = Application.Current.Dispatcher;
+            //services.AddSingleton<IUiContext, UiContext>(provider => new UiContext(dispatcher));
 
-            serviceProvider = serviceCollection.BuildServiceProvider();
+            serviceProvider = services.BuildServiceProvider();
         }
 
         /// <summary>
@@ -85,24 +61,6 @@ namespace RedShot.Desktop
                 logger.LogCritical(exception, "Unexpected error occurred.");
                 throw;
             }
-        }
-
-        private void ConfigureServices(IServiceCollection services)
-        {
-            services.AddLogging();
-            services.AddSingleton<IUiContext, UiContext>(provider => new UiContext(Windows.UI.Xaml.Window.Current.Dispatcher));
-            services.AddSingleton<NavigationStack>();
-            services.AddSingleton<ViewModelFactory>();
-            services.AddSingleton<INavigationService, NavigationService>(provider => 
-            {
-                return new NavigationService(
-                    Windows.UI.Xaml.Window.Current.Content as Frame,
-                    provider.GetRequiredService<ViewModelFactory>(),
-                    provider.GetRequiredService<NavigationStack>());
-            });
-
-            services.AddEtoServices();
-            services.AddDomainServices();
         }
 
         protected virtual void Dispose(bool disposing)

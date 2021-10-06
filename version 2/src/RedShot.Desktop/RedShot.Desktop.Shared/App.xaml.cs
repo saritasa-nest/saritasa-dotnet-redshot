@@ -1,9 +1,16 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using RedShot.Desktop.Shared.Infrastructure.Navigation;
+using RedShot.Eto.Desktop;
+using RedShot.Infrastructure.DomainServices.Services;
+using RedShot.Mvvm.ServiceAbstractions.Navigation;
+using RedShot.Mvvm.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -15,6 +22,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using RedShot.Infrastructure.Configuration.Services;
 
 namespace RedShot.Desktop
 {
@@ -23,14 +31,17 @@ namespace RedShot.Desktop
     /// </summary>
     public sealed partial class App : Application
     {
+        private readonly ICompositionRoot compositionRoot;
+
         private Window _window;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
-        public App()
+        public App(ICompositionRoot compositionRoot)
         {
+            this.compositionRoot = compositionRoot;
             InitializeLogging();
 
             this.InitializeComponent();
@@ -87,12 +98,37 @@ namespace RedShot.Desktop
             {
                 if (rootFrame.Content == null)
                 {
-                    var instance = CompositionRoot.GetInstance();
-                    await instance.RunAsync();
+                    await RunApplicationAsync();
                 }
                 // Ensure the current window is active
                 _window.Activate();
             }
+        }
+
+        private async Task RunApplicationAsync()
+        {
+            var serviceCollection = new ServiceCollection();
+            ConfigureCommonServices(serviceCollection);
+            compositionRoot.ConfigurePlatformServices(serviceCollection);
+            await compositionRoot.RunAsync();
+        }
+
+        private void ConfigureCommonServices(IServiceCollection services)
+        {
+            services.AddLogging();
+            services.AddSingleton<NavigationStack>();
+            services.AddSingleton<ViewModelFactory>();
+            services.AddSingleton<INavigationService, NavigationService>(provider =>
+            {
+                return new NavigationService(
+                    Windows.UI.Xaml.Window.Current.Content as Frame,
+                    provider.GetRequiredService<ViewModelFactory>(),
+                    provider.GetRequiredService<NavigationStack>());
+            });
+
+            services.AddEtoServices();
+            services.AddDomainServices();
+            services.AddConfiguration();
         }
 
         /// <summary>
