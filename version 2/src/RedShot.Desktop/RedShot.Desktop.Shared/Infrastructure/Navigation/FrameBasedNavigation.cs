@@ -135,10 +135,16 @@ namespace RedShot.Desktop.Shared.Infrastructure.Navigation
         /// </summary>
         public void Close()
         {
+            var currentViewModel = navigationStack.Pop<T>();
+            currentViewModel.NavigationResult.SetResult(default);
             if (frame.CanGoBack)
             {
                 frame.GoBack();
             }
+
+            var nextView = navigationStack.Peek<T>();
+            nextView.EnsureFrameVisibility();
+            currentViewModel.ViewModel.Dispose();
         }
 
         private void Frame_Navigating(object sender, Windows.UI.Xaml.Navigation.NavigatingCancelEventArgs e)
