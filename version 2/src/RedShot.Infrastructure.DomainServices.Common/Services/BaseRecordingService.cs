@@ -44,7 +44,7 @@ namespace RedShot.Infrastructure.DomainServices.Common.Services
             var videosFolder = foldersService.GetVideosFolder();
             var videoPath = Path.Combine(videosFolder, $"{videoName}.{recordingOptions.FFmpegOptions.Extension}");
 
-            var startArguments = GenerateStartArguments(videoPath, recordingOptions);
+            var startArguments = GenerateStartArguments(videoPath, recordingOptions, recordingArea);
             var fileName = await recordingApplication.GetRecorderFileNameAsync();
             await cliApplication.StartAsync(fileName, startArguments);
 
@@ -61,9 +61,9 @@ namespace RedShot.Infrastructure.DomainServices.Common.Services
             return recordingObservable;
         }
 
-        private string GenerateStartArguments(string videoPath, RecordingOptions recordingOptions)
+        private string GenerateStartArguments(string videoPath, RecordingOptions recordingOptions, Rectangle recordingArea)
         {
-            var deviceArguments = GenerateDeviceArguments(recordingOptions);
+            var deviceArguments = GenerateDeviceArguments(recordingOptions, recordingArea);
 
             var outputArguments = FfmpegArgumentsHelper.GenerateOutputArguments(videoPath);
             var videoArguments = FfmpegArgumentsHelper.GenerateVideoArguments(recordingOptions.FFmpegOptions);
@@ -85,7 +85,7 @@ namespace RedShot.Infrastructure.DomainServices.Common.Services
             await cliApplication.CloseAsync();
         }
 
-        protected abstract string GenerateDeviceArguments(RecordingOptions recordingOptions);
+        protected abstract string GenerateDeviceArguments(RecordingOptions recordingOptions, Rectangle recordingArea);
 
         protected virtual void Dispose(bool disposing)
         {
