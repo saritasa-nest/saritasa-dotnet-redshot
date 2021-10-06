@@ -18,6 +18,7 @@ namespace RedShot.Infrastructure.DomainServices.Common.CliManagement
         private volatile bool hasStarted;
         private Process cliProcess;
         private bool disposedValue;
+        private SemaphoreSlim applicationSemaphore;
 
         public string Output => outputBuilder.ToString();
 
@@ -27,10 +28,13 @@ namespace RedShot.Infrastructure.DomainServices.Common.CliManagement
         {
             responseMessages = new ReplaySubject<string>();
             outputBuilder = new StringBuilder();
+            applicationSemaphore = new SemaphoreSlim(0, 1);
         }
 
         public async Task StartAsync(string fileName, string arguments = "")
         {
+            await applicationSemaphore.WaitAsync();
+
             if (hasStarted)
             {
                 throw new DomainException("The CLI application is already started.");
@@ -64,6 +68,8 @@ namespace RedShot.Infrastructure.DomainServices.Common.CliManagement
             {
                 cliProcess.Start();
             });
+
+            applicationSemaphore.Release();
         }
 
         private void CliProcessOutputDataReceived(object sender, DataReceivedEventArgs e)
@@ -80,16 +86,26 @@ namespace RedShot.Infrastructure.DomainServices.Common.CliManagement
 
         public async Task InputCommandAsync(string command)
         {
+            await applicationSemaphore.WaitAsync();
+
             if (hasStarted)
             {
                 throw new DomainException("The CLI application should be started to input commands.");
             }
 
-            await cliProcess.StandardInput.WriteLineAsync(command);
+            await Task.Run(async () =>
+            {
+                cliProcess.WaitForInputIdle();
+                await cliProcess.StandardInput.WriteLineAsync(command);
+            });
+
+            applicationSemaphore.Release();
         }
 
         public async Task CloseAsync()
         {
+            await applicationSemaphore.WaitAsync();
+
             if (!hasStarted)
             {
                 throw new DomainException("The CLI application has not started yet.");
@@ -104,6 +120,33 @@ namespace RedShot.Infrastructure.DomainServices.Common.CliManagement
             outputBuilder = new StringBuilder();
 
             hasStarted = false;
+
+            applicationSemaphore.Release();
+        }
+
+        public async Task WaitForExitAsync()
+        {
+            await applicationSemaphore.WaitAsync();
+
+            if (cliProcess is null)
+            {
+                throw new DomainException("The CLI application is not initialized yet.");
+            }
+
+            if (!hasStarted)
+            {
+                return;
+            }
+
+            await Task.Run(() =>
+            {
+                if (IsProcessRunning())
+                {
+                    cliProcess.WaitForExit();
+                }
+            });
+
+            applicationSemaphore.Release();
         }
 
         private async Task KillProcessSafe()
