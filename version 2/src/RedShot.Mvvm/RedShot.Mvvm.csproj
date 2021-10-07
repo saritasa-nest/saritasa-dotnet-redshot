@@ -14,4 +14,8 @@
     <ProjectReference Include="..\RedShot.Infrastructure.Abstractions\RedShot.Infrastructure.Abstractions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ViewModels\Screenshots\" />
+  </ItemGroup>
+
 </Project>

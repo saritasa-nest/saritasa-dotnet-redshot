@@ -12,9 +12,10 @@ namespace RedShot.Infrastructure.DomainServices.Services
     {
         public static IServiceCollection AddDomainServices(this IServiceCollection services)
         {
-            services.AddSingleton<IMenuService, MenuService>();
+            services.AddSingleton<IApplicationCoreService, ApplicationCoreService>();
             services.AddSingleton<IEncryptionService, Base64Encrypter>();
             services.AddTransient<IFtpClientFactory, FtpClientFactory>();
+            services.AddSingleton<ILastFileService, LastFileService>();
 
             return services;
         }

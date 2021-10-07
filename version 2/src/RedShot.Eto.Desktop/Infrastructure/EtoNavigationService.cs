@@ -26,7 +26,6 @@ namespace RedShot.Eto.Desktop.Infrastructure
                 .GetExecutingAssembly()
                 .GetTypes()
                 .Where(t => t.IsSubclassOf(typeof(NavigationForm)))
-                .Where(t => typeof(IView).IsAssignableFrom(t))
                 .ToList();
         }
 
@@ -73,8 +72,7 @@ namespace RedShot.Eto.Desktop.Infrastructure
                 var cancellationSource = new TaskCompletionSource<object>();
 
                 var etoForm = form as NavigationForm;
-                etoForm.FormReadyToClose += (o, e) => cancellationSource?.TrySetResult(default);
-                etoForm.FormReadyToCancel += (o, e) => cancellationSource?.TrySetCanceled(default);
+                etoForm.Closed += (o, e) => cancellationSource?.TrySetResult(default);
                 etoForm.Show();
 
                 return cancellationSource.Task;
