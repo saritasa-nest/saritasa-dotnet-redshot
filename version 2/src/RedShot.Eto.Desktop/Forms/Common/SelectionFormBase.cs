@@ -11,11 +11,11 @@ namespace RedShot.Eto.Desktop.Forms.Common
     /// <summary>
     /// Base form for selection region.
     /// </summary>
-    public abstract class SelectionFormBase<T> : NavigationForm where T : Form, new()
+    public abstract class SelectionFormBase : NavigationForm
     {
-#region Fields
+        #region Fields
 
-        public override event EventHandler<EventArgs> FormReadyToCancel;
+        public event EventHandler ScreenChanged;
 
         /// <summary>
         /// Top message.
@@ -26,11 +26,6 @@ namespace RedShot.Eto.Desktop.Forms.Common
         /// Disposed flag.
         /// </summary>
         protected bool disposed;
-
-        /// <summary>
-        /// Selection manage form.
-        /// </summary>
-        protected T selectionManageForm;
 
         /// <summary>
         /// Selection manage form location.
@@ -121,8 +116,12 @@ namespace RedShot.Eto.Desktop.Forms.Common
         private void InitializeComponents()
         {
             SetScreenImage();
+
+            ShowInTaskbar = false;
             WindowState = WindowState.Maximized;
             WindowStyle = WindowStyle.None;
+
+            Opacity = 0;
 
             dialogOpenDate = DateTime.Now;
 
@@ -135,8 +134,6 @@ namespace RedShot.Eto.Desktop.Forms.Common
 
             Shown += EditorViewShown;
             UnLoad += EditorViewDrawingSkiaSharpUnLoad;
-
-            InitializeSelectionManageForm();
 
             SetPlatformOptions();
         }
@@ -157,19 +154,10 @@ namespace RedShot.Eto.Desktop.Forms.Common
                 if (screen.Bounds != selectionScreen.Bounds)
                 {
                     screenSelecting = false;
-                    Close();
-                    RunNew(this);
+                    ScreenChanged?.Invoke(this, EventArgs.Empty);
+                    CallReadyToClose();
                 }
             }
-        }
-
-        /// <summary>
-        /// Runs new selection form.
-        /// </summary>
-        private static void RunNew(SelectionFormBase<T> form)
-        {
-            var newForm = (SelectionFormBase<T>)Activator.CreateInstance(form.GetType());
-            newForm.Show();
         }
 
         private void SetScreenImage()
@@ -197,6 +185,8 @@ namespace RedShot.Eto.Desktop.Forms.Common
                 {
                     skcontrol.Execute((surface) => PaintClearImage(surface.Canvas));
                 }
+
+                Opacity = 1;
             }
         }
 #endregion Initialization
@@ -267,8 +257,7 @@ namespace RedShot.Eto.Desktop.Forms.Common
         {
             if (e.Buttons == MouseButtons.Alternate)
             {
-                FormReadyToCancel?.Invoke(this, EventArgs.Empty);
-                Close();
+                CallReadyToClose();
                 return;
             }
 
@@ -298,8 +287,7 @@ namespace RedShot.Eto.Desktop.Forms.Common
             switch (e.Key)
             {
                 case Keys.Escape:
-                    FormReadyToCancel?.Invoke(this, EventArgs.Empty);
-                    Close();
+                    CallReadyToClose();
                     break;
             }
         }
@@ -467,24 +455,6 @@ namespace RedShot.Eto.Desktop.Forms.Common
 
 #endregion SkiaSharpCommands
 
-#region Selection manage form
-
-        protected virtual void InitializeSelectionManageForm()
-        {
-            selectionManageForm = new T();
-
-            selectionManageFormLocation = new Point(
-                (int)(Size.Width - selectionManageForm.Width - Size.Width * 0.05) + Location.X,
-                (int)(Size.Height * 0.05) + Location.Y);
-
-            selectionManageForm.Location = selectionManageFormLocation;
-            selectionManageForm.KeyDown += EditorViewKeyDown;
-            selectionManageForm.Show();
-            selectionManageForm.Visible = false;
-        }
-
-        #endregion Selection manage form
-
 #region Selection processing
 
         /// <summary>
@@ -552,7 +522,6 @@ namespace RedShot.Eto.Desktop.Forms.Common
                 etoScreenImage?.Dispose();
                 skScreenImage?.Dispose();
                 skcontrol?.Dispose();
-                selectionManageForm?.Dispose();
             }
         }
 

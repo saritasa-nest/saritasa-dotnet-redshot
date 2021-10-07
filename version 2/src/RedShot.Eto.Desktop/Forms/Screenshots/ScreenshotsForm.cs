@@ -1,17 +1,14 @@
 ﻿using Eto.Drawing;
 using RedShot.Eto.Desktop.Forms.Common;
 using RedShot.Eto.Mvp.Presenters;
-using RedShot.Infrastructure.Screenshooting.Views;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace RedShot.Eto.Desktop.Forms
+namespace RedShot.Eto.Desktop.Forms.Screenshots
 {
-    internal class ScreenshotsForm : SelectionFormBase<ScreenShotPanel>, IScreenshotsView
+    internal class ScreenshotsForm : SelectionFormBase, IScreenshotsView
     {
-        public override event EventHandler<EventArgs> FormReadyToClose;
-
         /// <inheritdoc/>
         protected override string TopMessage { get; set; } = "Select the screenshot area";
 
@@ -22,8 +19,7 @@ namespace RedShot.Eto.Desktop.Forms
         {
             var screenshot = GetScreenShot();
             ScreenshotUpdated?.Invoke(this, screenshot);
-            FormReadyToClose?.Invoke(this, EventArgs.Empty);
-            Close();
+            CallReadyToClose();
         }
     }
 }
