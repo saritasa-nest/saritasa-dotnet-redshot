@@ -35,7 +35,7 @@ namespace RedShot.Infrastructure.DomainServices.Services.Ftp
         /// <summary>
         /// Upload file to destination resource.
         /// </summary>
-        public async Task UploadAsync(File file, CancellationToken cancellationToken)
+        public async Task<string> UploadAsync(File file, CancellationToken cancellationToken)
         {
             await clientSemaphore.WaitAsync();
 
@@ -50,6 +50,9 @@ namespace RedShot.Infrastructure.DomainServices.Services.Ftp
 
                 await using var fileStream = file.GetStream();
                 await UploadStreamAsync(fileStream, path, cancellationToken);
+
+                var remoteFileUrl = GetRemoteFileUrl(fullFileName);
+                return remoteFileUrl;
             }
             catch (Exception e)
             {
@@ -60,6 +63,29 @@ namespace RedShot.Infrastructure.DomainServices.Services.Ftp
                 clientSemaphore.Release();
             }
         }
+
+        public string GetRemoteFileUrl(string fileName)
+        {
+            if (string.IsNullOrEmpty(ftpAccount.HttpHomePath))
+            {
+                return "Empty URL";
+            }
+
+            var builder = new StringBuilder();
+            builder.Append($"{ftpAccount.HttpHomePath}/");
+
+            if (ftpAccount.HttpHomePathAddExtension)
+            {
+                builder.Append(fileName);
+            }
+            else
+            {
+                builder.Append(Path.GetFileNameWithoutExtension(fileName));
+            }
+
+            return builder.ToString();
+        }
+
 
         /// <summary>
         /// Upload file stream.
