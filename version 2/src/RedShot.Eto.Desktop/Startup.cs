@@ -19,6 +19,7 @@ using RedShot.Infrastructure.Abstractions.Interfaces;
 using RedShot.Eto.Desktop.Infrastructure;
 using RedShot.Eto.Mvp.ServiceAbstractions;
 using RedShot.Eto.Mvp.Infrastructure;
+using Saritasa.Tools.Domain.Exceptions;
 
 #if _WINDOWS
 
@@ -59,19 +60,35 @@ namespace RedShot.Eto.Desktop
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
 
+            var applicationStateService = provider.GetRequiredService<IApplicationStateService>();
+            var applicationCore = provider.GetRequiredService<IApplicationCoreService>();
+            var lastFileService = provider.GetRequiredService<ILastFileService>();
+
             var app = new Application(Platform.Detect);
-            app.UnhandledException += (o, e) => ShowException(e.ExceptionObject as Exception);
+            app.UnhandledException += (_, e) => HandleAppException(e.ExceptionObject as Exception, applicationStateService);
             //app.Initialized += AppInitialized;
 
             AddStyles();
-
             Platform.Detect.Add<ISKControl>(() => new SKControlHandler());
 
-
-            var menuService = provider.GetRequiredService<IMenuService>();
-            var tray = new ApplicationTray(menuService);
+            var tray = new ApplicationTray(applicationCore, lastFileService);
             tray.LoadComplete += (o, e) => ApplicationInitializedCompletionSource.SetResult(app);
             app.Run(tray);
+        }
+
+        private static void HandleAppException(Exception exception, IApplicationStateService applicationStateService)
+        {
+            if (exception is null || exception is TaskCanceledException)
+            {
+                return;
+            }
+
+            ShowException(exception);
+
+            if (!(exception is DomainException))
+            {
+                applicationStateService.ShutdownApplication();
+            }
         }
 
         private static void AddStyles()
@@ -89,24 +106,23 @@ namespace RedShot.Eto.Desktop
         /// <summary>
         /// Show exception in message box.
         /// </summary>
-        /// <param name="ex">Exception to show.</param>
-        private static void ShowException(Exception ex)
+        /// <param name="exception">Exception to show.</param>
+        private static void ShowException(Exception exception)
         {
-            if (ex == null)
+            if (exception is DomainException)
             {
+                MessageBox.Show(exception.Message, "Warning", MessageBoxButtons.OK, MessageBoxType.Warning);
                 return;
             }
 
-            if (ex is TargetInvocationException tiex)
+            if (exception is TargetInvocationException tiex)
             {
                 MessageBox.Show(tiex.InnerException.Message, "Error", MessageBoxButtons.OK, MessageBoxType.Error);
             }
             else
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxType.Error);
+                MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxType.Error);
             }
-
-            Application.Instance.Quit();
         }
     }
 }
