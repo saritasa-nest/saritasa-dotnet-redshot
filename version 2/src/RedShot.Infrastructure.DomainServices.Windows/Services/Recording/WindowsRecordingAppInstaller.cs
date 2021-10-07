@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
-using RedShot.Infrastructure.DomainServices.Common.Configurations;
+using RedShot.Infrastructure.Domain.Settings;
 using Saritasa.Tools.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -16,16 +16,16 @@ namespace RedShot.Infrastructure.Abstractions.Interfaces.Recording
     {
         private const string FfmpegBinaryName = "ffmpeg.exe";
 
-        private readonly FfmpegConfiguration ffmpegConfiguration;
+        private readonly ApplicationSettings applicationSettings;
         private readonly IRecordingFoldersService recordingFolders;
         private readonly IHttpClientFactory clientFactory;
 
         public WindowsRecordingAppInstaller(
-            IOptions<FfmpegConfiguration> ffmpegConfiguration,
+            IOptions<ApplicationSettings> applicationSettings,
             IRecordingFoldersService recordingFolders,
             IHttpClientFactory clientFactory)
         {
-            this.ffmpegConfiguration = ffmpegConfiguration.Value;
+            this.applicationSettings = applicationSettings.Value;
             this.recordingFolders = recordingFolders;
             this.clientFactory = clientFactory;
         }
@@ -94,7 +94,7 @@ namespace RedShot.Infrastructure.Abstractions.Interfaces.Recording
                 ".ffmpeg");
 
             using var client = clientFactory.CreateClient();
-            await using var stream = await client.GetStreamAsync(ffmpegConfiguration.WindowsBinariesUrl);
+            await using var stream = await client.GetStreamAsync(applicationSettings.WindowsFfmpegBinariesUrl);
             await using var fileStream = new FileStream(zipFileTempPath, FileMode.Create);
             await stream.CopyToAsync(fileStream);
             await fileStream.FlushAsync();
