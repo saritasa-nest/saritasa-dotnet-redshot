@@ -1,6 +1,8 @@
 ﻿using RedShot.Eto.Mvp.Presenters;
+using RedShot.Eto.Mvp.Presenters.Records;
 using RedShot.Eto.Mvp.ServiceAbstractions;
 using RedShot.Infrastructure.Abstractions.Interfaces;
+using RedShot.Infrastructure.Domain.Files;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -18,16 +20,43 @@ namespace RedShot.Eto.Mvp.Infrastructure
             this.etoNavigationService = etoNavigationService;
         }
 
-        public async Task<byte[]> OpenScreenSelectionForm()
+        public Task<File> OpenRecordingForm(Rectangle recordingArea)
         {
-            var screenshot = await etoNavigationService.OpenFormAsync<ScreenshotsPresenter, IScreenshotsView, byte[]>();
+            throw new NotImplementedException();
+        }
 
-            if (screenshot == null)
+        public async Task<Rectangle> OpenRecordingAreaSelectionForm()
+        {
+            var result = await etoNavigationService.OpenFormAsync<RecordAreaSelectionPresenter, IRecordAreaSelectionView, SelectionResult>();
+
+            if (result.Status == SelectionStatus.Canceled)
             {
                 throw new TaskCanceledException();
             }
 
-            return screenshot;
+            if (result.Status == SelectionStatus.NeedToChangeScreen)
+            {
+                return await OpenRecordingAreaSelectionForm();
+            }
+
+            return result.SelectionArea;
+        }
+
+        public async Task<File> OpenScreenshotForm()
+        {
+            var result = await etoNavigationService.OpenFormAsync<ScreenshotsPresenter, IScreenshotsView, ScreenshotResult>();
+
+            if (result.Status == ScreenshotStatus.Canceled)
+            {
+                throw new TaskCanceledException();
+            }
+
+            if (result.Status == ScreenshotStatus.NeedToChangeScreen)
+            {
+                return await OpenScreenshotForm();
+            }
+
+            return new File(result.Screenshot, FileType.Image);
         }
     }
 }

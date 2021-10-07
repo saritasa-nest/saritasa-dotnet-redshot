@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RedShot.Infrastructure.Domain.Files;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
@@ -8,6 +9,10 @@ namespace RedShot.Infrastructure.Abstractions.Interfaces
 {
     public interface IEtoFormsBridgeService
     {
-        Task<byte[]> OpenScreenSelectionForm();
+        Task<File> OpenScreenshotForm();
+
+        Task<Rectangle> OpenRecordingAreaSelectionForm();
+
+        Task<File> OpenRecordingForm(Rectangle recordingArea);
     }
 }

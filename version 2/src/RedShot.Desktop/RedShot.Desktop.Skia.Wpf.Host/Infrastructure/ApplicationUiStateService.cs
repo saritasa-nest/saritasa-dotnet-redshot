@@ -9,30 +9,28 @@ namespace RedShot.Desktop.Skia.Wpf.Host.Infrastructure
 {
     internal class ApplicationUiStateService : IApplicationUiStateService
     {
-        private readonly Window mainWindow;
-        private readonly Dispatcher dispatcher;
+        private readonly Application application;
 
-        public ApplicationUiStateService(Window mainWindow, Dispatcher dispatcher)
+        public ApplicationUiStateService(Application application)
         {
-            this.mainWindow = mainWindow;
-            this.dispatcher = dispatcher;
+            this.application = application;
         }
 
         public void HideUiInterface()
         {
-            dispatcher.Invoke(() =>
+            application.Dispatcher.Invoke(() =>
             {
-                mainWindow.Hide();
-                mainWindow.ShowInTaskbar = false;
+                application.MainWindow.Hide();
+                application.MainWindow.ShowInTaskbar = false;
             }, DispatcherPriority.Loaded);
         }
 
         public void ShowUiInterface()
         {
-            dispatcher.Invoke(() =>
+            application.Dispatcher.Invoke(() =>
             {
-                mainWindow.ShowInTaskbar = true;
-                mainWindow.Activate();
+                application.MainWindow.ShowInTaskbar = true;
+                application.MainWindow.Activate();
             });
         }
     }
