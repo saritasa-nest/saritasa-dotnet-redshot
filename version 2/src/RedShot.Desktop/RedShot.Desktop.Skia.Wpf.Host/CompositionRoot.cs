@@ -19,6 +19,8 @@ using Windows.UI.Xaml.Controls;
 using RedShot.Infrastructure.DomainServices.Windows.Services;
 using Application = System.Windows.Application;
 using RedShot.Desktop.Skia.Wpf.Host.Infrastructure;
+using RedShot.Desktop.Infrastructure;
+using RedShot.Infrastructure.Abstractions.Interfaces;
 
 namespace RedShot.Desktop.Skia.Wpf.Host
 {
@@ -40,18 +42,23 @@ namespace RedShot.Desktop.Skia.Wpf.Host
         /// <summary>
         /// Preparing DI.
         /// </summary>
-        public void ConfigurePlatformServices(IServiceCollection services)
+        public void ConfigureServices()
         {
             var builder = new ConfigurationBuilder();
             Configuration = builder.Build();
 
-            var dispatcher = Application.Current.Dispatcher;
-            var mainWindow = Application.Current.MainWindow;
+            var application = Application.Current;
+            var dispatcher = application.Dispatcher;
+            var mainWindow = application.MainWindow;
 
+            var services = new ServiceCollection();
+
+            services.AddSharedServices();
             services.AddRecordingServices();
             services.AddSingleton<IUiContext, UiContext>(provider => new UiContext(dispatcher));
             services.AddSingleton<IApplicationUiStateService, ApplicationUiStateService>(
-                provider => new ApplicationUiStateService(mainWindow, dispatcher));
+                provider => new ApplicationUiStateService(application));
+            services.AddSingleton<IApplicationStateService, ApplicationStateService>(provider => new ApplicationStateService(application));
 
             serviceProvider = services.BuildServiceProvider();
         }

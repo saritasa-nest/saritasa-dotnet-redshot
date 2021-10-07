@@ -24,6 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Infrastructure\Navigation\NavigationStack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Infrastructure\Navigation\ViewState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Infrastructure\Navigation\UsesViewModelAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Infrastructure\ServiceCollectionExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\MainMenu.xaml.cs">
       <DependentUpon>MainMenu.xaml</DependentUpon>
     </Compile>

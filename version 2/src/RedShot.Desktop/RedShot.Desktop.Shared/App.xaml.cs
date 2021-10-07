@@ -107,28 +107,8 @@ namespace RedShot.Desktop
 
         private async Task RunApplicationAsync()
         {
-            var serviceCollection = new ServiceCollection();
-            ConfigureCommonServices(serviceCollection);
-            compositionRoot.ConfigurePlatformServices(serviceCollection);
+            compositionRoot.ConfigureServices();
             await compositionRoot.RunAsync();
-        }
-
-        private void ConfigureCommonServices(IServiceCollection services)
-        {
-            services.AddLogging();
-            services.AddSingleton<NavigationStack>();
-            services.AddSingleton<ViewModelFactory>();
-            services.AddSingleton<INavigationService, NavigationService>(provider =>
-            {
-                return new NavigationService(
-                    Windows.UI.Xaml.Window.Current.Content as Frame,
-                    provider.GetRequiredService<ViewModelFactory>(),
-                    provider.GetRequiredService<NavigationStack>());
-            });
-
-            services.AddEtoServices();
-            services.AddDomainServices();
-            services.AddConfiguration();
         }
 
         /// <summary>

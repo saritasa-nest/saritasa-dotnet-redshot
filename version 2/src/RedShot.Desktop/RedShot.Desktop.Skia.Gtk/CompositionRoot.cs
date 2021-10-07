@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using RedShot.Desktop.Infrastructure;
 using RedShot.Eto.Desktop;
 using RedShot.Mvvm.ServiceAbstractions;
 using RedShot.Mvvm.ServiceAbstractions.Navigation;
@@ -29,10 +30,14 @@ namespace RedShot.Desktop.Skia.Gtk
         /// <summary>
         /// Preparing DI.
         /// </summary>
-        public void ConfigurePlatformServices(IServiceCollection services)
+        public void ConfigureServices()
         {
             var builder = new ConfigurationBuilder();
             Configuration = builder.Build();
+
+            var services = new ServiceCollection();
+
+            services.AddSharedServices();
 
             //var dispatcher = Application.Current.Dispatcher;
             //services.AddSingleton<IUiContext, UiContext>(provider => new UiContext(dispatcher));

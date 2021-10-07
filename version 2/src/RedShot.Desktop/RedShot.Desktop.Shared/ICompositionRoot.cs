@@ -20,7 +20,7 @@ namespace RedShot.Desktop
         /// <summary>
         /// Preparing DI.
         /// </summary>
-        void ConfigurePlatformServices(IServiceCollection services);
+        void ConfigureServices();
 
         /// <summary>
         /// Run the app and show the main page.
