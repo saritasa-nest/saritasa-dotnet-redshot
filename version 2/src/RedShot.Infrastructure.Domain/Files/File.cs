@@ -19,6 +19,14 @@ namespace RedShot.Infrastructure.Domain.Files
     /// </summary>
     public class File
     {
+        private readonly byte[] fileBytes;
+
+        public File(byte[] fileBytes, FileType fileType)
+        {
+            this.fileBytes = fileBytes;
+            FileType = fileType;
+        }
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -35,6 +43,11 @@ namespace RedShot.Infrastructure.Domain.Files
         /// </summary>
         public Stream GetStream()
         {
+            if (fileBytes is not null)
+            {
+                return new MemoryStream(fileBytes);
+            }
+
             return System.IO.File.Open(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
         }
 

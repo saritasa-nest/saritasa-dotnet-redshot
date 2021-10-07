@@ -10,32 +10,6 @@ namespace RedShot.Infrastructure.Domain.Ftp
     public class FtpAccount : ICloneable
     {
         /// <summary>
-        /// Get format link.
-        /// </summary>
-        /// <param name="fileName">File name.</param>
-        public string GetFormatLink(string fileName)
-        {
-            if (string.IsNullOrEmpty(HttpHomePath))
-            {
-                return "Empty URL";
-            }
-
-            var builder = new StringBuilder();
-            builder.Append($"{HttpHomePath}/");
-
-            if (HttpHomePathAddExtension)
-            {
-                builder.Append(fileName);
-            }
-            else
-            {
-                builder.Append(Path.GetFileNameWithoutExtension(fileName));
-            }
-
-            return builder.ToString();
-        }
-
-        /// <summary>
         /// HTTP home path no extension.
         /// </summary>
         public bool HttpHomePathAddExtension { get; set; }
