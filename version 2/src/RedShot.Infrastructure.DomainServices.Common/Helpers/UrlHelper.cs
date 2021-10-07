@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace RedShot.Infrastructure.DomainServices.Common.Helpers
@@ -12,7 +13,7 @@ namespace RedShot.Infrastructure.DomainServices.Common.Helpers
         /// <summary>
         /// Combine two URLs.
         /// </summary>
-        public static string CombineUrl(string url1, string url2)
+        public static string CombineUrl(string url1, string url2, params string[] otherUrls)
         {
             var url1Empty = string.IsNullOrEmpty(url1);
             var url2Empty = string.IsNullOrEmpty(url2);
@@ -42,7 +43,14 @@ namespace RedShot.Infrastructure.DomainServices.Common.Helpers
                 url2 = url2.Remove(0, 1);
             }
 
-            return url1 + "/" + url2;
+            var combinedUrl = url1 + "/" + url2;
+
+            if (otherUrls.Any())
+            {
+                return CombineUrl(combinedUrl, otherUrls.First(), otherUrls.Skip(1).ToArray());
+            }
+
+            return combinedUrl;
         }
 
         /// <summary>
@@ -61,28 +69,24 @@ namespace RedShot.Infrastructure.DomainServices.Common.Helpers
         /// <summary>
         /// Get all paths from path string.
         /// </summary>
-        public static List<string> GetPaths(string path)
+        public static IEnumerable<string> GetPaths(string path)
         {
-            List<string> paths = new List<string>();
-
             for (int i = 0; i < path.Length; i++)
             {
                 if (path[i] == '/')
                 {
-                    string currentPath = path.Remove(i);
+                    var currentPath = path.Remove(i);
 
                     if (!string.IsNullOrEmpty(currentPath))
                     {
-                        paths.Add(currentPath);
+                        yield return currentPath;
                     }
                 }
                 else if (i == path.Length - 1)
                 {
-                    paths.Add(path);
+                    yield return path;
                 }
             }
-
-            return paths;
         }
     }
 }

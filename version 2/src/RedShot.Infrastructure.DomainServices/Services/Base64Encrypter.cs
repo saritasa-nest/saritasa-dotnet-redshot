@@ -9,7 +9,7 @@ namespace RedShot.Infrastructure.DomainServices.Services
     /// Base 64 implementation of encryption service. In general it doesn't provide any
     /// security, the purpose is to no store plain text passwords.
     /// </summary>
-    public class Base64Encrypter : IEncryptionService
+    internal class Base64Encrypter : IEncryptionService
     {
         /// <inheritdoc />
         public string Decrypt(string value)
