@@ -3,6 +3,7 @@ using Eto.Forms;
 using Eto.Drawing;
 using RedShot.Infrastructure.Abstractions.Interfaces;
 using RedShot.Eto.Desktop.Resources;
+using RedShot.Infrastructure.Domain.Files;
 
 namespace RedShot.Eto.Desktop.Forms.Tray
 {
@@ -11,7 +12,9 @@ namespace RedShot.Eto.Desktop.Forms.Tray
     /// </summary>
     public class ApplicationTray : Form
     {
-        private readonly IMenuService menuService;
+        private readonly IApplicationCoreService applicationCore;
+        private readonly ILastFileService lastFileService;
+
         private ButtonMenuItem uploadLastFileButton;
 
         /// <inheritdoc/>
@@ -20,9 +23,10 @@ namespace RedShot.Eto.Desktop.Forms.Tray
         /// <summary>
         /// Initializes tray icon.
         /// </summary>
-        public ApplicationTray(IMenuService menuService)
+        public ApplicationTray(IApplicationCoreService applicationCore, ILastFileService lastFileService)
         {
-            this.menuService = menuService;
+            this.applicationCore = applicationCore;
+            this.lastFileService = lastFileService;
 
             Title = "RedShot";
             InitializeComponents();
@@ -38,8 +42,13 @@ namespace RedShot.Eto.Desktop.Forms.Tray
                 Text = "Open last file",
                 ToolTip = "Open last created file",
                 Visible = false,
-                Command = new Command((e, o) => OpenLastFile())
+                Command = new Command(async (e, o) => await applicationCore.OpenLastFileAsync())
             };
+
+            lastFileService.LastFileNotification.Subscribe(file =>
+            {
+                uploadLastFileButton.Visible = true;
+            });
 
             var menu = new ContextMenu();
 
@@ -47,13 +56,13 @@ namespace RedShot.Eto.Desktop.Forms.Tray
             {
                 Text = "Capture",
                 ToolTip = "Take a screenshot",
-                Command = new Command(async (e, o) => await menuService.TakeScreenshotAsync())
+                Command = new Command(async (e, o) => await applicationCore.TakeScreenshotAsync())
             });
             menu.Items.Add(new ButtonMenuItem()
             {
                 Text = "Record",
                 ToolTip = "Open view for video recording",
-                //Command = new Command((e, o) => RecordingManager.Instance.InitiateRecording())
+                Command = new Command(async (e, o) => await applicationCore.RecordVideoAsync())
             });
 
             menu.Items.Add(uploadLastFileButton);
@@ -62,19 +71,19 @@ namespace RedShot.Eto.Desktop.Forms.Tray
             menu.Items.Add(new ButtonMenuItem()
             {
                 Text = "Settings",
-                //Command = new Command((e, o) => SettingsManager.OpenSettings())
+                Command = new Command(async (e, o) => await applicationCore.OpenConfigurationAsync())
             });
             menu.Items.Add(new ButtonMenuItem()
             {
                 Text = "Send feedback",
-                Command = new Command((e, o) => SendFeedBack())
+                Command = new Command(async (e, o) => await applicationCore.SendFeedBackAsync())
             });
 
             menu.Items.Add(new SeparatorMenuItem());
             menu.Items.Add(new ButtonMenuItem()
             {
                 Text = "Exit",
-                Command = new Command((e, o) => Close())
+                Command = new Command((e, o) => applicationCore.CloseApplication())
             });
 
             Tray = new TrayIndicator
@@ -88,7 +97,7 @@ namespace RedShot.Eto.Desktop.Forms.Tray
         /// <summary>
         /// Upload last file.
         /// </summary>
-        private void OpenLastFile()
+        private void OpenLastFile(File file)
         {
             //var lastFile = UploadingProvider.LastFile;
             //if (lastFile != null)
