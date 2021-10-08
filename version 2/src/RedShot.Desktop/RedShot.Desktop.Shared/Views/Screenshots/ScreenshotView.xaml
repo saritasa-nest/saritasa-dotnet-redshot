@@ -1,0 +1,34 @@
+﻿<Page
+    x:Class="RedShot.Desktop.Views.Screenshots.ScreenshotView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:RedShot.Desktop.Views.Screenshots"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:skia="using:SkiaSharp.Views.UWP"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <controls:DockPanel>
+            <StackPanel 
+                Height="100"
+                Orientation="Horizontal"
+                controls:DockPanel.Dock="Top">
+                <Button Content="Color"/>
+                <Button Content="Draw Size"/>
+                <Button Content="Switch to Text"/>
+                <Button Content="Switch to Brush"/>
+                <Button Content="Switch to Rectangle Shape"/>
+                <Button Content="Switch to Arrow Shape"/>
+                <Button Content="Switch to Eraser"/>
+                <Button Content="Paint Back"/>
+                <Button Content="Upload"/>
+            </StackPanel>
+            <skia:SKXamlCanvas 
+                x:Name="Canvas"  
+                PaintSurface="OnPaintSurface" />
+        </controls:DockPanel>
+    </Grid>
+</Page>
