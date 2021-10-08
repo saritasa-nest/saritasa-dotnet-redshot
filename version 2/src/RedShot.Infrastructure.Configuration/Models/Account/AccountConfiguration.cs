@@ -11,7 +11,7 @@ namespace RedShot.Infrastructure.Configuration.Models.Account
         /// <summary>
         /// Id of the primary account.
         /// </summary>
-        public Guid PrimaryAccountGuid { get; set; }
+        public Guid? PrimaryAccountGuid { get; set; }
 
         /// <summary>
         /// List of available accounts.

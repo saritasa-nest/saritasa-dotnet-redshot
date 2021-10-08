@@ -46,6 +46,8 @@ namespace RedShot.Eto.Desktop
         public static IServiceCollection AddEtoServices(this IServiceCollection services)
         {
             services.AddSingleton<IEtoNavigationService, EtoNavigationService>();
+            services.AddSingleton<IClipboardService, EtoClipboardService>();
+            services.AddSingleton<INotificationService, EtoNotificationService>();
             services.AddEtoMvpServices();
 
             return services;
@@ -72,6 +74,7 @@ namespace RedShot.Eto.Desktop
             Platform.Detect.Add<ISKControl>(() => new SKControlHandler());
 
             var tray = new ApplicationTray(applicationCore, lastFileService);
+            EtoNotificationService.ApplicationTray = tray;
             tray.LoadComplete += (o, e) => ApplicationInitializedCompletionSource.SetResult(app);
             app.Run(tray);
         }
@@ -94,8 +97,8 @@ namespace RedShot.Eto.Desktop
         private static void AddStyles()
         {
 #if _WINDOWS
-            Style.Add<NotificationHandler>("FailedNotification", h => h.NotificationIcon = NotificationIcon.Error);
-            Style.Add<NotificationHandler>("SucceedNotification", h => h.NotificationIcon = NotificationIcon.Info);
+            Style.Add<NotificationHandler>(EtoNotificationService.FailedNotificationName, h => h.NotificationIcon = NotificationIcon.Error);
+            Style.Add<NotificationHandler>(EtoNotificationService.SucceedNotificationName, h => h.NotificationIcon = NotificationIcon.Info);
 #endif
         }
 
